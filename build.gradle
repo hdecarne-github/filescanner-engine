@@ -31,6 +31,7 @@ repositories {
 dependencies {
 	implementation("de.carne.common:java-default:6-SNAPSHOT")
 	implementation("de.carne.common:java-compression:3-SNAPSHOT")
+	testImplementation("junit:junit:4.12")
 }
 
 jacoco {
