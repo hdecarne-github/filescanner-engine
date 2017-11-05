@@ -1,0 +1,5 @@
+autoEnabled=true
+eclipse.preferences.version=1
+extraProperties=
+moduleKey=de.carne.common\:filescanner-engine
+serverId=SonarCloud/hdecarne-github
