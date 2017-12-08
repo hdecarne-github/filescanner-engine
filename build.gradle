@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-	implementation("de.carne.common:java-default:6")
+	implementation("de.carne.common:java-default:7-SNAPSHOT")
 	implementation("de.carne.common:java-compression:3")
 	testImplementation("junit:junit:4.12")
 }
@@ -134,7 +134,6 @@ bintray {
 
 eclipse {
 	classpath {
-		defaultOutputDir = file("eclipse-build")
 		downloadSources = true
 		downloadJavadoc = true
 	}
