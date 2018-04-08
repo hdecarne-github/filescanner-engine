@@ -63,6 +63,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	/**
 	 * Binds an attribute value in {@linkplain AttributeBindMode#CONTEXT} mode.
 	 *
+	 * @param <T> the actual attribute type.
 	 * @param attribute the attribute to bind.
 	 * @param value the attribute value to bind.
 	 */

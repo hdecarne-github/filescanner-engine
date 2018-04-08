@@ -79,6 +79,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	/**
 	 * Reads and decodes a value.
 	 *
+	 * @param <T> the actual attribute type.
 	 * @param size the size of the value to decode.
 	 * @param decoder the decoder to use.
 	 * @return the read value.

@@ -17,7 +17,7 @@
 package de.carne.filescanner.engine.format;
 
 /**
- * String & character format support.
+ * String &amp; character format support.
  */
 public class StringFormat {
 

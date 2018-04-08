@@ -62,6 +62,7 @@ public abstract class FileScannerResultContext {
 	/**
 	 * Gets a bound attribute value.
 	 *
+	 * @param <T> the actual attribute type.
 	 * @param attribute the {@linkplain AttributeSpec} to retrieve the value of.
 	 * @return the attribute value.
 	 */

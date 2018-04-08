@@ -33,8 +33,9 @@ public class StructSpec extends CompositeSpec {
 	private final List<FormatSpec> elements = new ArrayList<>();
 
 	/**
-	 * Adds a {@linkplain FormatSpec}.
+	 * Adds a format element.
 	 *
+	 * @param <T> the actual format element type.
 	 * @param element the {@linkplain FormatSpec} to add.
 	 * @return the added {@linkplain FormatSpec}.
 	 */
