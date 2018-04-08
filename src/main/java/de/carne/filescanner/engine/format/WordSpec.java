@@ -14,7 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine.format;
 
-import de.carne.boot.check.NonNullByDefault;
+import java.nio.ByteBuffer;
+import java.util.function.Supplier;
+
+/**
+ * Word (16-bit) attribute.
+ */
+public final class WordSpec extends FixedSizeAttributeSpec<Short> {
+
+	/**
+	 * Constructs a new {@linkplain WordSpec} instance.
+	 *
+	 * @param name the attribute's name.
+	 */
+	public WordSpec(Supplier<String> name) {
+		super(Short.class, name);
+	}
+
+	/**
+	 * Constructs a new {@linkplain WordSpec} instance.
+	 *
+	 * @param name the attribute's name.
+	 */
+	public WordSpec(String name) {
+		super(Short.class, name);
+	}
+
+	@Override
+	protected int size() {
+		return 2;
+	}
+
+	@Override
+	protected Short decodeValue(ByteBuffer buffer) {
+		return buffer.getShort();
+	}
+
+}

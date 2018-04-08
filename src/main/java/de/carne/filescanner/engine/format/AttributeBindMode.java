@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2017 Holger de Carne and contributors, All Rights Reserved.
+ * Copyright (c) 2007-2018 Holger de Carne and contributors, All Rights Reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.test.provider.spi;
+package de.carne.filescanner.engine.format;
 
-import de.carne.check.NonNullByDefault;
+/**
+ * Bind mode for {@linkplain AttributeSpec} elements.
+ */
+public enum AttributeBindMode {
+
+	/**
+	 * No binding
+	 */
+	NONE,
+
+	/**
+	 * Bind to context (needs to done during decode as well as during render phase)
+	 */
+	CONTEXT,
+
+	/**
+	 * Bind to result (value can be retrieved during render phase without re-decoding it)
+	 */
+	RESULT
+
+}

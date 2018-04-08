@@ -14,7 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine.transfer;
 
-import de.carne.boot.check.NonNullByDefault;
+/**
+ * Global rendering options that have to be set prior to the rendering start.
+ */
+public enum RenderOption {
+
+	/**
+	 * Use transparent background.
+	 */
+	TRANSPARENCY
+
+}

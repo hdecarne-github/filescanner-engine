@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2017 Holger de Carne and contributors, All Rights Reserved.
+ * Copyright (c) 2007-2018 Holger de Carne and contributors, All Rights Reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,6 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @NonNullByDefault
-package de.carne.filescanner.provider.spi;
+package de.carne.filescanner.engine.transfer;
 
-import de.carne.check.NonNullByDefault;
+import de.carne.boot.check.NonNullByDefault;

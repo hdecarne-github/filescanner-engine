@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2017 Holger de Carne and contributors, All Rights Reserved.
+ * Copyright (c) 2007-2018 Holger de Carne and contributors, All Rights Reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,27 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.provider.spi;
+@NonNullByDefault
+package de.carne.filescanner.test;
 
-import org.junit.Test;
-
-import de.carne.filescanner.provider.spi.Format;
-
-/**
- * Test {@linkplain Format} class.
- */
-public class FormatTest {
-
-	/**
-	 * Test {@linkplain Format#loadFormats()}.
-	 */
-	@Test
-	public void testLoadFormats() {
-		Iterable<Format> formats = Format.loadFormats();
-
-		for (Format format : formats) {
-			System.out.println(String.format("Format: '%1$s' (%2$s)", format.name(), format.byteOrder()));
-		}
-	}
-
-}
+import de.carne.boot.check.NonNullByDefault;

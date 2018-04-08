@@ -14,7 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine.transfer;
 
-import de.carne.boot.check.NonNullByDefault;
+/**
+ * The different rendering style that can be applied during rendering.
+ */
+public enum RenderStyle {
+
+	/**
+	 * 'normal' style.
+	 */
+	NORMAL,
+
+	/**
+	 * 'value' style.
+	 */
+	VALUE,
+
+	/**
+	 * 'comment' style.
+	 */
+	COMMENT,
+
+	/**
+	 * 'keyword' style.
+	 */
+	KEYWORD,
+
+	/**
+	 * 'operator' style.
+	 */
+	OPERATOR,
+
+	/**
+	 * 'label' style.
+	 */
+	LABEL,
+
+	/**
+	 * 'error' style.
+	 */
+	ERROR
+
+}

@@ -14,7 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.test.engine.spi;
 
-import de.carne.boot.check.NonNullByDefault;
+import org.junit.jupiter.api.Test;
+
+import de.carne.filescanner.engine.spi.Format;
+
+/**
+ * Test {@linkplain Format} class.
+ */
+class FormatTest {
+
+	@Test
+	void testLoadFormats() {
+		Iterable<Format> formats = Format.providers();
+
+		for (Format format : formats) {
+			System.out.println(String.format("Format: '%1$s' (%2$s)", format.name(), format.byteOrder()));
+		}
+	}
+
+}

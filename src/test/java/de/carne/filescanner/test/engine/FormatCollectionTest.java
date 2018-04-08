@@ -14,32 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.test.engine;
 
-import java.io.IOException;
-import java.nio.ByteOrder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">Zip file format</a> decoder.
+ * Test {@linkplain Formats} class.
  */
-public class ZipFormat extends Format {
+class FormatCollectionTest {
 
-	/**
-	 * Constructs a new {@linkplain ZipFormat} instance.
-	 */
-	public ZipFormat() {
-		super(ZipFormatSpecs.FORMAT_NAME, ByteOrder.LITTLE_ENDIAN);
-		registerHeaderSpec(ZipFormatSpecs.LOCAL_FILE_HEADER);
-	}
+	@Test
+	void testFormatCollection() {
+		Formats formats = Formats.all();
+		int formatCount = formats.enabledFormats().size();
+		Format aFormat = formats.iterator().next().getKey();
 
-	@Override
-	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
-		context.setByteOrder(byteOrder());
-		return context.decode(ZipFormatSpecs.FORMAT_SPEC);
+		formats.enable(aFormat);
+
+		Assertions.assertEquals(formatCount, formats.enabledFormats().size());
+
+		formats.disable(aFormat);
+
+		Assertions.assertEquals(formatCount - 1, formats.enabledFormats().size());
+
+		formats.enable(aFormat);
+
+		Assertions.assertEquals(formatCount, formats.enabledFormats().size());
 	}
 
 }

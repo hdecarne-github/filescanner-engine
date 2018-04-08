@@ -14,7 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine.format;
 
-import de.carne.boot.check.NonNullByDefault;
+import java.nio.ByteBuffer;
+import java.util.function.Supplier;
+
+/**
+ * Double word (32-bit) attribute.
+ */
+public final class DWordSpec extends FixedSizeAttributeSpec<Integer> {
+
+	/**
+	 * Constructs a new {@linkplain DWordSpec} instance.
+	 *
+	 * @param name the attribute's name.
+	 */
+	public DWordSpec(Supplier<String> name) {
+		super(Integer.class, name);
+	}
+
+	/**
+	 * Constructs a new {@linkplain DWordSpec} instance.
+	 *
+	 * @param name the attribute's name.
+	 */
+	public DWordSpec(String name) {
+		super(Integer.class, name);
+	}
+
+	@Override
+	protected int size() {
+		return 4;
+	}
+
+	@Override
+	protected Integer decodeValue(ByteBuffer buffer) {
+		return buffer.getInt();
+	}
+
+}

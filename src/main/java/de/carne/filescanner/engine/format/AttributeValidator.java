@@ -14,7 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine.format;
 
-import de.carne.boot.check.NonNullByDefault;
+/**
+ * Validate function for {@linkplain AttributeSpec} elements.
+ *
+ * @param <T> the actual attribute value type.
+ */
+@FunctionalInterface
+public interface AttributeValidator<T> {
+
+	/**
+	 * Validate an attribute value.
+	 *
+	 * @param value the value to validate.
+	 * @return {@code true} if the value is valid.
+	 */
+	boolean validate(T value);
+
+}

@@ -14,7 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@NonNullByDefault
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine;
 
-import de.carne.boot.check.NonNullByDefault;
+import java.io.IOException;
+
+/**
+ * {@linkplain FileScanner} specific {@linkplain Runnable} derivative aware of scan specific exceptions.
+ */
+@FunctionalInterface
+public interface FileScannerRunnable {
+
+	/**
+	 * Run {@linkplain FileScanner} logic.
+	 *
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the decode thread is interrupted.
+	 */
+	void run() throws IOException, InterruptedException;
+
+}

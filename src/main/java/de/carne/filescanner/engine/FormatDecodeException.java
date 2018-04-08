@@ -14,32 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.zip;
+package de.carne.filescanner.engine;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
-
-import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.spi.Format;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Zip_(file_format)">Zip file format</a> decoder.
+ * Base class for all kind of decoding exceptions.
  */
-public class ZipFormat extends Format {
+public abstract class FormatDecodeException extends IOException {
+
+	// Serialization support
+	private static final long serialVersionUID = 6404595481364372888L;
 
 	/**
-	 * Constructs a new {@linkplain ZipFormat} instance.
+	 * Constructs a new {@linkplain FormatDecodeException} instance.
+	 *
+	 * @param message the exception message to use.
 	 */
-	public ZipFormat() {
-		super(ZipFormatSpecs.FORMAT_NAME, ByteOrder.LITTLE_ENDIAN);
-		registerHeaderSpec(ZipFormatSpecs.LOCAL_FILE_HEADER);
+	public FormatDecodeException(String message) {
+		super(message);
 	}
 
-	@Override
-	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
-		context.setByteOrder(byteOrder());
-		return context.decode(ZipFormatSpecs.FORMAT_SPEC);
+	/**
+	 * Constructs a new {@linkplain FormatDecodeException} instance.
+	 *
+	 * @param message the exception message to use.
+	 * @param cause the causing exception.
+	 */
+	public FormatDecodeException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }
