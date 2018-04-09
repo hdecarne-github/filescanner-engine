@@ -57,7 +57,8 @@ public final class FileScanner implements Closeable {
 			throws IOException {
 		this.formatMatcherBuilder = new FormatMatcherBuilder(formats);
 		this.status = status;
-		this.result = FileScannerResultBuilder.inputResult(input).commit();
+		this.result = FileScannerResultBuilder.inputResult(input);
+		this.result.updateAndCommit(-1, true);
 		queueScanTask(() -> scanRootInput(this.result));
 	}
 
@@ -80,7 +81,7 @@ public final class FileScanner implements Closeable {
 		} catch (IOException e) {
 			LOG.warning(e, "An exception occurred while scanning input ''{0}''", inputResult.name());
 
-			this.status.scanException(this, e);
+			callStatus(() -> this.status.scanException(this, e));
 		}
 	}
 
@@ -109,9 +110,9 @@ public final class FileScanner implements Closeable {
 					if (decodeResultSize > 0) {
 						break;
 					}
-					LOG.debug("Format ''{0}'' failed to decode input", format.name());
-				} catch (FormatDecodeException e) {
-					LOG.debug(e, "Format ''{0}'' failed to decode input", format.name());
+					LOG.info("Format ''{0}'' failed to decode input", format.name());
+				} catch (FormatDecodeException | RuntimeException e) {
+					LOG.warning(e, "Format ''{0}'' failed to decode input", format.name());
 				}
 			}
 			if (decodeResult != null && decodeResultSize > 0) {
@@ -119,8 +120,10 @@ public final class FileScanner implements Closeable {
 
 				long decodeResultStart = decodeResult.start();
 
-				if (start < decodeResultStart) {
-					queueScanTask(() -> scanInputRange(parent, input, start, decodeResultStart));
+				if (scanPosition < decodeResultStart) {
+					long reScanPosition = scanPosition;
+
+					queueScanTask(() -> scanInputRange(parent, input, reScanPosition, decodeResultStart));
 				}
 				scanPosition = decodeResultStart + decodeResultSize;
 				scanRange = input.range(scanPosition, end);
@@ -132,7 +135,7 @@ public final class FileScanner implements Closeable {
 	}
 
 	void onScanResultCommit(FileScannerResult scanResult) {
-		this.status.scanResult(this, scanResult);
+		callStatus(() -> this.status.scanResult(this, scanResult));
 	}
 
 	/**
@@ -193,7 +196,7 @@ public final class FileScanner implements Closeable {
 			} catch (InterruptedException e) {
 				Exceptions.ignore(e);
 				Thread.currentThread().interrupt();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				LOG.warning(e, "Scan thread failed with exception");
 			} finally {
 				boolean scanFinished;
@@ -210,7 +213,7 @@ public final class FileScanner implements Closeable {
 	}
 
 	private void scanProgress(long totalInputBytesDelta, long scannedBytesDelta) {
-		FileScannerProgress progress = null;
+		FileScannerProgress reportProgress = null;
 
 		synchronized (this) {
 			this.totalInputBytes += totalInputBytesDelta;
@@ -222,12 +225,14 @@ public final class FileScanner implements Closeable {
 			if (totalInputBytesDelta > 0 || this.scannedBytes == this.totalInputBytes
 					|| (this.scanTimeNanos - this.lastProgressTimeNanos > 500000000l)) {
 				this.lastProgressTimeNanos = this.scanTimeNanos;
-				progress = new FileScannerProgress(this.scanStartedNanos, this.scanTimeNanos, this.scannedBytes,
+				reportProgress = new FileScannerProgress(this.scanStartedNanos, this.scanTimeNanos, this.scannedBytes,
 						this.totalInputBytes);
 			}
 		}
-		if (progress != null) {
-			this.status.scanProgress(this, progress);
+		if (reportProgress != null) {
+			FileScannerProgress progress = reportProgress;
+
+			callStatus(() -> this.status.scanProgress(this, progress));
 		}
 	}
 
@@ -236,7 +241,7 @@ public final class FileScanner implements Closeable {
 			this.scanStartedNanos = System.nanoTime();
 			notifyAll();
 		}
-		this.status.scanStarted(this);
+		callStatus(() -> this.status.scanStarted(this));
 	}
 
 	private void scanFinished() {
@@ -248,7 +253,7 @@ public final class FileScanner implements Closeable {
 
 		LOG.info("Finished scanning ''{0}'' (scan took: {1} ms)", this.result.name(), scanTime / 1000000l);
 
-		this.status.scanFinished(this);
+		callStatus(() -> this.status.scanFinished(this));
 		synchronized (this) {
 			notifyAll();
 		}
@@ -257,6 +262,14 @@ public final class FileScanner implements Closeable {
 	private void checkInterrupted() throws InterruptedException {
 		if (Thread.currentThread().isInterrupted()) {
 			throw new InterruptedException();
+		}
+	}
+
+	private void callStatus(Runnable runnable) {
+		try {
+			runnable.run();
+		} catch (RuntimeException e) {
+			LOG.warning(e, "Status callback failed with exception");
 		}
 	}
 

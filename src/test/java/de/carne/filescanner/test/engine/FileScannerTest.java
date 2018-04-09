@@ -34,6 +34,7 @@ import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.PrintStreamRenderer;
+import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.test.TestFiles;
 
 /**
@@ -45,8 +46,7 @@ class FileScannerTest {
 
 	private static class Status implements FileScannerStatus {
 
-		private final FileScannerResultOutput out = new FileScannerResultOutput(
-				new PrintStreamRenderer(System.out, false));
+		private final Renderer systemOutRenderer = new PrintStreamRenderer(System.out, false);
 		final AtomicInteger scanStartedCount = new AtomicInteger(0);
 		final AtomicInteger scanFinishedCount = new AtomicInteger(0);
 		final AtomicInteger scanProgressCount = new AtomicInteger(0);
@@ -83,10 +83,11 @@ class FileScannerTest {
 		@Override
 		public void scanResult(FileScanner scanner, FileScannerResult result) {
 			LOG.info("scanResult");
-			this.scanResultCount.addAndGet(1);
 
-			try {
-				result.render(this.out);
+			this.scanResultCount.addAndGet(1);
+			System.out.println("Scan result: '" + result.name() + "' (type:" + result.type() + ")");
+			try (FileScannerResultOutput out = new FileScannerResultOutput(this.systemOutRenderer)) {
+				result.render(out);
 			} catch (IOException | InterruptedException e) {
 				LOG.error(e, "Failed to render scan result");
 			}

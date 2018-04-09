@@ -63,17 +63,15 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	}
 
 	/**
-	 * Seeks the read position according to the given delta.
-	 * <p>
-	 * This function does no sanity check and the resulting read position might be invalid. In this case the next read
-	 * operation will fail.
+	 * Sets the read position for the next read operation.
 	 *
-	 * @param delta the position delta to apply.
-	 * @return the resulting read position.
+	 * @param position the position to set.
 	 */
-	public long seek(long delta) {
-		this.position += delta;
-		return this.position;
+	protected void setPosition(long position) {
+		if (position < this.inputRange.start() || this.inputRange.end() < position) {
+			throw new IllegalArgumentException("Invalid position " + HexFormat.formatLong(position));
+		}
+		this.position = position;
 	}
 
 	/**
@@ -95,7 +93,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 
 		T value = decoder.apply(buffer);
 
-		seek(size);
+		this.position += size;
 		return value;
 	}
 

@@ -33,6 +33,7 @@ class FileChannelInput extends FileScannerInput {
 
 	private final Path file;
 	private final FileChannel fileChannel;
+	private final long size;
 
 	FileChannelInput(Path file) throws IOException {
 		super(file.toAbsolutePath().toString());
@@ -41,6 +42,7 @@ class FileChannelInput extends FileScannerInput {
 
 		this.file = file;
 		this.fileChannel = FileChannel.open(file, StandardOpenOption.READ);
+		this.size = this.fileChannel.size();
 	}
 
 	@Override
@@ -52,7 +54,7 @@ class FileChannelInput extends FileScannerInput {
 
 	@Override
 	public long size() throws IOException {
-		return this.fileChannel.size();
+		return this.size;
 	}
 
 	@Override

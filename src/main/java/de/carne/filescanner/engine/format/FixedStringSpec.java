@@ -40,7 +40,7 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 */
 	public FixedStringSpec(Supplier<String> name) {
 		super(String.class, name);
-		format(StringFormat::formatString);
+		format(PrettyFormat::formatString);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 */
 	public FixedStringSpec(String name) {
 		super(String.class, name);
-		format(StringFormat::formatString);
+		format(PrettyFormat::formatString);
 	}
 
 	/**

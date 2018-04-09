@@ -17,12 +17,52 @@
 package de.carne.filescanner.engine.format;
 
 /**
- * String &amp; character format support.
+ * Pretty I18N aware and user ready format support.
  */
-public class StringFormat {
+public class PrettyFormat {
 
-	private StringFormat() {
+	private PrettyFormat() {
 		// Prevent instantiation
+	}
+
+	/**
+	 * Formats a {@code byte} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatByteNumber(byte value) {
+		return String.format("%1$,d", value);
+	}
+
+	/**
+	 * Formats a {@code short} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatShortNumber(short value) {
+		return String.format("%1$,d", value);
+	}
+
+	/**
+	 * Formats a {@code int} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatIntNumber(int value) {
+		return String.format("%1$,d", value);
+	}
+
+	/**
+	 * Formats a {@code long} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatLongNumber(long value) {
+		return String.format("%1$,d", value);
 	}
 
 	/**
@@ -68,6 +108,16 @@ public class StringFormat {
 		});
 		buffer.append('"');
 		return buffer;
+	}
+
+	/**
+	 * Formats {@code String} to it's quoted form.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatString(String value) {
+		return formatString(new StringBuilder(), value).toString();
 	}
 
 }

@@ -64,22 +64,37 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			throw new IllegalArgumentException("Root format spec must be a result spec");
 		}
 
-		FileScannerResultBuilder decodeResult;
+		FileScannerResultBuilder decodeResult = this.decodeStack.peekFirst().builder();
 
 		if (isResultSpec) {
-			decodeResult = FileScannerResultBuilder.formatResult(this.decodeStack.peekFirst().builder(), formatSpec,
-					inputRange(), position());
+			decodeResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec, inputRange(), position());
+			this.decodeStack.addFirst(new Scope(decodeResult));
+			try {
+				run(() -> formatSpec.decodeComposite(this));
+				if (this.decodeStack.size() > 2) {
+					decodeResult.updateAndCommit(position(), false);
+				}
+			} finally {
+				this.decodeStack.pop();
+			}
 		} else {
-			decodeResult = this.decodeStack.peekFirst().builder();
-		}
-		this.decodeStack.addFirst(new Scope(decodeResult));
-		try {
-			run(() -> formatSpec.decodeComposite(this));
-			decodeResult.preCommit(this.decodeStack.peekFirst().builder());
-		} finally {
-			this.decodeStack.pop();
+			formatSpec.decodeComposite(this);
 		}
 		return decodeResult;
+	}
+
+	/**
+	 * Decodes a {@linkplain CompositeSpec}.
+	 *
+	 * @param formatSpec a {@linkplain CompositeSpec} to decode.
+	 * @param position the position to start decoding at.
+	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the decode thread is interrupted.
+	 */
+	public FileScannerResult decode(CompositeSpec formatSpec, long position) throws IOException, InterruptedException {
+		setPosition(position);
+		return decode(formatSpec);
 	}
 
 	/**
@@ -128,7 +143,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * {@linkplain FileScanner} user.
 	 */
 	public void commit() {
-		FileScannerResultBuilder commitResult = this.decodeStack.peekFirst().builder().commit();
+		FileScannerResultBuilder commitResult = this.decodeStack.peekFirst().builder().updateAndCommit(position(),
+				true);
 
 		this.fileScanner.onScanResultCommit(commitResult);
 	}

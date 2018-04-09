@@ -28,6 +28,7 @@ import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
@@ -126,10 +127,15 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
 
-	public synchronized FileScannerResultBuilder preCommit(FileScannerResultBuilder barrier) {
-		FileScannerResultBuilder checkedParent = Check.notNull(this.parent);
+	public synchronized FileScannerResultBuilder preCommit(long commitPosition) {
+		FileScannerResultBuilder checkedParent = parent();
 
-		if (!checkedParent.equals(barrier) && !this.currentState.equals(this.committedState)) {
+		// Always update this result's extend
+		if (this.currentState.end() < commitPosition) {
+			modifyState().updateEnd(commitPosition);
+		}
+		// Only commit and add to parent if it is not the barrier and if this is the initial commit
+		if (UNCOMMITTED.equals(this.committedState)) {
 			synchronized (checkedParent) {
 				checkedParent.modifyState().addChild(this);
 			}
@@ -138,34 +144,41 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		return this;
 	}
 
-	public synchronized FileScannerResultBuilder commit() {
+	public synchronized FileScannerResultBuilder updateAndCommit(long commitPosition, boolean fullCommit) {
 		FileScannerResultBuilder commitResult = this;
 
+		if (this.currentState.end() < commitPosition) {
+			modifyState().updateEnd(commitPosition);
+		}
 		if (!this.currentState.equals(this.committedState)) {
-			FileScannerResultBuilder checkedParent = this.parent;
+			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
-			if (checkedParent != null) {
-				commitResult = checkedParent.postCommit(this);
-			}
 			this.committedState = this.currentState;
+			if (this.type == Type.FORMAT) {
+				commitResult = parent().updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
+			}
 		}
 		return commitResult;
 	}
 
-	public synchronized FileScannerResultBuilder postCommit(FileScannerResultBuilder commitChild) {
-		long commitEnd = modifyState().addChild(commitChild);
-
-		this.committedState = this.currentState;
-		return postPostCommit(Check.notNull(this.parent), commitEnd);
-	}
-
-	public synchronized FileScannerResultBuilder postPostCommit(FileScannerResultBuilder commitChild, long commitEnd) {
+	private synchronized FileScannerResultBuilder updateAndCommitParent(long commitPosition,
+			FileScannerResultBuilder commitChild, boolean addChild, boolean fullCommit) {
 		FileScannerResultBuilder commitResult = commitChild;
 
-		if (!this.currentState.equals(this.committedState) || this.currentState.end() < commitEnd) {
-			modifyState().updateEnd(commitEnd);
+		if (addChild) {
+			modifyState().updateEnd(commitPosition).addChild(commitChild);
+		} else if (this.currentState.end() < commitPosition) {
+			modifyState().updateEnd(commitPosition);
+		}
+		if (fullCommit && !this.currentState.equals(this.committedState)) {
+			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
+
 			this.committedState = this.currentState;
-			commitResult = postPostCommit(this, commitEnd);
+			if (this.type == Type.FORMAT) {
+				commitResult = parent().updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
+			} else {
+				commitResult = this;
+			}
 		}
 		return commitResult;
 	}
@@ -195,6 +208,27 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		HexFormat.formatLong(buffer, this.currentState.end());
 		buffer.append(']');
 		return buffer.toString();
+	}
+
+	public void renderInput(FileScannerResultOutput out) throws IOException, InterruptedException {
+		out.setStyle(RenderStyle.NORMAL).write("file");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).writeln("'" + input().name() + "'");
+		out.setStyle(RenderStyle.NORMAL).write("size");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).writeln(" byte(s)");
+	}
+
+	public void renderResult(FileScannerResultOutput out) throws IOException, InterruptedException {
+		out.setStyle(RenderStyle.NORMAL).write("start");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(start()));
+		out.setStyle(RenderStyle.NORMAL).write("end");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(end()));
+		out.setStyle(RenderStyle.NORMAL).write("size");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(size())).writeln(" byte(s)");
 	}
 
 	private static final class CommitState {
@@ -228,12 +262,12 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			return this.end;
 		}
 
-		public long updateEnd(long commitEnd) {
-			this.end = Math.max(this.end, commitEnd);
-			return this.end;
+		public CommitState updateEnd(long commitPosition) {
+			this.end = Math.max(this.end, commitPosition);
+			return this;
 		}
 
-		public long addChild(FileScannerResultBuilder commitChild) {
+		public CommitState addChild(FileScannerResultBuilder commitChild) {
 			this.children.add(commitChild);
 			return updateEnd(commitChild.end());
 		}
@@ -256,12 +290,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
-			out.setStyle(RenderStyle.NORMAL).write("file");
-			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).writeln("'" + input().name() + "'");
-			out.setStyle(RenderStyle.NORMAL).write("size");
-			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).writeln(String.format("%1$d", input().size()));
+			renderInput(out);
 		}
 
 		@Override
@@ -291,6 +320,9 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(input().range(start(), end()));
 
 			context.render(out, this.formatSpec);
+			if (out.isEmpty()) {
+				renderResult(out);
+			}
 		}
 
 		@Override
