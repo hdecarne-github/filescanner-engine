@@ -180,7 +180,7 @@ public abstract class Format {
 	 * @param decoder the {@linkplain FileScannerResultDecodeContext} to use for decoding.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public abstract FileScannerResult decode(FileScannerResultDecodeContext decoder)
 			throws IOException, InterruptedException;

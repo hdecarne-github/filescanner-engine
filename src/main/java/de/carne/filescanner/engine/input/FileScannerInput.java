@@ -18,8 +18,11 @@ package de.carne.filescanner.engine.input;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import de.carne.nio.compression.Check;
 
@@ -47,7 +50,7 @@ public abstract class FileScannerInput implements Closeable {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public static FileScannerInput open(Path file) throws IOException {
-		return new BufferedFileScannerInput(new FileChannelInput(file));
+		return new BufferedFileScannerInput(new FileChannelInput(file, StandardOpenOption.READ));
 	}
 
 	/**
@@ -110,7 +113,41 @@ public abstract class FileScannerInput implements Closeable {
 		Check.assertTrue(start <= end);
 		Check.assertTrue(end <= size());
 
-		return new FileScannerInputRange(this, start, end);
+		return new FileScannerInputRange(this.name, this, 0, start, end);
+	}
+
+	/**
+	 * Creates a {@linkplain ReadableByteChannel} instance backed up by this {@linkplain FileScannerInput} and
+	 * restricted to the given range.
+	 *
+	 * @param start the start position of the requested range.
+	 * @param end the end position of the requested range.
+	 * @return the created {@linkplain ReadableByteChannel} instance.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public ReadableByteChannel byteChannel(long start, long end) throws IOException {
+		Check.assertTrue(0 <= start);
+		Check.assertTrue(start <= end);
+		Check.assertTrue(end <= size());
+
+		return new FileScannerInputByteChannel(this, start, end);
+	}
+
+	/**
+	 * Creates a {@linkplain InputStream} instance backed up by this {@linkplain FileScannerInput} and restricted to the
+	 * given range.
+	 *
+	 * @param start the start position of the requested range.
+	 * @param end the end position of the requested range.
+	 * @return the created {@linkplain InputStream} instance.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public InputStream inputStream(long start, long end) throws IOException {
+		Check.assertTrue(0 <= start);
+		Check.assertTrue(start <= end);
+		Check.assertTrue(end <= size());
+
+		return new FileScannerInputInputStream(this, start, end);
 	}
 
 	@Override

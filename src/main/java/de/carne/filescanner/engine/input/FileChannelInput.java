@@ -19,8 +19,8 @@ package de.carne.filescanner.engine.input;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 import de.carne.boot.logging.Log;
 
@@ -33,16 +33,18 @@ class FileChannelInput extends FileScannerInput {
 
 	private final Path file;
 	private final FileChannel fileChannel;
-	private final long size;
 
-	FileChannelInput(Path file) throws IOException {
+	FileChannelInput(Path file, OpenOption... options) throws IOException {
 		super(file.toAbsolutePath().toString());
 
 		LOG.info("Opening input ''{0}''...", file);
 
 		this.file = file;
-		this.fileChannel = FileChannel.open(file, StandardOpenOption.READ);
-		this.size = this.fileChannel.size();
+		this.fileChannel = FileChannel.open(file, options);
+	}
+
+	public FileChannel channel() {
+		return this.fileChannel;
 	}
 
 	@Override
@@ -54,7 +56,7 @@ class FileChannelInput extends FileScannerInput {
 
 	@Override
 	public long size() throws IOException {
-		return this.size;
+		return this.fileChannel.size();
 	}
 
 	@Override

@@ -25,6 +25,8 @@ public class PrettyFormat {
 		// Prevent instantiation
 	}
 
+	private static final String NUMBER_FORMAT = "%1$,d";
+
 	/**
 	 * Formats a {@code byte} value.
 	 *
@@ -32,7 +34,7 @@ public class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatByteNumber(byte value) {
-		return String.format("%1$,d", value);
+		return String.format(NUMBER_FORMAT, value);
 	}
 
 	/**
@@ -42,7 +44,7 @@ public class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatShortNumber(short value) {
-		return String.format("%1$,d", value);
+		return String.format(NUMBER_FORMAT, value);
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatIntNumber(int value) {
-		return String.format("%1$,d", value);
+		return String.format(NUMBER_FORMAT, value);
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatLongNumber(long value) {
-		return String.format("%1$,d", value);
+		return String.format(NUMBER_FORMAT, value);
 	}
 
 	/**

@@ -28,7 +28,7 @@ public interface FileScannerRunnable {
 	 * Run {@linkplain FileScanner} logic.
 	 *
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	void run() throws IOException, InterruptedException;
 

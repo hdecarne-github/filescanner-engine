@@ -27,13 +27,15 @@ import de.carne.boot.check.Check;
 import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
-import de.carne.filescanner.engine.util.StringSupplier;
+import de.carne.filescanner.engine.util.FinalSupplier;
+import de.carne.text.MemoryUnitFormat;
 
 /**
  * {@linkplain FileScannerResultBuilder} implementation with commit and render support.
@@ -69,8 +71,13 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	public static FileScannerResultBuilder formatResult(FileScannerResultBuilder parent, CompositeSpec formatSpec,
-			FileScannerInputRange inputRange, long position) {
-		return new FormatResult(parent, formatSpec, inputRange, position);
+			FileScannerInputRange inputRange, long start) {
+		return new FormatResultBuilder(parent, formatSpec, inputRange, start);
+	}
+
+	public static FileScannerResultBuilder encodedInputResult(FileScannerResultBuilder parent,
+			EncodedInputSpec encodedInputSpec, FileScannerInputRange inputRange, long start, long end) {
+		return new EncodedInputResultBuilder(parent, encodedInputSpec, inputRange, start, end);
 	}
 
 	@Override
@@ -126,23 +133,6 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
-
-	public synchronized FileScannerResultBuilder preCommit(long commitPosition) {
-		FileScannerResultBuilder checkedParent = parent();
-
-		// Always update this result's extend
-		if (this.currentState.end() < commitPosition) {
-			modifyState().updateEnd(commitPosition);
-		}
-		// Only commit and add to parent if it is not the barrier and if this is the initial commit
-		if (UNCOMMITTED.equals(this.committedState)) {
-			synchronized (checkedParent) {
-				checkedParent.modifyState().addChild(this);
-			}
-			this.committedState = this.currentState;
-		}
-		return this;
-	}
 
 	public synchronized FileScannerResultBuilder updateAndCommit(long commitPosition, boolean fullCommit) {
 		FileScannerResultBuilder commitResult = this;
@@ -210,16 +200,8 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		return buffer.toString();
 	}
 
-	public void renderInput(FileScannerResultOutput out) throws IOException, InterruptedException {
-		out.setStyle(RenderStyle.NORMAL).write("file");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).writeln("'" + input().name() + "'");
-		out.setStyle(RenderStyle.NORMAL).write("size");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).writeln(" byte(s)");
-	}
-
-	public void renderResult(FileScannerResultOutput out) throws IOException, InterruptedException {
+	@Override
+	public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.NORMAL).write("start");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(start()));
@@ -228,7 +210,9 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(end()));
 		out.setStyle(RenderStyle.NORMAL).write("size");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(size())).writeln(" byte(s)");
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).write(" byte(s)");
+		out.setStyle(RenderStyle.COMMENT).write(" // ")
+				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
 	}
 
 	private static final class CommitState {
@@ -244,7 +228,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		public CommitState(String name, long end) {
-			this(StringSupplier.of(name), end);
+			this(FinalSupplier.of(name), end);
 		}
 
 		public CommitState(CommitState state) {
@@ -285,12 +269,19 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private static class InputResultBuilder extends FileScannerResultBuilder {
 
 		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange) {
-			super(parent, FileScannerResult.Type.INPUT, inputRange, StringSupplier.of(inputRange.name()));
+			super(parent, FileScannerResult.Type.INPUT, inputRange, FinalSupplier.of(inputRange.name()));
 		}
 
 		@Override
 		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
-			renderInput(out);
+			out.setStyle(RenderStyle.NORMAL).write("file");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).writeln("'" + input().name() + "'");
+			out.setStyle(RenderStyle.NORMAL).write("size");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).write(" byte(s)");
+			out.setStyle(RenderStyle.COMMENT).write(" // ")
+					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
 		}
 
 		@Override
@@ -305,13 +296,13 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	}
 
-	private static class FormatResult extends FileScannerResultBuilder {
+	private static class FormatResultBuilder extends FileScannerResultBuilder {
 
 		private final CompositeSpec formatSpec;
 
-		public FormatResult(FileScannerResultBuilder parent, CompositeSpec formatSpec, FileScannerInputRange inputRange,
-				long position) {
-			super(parent, FileScannerResult.Type.FORMAT, inputRange, formatSpec.resultName(), position, position);
+		public FormatResultBuilder(FileScannerResultBuilder parent, CompositeSpec formatSpec,
+				FileScannerInputRange inputRange, long start) {
+			super(parent, FileScannerResult.Type.FORMAT, inputRange, formatSpec.resultName(), start, start);
 			this.formatSpec = formatSpec;
 		}
 
@@ -321,7 +312,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 			context.render(out, this.formatSpec);
 			if (out.isEmpty()) {
-				renderResult(out);
+				super.render(out);
 			}
 		}
 
@@ -339,6 +330,38 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			T value = getResultValue(attribute, committed);
 
 			return (value != null ? value : parent().getValue(attribute, committed));
+		}
+
+	}
+
+	private static class EncodedInputResultBuilder extends FileScannerResultBuilder {
+
+		private final EncodedInputSpec encodedInputSpec;
+
+		public EncodedInputResultBuilder(FileScannerResultBuilder parent, EncodedInputSpec encodedInputSpec,
+				FileScannerInputRange inputRange, long start, long end) {
+			super(parent, FileScannerResult.Type.ENCODED_INPUT, inputRange, encodedInputSpec.encodedInputName(), start,
+					end);
+			this.encodedInputSpec = encodedInputSpec;
+		}
+
+		@Override
+		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+			super.render(out);
+
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(input().range(start(), end()));
+
+			context.render(out, this.encodedInputSpec);
+		}
+
+		@Override
+		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
+			throw new IllegalStateException("Cannot bind value to encoded input result '" + this + "'");
+		}
+
+		@Override
+		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
+			throw new IllegalStateException("Cannot get value from encoded input result '" + this + "'");
 		}
 
 	}

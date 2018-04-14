@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 public interface FormatSpec {
 
 	/**
-	 * Checks whether this format element is of fixed size and can be pre-loaded.
+	 * Checks whether this format element is of fixed size and can be preloaded.
 	 *
 	 * @return {@code true} if this format element is of fixed size.
 	 * @see #matchSize()
@@ -59,7 +59,7 @@ public interface FormatSpec {
 	 *
 	 * @param context the {@linkplain FileScannerResultDecodeContext} instance to use for decoding.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException;
 

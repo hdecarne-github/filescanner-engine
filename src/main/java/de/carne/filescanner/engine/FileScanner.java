@@ -29,8 +29,11 @@ import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FormatMatcherBuilder.Matcher;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
+import de.carne.filescanner.engine.input.InputDecodeCache;
+import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.util.SystemProperties;
+import de.carne.util.Threads;
 
 /**
  * FileScanner engine.
@@ -44,6 +47,7 @@ public final class FileScanner implements Closeable {
 
 	private final ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
 	private final FormatMatcherBuilder formatMatcherBuilder;
+	private final InputDecodeCache inputDecodeCache;
 	private final FileScannerStatus status;
 	private final FileScannerResultBuilder result;
 	private int pendingScanTasks = 0;
@@ -56,6 +60,7 @@ public final class FileScanner implements Closeable {
 	private FileScanner(FileScannerInput input, Collection<Format> formats, FileScannerStatus status)
 			throws IOException {
 		this.formatMatcherBuilder = new FormatMatcherBuilder(formats);
+		this.inputDecodeCache = new InputDecodeCache();
 		this.status = status;
 		this.result = FileScannerResultBuilder.inputResult(input);
 		this.result.updateAndCommit(-1, true);
@@ -92,14 +97,14 @@ public final class FileScanner implements Closeable {
 		FileScannerInputRange scanRange = input.range(scanPosition, end);
 
 		while (scanPosition < end) {
-			checkInterrupted();
+			Threads.checkInterrupted();
 
 			List<Format> matchingFormats = formatMatcher.match(scanRange, scanPosition);
 			FileScannerResult decodeResult = null;
 			long decodeResultSize = -1;
 
 			for (Format format : matchingFormats) {
-				checkInterrupted();
+				Threads.checkInterrupted();
 
 				FileScannerResultDecodeContext context = new FileScannerResultDecodeContext(this, parent, scanRange,
 						scanPosition);
@@ -132,6 +137,11 @@ public final class FileScanner implements Closeable {
 				scanPosition++;
 			}
 		}
+	}
+
+	InputDecodeCache.Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
+			long end) throws IOException, InterruptedException {
+		return this.inputDecodeCache.decodeInput(name, inputDecoder, input, start, end);
 	}
 
 	void onScanResultCommit(FileScannerResult scanResult) {
@@ -184,6 +194,7 @@ public final class FileScanner implements Closeable {
 	public void close() throws IOException {
 		this.threadPool.shutdownNow();
 		this.result.input().close();
+		this.inputDecodeCache.close();
 	}
 
 	private void queueScanTask(FileScannerRunnable task) {
@@ -256,12 +267,6 @@ public final class FileScanner implements Closeable {
 		callStatus(() -> this.status.scanFinished(this));
 		synchronized (this) {
 			notifyAll();
-		}
-	}
-
-	private void checkInterrupted() throws InterruptedException {
-		if (Thread.currentThread().isInterrupted()) {
-			throw new InterruptedException();
 		}
 	}
 

@@ -28,12 +28,14 @@ import de.carne.filescanner.engine.format.HexFormat;
 public class FileScannerInputRange extends FileScannerInput {
 
 	private final FileScannerInput input;
+	private final long base;
 	private final long start;
 	private final long end;
 
-	FileScannerInputRange(FileScannerInput input, long start, long end) {
-		super(input.name());
+	FileScannerInputRange(String name, FileScannerInput input, long base, long start, long end) {
+		super(name);
 		this.input = input;
+		this.base = base;
 		this.start = start;
 		this.end = end;
 	}
@@ -77,15 +79,16 @@ public class FileScannerInputRange extends FileScannerInput {
 
 	@Override
 	public int read(ByteBuffer buffer, long position) throws IOException {
+		long rebasedPosition = this.base + position;
 		int read;
 
-		if (position + buffer.remaining() <= this.end) {
-			read = this.input.read(buffer, position);
-		} else if (position < this.end) {
+		if (rebasedPosition + buffer.remaining() <= this.end) {
+			read = this.input.read(buffer, rebasedPosition);
+		} else if (rebasedPosition < this.end) {
 			ByteBuffer limitedBuffer = buffer.duplicate();
 
-			limitedBuffer.limit((int) (this.end - position));
-			read = this.input.read(limitedBuffer, position);
+			limitedBuffer.limit((int) (this.end - rebasedPosition));
+			read = this.input.read(limitedBuffer, rebasedPosition);
 			buffer.position(limitedBuffer.position());
 		} else {
 			read = -1;

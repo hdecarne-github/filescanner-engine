@@ -119,7 +119,7 @@ public interface FileScannerResult {
 	 *
 	 * @param out the {@linkplain FileScannerResultOutput} to render to.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	void render(FileScannerResultOutput out) throws IOException, InterruptedException;
 

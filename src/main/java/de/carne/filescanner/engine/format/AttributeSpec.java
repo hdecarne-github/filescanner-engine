@@ -30,7 +30,7 @@ import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
-import de.carne.filescanner.engine.util.StringSupplier;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Base class for bind-able attribute format elements.
@@ -66,7 +66,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 */
 	protected AttributeSpec(Class<T> type, String name) {
 		this.type = type;
-		this.name = StringSupplier.of(name);
+		this.name = FinalSupplier.of(name);
 	}
 
 	/**
@@ -171,7 +171,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @param context the {@linkplain FileScannerResultInputContext} to decode the value from.
 	 * @return the decoded value.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	protected abstract T decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException;
 

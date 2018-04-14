@@ -27,7 +27,9 @@ import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
+import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.util.Strings;
 
 /**
@@ -53,10 +55,10 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param formatSpec a {@linkplain CompositeSpec} to decode.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public FileScannerResult decode(CompositeSpec formatSpec) throws IOException, InterruptedException {
-		LOG.debug("Decoding format spec ''{0}''...", formatSpec);
+		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
 
 		boolean isResultSpec = formatSpec.isResult();
 
@@ -86,15 +88,50 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	/**
 	 * Decodes a {@linkplain CompositeSpec}.
 	 *
-	 * @param formatSpec a {@linkplain CompositeSpec} to decode.
+	 * @param formatSpec the {@linkplain CompositeSpec} to decode.
 	 * @param position the position to start decoding at.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public FileScannerResult decode(CompositeSpec formatSpec, long position) throws IOException, InterruptedException {
 		setPosition(position);
 		return decode(formatSpec);
+	}
+
+	/**
+	 * Decodes an {@linkplain EncodedInputSpec}.
+	 *
+	 * @param encodedInputSpec the {@linkplain EncodedInputSpec} to decode.
+	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the decode thread has been interrupted.
+	 */
+	public FileScannerResult decode(EncodedInputSpec encodedInputSpec) throws IOException, InterruptedException {
+		LOG.debug("Decoding encoded input spec ''{0}''...", encodedInputSpec);
+
+		long decodeStart = position();
+		long encodedInputSize = encodedInputSpec.encodedInputSize().get();
+		long decodeEnd;
+		FileScannerResultBuilder decodeResult;
+
+		if (encodedInputSize >= 0) {
+			decodeEnd = decodeStart + encodedInputSize;
+			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peekFirst().builder(),
+					encodedInputSpec, inputRange(), decodeStart, decodeEnd);
+		} else {
+			decodeEnd = inputRange().end();
+			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peekFirst().builder(),
+					encodedInputSpec, inputRange(), decodeStart, decodeStart);
+		}
+
+		InputDecodeCache.Decoded decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
+				encodedInputSpec.inputDecoder().get(), inputRange(), decodeStart, decodeEnd);
+		long commitPosition = decodeStart + decoded.encodedSize();
+
+		setPosition(commitPosition);
+		decodeResult.updateAndCommit(commitPosition, false);
+		return decodeResult;
 	}
 
 	/**

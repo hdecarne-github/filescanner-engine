@@ -36,6 +36,7 @@ import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.PrintStreamRenderer;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.test.TestFiles;
+import de.carne.text.MemoryUnitFormat;
 
 /**
  * Test {@linkplain FileScanner} class.
@@ -73,11 +74,14 @@ class FileScannerTest {
 		public void scanProgress(FileScanner scanner, FileScannerProgress progress) {
 			LOG.info("scanProgress");
 			this.scanProgressCount.addAndGet(1);
-			System.out.println("Total input bytes: " + progress.totalInputBytes());
-			System.out.println("Scanned bytes    : " + progress.scannedBytes());
+
+			MemoryUnitFormat format = MemoryUnitFormat.getMemoryUnitInstance();
+
+			System.out.println("Total input bytes: " + format.format(progress.totalInputBytes()));
+			System.out.println("Scanned bytes    : " + format.format(progress.scannedBytes()));
 			System.out.println("Scan progress    : " + progress.scanProgress());
 			System.out.println("Scan time        : " + progress.scanTimeNanos());
-			System.out.println("Scan rate        : " + progress.scanRate());
+			System.out.println("Scan rate        : " + format.format(progress.scanRate()) + "/s");
 		}
 
 		@Override

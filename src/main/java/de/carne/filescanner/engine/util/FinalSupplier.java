@@ -19,34 +19,37 @@ package de.carne.filescanner.engine.util;
 import java.util.function.Supplier;
 
 /**
- * Utility class used for static {@code Supplier<String>} instances with a proper {@linkplain #toString()} function.
+ * Utility class used for {@code Supplier} instances that actually provide a final value and therefore can be displayed
+ * during debugging or logging by an informative string representation.
+ *
+ * @param <T> the supplied type.
  */
-public class StringSupplier implements Supplier<String> {
+public class FinalSupplier<T> implements Supplier<T> {
 
-	private final String string;
+	private final T value;
 
-	private StringSupplier(String string) {
-		this.string = string;
+	private FinalSupplier(T value) {
+		this.value = value;
 	}
 
 	/**
-	 * Wrap the given {@linkplain String} in a {@linkplain StringSupplier} instance.
+	 * Wrap the given value in a {@linkplain FinalSupplier} instance.
 	 *
-	 * @param string the {@linkplain String} to wrap.
-	 * @return the created {@linkplain StringSupplier} instance.
+	 * @param value the value to wrap.
+	 * @return the created {@linkplain FinalSupplier} instance.
 	 */
-	public static StringSupplier of(String string) {
-		return new StringSupplier(string);
+	public static <T> FinalSupplier<T> of(T value) {
+		return new FinalSupplier<>(value);
 	}
 
 	@Override
-	public String get() {
-		return this.string;
+	public T get() {
+		return this.value;
 	}
 
 	@Override
 	public String toString() {
-		return this.string;
+		return this.value.toString();
 	}
 
 }

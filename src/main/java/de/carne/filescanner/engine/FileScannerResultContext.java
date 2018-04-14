@@ -46,7 +46,7 @@ public abstract class FileScannerResultContext {
 	 *
 	 * @param runnable the {@linkplain FileScannerRunnable} to run.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	protected void run(FileScannerRunnable runnable) throws IOException, InterruptedException {
 		FileScannerResultContext previousContext = CONTEXT.get();

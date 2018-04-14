@@ -18,52 +18,172 @@ package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- *
+ * Encoded input data stream specification.
+ * <p>
+ * If the encoded input's size is unknown a decoder has to be defined and is responsible for determining the actual
+ * size. If size and decoder are set, the former limits the available data for the decoder.
  */
-public class EncodedInputSpec implements FormatSpec {
+public final class EncodedInputSpec implements FormatSpec {
+
+	private final Supplier<String> encodedInputName;
+	private Supplier<Long> encodedInputSize = FinalSupplier.of(Long.valueOf(-1l));
+	private Supplier<InputDecoder> inputDecoder = FinalSupplier.of(InputDecoder.NONE);
+	private Supplier<String> decodedInputName = FinalSupplier.of("<decoded data>");
 
 	/**
+	 * Constructs a new {@linkplain EncodedInputSpec} instance.
 	 *
+	 * @param encodedInputName the encoded input's name.
 	 */
-	public EncodedInputSpec() {
-		// TODO Auto-generated constructor stub
+	public EncodedInputSpec(Supplier<String> encodedInputName) {
+		this.encodedInputName = encodedInputName;
+	}
+
+	/**
+	 * Constructs a new {@linkplain EncodedInputSpec} instance.
+	 *
+	 * @param encodedInputName the encoded input's name.
+	 */
+	public EncodedInputSpec(String encodedInputName) {
+		this(FinalSupplier.of(encodedInputName));
+	}
+
+	/**
+	 * Gets the encoded input's name.
+	 *
+	 * @return the encoded input's name.
+	 */
+	public Supplier<String> encodedInputName() {
+		return this.encodedInputName;
+	}
+
+	/**
+	 * Sets the encoded input's size.
+	 *
+	 * @param size the size to set.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec encodedInputSize(Supplier<Long> size) {
+		this.encodedInputSize = size;
+		return this;
+	}
+
+	/**
+	 * Sets the encoded input's size.
+	 *
+	 * @param size the size to set.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec encodedInputSize(Long size) {
+		return encodedInputSize(FinalSupplier.of(size));
+	}
+
+	/**
+	 * Gets the encoded input's size.
+	 * <p>
+	 * If the supplied value is {@code -1} the actual size is not known and has to be determined by the decoder.
+	 *
+	 * @return the encoded input's size.
+	 */
+	public Supplier<Long> encodedInputSize() {
+		return this.encodedInputSize;
+	}
+
+	/**
+	 * Sets the input decoder.
+	 *
+	 * @param decoder the decoder to set.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec inputDecoder(Supplier<InputDecoder> decoder) {
+		this.inputDecoder = decoder;
+		return this;
+	}
+
+	/**
+	 * Sets the input decoder.
+	 *
+	 * @param decoder the decoder to set.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec inputDecoder(InputDecoder decoder) {
+		this.inputDecoder = FinalSupplier.of(decoder);
+		return this;
+	}
+
+	/**
+	 * Gets the input decoder.
+	 *
+	 * @return the input decoder.
+	 */
+	public Supplier<InputDecoder> inputDecoder() {
+		return this.inputDecoder;
+	}
+
+	/**
+	 * Sets the decoded input's name.
+	 *
+	 * @param name the decoded input's name.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec decodedInputName(Supplier<String> name) {
+		this.decodedInputName = name;
+		return this;
+	}
+
+	/**
+	 * Sets the decoded input's name.
+	 *
+	 * @param name the decoded input's name.
+	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
+	 */
+	public EncodedInputSpec decodedInputName(String name) {
+		this.decodedInputName = FinalSupplier.of(name);
+		return this;
+	}
+
+	/**
+	 * Gets the decoded input's name.
+	 *
+	 * @return the decoded input's name.
+	 */
+	public Supplier<String> decodedInputName() {
+		return this.decodedInputName;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int matchSize() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-
+		context.decode(this);
 	}
 
 	@Override
 	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-
+		this.inputDecoder.get().render(out);
 	}
 
 }

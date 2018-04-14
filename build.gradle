@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-	api("de.carne.common:java-default:8.4.0")
+	api("de.carne.common:java-default:8.5.0-SNAPSHOT")
 	implementation("de.carne.common:java-compression:4.0.0")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.1.0")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.1.0")

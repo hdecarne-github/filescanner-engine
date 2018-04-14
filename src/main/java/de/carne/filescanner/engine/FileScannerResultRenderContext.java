@@ -25,6 +25,7 @@ import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 
@@ -52,12 +53,27 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	 * @param out the {@linkplain FileScannerResultOutput} to render to.
 	 * @param formatSpec a {@linkplain CompositeSpec} to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread is interrupted.
+	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public void render(FileScannerResultOutput out, CompositeSpec formatSpec) throws IOException, InterruptedException {
 		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
 		run(() -> formatSpec.render(out, this));
+	}
+
+	/**
+	 * Renders a {@linkplain EncodedInputSpec}.
+	 *
+	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param encodedInputSpec a {@linkplain EncodedInputSpec} to render.
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the decode thread has been interrupted.
+	 */
+	public void render(FileScannerResultOutput out, EncodedInputSpec encodedInputSpec)
+			throws IOException, InterruptedException {
+		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
+
+		run(() -> encodedInputSpec.render(out, this));
 	}
 
 	/**
