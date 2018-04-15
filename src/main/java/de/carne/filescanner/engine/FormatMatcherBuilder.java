@@ -109,11 +109,9 @@ final class FormatMatcherBuilder {
 		matchBuffer.order(format.byteOrder());
 		for (FormatSpec headerSpec : format.headerSpecs()) {
 			matchBuffer.rewind();
-			if (matchBuffer.remaining() <= headerSpec.matchSize()) {
-				if (headerSpec.matches(matchBuffer)) {
-					match = true;
-					break;
-				}
+			if (matchBuffer.remaining() <= headerSpec.matchSize() && headerSpec.matches(matchBuffer)) {
+				match = true;
+				break;
 			}
 		}
 		return match;

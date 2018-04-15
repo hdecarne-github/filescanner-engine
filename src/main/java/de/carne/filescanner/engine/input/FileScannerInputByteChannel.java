@@ -55,13 +55,7 @@ class FileScannerInputByteChannel implements ReadableByteChannel {
 		int read;
 
 		if (this.position + dst.remaining() <= this.end) {
-			if (this.position == 31934) {
-				System.out.println(dst);
-			}
 			read = this.input.read(dst, this.position);
-			if (dst.hasRemaining()) {
-				System.out.println(read);
-			}
 		} else if (this.position < this.end) {
 			ByteBuffer limitedDst = dst.duplicate();
 
