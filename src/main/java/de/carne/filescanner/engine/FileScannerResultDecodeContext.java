@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.carne.boot.check.Check;
@@ -28,6 +29,7 @@ import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
+import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.util.Strings;
@@ -41,6 +43,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 	private final FileScanner fileScanner;
 	private final Deque<Scope> decodeStack = new LinkedList<>();
+	private final List<FileScannerResultBuilder> pendingInputResults = new LinkedList<>();
 
 	FileScannerResultDecodeContext(FileScanner fileScanner, FileScannerResultBuilder parent,
 			FileScannerInputRange inputRange, long position) {
@@ -66,15 +69,17 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			throw new IllegalArgumentException("Root format spec must be a result spec");
 		}
 
-		FileScannerResultBuilder decodeResult = this.decodeStack.peekFirst().builder();
+		FileScannerResultBuilder decodeResult = this.decodeStack.peek().builder();
 
 		if (isResultSpec) {
 			decodeResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec, inputRange(), position());
-			this.decodeStack.addFirst(new Scope(decodeResult));
+			this.decodeStack.push(new Scope(decodeResult));
 			try {
-				run(() -> formatSpec.decodeComposite(this));
+				run(() -> formatSpec.decodeComposite(this), true);
 				if (this.decodeStack.size() > 2) {
 					decodeResult.updateAndCommit(position(), false);
+				} else {
+					commit();
 				}
 			} finally {
 				this.decodeStack.pop();
@@ -117,18 +122,25 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		if (encodedInputSize >= 0) {
 			decodeEnd = decodeStart + encodedInputSize;
-			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peekFirst().builder(),
+			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peek().builder(),
 					encodedInputSpec, inputRange(), decodeStart, decodeEnd);
 		} else {
 			decodeEnd = inputRange().end();
-			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peekFirst().builder(),
+			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peek().builder(),
 					encodedInputSpec, inputRange(), decodeStart, decodeStart);
 		}
 
 		InputDecodeCache.Decoded decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
 				encodedInputSpec.inputDecoder().get(), inputRange(), decodeStart, decodeEnd);
 		long commitPosition = decodeStart + decoded.encodedSize();
+		FileScannerInput decodedInput = decoded.decodedInput();
 
+		if (decodedInput.size() > 0) {
+			FileScannerResultBuilder decodedInputResult = FileScannerResultBuilder
+					.inputResult(decodeResult, decodedInput).updateAndCommit(-1, false);
+
+			this.pendingInputResults.add(decodedInputResult);
+		}
 		setPosition(commitPosition);
 		decodeResult.updateAndCommit(commitPosition, false);
 		return decodeResult;
@@ -144,7 +156,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	public <T> void bindContextValue(AttributeSpec<T> attribute, T value) {
 		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.decode(value.toString()));
 
-		this.decodeStack.peekFirst().contextValues().put(attribute, value);
+		this.decodeStack.peek().contextValues().put(attribute, value);
 	}
 
 	/**
@@ -158,14 +170,14 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
 		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute, Strings.decode(value.toString()));
 
-		this.decodeStack.peekFirst().builder().bindResultValue(scope, attribute, value);
+		this.decodeStack.peek().builder().bindResultValue(scope, attribute, value);
 	}
 
 	@Override
 	public <T> T getValue(AttributeSpec<T> attribute) {
 		LOG.debug("Resolving attribute value ''{0}''", attribute);
 
-		Scope result = this.decodeStack.peekFirst();
+		Scope result = this.decodeStack.peek();
 		Object contextValue = result.contextValues().get(attribute);
 		T value = (contextValue != null ? Check.isInstanceOf(contextValue, attribute.type())
 				: result.builder().getValue(attribute, false));
@@ -180,10 +192,11 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * {@linkplain FileScanner} user.
 	 */
 	public void commit() {
-		FileScannerResultBuilder commitResult = this.decodeStack.peekFirst().builder().updateAndCommit(position(),
-				true);
+		FileScannerResultBuilder commitResult = this.decodeStack.peek().builder().updateAndCommit(position(), true);
 
 		this.fileScanner.onScanResultCommit(commitResult);
+		this.fileScanner.queueInputResults(this.pendingInputResults);
+		this.pendingInputResults.clear();
 	}
 
 	private static final class Scope {

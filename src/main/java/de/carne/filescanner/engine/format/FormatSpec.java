@@ -69,7 +69,7 @@ public interface FormatSpec {
 	 * @param out the {@linkplain FileScannerResultOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread is interrupted.
+	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
 	void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException;

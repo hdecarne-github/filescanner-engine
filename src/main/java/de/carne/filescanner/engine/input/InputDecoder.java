@@ -52,6 +52,24 @@ public abstract class InputDecoder {
 	}
 
 	/**
+	 * Creates an {@linkplain InputDecoder} instance for an unsupported encoding format that fails with a corresponding
+	 * error message.
+	 * 
+	 * @param name the name of the unsupported encoding format.
+	 * @return the created {@linkplain InputDecoder} instance.
+	 */
+	public static InputDecoder unsupportedInputDecoder(String name) {
+		return new InputDecoder(name) {
+
+			@Override
+			public Decoder newDecoder() throws IOException {
+				throw new IOException("Unsupported encoding format: " + name());
+			}
+
+		};
+	}
+
+	/**
 	 * Gets this decoder's name.
 	 *
 	 * @return this decoder's name.
@@ -64,8 +82,9 @@ public abstract class InputDecoder {
 	 * Gets a new {@linkplain Decoder} instance for input decoding.
 	 *
 	 * @return a new {@linkplain Decoder} instance for input decoding.
+	 * @throws IOException if an I/O error occurs.
 	 */
-	public abstract Decoder newDecoder();
+	public abstract Decoder newDecoder() throws IOException;
 
 	/**
 	 * Renders detailed decoder informations (if available).

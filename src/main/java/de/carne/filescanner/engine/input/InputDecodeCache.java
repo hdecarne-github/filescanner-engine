@@ -28,7 +28,6 @@ import java.nio.file.StandardOpenOption;
 import de.carne.boot.check.Nullable;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.nio.compression.CompressionException;
 import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;
 import de.carne.nio.file.attribute.FileAttributes;
@@ -120,13 +119,12 @@ public final class InputDecodeCache implements Closeable {
 					decodedInputEnd += this.cacheFileChannel.write(buffer);
 					buffer.rewind();
 				}
-			} catch (CompressionException e) {
+			} catch (IOException e) {
 				decodeException = e;
 			}
 			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedInputStart, decodedInputStart,
 					decodedInputEnd);
 		}
-
 		return new Decoded(decodedInput, encodedSize, decodeException);
 	}
 
@@ -144,13 +142,13 @@ public final class InputDecodeCache implements Closeable {
 	 */
 	public static class Decoded {
 
-		private final FileScannerInput input;
+		private final FileScannerInput decodedInput;
 		private final long encodedSize;
 		@Nullable
 		private final Throwable decodeException;
 
-		Decoded(FileScannerInput input, long encodedSize, @Nullable Throwable decodeException) {
-			this.input = input;
+		Decoded(FileScannerInput decodedInput, long encodedSize, @Nullable Throwable decodeException) {
+			this.decodedInput = decodedInput;
 			this.encodedSize = encodedSize;
 			this.decodeException = decodeException;
 		}
@@ -160,8 +158,8 @@ public final class InputDecodeCache implements Closeable {
 		 *
 		 * @return the {@linkplain FileScannerInput} instance providing access to the decoded input stream.
 		 */
-		public FileScannerInput input() {
-			return this.input;
+		public FileScannerInput decodedInput() {
+			return this.decodedInput;
 		}
 
 		/**

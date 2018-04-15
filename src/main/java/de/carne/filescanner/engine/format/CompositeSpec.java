@@ -21,6 +21,8 @@ import java.util.function.Supplier;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -87,6 +89,23 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public abstract void decodeComposite(FileScannerResultDecodeContext context)
+			throws IOException, InterruptedException;
+
+	@Override
+	public final void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+			throws IOException, InterruptedException {
+		context.render(out, this);
+	}
+
+	/**
+	 * Renders this {@linkplain CompositeSpec} instance.
+	 *
+	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the render thread has been interrupted.
+	 */
+	public abstract void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException;
 
 }

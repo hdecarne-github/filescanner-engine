@@ -144,7 +144,13 @@ public final class FileScanner implements Closeable {
 		return this.inputDecodeCache.decodeInput(name, inputDecoder, input, start, end);
 	}
 
-	void onScanResultCommit(FileScannerResult scanResult) {
+	void queueInputResults(Collection<FileScannerResultBuilder> inputResults) {
+		for (FileScannerResultBuilder inputResult : inputResults) {
+			queueScanTask(() -> scanInput(inputResult));
+		}
+	}
+
+	void onScanResultCommit(FileScannerResultBuilder scanResult) {
 		callStatus(() -> this.status.scanResult(this, scanResult));
 	}
 

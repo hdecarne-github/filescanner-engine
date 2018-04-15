@@ -70,6 +70,11 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		return new InputResultBuilder(null, input.range(0, input.size()));
 	}
 
+	public static FileScannerResultBuilder inputResult(FileScannerResultBuilder parent, FileScannerInput input)
+			throws IOException {
+		return new InputResultBuilder(parent, input.range(0, input.size()));
+	}
+
 	public static FileScannerResultBuilder formatResult(FileScannerResultBuilder parent, CompositeSpec formatSpec,
 			FileScannerInputRange inputRange, long start) {
 		return new FormatResultBuilder(parent, formatSpec, inputRange, start);
@@ -140,12 +145,19 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		if (this.currentState.end() < commitPosition) {
 			modifyState().updateEnd(commitPosition);
 		}
-		if (!this.currentState.equals(this.committedState)) {
+		if (!this.currentState.equals(this.committedState) && this.start < this.currentState.end()) {
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
 			this.committedState = this.currentState;
-			if (this.type == Type.FORMAT) {
-				commitResult = parent().updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
+
+			FileScannerResultBuilder checkedParent = this.parent;
+
+			if (checkedParent != null) {
+				if (this.type != Type.INPUT) {
+					commitResult = checkedParent.updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
+				} else {
+					checkedParent.updateAndCommitParent(-1, this, true, false);
+				}
 			}
 		}
 		return commitResult;
@@ -156,7 +168,11 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		FileScannerResultBuilder commitResult = commitChild;
 
 		if (addChild) {
-			modifyState().updateEnd(commitPosition).addChild(commitChild);
+			if (this.type == Type.FORMAT) {
+				modifyState().updateEnd(commitPosition).addChild(commitChild);
+			} else {
+				modifyState().addChild(commitChild);
+			}
 		} else if (this.currentState.end() < commitPosition) {
 			modifyState().updateEnd(commitPosition);
 		}
@@ -164,7 +180,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
 			this.committedState = this.currentState;
-			if (this.type == Type.FORMAT) {
+			if (this.type != Type.INPUT) {
 				commitResult = parent().updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
 			} else {
 				commitResult = this;
@@ -291,7 +307,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			throw new IllegalStateException("Cannot get value from input result '" + this + "'");
+			throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
 		}
 
 	}
@@ -308,9 +324,9 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
-			FileScannerResultRenderContext context = new FileScannerResultRenderContext(input().range(start(), end()));
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
-			context.render(out, this.formatSpec);
+			this.formatSpec.render(out, context);
 			if (out.isEmpty()) {
 				super.render(out);
 			}
@@ -349,7 +365,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
 			super.render(out);
 
-			FileScannerResultRenderContext context = new FileScannerResultRenderContext(input().range(start(), end()));
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
 			context.render(out, this.encodedInputSpec);
 		}
@@ -361,7 +377,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			throw new IllegalStateException("Cannot get value from encoded input result '" + this + "'");
+			throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
 		}
 
 	}

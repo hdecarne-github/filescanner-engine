@@ -45,17 +45,20 @@ public abstract class FileScannerResultContext {
 	 * Runs the submitted {@linkplain FileScannerRunnable} within this {@linkplain FileScannerResultContext} instance.
 	 *
 	 * @param runnable the {@linkplain FileScannerRunnable} to run.
+	 * @param recursive whether to perform recursive calls ({@code true}) or not ({@code false}).
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	protected void run(FileScannerRunnable runnable) throws IOException, InterruptedException {
+	protected void run(FileScannerRunnable runnable, boolean recursive) throws IOException, InterruptedException {
 		FileScannerResultContext previousContext = CONTEXT.get();
 
-		CONTEXT.set(this);
-		try {
-			runnable.run();
-		} finally {
-			CONTEXT.set(previousContext);
+		if (previousContext == null || recursive) {
+			CONTEXT.set(this);
+			try {
+				runnable.run();
+			} finally {
+				CONTEXT.set(previousContext);
+			}
 		}
 	}
 

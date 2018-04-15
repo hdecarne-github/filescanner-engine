@@ -60,7 +60,7 @@ public class VArraySpec extends CompositeSpec {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 

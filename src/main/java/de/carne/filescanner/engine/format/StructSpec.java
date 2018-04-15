@@ -91,7 +91,7 @@ public class StructSpec extends CompositeSpec {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		for (FormatSpec element : this.elements) {
 			element.render(out, context);

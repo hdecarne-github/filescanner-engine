@@ -17,11 +17,13 @@
 package de.carne.filescanner.provider.zip;
 
 import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.format.FixedStringSpec;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.format.WordSpec;
+import de.carne.filescanner.engine.input.InputDecoder;
 
 final class ZipFormatSpecs {
 
@@ -34,6 +36,7 @@ final class ZipFormatSpecs {
 
 	// Format specs
 	static final StructSpec LOCAL_FILE_HEADER;
+	static final WordSpec LFH_COMPRESSION_METHOD = new WordSpec("compression method");
 	static final WordSpec LFH_FILE_NAME_LENGTH = new WordSpec("file name length");
 	static final WordSpec LFH_EXTRA_FIELD_LENGTH = new WordSpec("extra field length");
 	static final FixedStringSpec LFH_FILE_NAME = new FixedStringSpec("file name");
@@ -45,7 +48,7 @@ final class ZipFormatSpecs {
 		lfh.add(new DWordSpec("local file header signature").format(HexFormat.INT_FORMATTER).validate(0x04034b50));
 		lfh.add(new WordSpec("version needed to extract").format(HexFormat.SHORT_FORMATTER));
 		lfh.add(new WordSpec("general purpose bit flag").format(HexFormat.SHORT_FORMATTER));
-		lfh.add(new WordSpec("compression method").format(HexFormat.SHORT_FORMATTER));
+		lfh.add(LFH_COMPRESSION_METHOD.format(HexFormat.SHORT_FORMATTER));
 		lfh.add(new WordSpec("last mod file time").format(HexFormat.SHORT_FORMATTER));
 		lfh.add(new WordSpec("last mod file date").format(HexFormat.SHORT_FORMATTER));
 		lfh.add(new DWordSpec("crc-32").format(HexFormat.INT_FORMATTER));
@@ -54,7 +57,6 @@ final class ZipFormatSpecs {
 		lfh.add(LFH_FILE_NAME_LENGTH.format(HexFormat.SHORT_FORMATTER).bind());
 		lfh.add(LFH_EXTRA_FIELD_LENGTH.format(HexFormat.SHORT_FORMATTER).bind());
 		lfh.add(LFH_FILE_NAME.size(LFH_FILE_NAME_LENGTH));
-		lfh.add(FormatSpecs.COMMIT);
 		LOCAL_FILE_HEADER = lfh;
 	}
 
@@ -65,6 +67,9 @@ final class ZipFormatSpecs {
 
 		zipEntry.result(() -> String.format("Zip entry [%1$s]", LFH_FILE_NAME.get()));
 		zipEntry.add(LOCAL_FILE_HEADER);
+		zipEntry.add(new EncodedInputSpec("file data").inputDecoder(ZipFormatSpecs::getInputDecoder)
+				.decodedInputName(LFH_FILE_NAME));
+		zipEntry.add(FormatSpecs.COMMIT);
 		ZIP_ENTRY = zipEntry;
 	}
 
@@ -80,7 +85,26 @@ final class ZipFormatSpecs {
 
 	// Setup result scoped bindings
 	static {
+		LFH_COMPRESSION_METHOD.bind(ZIP_ENTRY);
 		LFH_FILE_NAME.bind(ZIP_ENTRY);
+	}
+
+	private static InputDecoder getInputDecoder() {
+		short compressionMethod = LFH_COMPRESSION_METHOD.get();
+		InputDecoder inputDecoder;
+
+		switch (compressionMethod) {
+		case 0x00:
+			inputDecoder = InputDecoder.NONE;
+			break;
+		case 0x08:
+			inputDecoder = DeflatedInputDecoder.INSTANCE;
+			break;
+		default:
+			inputDecoder = InputDecoder
+					.unsupportedInputDecoder("ZIP compression method " + HexFormat.formatShort(compressionMethod));
+		}
+		return inputDecoder;
 	}
 
 }

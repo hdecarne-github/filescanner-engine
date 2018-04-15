@@ -26,7 +26,6 @@ import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
-import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 
 /**
@@ -37,14 +36,11 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	private static final Log LOG = new Log();
 
 	private final Map<Object, Object> contextValues = new HashMap<>();
+	private final FileScannerResultBuilder result;
 
-	/**
-	 * Constructs a new {@linkplain FileScannerResultRenderContext} instance.
-	 *
-	 * @param inputRange the {@linkplain FileScannerInputRange} to read from.
-	 */
-	public FileScannerResultRenderContext(FileScannerInputRange inputRange) {
-		super(inputRange, inputRange.start());
+	FileScannerResultRenderContext(FileScannerResultBuilder result) throws IOException {
+		super(result.input().range(result.start(), result.end()), result.start());
+		this.result = result;
 	}
 
 	/**
@@ -58,7 +54,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	public void render(FileScannerResultOutput out, CompositeSpec formatSpec) throws IOException, InterruptedException {
 		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
-		run(() -> formatSpec.render(out, this));
+		run(() -> formatSpec.renderComposite(out, this), false);
 	}
 
 	/**
@@ -73,7 +69,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 			throws IOException, InterruptedException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
-		run(() -> encodedInputSpec.render(out, this));
+		run(() -> encodedInputSpec.render(out, this), false);
 	}
 
 	/**
@@ -92,7 +88,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 		Object value = this.contextValues.get(attributeSpec);
 
 		if (value == null) {
-			throw new IllegalStateException("Failed to retrieve context attribute '" + attributeSpec + "'");
+			value = this.result.getValue(attributeSpec, true);
 		}
 		return Check.isInstanceOf(value, attributeSpec.type());
 	}
