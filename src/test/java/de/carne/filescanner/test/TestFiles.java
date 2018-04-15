@@ -78,30 +78,30 @@ public final class TestFiles {
 	}
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr-1.0.0.zip
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip
 	 */
 	public static final TestFile ZIP_ARCHIVE = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr-1.0.0.zip", "certmgr-1.0.0.zip");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip", "certmgr-1.1.0.zip");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_windows_1_0_0.exe
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_windows_1_0_0.exe",
-			"certmgr_windows_1_0_0.exe");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe",
+			"certmgr_windows_1_1_0.exe");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_windows-x64_1_0_0.exe
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows-x64_1_1_0.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS64 = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_windows-x64_1_0_0.exe",
-			"certmgr_windows-x64_1_0_0.exe");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows-x64_1_1_0.exe",
+			"certmgr_windows-x64_1_1_0.exe");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_macos_1_0_0.dmg
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg
 	 */
 	public static final TestFile I4J_INSTALLER_MACOS = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.0.0/certmgr_macos_1_0_0.dmg",
-			"certmgr_macos_1_0_0.dmg");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg",
+			"certmgr_macos_1_1_0.dmg");
 
 }

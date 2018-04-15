@@ -116,7 +116,7 @@ public final class FileScanner implements Closeable {
 						break;
 					}
 					LOG.info("Format ''{0}'' failed to decode input", format.name());
-				} catch (FormatDecodeException | RuntimeException e) {
+				} catch (FormatDecodeException e) {
 					LOG.warning(e, "Format ''{0}'' failed to decode input", format.name());
 				}
 			}

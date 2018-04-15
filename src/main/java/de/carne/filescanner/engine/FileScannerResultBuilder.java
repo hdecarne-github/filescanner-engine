@@ -273,7 +273,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		public CommitState addChild(FileScannerResultBuilder commitChild) {
 			this.children.add(commitChild);
-			return updateEnd(commitChild.end());
+			return (commitChild.type() != FileScannerResult.Type.INPUT ? updateEnd(commitChild.end()) : this);
 		}
 
 		public List<FileScannerResultBuilder> getChildren() {

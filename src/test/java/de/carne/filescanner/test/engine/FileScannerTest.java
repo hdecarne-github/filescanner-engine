@@ -134,7 +134,7 @@ class FileScannerTest {
 		Assertions.assertTrue(elapsedNanos >= 0);
 		Assertions.assertTrue(progress.scanTimeNanos() >= 0);
 		Assertions.assertTrue(elapsedNanos >= progress.scanTimeNanos());
-		Assertions.assertEquals(Files.size(file), progress.totalInputBytes());
+		Assertions.assertTrue(Files.size(file) <= progress.totalInputBytes());
 		Assertions.assertEquals(progress.totalInputBytes(), progress.scannedBytes());
 		Assertions.assertEquals(100, progress.scanProgress());
 		Assertions.assertTrue(progress.scanRate() >= -1);

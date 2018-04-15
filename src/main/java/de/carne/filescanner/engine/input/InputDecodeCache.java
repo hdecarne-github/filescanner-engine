@@ -47,7 +47,7 @@ public final class InputDecodeCache implements Closeable {
 	public static final int DECODE_BUFFER_SIZE;
 
 	static {
-		int defaultDecodeBufferSize = 0x1000;
+		int defaultDecodeBufferSize = 0x10000;
 		int decodeBufferSize = SystemProperties.intValue(InputDecodeCache.class, ".decodeBufferSize",
 				defaultDecodeBufferSize);
 		if (decodeBufferSize <= 0) {
@@ -61,7 +61,7 @@ public final class InputDecodeCache implements Closeable {
 	private final Path cacheFilePath;
 	private final FileChannel cacheFileChannel;
 	private final FileScannerInput cacheFileInput;
-	private long cacheSize = 0;
+	private long cacheExtent = 0;
 
 	/**
 	 * Constructs a new {@linkplain InputDecodeCache} instance.
@@ -104,9 +104,9 @@ public final class InputDecodeCache implements Closeable {
 			encodedSize = end - start;
 			decodedInput = new FileScannerInputRange(name, input, start, start, end);
 		} else {
-			this.cacheFileChannel.position(this.cacheSize);
+			this.cacheFileChannel.position(this.cacheExtent);
 
-			long decodedInputStart = this.cacheSize;
+			long decodedInputStart = this.cacheExtent;
 			long decodedInputEnd = decodedInputStart;
 
 			try (ReadableByteChannel inputByteChannel = input.byteChannel(start, end)) {
@@ -120,10 +120,12 @@ public final class InputDecodeCache implements Closeable {
 					decodedInputEnd += this.cacheFileChannel.write(buffer);
 					buffer.rewind();
 				}
+			} catch (IOException e) {
+				throw new InputDecoderException(inputDecoder, e);
 			}
 			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedInputStart, decodedInputStart,
 					decodedInputEnd);
-			this.cacheSize = decodedInputEnd;
+			this.cacheExtent = decodedInputEnd;
 		}
 		return new Decoded(decodedInput, encodedSize);
 	}

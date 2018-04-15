@@ -121,15 +121,15 @@ public class BufferedFileScannerInput extends FileScannerInput {
 		}
 
 		private ByteBuffer read0(FileScannerInput input, long position, int size) throws IOException {
-			ByteBuffer buffer = feedBuffer(input, position, size);
+			ByteBuffer buffer = mapBuffer(input, position, size);
 			ByteBuffer readBuffer = buffer.slice().asReadOnlyBuffer();
 
-			readBuffer.position((int) (position - this.bufferPosition));
-			readBuffer.limit(Math.min(readBuffer.remaining(), (int) (position + size - this.bufferPosition)));
+			readBuffer.limit(Math.min(readBuffer.remaining(), (int) (position - this.bufferPosition + size)));
+			readBuffer.position(Math.min(readBuffer.limit(), (int) (position - this.bufferPosition)));
 			return readBuffer;
 		}
 
-		private ByteBuffer feedBuffer(FileScannerInput input, long position, int size) throws IOException {
+		private ByteBuffer mapBuffer(FileScannerInput input, long position, int size) throws IOException {
 			ByteBuffer buffer = this.bufferReference.get();
 
 			if (buffer == null) {
@@ -141,7 +141,8 @@ public class BufferedFileScannerInput extends FileScannerInput {
 				buffer.flip();
 				this.bufferPosition = newBufferPosition;
 				this.bufferReference = new SoftReference<>(buffer);
-			} else if (position < this.bufferPosition || (this.bufferPosition + BUFFER_SIZE) < (position + size)) {
+			} else if (position < this.bufferPosition
+					|| (this.bufferPosition + buffer.capacity()) < (position + size)) {
 				long newBufferPosition = position & ~((BUFFER_SIZE >> 1) - 1);
 
 				input.read(buffer, newBufferPosition);
