@@ -25,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import de.carne.boot.check.Nullable;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.nio.compression.spi.Decoder;
@@ -62,6 +61,7 @@ public final class InputDecodeCache implements Closeable {
 	private final Path cacheFilePath;
 	private final FileChannel cacheFileChannel;
 	private final FileScannerInput cacheFileInput;
+	private long cacheSize = 0;
 
 	/**
 	 * Constructs a new {@linkplain InputDecodeCache} instance.
@@ -98,14 +98,15 @@ public final class InputDecodeCache implements Closeable {
 	public synchronized Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
 			long end) throws IOException, InterruptedException {
 		long encodedSize = 0;
-		Throwable decodeException = null;
 		FileScannerInput decodedInput;
 
 		if (InputDecoder.NONE.equals(inputDecoder)) {
 			encodedSize = end - start;
 			decodedInput = new FileScannerInputRange(name, input, start, start, end);
 		} else {
-			long decodedInputStart = this.cacheFileInput.size();
+			this.cacheFileChannel.position(this.cacheSize);
+
+			long decodedInputStart = this.cacheSize;
 			long decodedInputEnd = decodedInputStart;
 
 			try (ReadableByteChannel inputByteChannel = input.byteChannel(start, end)) {
@@ -119,13 +120,12 @@ public final class InputDecodeCache implements Closeable {
 					decodedInputEnd += this.cacheFileChannel.write(buffer);
 					buffer.rewind();
 				}
-			} catch (IOException e) {
-				decodeException = e;
 			}
 			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedInputStart, decodedInputStart,
 					decodedInputEnd);
+			this.cacheSize = decodedInputEnd;
 		}
-		return new Decoded(decodedInput, encodedSize, decodeException);
+		return new Decoded(decodedInput, encodedSize);
 	}
 
 	@Override
@@ -144,13 +144,10 @@ public final class InputDecodeCache implements Closeable {
 
 		private final FileScannerInput decodedInput;
 		private final long encodedSize;
-		@Nullable
-		private final Throwable decodeException;
 
-		Decoded(FileScannerInput decodedInput, long encodedSize, @Nullable Throwable decodeException) {
+		Decoded(FileScannerInput decodedInput, long encodedSize) {
 			this.decodedInput = decodedInput;
 			this.encodedSize = encodedSize;
-			this.decodeException = decodeException;
 		}
 
 		/**
@@ -171,15 +168,6 @@ public final class InputDecodeCache implements Closeable {
 			return this.encodedSize;
 		}
 
-		/**
-		 * Gets a possibly encountered decode exception.
-		 *
-		 * @return a possibly encountered decode exception or {@code null} if no exception occurred.
-		 */
-		@Nullable
-		public Throwable decodeException() {
-			return this.decodeException;
-		}
 	}
 
 }

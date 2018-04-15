@@ -132,7 +132,10 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		InputDecodeCache.Decoded decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
 				encodedInputSpec.inputDecoder().get(), inputRange(), decodeStart, decodeEnd);
-		long commitPosition = decodeStart + decoded.encodedSize();
+		long commitPosition = Math.max(encodedInputSize, decodeStart + decoded.encodedSize());
+
+		setPosition(commitPosition);
+
 		FileScannerInput decodedInput = decoded.decodedInput();
 
 		if (decodedInput.size() > 0) {
@@ -141,7 +144,6 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 			this.pendingInputResults.add(decodedInputResult);
 		}
-		setPosition(commitPosition);
 		decodeResult.updateAndCommit(commitPosition, false);
 		return decodeResult;
 	}
@@ -194,9 +196,11 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	public void commit() {
 		FileScannerResultBuilder commitResult = this.decodeStack.peek().builder().updateAndCommit(position(), true);
 
-		this.fileScanner.onScanResultCommit(commitResult);
-		this.fileScanner.queueInputResults(this.pendingInputResults);
-		this.pendingInputResults.clear();
+		if (commitResult != null) {
+			this.fileScanner.onScanResultCommit(commitResult);
+			this.fileScanner.queueInputResults(this.pendingInputResults);
+			this.pendingInputResults.clear();
+		}
 	}
 
 	private static final class Scope {

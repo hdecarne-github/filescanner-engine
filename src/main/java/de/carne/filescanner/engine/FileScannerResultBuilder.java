@@ -139,13 +139,17 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
 
+	@Nullable
 	public synchronized FileScannerResultBuilder updateAndCommit(long commitPosition, boolean fullCommit) {
-		FileScannerResultBuilder commitResult = this;
+		FileScannerResultBuilder commitResult = null;
 
 		if (this.currentState.end() < commitPosition) {
+			commitResult = this;
 			modifyState().updateEnd(commitPosition);
 		}
 		if (!this.currentState.equals(this.committedState) && this.start < this.currentState.end()) {
+			commitResult = this;
+
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
 			this.committedState = this.currentState;

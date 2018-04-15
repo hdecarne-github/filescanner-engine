@@ -54,7 +54,7 @@ public abstract class InputDecoder {
 	/**
 	 * Creates an {@linkplain InputDecoder} instance for an unsupported encoding format that fails with a corresponding
 	 * error message.
-	 * 
+	 *
 	 * @param name the name of the unsupported encoding format.
 	 * @return the created {@linkplain InputDecoder} instance.
 	 */
