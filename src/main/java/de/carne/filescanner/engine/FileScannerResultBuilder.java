@@ -51,6 +51,8 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private final long start;
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
+	@Nullable
+	private Object data = null;
 
 	protected FileScannerResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerResult.Type type,
 			FileScannerInputRange inputRange, Supplier<String> name) {
@@ -116,8 +118,26 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public synchronized List<FileScannerResult> children() {
-		return new ArrayList<>(this.committedState.getChildren());
+	public synchronized int childrenCount() {
+		return this.committedState.getChildren().size();
+	}
+
+	@Override
+	public synchronized FileScannerResult[] children() {
+		List<FileScannerResultBuilder> children = this.committedState.getChildren();
+
+		return children.toArray(new FileScannerResult[children.size()]);
+	}
+
+	@Override
+	public synchronized void setData(Object data) {
+		this.data = data;
+	}
+
+	@Override
+	@Nullable
+	public synchronized Object getData() {
+		return this.data;
 	}
 
 	protected FileScannerResultBuilder parent() {
@@ -152,7 +172,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
-			this.committedState = this.currentState;
+			this.committedState = this.currentState.commit();
 
 			FileScannerResultBuilder checkedParent = this.parent;
 
@@ -183,7 +203,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		if (fullCommit && !this.currentState.equals(this.committedState)) {
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
-			this.committedState = this.currentState;
+			this.committedState = this.currentState.commit();
 			if (this.type != Type.INPUT) {
 				commitResult = parent().updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
 			} else {
@@ -237,7 +257,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static final class CommitState {
 
-		private final Supplier<String> name;
+		private Supplier<String> name;
 		private long end;
 		private final List<FileScannerResultBuilder> children = new ArrayList<>();
 		private final Map<Object, Object> values = new HashMap<>();
@@ -256,6 +276,11 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			this.end = state.end;
 			this.children.addAll(state.children);
 			this.values.putAll(state.values);
+		}
+
+		public CommitState commit() {
+			this.name = FinalSupplier.of(this.name.get());
+			return this;
 		}
 
 		public Supplier<String> name() {

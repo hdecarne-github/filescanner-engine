@@ -17,8 +17,8 @@
 package de.carne.filescanner.engine;
 
 import java.io.IOException;
-import java.util.List;
 
+import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 
@@ -108,11 +108,18 @@ public interface FileScannerResult {
 	long size();
 
 	/**
+	 * Gets this {@linkplain FileScannerResult} children result count.
+	 *
+	 * @return this {@linkplain FileScannerResult} children result count.
+	 */
+	int childrenCount();
+
+	/**
 	 * Gets this {@linkplain FileScannerResult} children results.
 	 *
 	 * @return this {@linkplain FileScannerResult} children results.
 	 */
-	List<FileScannerResult> children();
+	FileScannerResult[] children();
 
 	/**
 	 * Renders this {@linkplain FileScannerResult}.
@@ -122,5 +129,20 @@ public interface FileScannerResult {
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	void render(FileScannerResultOutput out) throws IOException, InterruptedException;
+
+	/**
+	 * Sets the custom data object associated with this {@linkplain FileScannerResult}.
+	 *
+	 * @param data the data object to set.
+	 */
+	void setData(Object data);
+
+	/**
+	 * Gets the previously set custom data object associated with this {@linkplain FileScannerResult}.
+	 *
+	 * @return the previously set custom data object associated with this {@linkplain FileScannerResult}.
+	 */
+	@Nullable
+	Object getData();
 
 }

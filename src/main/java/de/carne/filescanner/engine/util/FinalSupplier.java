@@ -35,6 +35,7 @@ public class FinalSupplier<T> implements Supplier<T> {
 	/**
 	 * Wrap the given value in a {@linkplain FinalSupplier} instance.
 	 *
+	 * @param <T> the type to wrap.
 	 * @param value the value to wrap.
 	 * @return the created {@linkplain FinalSupplier} instance.
 	 */

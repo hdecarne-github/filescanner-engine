@@ -72,17 +72,24 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		FileScannerResultBuilder decodeResult = this.decodeStack.peek().builder();
 
 		if (isResultSpec) {
-			decodeResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec, inputRange(), position());
-			this.decodeStack.push(new Scope(decodeResult));
+			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec,
+					inputRange(), position());
+
+			this.decodeStack.push(new Scope(formatSpecResult));
 			try {
-				run(() -> formatSpec.decodeComposite(this), true);
-				if (this.decodeStack.size() > 2) {
-					decodeResult.updateAndCommit(position(), false);
-				} else {
-					commit();
+				boolean fullCommit = this.decodeStack.size() <= 2;
+
+				run(() -> {
+					formatSpec.decodeComposite(this);
+					if (!fullCommit) {
+						formatSpecResult.updateAndCommit(position(), false);
+					}
+				}, true);
+				if (fullCommit) {
+					commit(formatSpecResult);
 				}
 			} finally {
-				this.decodeStack.pop();
+				decodeResult = this.decodeStack.pop().builder();
 			}
 		} else {
 			formatSpec.decodeComposite(this);
@@ -194,7 +201,11 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * {@linkplain FileScanner} user.
 	 */
 	public void commit() {
-		FileScannerResultBuilder commitResult = this.decodeStack.peek().builder().updateAndCommit(position(), true);
+		commit(this.decodeStack.peek().builder());
+	}
+
+	private void commit(FileScannerResultBuilder result) {
+		FileScannerResultBuilder commitResult = result.updateAndCommit(position(), true);
 
 		if (commitResult != null) {
 			this.fileScanner.onScanResultCommit(commitResult);
