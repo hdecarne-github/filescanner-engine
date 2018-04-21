@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.engine.transfer;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 /**
@@ -38,7 +39,7 @@ public class PrintStreamRenderer implements Renderer {
 	}
 
 	@Override
-	public void emitText(RenderStyle style, String text, boolean lineBreak) {
+	public void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException, InterruptedException {
 		if (lineBreak) {
 			this.ps.println(text);
 		} else {
