@@ -406,7 +406,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
+			return parent().getValue(attribute, committed);
 		}
 
 	}
