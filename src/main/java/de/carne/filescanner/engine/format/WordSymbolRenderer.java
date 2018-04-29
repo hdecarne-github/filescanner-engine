@@ -17,19 +17,11 @@
 package de.carne.filescanner.engine.format;
 
 /**
- * Format function for {@linkplain AttributeSpec} elements.
- *
- * @param <T> the actual attribute value type.
+ * Word attribute {@linkplain SymbolRenderer}.
  */
-@FunctionalInterface
-public interface AttributeFormatter<T> {
+public class WordSymbolRenderer extends SymbolRenderer<Short> {
 
-	/**
-	 * Formats an attribute value.
-	 *
-	 * @param value the value to format.
-	 * @return the formatted attribute value.
-	 */
-	String format(T value);
+	// Serialization support
+	private static final long serialVersionUID = -7293816496603694799L;
 
 }

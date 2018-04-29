@@ -240,7 +240,7 @@ public final class FileScanner implements Closeable {
 
 			this.scanTimeNanos = currentNanos - this.scanStartedNanos;
 			if (totalInputBytesDelta > 0 || this.scannedBytes == this.totalInputBytes
-					|| (this.scanTimeNanos - this.lastProgressTimeNanos > 500000000l)) {
+					|| (this.scanTimeNanos - this.lastProgressTimeNanos > 700000000l)) {
 				this.lastProgressTimeNanos = this.scanTimeNanos;
 				reportProgress = new FileScannerProgress(this.scanStartedNanos, this.scanTimeNanos, this.scannedBytes,
 						this.totalInputBytes);

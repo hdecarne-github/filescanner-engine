@@ -18,8 +18,6 @@ package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
@@ -28,39 +26,38 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 /**
  *
  */
-public class FixedStringSpec extends AttributeSpec<String> {
+public class ByteArraySpec extends AttributeSpec<byte[]> {
 
 	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
-	private Supplier<Charset> charset = FinalSupplier.of(StandardCharsets.US_ASCII);
 
 	/**
-	 * Constructs a new {@linkplain FixedStringSpec} instance.
+	 * Constructs a new {@linkplain ByteArraySpec} instance.
 	 *
 	 * @param name the attribute's name.
 	 */
-	public FixedStringSpec(Supplier<String> name) {
-		super(String.class, name);
-		format(PrettyFormat.STRING_FORMATTER);
+	public ByteArraySpec(Supplier<String> name) {
+		super(byte[].class, name);
+		format(HexFormat.BYTES_FORMATTER);
 	}
 
 	/**
-	 * Constructs a new {@linkplain FixedStringSpec} instance.
+	 * Constructs a new {@linkplain ByteArraySpec} instance.
 	 *
 	 * @param name The attribute's name.
 	 */
-	public FixedStringSpec(String name) {
-		super(String.class, name);
-		format(PrettyFormat.STRING_FORMATTER);
+	public ByteArraySpec(String name) {
+		super(byte[].class, name);
+		format(HexFormat.BYTES_FORMATTER);
 	}
 
 	/**
 	 * Sets the size (in bytes) of this {@linkplain String} attribute.
 	 *
 	 * @param sizeSupplier the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec size(Supplier<? extends Number> sizeSupplier) {
+	public ByteArraySpec size(Supplier<? extends Number> sizeSupplier) {
 		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
@@ -70,33 +67,11 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 * Sets the size (in bytes) of this {@linkplain String} attribute.
 	 *
 	 * @param sizeValue the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec size(int sizeValue) {
+	public ByteArraySpec size(int sizeValue) {
 		this.fixedSize = true;
 		this.size = Integer.valueOf(sizeValue)::intValue;
-		return this;
-	}
-
-	/**
-	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
-	 *
-	 * @param charsetSupplier the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
-	 */
-	public FixedStringSpec charset(Supplier<Charset> charsetSupplier) {
-		this.charset = charsetSupplier;
-		return this;
-	}
-
-	/**
-	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
-	 *
-	 * @param charsetValue the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
-	 */
-	public FixedStringSpec charset(Charset charsetValue) {
-		this.charset = () -> charsetValue;
 		return this;
 	}
 
@@ -117,16 +92,22 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	}
 
 	@Override
-	protected String decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException {
+	protected byte[] decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException {
 		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 
-	private String decodeValue(ByteBuffer buffer) {
+	private byte[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
 		slice.limit(this.size.get().intValue());
 
-		String value = this.charset.get().decode(slice).toString();
+		byte[] value = new byte[slice.remaining()];
+		int valueIndex = 0;
+
+		while (slice.hasRemaining()) {
+			value[valueIndex] = slice.get();
+			valueIndex++;
+		}
 
 		buffer.position(buffer.position() + slice.position());
 		return value;

@@ -250,7 +250,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(end()));
 		out.setStyle(RenderStyle.NORMAL).write("size");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).write(" byte(s)");
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size()));
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
 				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
 	}
@@ -321,10 +321,10 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
 			out.setStyle(RenderStyle.NORMAL).write("file");
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).writeln("'" + input().name() + "'");
+			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input().name()));
 			out.setStyle(RenderStyle.NORMAL).write("size");
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size())).write(" byte(s)");
+			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size()));
 			out.setStyle(RenderStyle.COMMENT).write(" // ")
 					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
 		}

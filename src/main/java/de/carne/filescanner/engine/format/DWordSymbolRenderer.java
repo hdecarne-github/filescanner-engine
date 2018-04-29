@@ -17,19 +17,11 @@
 package de.carne.filescanner.engine.format;
 
 /**
- * Format function for {@linkplain AttributeSpec} elements.
- *
- * @param <T> the actual attribute value type.
+ * Double word attribute {@linkplain SymbolRenderer}.
  */
-@FunctionalInterface
-public interface AttributeFormatter<T> {
+public class DWordSymbolRenderer extends SymbolRenderer<Integer> {
 
-	/**
-	 * Formats an attribute value.
-	 *
-	 * @param value the value to format.
-	 * @return the formatted attribute value.
-	 */
-	String format(T value);
+	// Serialization support
+	private static final long serialVersionUID = 8051383114011052983L;
 
 }

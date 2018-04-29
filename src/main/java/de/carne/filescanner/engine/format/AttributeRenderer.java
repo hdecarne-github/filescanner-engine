@@ -16,20 +16,26 @@
  */
 package de.carne.filescanner.engine.format;
 
+import java.io.IOException;
+
+import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+
 /**
- * Format function for {@linkplain AttributeSpec} elements.
+ * Render function for {@linkplain AttributeSpec} elements.
  *
  * @param <T> the actual attribute value type.
  */
 @FunctionalInterface
-public interface AttributeFormatter<T> {
+public interface AttributeRenderer<T> {
 
 	/**
-	 * Formats an attribute value.
+	 * Renders an attribute value.
 	 *
-	 * @param value the value to format.
-	 * @return the formatted attribute value.
+	 * @param out the {@linkplain FileScannerResultOutput} buffer to render into.
+	 * @param value the value to render.
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	String format(T value);
+	void render(FileScannerResultOutput out, T value) throws IOException, InterruptedException;
 
 }

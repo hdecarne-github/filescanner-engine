@@ -30,6 +30,7 @@ import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -41,8 +42,9 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 
 	private final Class<T> type;
 	private final Supplier<String> name;
-	private final List<AttributeFormatter<T>> formatters = new ArrayList<>();
+	private AttributeFormatter<T> format = Object::toString;
 	private final List<AttributeValidator<T>> validators = new ArrayList<>();
+	private final List<AttributeRenderer<T>> renderers = new ArrayList<>();
 	private AttributeBindMode bindMode = AttributeBindMode.NONE;
 	@Nullable
 	private CompositeSpec bindScope = null;
@@ -88,24 +90,24 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	}
 
 	/**
-	 * Adds an attribute formatter.
+	 * Sets the attribute format.
 	 *
-	 * @param formatter the {@linkplain AttributeFormatter} to add.
+	 * @param formatter the {@linkplain AttributeFormatter} to set.
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> format(AttributeFormatter<T> formatter) {
-		this.formatters.add(formatter);
+		this.format = formatter;
 		return this;
 	}
 
 	/**
-	 * Adds an attribute formatter based upon the {@linkplain String#format(String, Object...)} function.
+	 * Sets the attribute format based upon the {@linkplain String#format(String, Object...)} function.
 	 *
-	 * @param format the format string to use for formatting.
+	 * @param formatter the format string to use for formatting.
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
-	public AttributeSpec<T> format(String format) {
-		return format((b, v) -> b.append(String.format(format, v)));
+	public AttributeSpec<T> format(String formatter) {
+		return format(value -> String.format(formatter, value));
 	}
 
 	/**
@@ -137,6 +139,17 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 */
 	public AttributeSpec<T> validate(Set<T> values) {
 		return validate(values::contains);
+	}
+
+	/**
+	 * Adds an attribute renderer.
+	 *
+	 * @param renderer the renderer to add.
+	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
+	 */
+	public AttributeSpec<T> renderer(AttributeRenderer<T> renderer) {
+		this.renderers.add(renderer);
+		return this;
 	}
 
 	/**
@@ -218,6 +231,13 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 		case RESULT:
 			break;
 		}
+		out.setStyle(RenderStyle.NORMAL).write(this.name.get());
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).write(this.format.format(value));
+		for (AttributeRenderer<T> renderer : this.renderers) {
+			renderer.render(out, value);
+		}
+		out.writeln();
 	}
 
 	@Override

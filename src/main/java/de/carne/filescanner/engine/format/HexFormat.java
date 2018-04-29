@@ -31,7 +31,7 @@ public final class HexFormat {
 	/**
 	 * Hexadecimal {@linkplain AttributeFormatter} for {@linkplain Byte} values..
 	 */
-	public static final AttributeFormatter<Byte> BYTE_FORMATTER = (b, v) -> formatByte(b, v.byteValue());
+	public static final AttributeFormatter<Byte> BYTE_FORMATTER = HexFormat::formatByte;
 
 	/**
 	 * Formats {@code byte} value to hexadecimal.
@@ -58,9 +58,42 @@ public final class HexFormat {
 	}
 
 	/**
+	 * Hexadecimal {@linkplain AttributeFormatter} for {@code byte[]} values..
+	 */
+	public static final AttributeFormatter<byte[]> BYTES_FORMATTER = HexFormat::formatBytes;
+
+	/**
+	 * Formats {@code byte[]} value to hexadecimal.
+	 *
+	 * @param buffer the {@linkplain StringBuilder} to format into.
+	 * @param value the value to format.
+	 * @return the updated {@linkplain StringBuilder} for chaining.
+	 */
+	public static StringBuilder formatBytes(StringBuilder buffer, byte[] value) {
+		buffer.append("{ ");
+		for (byte valueElement : value) {
+			buffer.append(HEX_CHARS[(valueElement >> 4) & 0xf]);
+			buffer.append(HEX_CHARS[valueElement & 0xf]);
+			buffer.append("h ");
+		}
+		buffer.append('}');
+		return buffer;
+	}
+
+	/**
+	 * Formats {@code byte[]} value to hexadecimal.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatBytes(byte[] value) {
+		return formatBytes(new StringBuilder(), value).toString();
+	}
+
+	/**
 	 * Hexadecimal {@linkplain AttributeFormatter} for {@linkplain Short} values..
 	 */
-	public static final AttributeFormatter<Short> SHORT_FORMATTER = (b, v) -> formatShort(b, v.shortValue());
+	public static final AttributeFormatter<Short> SHORT_FORMATTER = HexFormat::formatShort;
 
 	/**
 	 * Formats {@code short} value to hexadecimal.
@@ -91,7 +124,7 @@ public final class HexFormat {
 	/**
 	 * Hexadecimal {@linkplain AttributeFormatter} for {@linkplain Integer} values..
 	 */
-	public static final AttributeFormatter<Integer> INT_FORMATTER = (b, v) -> formatInt(b, v.intValue());
+	public static final AttributeFormatter<Integer> INT_FORMATTER = HexFormat::formatInt;
 
 	/**
 	 * Formats {@code int} value to hexadecimal.
@@ -126,7 +159,7 @@ public final class HexFormat {
 	/**
 	 * Hexadecimal {@linkplain AttributeFormatter} for {@linkplain Long} values..
 	 */
-	public static final AttributeFormatter<Long> LONG_FORMATTER = (b, v) -> formatLong(b, v.longValue());
+	public static final AttributeFormatter<Long> LONG_FORMATTER = HexFormat::formatLong;
 
 	/**
 	 * Formats {@code long} value to hexadecimal.

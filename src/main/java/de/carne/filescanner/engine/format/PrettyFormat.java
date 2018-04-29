@@ -28,6 +28,11 @@ public class PrettyFormat {
 	private static final String NUMBER_FORMAT = "%1$,d";
 
 	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain Byte} values..
+	 */
+	public static final AttributeFormatter<Byte> BYTE_FORMATTER = PrettyFormat::formatByteNumber;
+
+	/**
 	 * Formats a {@code byte} value.
 	 *
 	 * @param value the value to format.
@@ -36,6 +41,11 @@ public class PrettyFormat {
 	public static String formatByteNumber(byte value) {
 		return String.format(NUMBER_FORMAT, value);
 	}
+
+	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain Short} values..
+	 */
+	public static final AttributeFormatter<Short> SHORT_FORMATTER = PrettyFormat::formatShortNumber;
 
 	/**
 	 * Formats a {@code short} value.
@@ -48,6 +58,11 @@ public class PrettyFormat {
 	}
 
 	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain Integer} values..
+	 */
+	public static final AttributeFormatter<Integer> INT_FORMATTER = PrettyFormat::formatIntNumber;
+
+	/**
 	 * Formats a {@code int} value.
 	 *
 	 * @param value the value to format.
@@ -56,6 +71,11 @@ public class PrettyFormat {
 	public static String formatIntNumber(int value) {
 		return String.format(NUMBER_FORMAT, value);
 	}
+
+	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain Long} values..
+	 */
+	public static final AttributeFormatter<Long> LONG_FORMATTER = PrettyFormat::formatLongNumber;
 
 	/**
 	 * Formats a {@code long} value.
@@ -68,6 +88,11 @@ public class PrettyFormat {
 	}
 
 	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain String} values..
+	 */
+	public static final AttributeFormatter<String> STRING_FORMATTER = PrettyFormat::formatString;
+
+	/**
 	 * Formats {@code String} to it's quoted form.
 	 *
 	 * @param buffer the {@linkplain StringBuilder} to format into.
@@ -75,7 +100,7 @@ public class PrettyFormat {
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
 	public static StringBuilder formatString(StringBuilder buffer, String value) {
-		buffer.append("'");
+		buffer.append("\"");
 		value.chars().forEach(c -> {
 			if (c == '"') {
 				buffer.append("\\\"");

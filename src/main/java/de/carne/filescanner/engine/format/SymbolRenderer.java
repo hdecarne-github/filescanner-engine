@@ -16,20 +16,30 @@
  */
 package de.carne.filescanner.engine.format;
 
-/**
- * Format function for {@linkplain AttributeSpec} elements.
- *
- * @param <T> the actual attribute value type.
- */
-@FunctionalInterface
-public interface AttributeFormatter<T> {
+import java.io.IOException;
+import java.util.HashMap;
 
-	/**
-	 * Formats an attribute value.
-	 *
-	 * @param value the value to format.
-	 * @return the formatted attribute value.
-	 */
-	String format(T value);
+import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
+
+/**
+ * {@linkplain AttributeRenderer} implementation which renders a comment showing the attribute value's symbolic name (if
+ * available).
+ * 
+ * @param <T> The actual attribute type.
+ */
+public class SymbolRenderer<T> extends HashMap<T, String> implements AttributeRenderer<T> {
+
+	// Serialization support
+	private static final long serialVersionUID = -7227668070648773298L;
+
+	@Override
+	public void render(FileScannerResultOutput out, T value) throws IOException, InterruptedException {
+		String symbol = get(value);
+
+		if (symbol != null) {
+			out.setStyle(RenderStyle.COMMENT).write(" // ").write(symbol);
+		}
+	}
 
 }
