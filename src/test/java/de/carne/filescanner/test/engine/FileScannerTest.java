@@ -45,9 +45,10 @@ class FileScannerTest {
 
 	static final Log LOG = new Log();
 
+	private final Renderer systemOutRenderer = new PrintStreamRenderer(System.out, false);
+
 	private static class Status implements FileScannerStatus {
 
-		private final Renderer systemOutRenderer = new PrintStreamRenderer(System.out, false);
 		final AtomicInteger scanStartedCount = new AtomicInteger(0);
 		final AtomicInteger scanFinishedCount = new AtomicInteger(0);
 		final AtomicInteger scanProgressCount = new AtomicInteger(0);
@@ -90,11 +91,6 @@ class FileScannerTest {
 
 			this.scanResultCount.addAndGet(1);
 			System.out.println("Scan result: '" + result.name() + "' (type:" + result.type() + ")");
-			try (FileScannerResultOutput out = new FileScannerResultOutput(this.systemOutRenderer)) {
-				result.render(out);
-			} catch (IOException | InterruptedException e) {
-				LOG.error(e, "Failed to render scan result");
-			}
 		}
 
 		@Override
@@ -138,7 +134,18 @@ class FileScannerTest {
 		Assertions.assertEquals(progress.totalInputBytes(), progress.scannedBytes());
 		Assertions.assertEquals(100, progress.scanProgress());
 		Assertions.assertTrue(progress.scanRate() >= -1);
+
+		renderResult(fileScanner.result());
 		return status;
+	}
+
+	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
+		try (FileScannerResultOutput out = new FileScannerResultOutput(this.systemOutRenderer)) {
+			result.render(out);
+		}
+		for (FileScannerResult resultChild : result.children()) {
+			renderResult(resultChild);
+		}
 	}
 
 }
