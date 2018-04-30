@@ -269,7 +269,7 @@ public final class FileScanner implements Closeable {
 			scanTime = this.scanTimeNanos = System.nanoTime() - this.scanStartedNanos;
 		}
 
-		LOG.info("Finished scanning ''{0}'' (scan took: {1} ms)", this.result.name(), scanTime / 1000000l);
+		LOG.notice("Finished scanning ''{0}'' (scan took: {1} ms)", this.result.name(), scanTime / 1000000l);
 
 		callStatus(() -> this.status.scanFinished(this));
 		synchronized (this) {
