@@ -90,6 +90,7 @@ public final class FileScanner implements Closeable {
 		}
 	}
 
+	@SuppressWarnings("squid:S3776")
 	private void scanInputRange(FileScannerResultBuilder parent, FileScannerInput input, long start, long end)
 			throws IOException, InterruptedException {
 		Matcher formatMatcher = this.formatMatcherBuilder.matcher();
