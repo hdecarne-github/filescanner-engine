@@ -27,12 +27,14 @@ public enum AttributeBindMode {
 	NONE,
 
 	/**
-	 * Bind to context (needs to done during decode as well as during render phase)
+	 * Bind to context (bind needs to done during decode as well as during render phase and the bound attribute is only
+	 * available for the current result)
 	 */
 	CONTEXT,
 
 	/**
-	 * Bind to result (value can be retrieved during render phase without re-decoding it)
+	 * Bind to result (value can be retrieved during render phase without re-decoding it and the bound attribute is
+	 * available to the current result as well as it's children)
 	 */
 	RESULT
 

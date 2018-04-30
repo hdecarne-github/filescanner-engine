@@ -183,7 +183,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	@Override
 	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
-		this.inputDecoder.get().render(out);
+		// Nothing to do here
 	}
 
 }

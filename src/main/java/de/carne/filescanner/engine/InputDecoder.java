@@ -14,28 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.format;
+package de.carne.filescanner.engine;
 
-import de.carne.boot.check.Nullable;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
- * Byte attribute {@linkplain SymbolRenderer}.
+ * Decode function for input data.
+ * 
+ * @param <T> the actual decode result type.
  */
-public class ByteSymbolRenderer extends SymbolRenderer<Byte> {
-
-	// Serialization support
-	private static final long serialVersionUID = -7652553942215636375L;
+@FunctionalInterface
+public interface InputDecoder<T> {
 
 	/**
-	 * Adds a value symbol.
-	 *
-	 * @param value the value to add the symbol for.
-	 * @param symbol the symbol to add.
-	 * @return the previously associated symbol (may be {@code null}).
+	 * Decode input data.
+	 * 
+	 * @param buffer the {@linkplain ByteBuffer} to decode from.
+	 * @return the decoded input data.
+	 * @throws IOException if a decode error occurs.
 	 */
-	@Nullable
-	public String put(byte value, String symbol) {
-		return put(Byte.valueOf(value), symbol);
-	}
+	T decode(ByteBuffer buffer) throws IOException;
 
 }

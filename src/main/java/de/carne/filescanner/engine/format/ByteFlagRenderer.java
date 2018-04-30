@@ -19,6 +19,8 @@ package de.carne.filescanner.engine.format;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import de.carne.boot.check.Nullable;
+
 /**
  * Byte attribute {@linkplain FlagRenderer}.
  */
@@ -26,6 +28,18 @@ public class ByteFlagRenderer extends FlagRenderer<Byte> {
 
 	// Serialization support
 	private static final long serialVersionUID = -8064762212173430381L;
+
+	/**
+	 * Adds flag symbol.
+	 *
+	 * @param flag the flag to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(byte flag, String symbol) {
+		return put(Byte.valueOf(flag), symbol);
+	}
 
 	private static final byte MSB = (byte) 0b10000000;
 

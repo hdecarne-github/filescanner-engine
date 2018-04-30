@@ -14,32 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.util;
+package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.text.MemoryUnitFormat;
 
 /**
- * {@linkplain AttributeRenderer} used for rendering of double word based size values.
+ * {@linkplain AttributeRenderer} used for rendering of word based size values.
  */
-public class DWordSizeRenderer implements AttributeRenderer<Integer> {
+public class WordSizeRenderer implements AttributeRenderer<Short> {
 
 	/**
 	 * The single renderer instance.
 	 */
-	public static final DWordSizeRenderer RENDERER = new DWordSizeRenderer();
+	public static final WordSizeRenderer RENDERER = new WordSizeRenderer();
 
-	private DWordSizeRenderer() {
+	private WordSizeRenderer() {
 		// Prevent instantiation
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, Integer value) throws IOException, InterruptedException {
-		render(out, value.intValue());
+	public void render(FileScannerResultOutput out, Short value) throws IOException, InterruptedException {
+		render(out, value.shortValue());
 	}
 
 	/**
@@ -50,9 +49,9 @@ public class DWordSizeRenderer implements AttributeRenderer<Integer> {
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out, int value) throws IOException, InterruptedException {
+	public void render(FileScannerResultOutput out, short value) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
-				.write(MemoryUnitFormat.getMemoryUnitInstance().format(value & 0xffffffffl));
+				.write(MemoryUnitFormat.getMemoryUnitInstance().format((value & 0xffff) * 1.0));
 	}
 
 }

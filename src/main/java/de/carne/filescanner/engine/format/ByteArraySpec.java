@@ -24,7 +24,9 @@ import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- *
+ * Byte array based format attribute specification.
+ * <p>
+ * The array size has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
 public class ByteArraySpec extends AttributeSpec<byte[]> {
 
@@ -108,7 +110,6 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 			value[valueIndex] = slice.get();
 			valueIndex++;
 		}
-
 		buffer.position(buffer.position() + slice.position());
 		return value;
 	}

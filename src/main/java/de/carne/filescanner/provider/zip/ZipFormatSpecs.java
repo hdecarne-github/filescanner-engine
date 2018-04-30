@@ -22,16 +22,13 @@ import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.format.FixedStringSpec;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.format.WordFlagRenderer;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.format.WordSymbolRenderer;
 import de.carne.filescanner.engine.input.InputDecoder;
-import de.carne.filescanner.provider.util.DWordSizeRenderer;
 import de.carne.filescanner.provider.util.DosDateRenderer;
 import de.carne.filescanner.provider.util.DosTimeRenderer;
-import de.carne.filescanner.provider.util.WordSizeRenderer;
 
 final class ZipFormatSpecs {
 
@@ -82,32 +79,28 @@ final class ZipFormatSpecs {
 
 	// Format specs
 	static final StructSpec LOCAL_FILE_HEADER;
-	static final WordSpec LFH_GENERAL_PURPOSE_BIT_FLAG = new WordSpec("general purpose bit flag");
-	static final WordSpec LFH_COMPRESSION_METHOD = new WordSpec("compression method");
-	static final DWordSpec LFH_COMPRESSED_SIZE = new DWordSpec("compressed size");
-	static final WordSpec LFH_FILE_NAME_LENGTH = new WordSpec("file name length");
-	static final WordSpec LFH_EXTRA_FIELD_LENGTH = new WordSpec("extra field length");
+	static final WordSpec LFH_GENERAL_PURPOSE_BIT_FLAG = WordSpec.hex("general purpose bit flag");
+	static final WordSpec LFH_COMPRESSION_METHOD = WordSpec.hex("compression method");
+	static final DWordSpec LFH_COMPRESSED_SIZE = DWordSpec.size("compressed size");
+	static final WordSpec LFH_FILE_NAME_LENGTH = WordSpec.size("file name length");
+	static final WordSpec LFH_EXTRA_FIELD_LENGTH = WordSpec.size("extra field length");
 	static final FixedStringSpec LFH_FILE_NAME = new FixedStringSpec("file name");
 
 	static {
 		StructSpec lfh = new StructSpec();
 
 		lfh.result("Local file header");
-		lfh.add(new DWordSpec("local file header signature").format(HexFormat.INT_FORMATTER).validate(0x04034b50));
-		lfh.add(new WordSpec("version needed to extract").format(HexFormat.SHORT_FORMATTER));
-		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG.format(HexFormat.SHORT_FORMATTER)
-				.renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS));
-		lfh.add(LFH_COMPRESSION_METHOD.format(HexFormat.SHORT_FORMATTER).renderer(COMPRESSION_METHOD_SYMBOLS));
-		lfh.add(new WordSpec("last mod file time").format(HexFormat.SHORT_FORMATTER)
-				.renderer(DosTimeRenderer.RENDERER));
-		lfh.add(new WordSpec("last mod file date").format(HexFormat.SHORT_FORMATTER)
-				.renderer(DosDateRenderer.RENDERER));
-		lfh.add(new DWordSpec("crc-32").format(HexFormat.INT_FORMATTER));
-		lfh.add(LFH_COMPRESSED_SIZE.format(PrettyFormat.INT_FORMATTER).renderer(DWordSizeRenderer.RENDERER));
-		lfh.add(new DWordSpec("uncompressed size").format(PrettyFormat.INT_FORMATTER)
-				.renderer(DWordSizeRenderer.RENDERER));
-		lfh.add(LFH_FILE_NAME_LENGTH.format(PrettyFormat.SHORT_FORMATTER).renderer(WordSizeRenderer.RENDERER).bind());
-		lfh.add(LFH_EXTRA_FIELD_LENGTH.format(PrettyFormat.SHORT_FORMATTER).renderer(WordSizeRenderer.RENDERER).bind());
+		lfh.add(DWordSpec.hex("local file header signature").validate(0x04034b50));
+		lfh.add(WordSpec.hex("version needed to extract"));
+		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG.renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS));
+		lfh.add(LFH_COMPRESSION_METHOD.renderer(COMPRESSION_METHOD_SYMBOLS));
+		lfh.add(WordSpec.hex("last mod file time").renderer(DosTimeRenderer.RENDERER));
+		lfh.add(WordSpec.hex("last mod file date").renderer(DosDateRenderer.RENDERER));
+		lfh.add(DWordSpec.hex("crc-32"));
+		lfh.add(LFH_COMPRESSED_SIZE);
+		lfh.add(DWordSpec.size("uncompressed size"));
+		lfh.add(LFH_FILE_NAME_LENGTH);
+		lfh.add(LFH_EXTRA_FIELD_LENGTH);
 		lfh.add(LFH_FILE_NAME.size(LFH_FILE_NAME_LENGTH));
 		lfh.add(new ByteArraySpec("extra field").size(LFH_EXTRA_FIELD_LENGTH));
 		LOCAL_FILE_HEADER = lfh;
@@ -120,10 +113,9 @@ final class ZipFormatSpecs {
 
 		zipEntry.result(() -> String.format("Zip entry \"%1$s\"", LFH_FILE_NAME.get()));
 		zipEntry.add(LOCAL_FILE_HEADER);
-		zipEntry.add(new EncodedInputSpec("file data").inputDecoder(ZipFormatSpecs::getInputDecoder)
-				.decodedInputName(LFH_FILE_NAME)
-				.encodedInputSize(() -> Integer.toUnsignedLong(LFH_COMPRESSED_SIZE.get())));
 		zipEntry.add(FormatSpecs.COMMIT);
+		zipEntry.add(new EncodedInputSpec("file data").inputDecoder(ZipFormatSpecs::getInputDecoder)
+				.decodedInputName(LFH_FILE_NAME).encodedInputSize(ZipFormatSpecs::getEncodedInputSize));
 		ZIP_ENTRY = zipEntry;
 	}
 
@@ -137,8 +129,10 @@ final class ZipFormatSpecs {
 		FORMAT_SPEC = formatSpec;
 	}
 
-	// Setup result scoped bindings
+	// Setup bindings
 	static {
+		LFH_FILE_NAME_LENGTH.bind();
+		LFH_EXTRA_FIELD_LENGTH.bind();
 		LFH_GENERAL_PURPOSE_BIT_FLAG.bind(ZIP_ENTRY);
 		LFH_COMPRESSION_METHOD.bind(ZIP_ENTRY);
 		LFH_COMPRESSED_SIZE.bind(ZIP_ENTRY);
@@ -146,7 +140,7 @@ final class ZipFormatSpecs {
 	}
 
 	private static InputDecoder getInputDecoder() {
-		short compressionMethod = LFH_COMPRESSION_METHOD.get();
+		short compressionMethod = LFH_COMPRESSION_METHOD.get().shortValue();
 		InputDecoder inputDecoder;
 
 		switch (compressionMethod) {
@@ -161,6 +155,12 @@ final class ZipFormatSpecs {
 					.unsupportedInputDecoder("ZIP compression method " + HexFormat.formatShort(compressionMethod));
 		}
 		return inputDecoder;
+	}
+
+	private static long getEncodedInputSize() {
+		return ((LFH_GENERAL_PURPOSE_BIT_FLAG.get().intValue() & 0x0008) == 0
+				? Integer.toUnsignedLong(LFH_COMPRESSED_SIZE.get().intValue())
+				: -1l);
 	}
 
 }

@@ -14,32 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.util;
+package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.text.MemoryUnitFormat;
 
 /**
- * {@linkplain AttributeRenderer} used for rendering of byte based size values.
+ * {@linkplain AttributeRenderer} used for rendering of quad word based size values.
  */
-public class ByteSizeRenderer implements AttributeRenderer<Byte> {
+public class QWordSizeRenderer implements AttributeRenderer<Long> {
 
 	/**
 	 * The single renderer instance.
 	 */
-	public static final ByteSizeRenderer RENDERER = new ByteSizeRenderer();
+	public static final QWordSizeRenderer RENDERER = new QWordSizeRenderer();
 
-	private ByteSizeRenderer() {
+	private QWordSizeRenderer() {
 		// Prevent instantiation
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, Byte value) throws IOException, InterruptedException {
-		render(out, value.byteValue());
+	public void render(FileScannerResultOutput out, Long value) throws IOException, InterruptedException {
+		render(out, value.longValue());
 	}
 
 	/**
@@ -50,9 +49,9 @@ public class ByteSizeRenderer implements AttributeRenderer<Byte> {
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out, byte value) throws IOException, InterruptedException {
+	public void render(FileScannerResultOutput out, long value) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
-				.write(MemoryUnitFormat.getMemoryUnitInstance().format(value & 0xff));
+				.write(MemoryUnitFormat.getMemoryUnitInstance().format(value * 1.0));
 	}
 
 }

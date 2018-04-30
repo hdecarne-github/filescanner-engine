@@ -14,32 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.util;
+package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.text.MemoryUnitFormat;
 
 /**
- * {@linkplain AttributeRenderer} used for rendering of quad word based size values.
+ * {@linkplain AttributeRenderer} used for rendering of byte based size values.
  */
-public class QWordSizeRenderer implements AttributeRenderer<Long> {
+public class ByteSizeRenderer implements AttributeRenderer<Byte> {
 
 	/**
 	 * The single renderer instance.
 	 */
-	public static final QWordSizeRenderer RENDERER = new QWordSizeRenderer();
+	public static final ByteSizeRenderer RENDERER = new ByteSizeRenderer();
 
-	private QWordSizeRenderer() {
+	private ByteSizeRenderer() {
 		// Prevent instantiation
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, Long value) throws IOException, InterruptedException {
-		render(out, value.longValue());
+	public void render(FileScannerResultOutput out, Byte value) throws IOException, InterruptedException {
+		render(out, value.byteValue());
 	}
 
 	/**
@@ -50,8 +49,9 @@ public class QWordSizeRenderer implements AttributeRenderer<Long> {
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out, long value) throws IOException, InterruptedException {
-		out.setStyle(RenderStyle.COMMENT).write(" // ").write(MemoryUnitFormat.getMemoryUnitInstance().format(value));
+	public void render(FileScannerResultOutput out, byte value) throws IOException, InterruptedException {
+		out.setStyle(RenderStyle.COMMENT).write(" // ")
+				.write(MemoryUnitFormat.getMemoryUnitInstance().format((value & 0xff) * 1.0));
 	}
 
 }

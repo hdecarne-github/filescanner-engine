@@ -19,6 +19,8 @@ package de.carne.filescanner.engine.format;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import de.carne.boot.check.Nullable;
+
 /**
  * Double word attribute {@linkplain FlagRenderer}.
  */
@@ -26,6 +28,18 @@ public class DWordFlagRenderer extends FlagRenderer<Integer> {
 
 	// Serialization support
 	private static final long serialVersionUID = -2295541110505555035L;
+
+	/**
+	 * Adds flag symbol.
+	 *
+	 * @param flag the flag to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(int flag, String symbol) {
+		return put(Integer.valueOf(flag), symbol);
+	}
 
 	private static final int MSB = 0b10000000000000000000000000000000;
 

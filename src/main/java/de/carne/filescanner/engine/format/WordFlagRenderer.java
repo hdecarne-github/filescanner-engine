@@ -19,6 +19,8 @@ package de.carne.filescanner.engine.format;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import de.carne.boot.check.Nullable;
+
 /**
  * Word attribute {@linkplain FlagRenderer}.
  */
@@ -26,6 +28,18 @@ public class WordFlagRenderer extends FlagRenderer<Short> {
 
 	// Serialization support
 	private static final long serialVersionUID = -1868333347932279815L;
+
+	/**
+	 * Adds flag symbol.
+	 *
+	 * @param flag the flag to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(short flag, String symbol) {
+		return put(Short.valueOf(flag), symbol);
+	}
 
 	private static final short MSB = (short) 0b1000000000000000;
 

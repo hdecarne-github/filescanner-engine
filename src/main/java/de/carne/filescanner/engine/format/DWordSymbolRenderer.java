@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.format;
 
+import de.carne.boot.check.Nullable;
+
 /**
  * Double word attribute {@linkplain SymbolRenderer}.
  */
@@ -23,5 +25,17 @@ public class DWordSymbolRenderer extends SymbolRenderer<Integer> {
 
 	// Serialization support
 	private static final long serialVersionUID = 8051383114011052983L;
+
+	/**
+	 * Adds a value symbol.
+	 *
+	 * @param value the value to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(int value, String symbol) {
+		return put(Integer.valueOf(value), symbol);
+	}
 
 }

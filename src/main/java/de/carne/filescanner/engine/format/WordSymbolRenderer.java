@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.format;
 
+import de.carne.boot.check.Nullable;
+
 /**
  * Word attribute {@linkplain SymbolRenderer}.
  */
@@ -23,5 +25,17 @@ public class WordSymbolRenderer extends SymbolRenderer<Short> {
 
 	// Serialization support
 	private static final long serialVersionUID = -7293816496603694799L;
+
+	/**
+	 * Adds a value symbol.
+	 *
+	 * @param value the value to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(short value, String symbol) {
+		return put(Short.valueOf(value), symbol);
+	}
 
 }

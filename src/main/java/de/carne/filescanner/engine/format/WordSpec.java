@@ -42,6 +42,59 @@ public final class WordSpec extends FixedSizeAttributeSpec<Short> {
 		super(Short.class, name);
 	}
 
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured hexadecimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec hex(Supplier<String> name) {
+		return hex(new WordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured hexadecimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec hex(String name) {
+		return hex(new WordSpec(name));
+	}
+
+	private static WordSpec hex(WordSpec spec) {
+		spec.format(HexFormat.SHORT_FORMATTER);
+		return spec;
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured decimal format and
+	 * size renderer.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec size(Supplier<String> name) {
+		return size(new WordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured decimal format and
+	 * size renderer.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec size(String name) {
+		return size(new WordSpec(name));
+	}
+
+	private static WordSpec size(WordSpec spec) {
+		spec.format(PrettyFormat.SHORT_FORMATTER);
+		spec.renderer(WordSizeRenderer.RENDERER);
+		return spec;
+	}
+
 	@Override
 	protected int size() {
 		return 2;

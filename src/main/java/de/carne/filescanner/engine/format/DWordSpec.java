@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 /**
- * Double word (32-bit) attribute.
+ * Double word (32-bit) format attribute specification.
  */
 public final class DWordSpec extends FixedSizeAttributeSpec<Integer> {
 
@@ -40,6 +40,59 @@ public final class DWordSpec extends FixedSizeAttributeSpec<Integer> {
 	 */
 	public DWordSpec(String name) {
 		super(Integer.class, name);
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured hexadecimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec hex(Supplier<String> name) {
+		return hex(new DWordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured hexadecimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec hex(String name) {
+		return hex(new DWordSpec(name));
+	}
+
+	private static DWordSpec hex(DWordSpec spec) {
+		spec.format(HexFormat.INT_FORMATTER);
+		return spec;
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format and
+	 * size renderer.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec size(Supplier<String> name) {
+		return size(new DWordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format and
+	 * size renderer.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec size(String name) {
+		return size(new DWordSpec(name));
+	}
+
+	private static DWordSpec size(DWordSpec spec) {
+		spec.format(PrettyFormat.INT_FORMATTER);
+		spec.renderer(DWordSizeRenderer.RENDERER);
+		return spec;
 	}
 
 	@Override

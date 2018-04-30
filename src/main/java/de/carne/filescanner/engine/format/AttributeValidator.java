@@ -25,7 +25,7 @@ package de.carne.filescanner.engine.format;
 public interface AttributeValidator<T> {
 
 	/**
-	 * Validate an attribute value.
+	 * Validates an attribute value.
 	 *
 	 * @param value the value to validate.
 	 * @return {@code true} if the value is valid.

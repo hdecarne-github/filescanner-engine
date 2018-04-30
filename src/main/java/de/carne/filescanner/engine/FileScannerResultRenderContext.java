@@ -69,7 +69,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 			throws IOException, InterruptedException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
-		run(() -> encodedInputSpec.render(out, this), false);
+		run(() -> encodedInputSpec.inputDecoder().get().render(out), false);
 	}
 
 	/**

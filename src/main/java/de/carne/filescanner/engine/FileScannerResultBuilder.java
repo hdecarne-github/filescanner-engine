@@ -250,9 +250,9 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(end()));
 		out.setStyle(RenderStyle.NORMAL).write("size");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size()));
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(size()));
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
-				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
+				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(size() * 1.0));
 	}
 
 	private static final class CommitState {

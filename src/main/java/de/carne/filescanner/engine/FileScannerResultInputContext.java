@@ -19,7 +19,6 @@ package de.carne.filescanner.engine;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.function.Function;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
@@ -83,7 +82,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * @return the read value.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public <T> T readValue(int size, Function<ByteBuffer, T> decoder) throws IOException {
+	public <T> T readValue(int size, InputDecoder<T> decoder) throws IOException {
 		ByteBuffer buffer = this.inputRange.read(this.position, size);
 
 		if (buffer.remaining() < size) {
@@ -91,7 +90,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 		}
 		buffer.order(this.byteOrder);
 
-		T value = decoder.apply(buffer);
+		T value = decoder.decode(buffer);
 
 		this.position += size;
 		return value;
