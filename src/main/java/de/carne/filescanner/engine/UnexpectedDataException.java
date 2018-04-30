@@ -31,6 +31,13 @@ public class UnexpectedDataException extends FormatDecodeException {
 
 	/**
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
+	 */
+	public UnexpectedDataException() {
+		super("Unexpected data: { ... }");
+	}
+
+	/**
+	 * Constructs a new {@linkplain UnexpectedDataException} instance.
 	 *
 	 * @param data the invalid data.
 	 */
@@ -46,7 +53,7 @@ public class UnexpectedDataException extends FormatDecodeException {
 		Class<?> dataType = data.getClass();
 
 		if (dataType.isArray()) {
-			buffer.append("[ ");
+			buffer.append("{ ");
 
 			int length = Array.getLength(data);
 
@@ -56,7 +63,7 @@ public class UnexpectedDataException extends FormatDecodeException {
 				}
 				formatData(buffer, Array.get(data, index));
 			}
-			buffer.append("]");
+			buffer.append(" }");
 		} else if (dataType.equals(Long.class)) {
 			buffer.append(HexFormat.formatLong((Long) data));
 		} else if (dataType.equals(Integer.class)) {

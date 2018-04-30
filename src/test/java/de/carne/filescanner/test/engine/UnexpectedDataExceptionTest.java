@@ -44,13 +44,17 @@ class UnexpectedDataExceptionTest {
 
 		Assertions.assertEquals("Unexpected data: 7fh", message4);
 
-		String message5 = new UnexpectedDataException(new byte[] { 1, 2, 3, 4 }).getMessage();
+		String message5 = new UnexpectedDataException().getMessage();
 
-		Assertions.assertEquals("Unexpected data: [ 01h, 02h, 03h, 04h]", message5);
+		Assertions.assertEquals("Unexpected data: { ... }", message5);
 
-		String message6 = new UnexpectedDataException("Test message").getMessage();
+		String message6 = new UnexpectedDataException(new byte[] { 1, 2, 3, 4 }).getMessage();
 
-		Assertions.assertEquals("Unexpected data: Test message", message6);
+		Assertions.assertEquals("Unexpected data: { 01h, 02h, 03h, 04h }", message6);
+
+		String message7 = new UnexpectedDataException("Test message").getMessage();
+
+		Assertions.assertEquals("Unexpected data: Test message", message7);
 	}
 
 }

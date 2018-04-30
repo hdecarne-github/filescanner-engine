@@ -23,6 +23,7 @@ import de.carne.filescanner.engine.format.FixedStringSpec;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.StructSpec;
+import de.carne.filescanner.engine.format.VarArraySpec;
 import de.carne.filescanner.engine.format.WordFlagRenderer;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.format.WordSymbolRenderer;
@@ -119,13 +120,77 @@ final class ZipFormatSpecs {
 		ZIP_ENTRY = zipEntry;
 	}
 
+	static final StructSpec CENTRAL_DIRECTORY_HEADER;
+	static final WordSpec CDH_FILE_NAME_LENGTH = WordSpec.size("file name length");
+	static final WordSpec CDH_EXTRA_FIELD_LENGTH = WordSpec.size("extra field length");
+	static final WordSpec CDH_FILE_COMMENT_LENGTH = WordSpec.size("file comment length");
+	static final FixedStringSpec CDH_FILE_NAME = new FixedStringSpec("file name");
+
+	static {
+		StructSpec cdh = new StructSpec();
+
+		cdh.result(() -> String.format("Central directory header \"%1$s\"", CDH_FILE_NAME.get()));
+		cdh.add(DWordSpec.hex("central file header signature").validate(0x02014b50));
+		cdh.add(WordSpec.hex("version made by"));
+		cdh.add(WordSpec.hex("version needed to extract"));
+		cdh.add(WordSpec.hex("general purpose bit flag").renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS));
+		cdh.add(WordSpec.hex("compression method").renderer(COMPRESSION_METHOD_SYMBOLS));
+		cdh.add(WordSpec.hex("last mod file time").renderer(DosTimeRenderer.RENDERER));
+		cdh.add(WordSpec.hex("last mod file date").renderer(DosDateRenderer.RENDERER));
+		cdh.add(DWordSpec.hex("crc-32"));
+		cdh.add(DWordSpec.size("compressed size"));
+		cdh.add(DWordSpec.size("uncompressed size"));
+		cdh.add(CDH_FILE_NAME_LENGTH);
+		cdh.add(CDH_EXTRA_FIELD_LENGTH);
+		cdh.add(CDH_FILE_COMMENT_LENGTH);
+		cdh.add(WordSpec.hex("disk number start"));
+		cdh.add(WordSpec.hex("internal file attributes"));
+		cdh.add(DWordSpec.hex("external file attributes"));
+		cdh.add(DWordSpec.hex("relative offset of local header"));
+		cdh.add(CDH_FILE_NAME.size(CDH_FILE_NAME_LENGTH));
+		cdh.add(new ByteArraySpec("extra field").size(CDH_EXTRA_FIELD_LENGTH));
+		cdh.add(new FixedStringSpec("file comment").size(CDH_FILE_COMMENT_LENGTH));
+		CENTRAL_DIRECTORY_HEADER = cdh;
+	}
+
+	static final StructSpec END_OF_CENTRAL_DIRECTORY;
+	static final WordSpec EOCD_ZIP_FILE_COMMENT_LENGTH = WordSpec.size(".ZIP file comment length");
+
+	static {
+		StructSpec eocd = new StructSpec();
+
+		eocd.result("End of central directory");
+		eocd.add(DWordSpec.hex("end of central dir signature").validate(0x06054b50));
+		eocd.add(WordSpec.hex("number of this disk"));
+		eocd.add(WordSpec.hex("number of the disk with the start of the central directory"));
+		eocd.add(WordSpec.hex("total number of entries in the central directory on this disk"));
+		eocd.add(WordSpec.hex("total number of entries in the central directory"));
+		eocd.add(DWordSpec.size("size of the central directory"));
+		eocd.add(DWordSpec.hex("offset of start of central directory"));
+		eocd.add(EOCD_ZIP_FILE_COMMENT_LENGTH);
+		eocd.add(new FixedStringSpec(".ZIP file comment").size(EOCD_ZIP_FILE_COMMENT_LENGTH));
+		END_OF_CENTRAL_DIRECTORY = eocd;
+	}
+
+	static final StructSpec CENTRAL_DIRECTORY;
+
+	static {
+		StructSpec cd = new StructSpec();
+
+		cd.result("Central directory");
+		cd.add(new VarArraySpec(CENTRAL_DIRECTORY_HEADER));
+		cd.add(END_OF_CENTRAL_DIRECTORY);
+		CENTRAL_DIRECTORY = cd;
+	}
+
 	static final StructSpec FORMAT_SPEC;
 
 	static {
 		StructSpec formatSpec = new StructSpec();
 
 		formatSpec.result(FORMAT_NAME);
-		formatSpec.add(ZIP_ENTRY);
+		formatSpec.add(new VarArraySpec(ZIP_ENTRY));
+		formatSpec.add(CENTRAL_DIRECTORY);
 		FORMAT_SPEC = formatSpec;
 	}
 
@@ -137,6 +202,13 @@ final class ZipFormatSpecs {
 		LFH_COMPRESSION_METHOD.bind(ZIP_ENTRY);
 		LFH_COMPRESSED_SIZE.bind(ZIP_ENTRY);
 		LFH_FILE_NAME.bind(ZIP_ENTRY);
+
+		CDH_FILE_NAME_LENGTH.bind();
+		CDH_EXTRA_FIELD_LENGTH.bind();
+		CDH_FILE_COMMENT_LENGTH.bind();
+		CDH_FILE_NAME.bind(CENTRAL_DIRECTORY_HEADER);
+
+		EOCD_ZIP_FILE_COMMENT_LENGTH.bind();
 	}
 
 	private static InputDecoder getInputDecoder() {
@@ -148,7 +220,7 @@ final class ZipFormatSpecs {
 			inputDecoder = InputDecoder.NONE;
 			break;
 		case 0x08:
-			inputDecoder = DeflatedInputDecoder.INSTANCE;
+			inputDecoder = DeflatedInputDecoder.DECODER;
 			break;
 		default:
 			inputDecoder = InputDecoder

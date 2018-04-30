@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 
@@ -74,6 +75,36 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	}
 
 	/**
+	 * Sets the {@linkplain ByteOrder} for the next context operation.
+	 *
+	 * @param byteOrder the {@linkplain ByteOrder} to set.
+	 */
+	public void setByteOrder(ByteOrder byteOrder) {
+		this.byteOrder = byteOrder;
+	}
+
+	/**
+	 * Matches the given {@linkplain FormatSpec} against the input data at the current position.
+	 *
+	 * @param spec the {@linkplain FormatSpec} to match.
+	 * @return {@code true} if the remaining input data size is sufficient and matches the given
+	 *         {@linkplain FormatSpec}.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public boolean match(FormatSpec spec) throws IOException {
+		int matchSize = spec.matchSize();
+		boolean match = true;
+
+		if (matchSize > 0) {
+			ByteBuffer buffer = this.inputRange.read(this.position, matchSize);
+
+			buffer.order(this.byteOrder);
+			match = (buffer.remaining() <= matchSize ? spec.matches(buffer) : false);
+		}
+		return match;
+	}
+
+	/**
 	 * Reads and decodes a value.
 	 *
 	 * @param <T> the actual attribute type.
@@ -83,11 +114,8 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public <T> T readValue(int size, InputDecoder<T> decoder) throws IOException {
-		ByteBuffer buffer = this.inputRange.read(this.position, size);
+		ByteBuffer buffer = readComplete(size);
 
-		if (buffer.remaining() < size) {
-			throw new InsufficientDataException(this.inputRange, this.position, size, buffer.remaining());
-		}
 		buffer.order(this.byteOrder);
 
 		T value = decoder.decode(buffer);
@@ -96,13 +124,13 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 		return value;
 	}
 
-	/**
-	 * Sets the {@linkplain ByteOrder} for the next context operation.
-	 *
-	 * @param byteOrder the {@linkplain ByteOrder} to set.
-	 */
-	public void setByteOrder(ByteOrder byteOrder) {
-		this.byteOrder = byteOrder;
+	private ByteBuffer readComplete(int size) throws IOException {
+		ByteBuffer buffer = this.inputRange.read(this.position, size);
+
+		if (buffer.remaining() < size) {
+			throw new InsufficientDataException(this.inputRange, this.position, size, buffer.remaining());
+		}
+		return buffer;
 	}
 
 	@Override

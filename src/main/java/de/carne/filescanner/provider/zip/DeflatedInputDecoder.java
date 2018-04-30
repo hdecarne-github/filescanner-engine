@@ -24,7 +24,7 @@ import de.carne.nio.compression.spi.Decoder;
 
 class DeflatedInputDecoder extends InputDecoder {
 
-	public static final DeflatedInputDecoder INSTANCE = new DeflatedInputDecoder();
+	public static final DeflatedInputDecoder DECODER = new DeflatedInputDecoder();
 
 	private static final String NAME = "ZIP Deflate";
 
