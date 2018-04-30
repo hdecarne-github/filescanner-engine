@@ -33,6 +33,39 @@ public final class FormatSpecs {
 	}
 
 	/**
+	 * Empty {@linkplain FormatSpec} with no decode result.
+	 */
+	public static final FormatSpec EMPTY = new FormatSpec() {
+
+		@Override
+		public boolean isFixedSize() {
+			return true;
+		}
+
+		@Override
+		public int matchSize() {
+			return 0;
+		}
+
+		@Override
+		public boolean matches(ByteBuffer buffer) {
+			return true;
+		}
+
+		@Override
+		public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+			// Nothing to do here
+		}
+
+		@Override
+		public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+				throws IOException, InterruptedException {
+			// Nothing to do here
+		}
+
+	};
+
+	/**
 	 * Empty {@linkplain FormatSpec} used to commit the current decode result.
 	 */
 	public static final FormatSpec COMMIT = new FormatSpec() {

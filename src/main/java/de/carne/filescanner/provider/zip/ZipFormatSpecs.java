@@ -17,9 +17,11 @@
 package de.carne.filescanner.provider.zip;
 
 import de.carne.filescanner.engine.format.ByteArraySpec;
+import de.carne.filescanner.engine.format.ConditionalSpec;
 import de.carne.filescanner.engine.format.DWordSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.format.FixedStringSpec;
+import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.StructSpec;
@@ -107,6 +109,19 @@ final class ZipFormatSpecs {
 		LOCAL_FILE_HEADER = lfh;
 	}
 
+	static final StructSpec DATA_DESCRIPTOR;
+
+	static {
+		StructSpec dd = new StructSpec();
+
+		dd.result("Data Descriptor");
+		dd.add(DWordSpec.hex("local file header signature").validate(0x08074b50));
+		dd.add(DWordSpec.hex("crc-32"));
+		dd.add(DWordSpec.size("compressed size"));
+		dd.add(DWordSpec.size("uncompressed size"));
+		DATA_DESCRIPTOR = dd;
+	}
+
 	static final StructSpec ZIP_ENTRY;
 
 	static {
@@ -117,6 +132,7 @@ final class ZipFormatSpecs {
 		zipEntry.add(FormatSpecs.COMMIT);
 		zipEntry.add(new EncodedInputSpec("file data").inputDecoder(ZipFormatSpecs::getInputDecoder)
 				.decodedInputName(LFH_FILE_NAME).encodedInputSize(ZipFormatSpecs::getEncodedInputSize));
+		zipEntry.add(new ConditionalSpec(ZipFormatSpecs::getDataDescriptorSpec));
 		ZIP_ENTRY = zipEntry;
 	}
 
@@ -143,7 +159,7 @@ final class ZipFormatSpecs {
 		cdh.add(CDH_FILE_NAME_LENGTH);
 		cdh.add(CDH_EXTRA_FIELD_LENGTH);
 		cdh.add(CDH_FILE_COMMENT_LENGTH);
-		cdh.add(WordSpec.hex("disk number start"));
+		cdh.add(WordSpec.dec("disk number start"));
 		cdh.add(WordSpec.hex("internal file attributes"));
 		cdh.add(DWordSpec.hex("external file attributes"));
 		cdh.add(DWordSpec.hex("relative offset of local header"));
@@ -161,10 +177,10 @@ final class ZipFormatSpecs {
 
 		eocd.result("End of central directory");
 		eocd.add(DWordSpec.hex("end of central dir signature").validate(0x06054b50));
-		eocd.add(WordSpec.hex("number of this disk"));
-		eocd.add(WordSpec.hex("number of the disk with the start of the central directory"));
-		eocd.add(WordSpec.hex("total number of entries in the central directory on this disk"));
-		eocd.add(WordSpec.hex("total number of entries in the central directory"));
+		eocd.add(WordSpec.dec("number of this disk"));
+		eocd.add(WordSpec.dec("number of the disk with the start of the central directory"));
+		eocd.add(WordSpec.dec("total number of entries in the central directory on this disk"));
+		eocd.add(WordSpec.dec("total number of entries in the central directory"));
 		eocd.add(DWordSpec.size("size of the central directory"));
 		eocd.add(DWordSpec.hex("offset of start of central directory"));
 		eocd.add(EOCD_ZIP_FILE_COMMENT_LENGTH);
@@ -233,6 +249,10 @@ final class ZipFormatSpecs {
 		return ((LFH_GENERAL_PURPOSE_BIT_FLAG.get().intValue() & 0x0008) == 0
 				? Integer.toUnsignedLong(LFH_COMPRESSED_SIZE.get().intValue())
 				: -1l);
+	}
+
+	private static FormatSpec getDataDescriptorSpec() {
+		return ((LFH_GENERAL_PURPOSE_BIT_FLAG.get().intValue() & 0x0008) == 0 ? FormatSpecs.EMPTY : DATA_DESCRIPTOR);
 	}
 
 }

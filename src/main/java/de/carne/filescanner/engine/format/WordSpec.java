@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 /**
- * Word (16-bit) attribute.
+ * Word (16-bit) format attribute specification.
  */
 public final class WordSpec extends FixedSizeAttributeSpec<Short> {
 
@@ -40,6 +40,31 @@ public final class WordSpec extends FixedSizeAttributeSpec<Short> {
 	 */
 	public WordSpec(String name) {
 		super(Short.class, name);
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured decimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec dec(Supplier<String> name) {
+		return dec(new WordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain WordSpec} instance with pre-configured decimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static WordSpec dec(String name) {
+		return dec(new WordSpec(name));
+	}
+
+	private static WordSpec dec(WordSpec spec) {
+		spec.format(PrettyFormat.SHORT_FORMATTER);
+		return spec;
 	}
 
 	/**

@@ -43,6 +43,31 @@ public final class DWordSpec extends FixedSizeAttributeSpec<Integer> {
 	}
 
 	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec dec(Supplier<String> name) {
+		return dec(new DWordSpec(name));
+	}
+
+	/**
+	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format.
+	 *
+	 * @param name the attribute's name.
+	 * @return the created spec instance.
+	 */
+	public static DWordSpec dec(String name) {
+		return dec(new DWordSpec(name));
+	}
+
+	private static DWordSpec dec(DWordSpec spec) {
+		spec.format(PrettyFormat.INT_FORMATTER);
+		return spec;
+	}
+
+	/**
 	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured hexadecimal format.
 	 *
 	 * @param name the attribute's name.
