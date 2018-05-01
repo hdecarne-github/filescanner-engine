@@ -16,12 +16,10 @@
  */
 package de.carne.filescanner.engine;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.carne.filescanner.engine.spi.Format;
@@ -29,12 +27,13 @@ import de.carne.filescanner.engine.spi.Format;
 /**
  * Helper class used to access the available {@linkplain Format} provider and configure the active ones for a scan.
  */
-public final class Formats implements Iterable<Map.Entry<Format, Boolean>> {
+public final class Formats implements Iterable<Format> {
 
-	private final Map<Format, Boolean> formatStatus = new HashMap<>();
+	private final Set<Format> formats = new HashSet<>();
+	private final Set<String> disabledFormats = new HashSet<>();
 
 	private Formats() {
-		Format.providers().forEach(f -> this.formatStatus.put(f, Boolean.TRUE));
+		Format.providers().forEach(format -> this.formats.add(format));
 	}
 
 	/**
@@ -53,7 +52,17 @@ public final class Formats implements Iterable<Map.Entry<Format, Boolean>> {
 	 * @return the updated {@linkplain Formats} instance for chaining.
 	 */
 	public Formats enable(Format format) {
-		this.formatStatus.put(format, Boolean.TRUE);
+		return enable(format.name());
+	}
+
+	/**
+	 * Enables a specific {@linkplain Format}.
+	 *
+	 * @param name the name of the {@linkplain Format} to enable.
+	 * @return the updated {@linkplain Formats} instance for chaining.
+	 */
+	public Formats enable(String name) {
+		this.disabledFormats.remove(name);
 		return this;
 	}
 
@@ -64,7 +73,17 @@ public final class Formats implements Iterable<Map.Entry<Format, Boolean>> {
 	 * @return the updated {@linkplain Formats} instance for chaining.
 	 */
 	public Formats disable(Format format) {
-		this.formatStatus.put(format, Boolean.FALSE);
+		return disable(format.name());
+	}
+
+	/**
+	 * Disables a specific {@linkplain Format}.
+	 *
+	 * @param name the name of the {@linkplain Format} to enable.
+	 * @return the updated {@linkplain Formats} instance for chaining.
+	 */
+	public Formats disable(String name) {
+		this.disabledFormats.add(name);
 		return this;
 	}
 
@@ -73,14 +92,14 @@ public final class Formats implements Iterable<Map.Entry<Format, Boolean>> {
 	 *
 	 * @return the currently enabled {@linkplain Format} instances.
 	 */
-	public Collection<Format> enabledFormats() {
-		return this.formatStatus.entrySet().stream().filter(entry -> entry.getValue().booleanValue()).map(Entry::getKey)
-				.collect(Collectors.toList());
+	public Set<Format> enabledFormats() {
+		return this.formats.stream().filter(format -> !this.disabledFormats.contains(format.name()))
+				.collect(Collectors.toSet());
 	}
 
 	@Override
-	public Iterator<Entry<Format, Boolean>> iterator() {
-		return Collections.unmodifiableMap(this.formatStatus).entrySet().iterator();
+	public Iterator<Format> iterator() {
+		return Collections.unmodifiableSet(this.formats).iterator();
 	}
 
 }

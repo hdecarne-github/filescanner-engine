@@ -25,13 +25,13 @@ import de.carne.filescanner.engine.spi.Format;
 /**
  * Test {@linkplain Formats} class.
  */
-class FormatCollectionTest {
+class FormatsTest {
 
 	@Test
-	void testFormatCollection() {
+	void testFormats() {
 		Formats formats = Formats.all();
 		int formatCount = formats.enabledFormats().size();
-		Format aFormat = formats.iterator().next().getKey();
+		Format aFormat = formats.iterator().next();
 
 		formats.enable(aFormat);
 
