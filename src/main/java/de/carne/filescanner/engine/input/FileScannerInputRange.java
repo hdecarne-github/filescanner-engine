@@ -97,6 +97,12 @@ public class FileScannerInputRange extends FileScannerInput {
 	}
 
 	@Override
+	public FileScannerInputRange range(long rangeStart, long rangeEnd) throws IOException {
+		return (this.base == 0 && this.start == rangeStart && this.end == rangeEnd ? this
+				: super.range(rangeStart, rangeEnd));
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
 
