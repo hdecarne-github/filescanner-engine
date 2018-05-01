@@ -118,7 +118,7 @@ public final class InputDecodeCache implements Closeable {
 					Threads.checkInterrupted();
 					buffer.flip();
 					decodedInputEnd += this.cacheFileChannel.write(buffer);
-					buffer.rewind();
+					buffer.clear();
 				}
 			} catch (IOException e) {
 				throw new InputDecoderException(inputDecoder, e);

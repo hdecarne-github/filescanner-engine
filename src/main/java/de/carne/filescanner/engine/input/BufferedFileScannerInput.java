@@ -137,6 +137,7 @@ public class BufferedFileScannerInput extends FileScannerInput {
 
 				long newBufferPosition = position & ~((BUFFER_SIZE >> 1) - 1);
 
+				buffer.clear();
 				input.read(buffer, newBufferPosition);
 				buffer.flip();
 				this.bufferPosition = newBufferPosition;
@@ -145,6 +146,7 @@ public class BufferedFileScannerInput extends FileScannerInput {
 					|| (this.bufferPosition + buffer.capacity()) < (position + size)) {
 				long newBufferPosition = position & ~((BUFFER_SIZE >> 1) - 1);
 
+				buffer.clear();
 				input.read(buffer, newBufferPosition);
 				buffer.flip();
 				this.bufferPosition = newBufferPosition;
