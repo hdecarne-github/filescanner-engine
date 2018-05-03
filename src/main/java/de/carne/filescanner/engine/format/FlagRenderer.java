@@ -40,36 +40,37 @@ public abstract class FlagRenderer<T> extends HashMap<T, String> implements Attr
 		while (flags.hasNext()) {
 			T flag = flags.next();
 
-			if (testFlag(value, flag)) {
+			if (containsKey(flag) || testFlag(value, flag)) {
 				out.writeln();
-				out.setStyle(RenderStyle.VALUE).write(formatFlag(flag));
+				out.setStyle(RenderStyle.VALUE).write(formatFlag(value, flag));
 				out.setStyle(RenderStyle.COMMENT).write(" // ").write(getOrDefault(flag, "?"));
 			}
 		}
 	}
 
 	/**
-	 * Gets the {@linkplain Iterator} instance for flag value enumeration.
-	 * 
-	 * @return the {@linkplain Iterator} instance for flag value enumeration.
+	 * Gets the {@linkplain Iterator} instance for flag enumeration.
+	 *
+	 * @return the {@linkplain Iterator} instance for flag enumeration.
 	 */
 	protected abstract Iterator<T> flags();
 
 	/**
-	 * Tests whether a flag value is set.
-	 * 
+	 * Tests whether a flag is set.
+	 *
 	 * @param value the value to test the flag against.
-	 * @param flag the flat value to test.
-	 * @return {@code true} if the flag value is set.
+	 * @param flag the flag to test.
+	 * @return {@code true} if the flag is set.
 	 */
 	protected abstract boolean testFlag(T value, T flag);
 
 	/**
-	 * Formats a flag value.
-	 * 
+	 * Formats a a single flag.
+	 *
+	 * @param value the value containing the flags.
 	 * @param flag the flag value to format.
 	 * @return the formatted flag value.
 	 */
-	protected abstract String formatFlag(T flag);
+	protected abstract String formatFlag(T value, T flag);
 
 }

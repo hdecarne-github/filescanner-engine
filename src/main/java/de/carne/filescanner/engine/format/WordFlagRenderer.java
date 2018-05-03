@@ -77,12 +77,19 @@ public class WordFlagRenderer extends FlagRenderer<Short> {
 	}
 
 	@Override
-	protected String formatFlag(Short flag) {
+	protected String formatFlag(Short value, Short flag) {
 		StringBuilder buffer = new StringBuilder();
+		short valueValue = value.shortValue();
 		short flagValue = flag.shortValue();
 
 		for (short mask = MSB; mask != 0; mask = shift(mask)) {
-			buffer.append((flagValue & mask) == mask ? '1' : '.');
+			if ((flagValue & mask) != mask) {
+				buffer.append('.');
+			} else if ((flagValue & valueValue) != 0) {
+				buffer.append('1');
+			} else {
+				buffer.append('0');
+			}
 		}
 		return buffer.toString();
 	}

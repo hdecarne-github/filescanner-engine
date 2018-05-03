@@ -50,7 +50,7 @@ public final class FileScanner implements Closeable {
 	private final InputDecodeCache inputDecodeCache;
 	private final FileScannerStatus status;
 	private final FileScannerResultBuilder result;
-	private int pendingScanTasks = 0;
+	private int runningScanTasks = 0;
 	private long scanStartedNanos = 0;
 	private long scanTimeNanos = 0;
 	private long lastProgressTimeNanos = 0;
@@ -174,7 +174,7 @@ public final class FileScanner implements Closeable {
 	 * @return {@code true} if the scanner is currently scanning.
 	 */
 	public synchronized boolean isScanning() {
-		return this.pendingScanTasks > 0;
+		return this.runningScanTasks > 0;
 	}
 
 	/**
@@ -206,7 +206,7 @@ public final class FileScanner implements Closeable {
 
 	private void queueScanTask(FileScannerRunnable task) {
 		synchronized (this) {
-			this.pendingScanTasks++;
+			this.runningScanTasks++;
 		}
 		this.threadPool.execute(() -> {
 			try {
@@ -220,8 +220,8 @@ public final class FileScanner implements Closeable {
 				boolean scanFinished;
 
 				synchronized (this) {
-					this.pendingScanTasks--;
-					scanFinished = this.pendingScanTasks == 0;
+					this.runningScanTasks--;
+					scanFinished = this.runningScanTasks == 0;
 				}
 				if (scanFinished) {
 					scanFinished();

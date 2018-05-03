@@ -77,12 +77,19 @@ public class ByteFlagRenderer extends FlagRenderer<Byte> {
 	}
 
 	@Override
-	protected String formatFlag(Byte flag) {
+	protected String formatFlag(Byte value, Byte flag) {
 		StringBuilder buffer = new StringBuilder();
+		byte valueValue = value.byteValue();
 		byte flagValue = flag.byteValue();
 
 		for (byte mask = MSB; mask != 0; mask = shift(mask)) {
-			buffer.append((flagValue & mask) == mask ? '1' : '.');
+			if ((flagValue & mask) != mask) {
+				buffer.append('.');
+			} else if ((flagValue & valueValue) != 0) {
+				buffer.append('1');
+			} else {
+				buffer.append('0');
+			}
 		}
 		return buffer.toString();
 	}
