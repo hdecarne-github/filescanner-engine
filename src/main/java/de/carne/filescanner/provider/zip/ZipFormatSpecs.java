@@ -115,7 +115,7 @@ final class ZipFormatSpecs {
 		StructSpec dd = new StructSpec();
 
 		dd.result("Data Descriptor");
-		dd.add(DWordSpec.hex("local file header signature").validate(0x08074b50));
+		dd.add(DWordSpec.hex("data descriptor signature").validate(0x08074b50));
 		dd.add(DWordSpec.hex("crc-32"));
 		dd.add(DWordSpec.size("compressed size"));
 		dd.add(DWordSpec.size("uncompressed size"));
