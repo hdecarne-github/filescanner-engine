@@ -63,9 +63,10 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	public FileScannerResult decode(CompositeSpec formatSpec) throws IOException, InterruptedException {
 		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
 
+		boolean isRootSpec = this.decodeStack.size() == 1;
 		boolean isResultSpec = formatSpec.isResult();
 
-		if (this.decodeStack.size() == 1 && !isResultSpec) {
+		if (isRootSpec && !isResultSpec) {
 			throw new IllegalArgumentException("Root format spec must be a result spec");
 		}
 
@@ -77,15 +78,13 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 			this.decodeStack.push(new Scope(formatSpecResult));
 			try {
-				boolean fullCommit = this.decodeStack.size() <= 2;
-
 				run(() -> {
 					formatSpec.decodeComposite(this);
-					if (!fullCommit) {
+					if (!isRootSpec) {
 						formatSpecResult.updateAndCommit(position(), false);
 					}
 				}, true);
-				if (fullCommit) {
+				if (isRootSpec) {
 					commit(formatSpecResult);
 				}
 			} finally {
