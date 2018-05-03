@@ -140,9 +140,18 @@ public interface FileScannerResult {
 	/**
 	 * Gets the previously set custom data object associated with this {@linkplain FileScannerResult}.
 	 *
+	 * @param <T> the actual data type.
+	 * @param dataType the actual data type to retrieve.
 	 * @return the previously set custom data object associated with this {@linkplain FileScannerResult}.
 	 */
 	@Nullable
-	Object getData();
+	<T> T getData(Class<T> dataType);
+
+	/**
+	 * Gets the unique key of this {@linkplain FileScannerResult}.
+	 * 
+	 * @return the unique key of this {@linkplain FileScannerResult}.
+	 */
+	byte[] key();
 
 }

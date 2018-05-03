@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.engine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
 import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.format.AttributeSpec;
@@ -136,8 +138,35 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	@Nullable
-	public synchronized Object getData() {
-		return this.data;
+	public synchronized <T> T getData(Class<T> dataType) {
+		return (this.data != null ? Check.isInstanceOf(this.data, dataType) : null);
+	}
+
+	@Override
+	public byte[] key() {
+		byte[] key;
+
+		try (ByteArrayOutputStream keyBytes = new ByteArrayOutputStream()) {
+			keyHelper(keyBytes);
+			key = keyBytes.toByteArray();
+		} catch (IOException e) {
+			throw Exceptions.toRuntime(e);
+		}
+		return key;
+	}
+
+	private void keyHelper(ByteArrayOutputStream keyBytes) {
+		if (this.parent != null) {
+			this.parent.keyHelper(keyBytes);
+		}
+		keyBytes.write((int) ((this.start >> 56) & 0xff));
+		keyBytes.write((int) ((this.start >> 48) & 0xff));
+		keyBytes.write((int) ((this.start >> 40) & 0xff));
+		keyBytes.write((int) ((this.start >> 32) & 0xff));
+		keyBytes.write((int) ((this.start >> 24) & 0xff));
+		keyBytes.write((int) ((this.start >> 16) & 0xff));
+		keyBytes.write((int) ((this.start >> 8) & 0xff));
+		keyBytes.write((int) (this.start & 0xff));
 	}
 
 	protected FileScannerResultBuilder parent() {
