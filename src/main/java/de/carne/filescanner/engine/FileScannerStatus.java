@@ -45,6 +45,8 @@ public interface FileScannerStatus {
 
 	/**
 	 * Called whenever new scan results are available.
+	 * <p>
+	 * The submitted result object is the root node of the updated or created sub-tree within the overall result tree.
 	 *
 	 * @param scanner the calling {@linkplain FileScanner}.
 	 * @param result the new or updated scan result.
