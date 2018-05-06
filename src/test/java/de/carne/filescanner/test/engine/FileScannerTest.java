@@ -140,9 +140,7 @@ class FileScannerTest {
 	}
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
-		try (FileScannerResultOutput out = new FileScannerResultOutput(this.systemOutRenderer)) {
-			result.render(out);
-		}
+		FileScannerResultOutput.render(result, this.systemOutRenderer);
 		for (FileScannerResult resultChild : result.children()) {
 			renderResult(resultChild);
 		}

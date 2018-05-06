@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.carne.boot.check.Check;
+import de.carne.filescanner.engine.FileScannerResult;
 
 /**
  * Class used to output file scanner results in a generic manner to different kind of outputs.
@@ -40,6 +41,20 @@ public final class FileScannerResultOutput implements Closeable {
 	 */
 	public FileScannerResultOutput(Renderer renderer) {
 		this.renderer = renderer;
+	}
+
+	/**
+	 * Convenience function for rendering the given {@linkplain FileScannerResult} to the given {@linkplain Renderer}.
+	 * 
+	 * @param result the {@linkplain FileScannerResult} to render.
+	 * @param renderer the {@linkplain Renderer} to use for output generation.
+	 * @throws IOException if an I/O error occurs.
+	 * @throws InterruptedException if the rendering thread is interrupted.
+	 */
+	public static void render(FileScannerResult result, Renderer renderer) throws IOException, InterruptedException {
+		try (FileScannerResultOutput out = new FileScannerResultOutput(renderer)) {
+			result.render(out);
+		}
 	}
 
 	/**

@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 /**
- * Simple {@linkplain PrintStream} based {@linkplain Renderer} implementation suitable for console output.
+ * Simple {@linkplain PrintStream} based {@linkplain Renderer} implementation suitable for writing scan results to a
+ * {@linkplain PrintStream}.
  */
 public class PrintStreamRenderer implements Renderer {
 
