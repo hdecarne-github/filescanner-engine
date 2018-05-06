@@ -158,15 +158,15 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private void keyHelper(ByteArrayOutputStream keyBytes) {
 		if (this.parent != null) {
 			this.parent.keyHelper(keyBytes);
+			keyBytes.write((int) ((this.start >> 56) & 0xff));
+			keyBytes.write((int) ((this.start >> 48) & 0xff));
+			keyBytes.write((int) ((this.start >> 40) & 0xff));
+			keyBytes.write((int) ((this.start >> 32) & 0xff));
+			keyBytes.write((int) ((this.start >> 24) & 0xff));
+			keyBytes.write((int) ((this.start >> 16) & 0xff));
+			keyBytes.write((int) ((this.start >> 8) & 0xff));
+			keyBytes.write((int) (this.start & 0xff));
 		}
-		keyBytes.write((int) ((this.start >> 56) & 0xff));
-		keyBytes.write((int) ((this.start >> 48) & 0xff));
-		keyBytes.write((int) ((this.start >> 40) & 0xff));
-		keyBytes.write((int) ((this.start >> 32) & 0xff));
-		keyBytes.write((int) ((this.start >> 24) & 0xff));
-		keyBytes.write((int) ((this.start >> 16) & 0xff));
-		keyBytes.write((int) ((this.start >> 8) & 0xff));
-		keyBytes.write((int) (this.start & 0xff));
 	}
 
 	protected FileScannerResultBuilder parent() {

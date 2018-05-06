@@ -19,14 +19,17 @@ package de.carne.filescanner.engine;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import de.carne.boot.Exceptions;
+import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FormatMatcherBuilder.Matcher;
+import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
@@ -156,12 +159,12 @@ public final class FileScanner implements Closeable {
 	}
 
 	/**
-	 * Create a {@linkplain FileScanner} and scan the submitted file.
+	 * Creates a new {@linkplain FileScanner} instance and scans the submitted file.
 	 *
-	 * @param file The file to scan.
-	 * @param formats The {@linkplain Format}s to scan for.
-	 * @param status The callback interface receiving scan status updates.
-	 * @return The created {@linkplain FileScanner}.
+	 * @param file the file to scan.
+	 * @param formats the {@linkplain Format}s to scan for.
+	 * @param status the callback interface receiving scan status updates.
+	 * @return the created {@linkplain FileScanner} instance.
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public static FileScanner scan(Path file, Collection<Format> formats, FileScannerStatus status) throws IOException {
@@ -169,7 +172,7 @@ public final class FileScanner implements Closeable {
 	}
 
 	/**
-	 * Get the current scan status of this {@linkplain FileScanner}.
+	 * Gets the current scan status of this {@linkplain FileScanner}.
 	 *
 	 * @return {@code true} if the scanner is currently scanning.
 	 */
@@ -178,9 +181,9 @@ public final class FileScanner implements Closeable {
 	}
 
 	/**
-	 * Get the current scan progress.
+	 * Gets the current scan progress.
 	 *
-	 * @return The current scan progress.
+	 * @return the current scan progress.
 	 * @see FileScannerProgress
 	 */
 	public synchronized FileScannerProgress progress() {
@@ -189,12 +192,71 @@ public final class FileScanner implements Closeable {
 	}
 
 	/**
-	 * Get the root {@linkplain FileScannerResult}.
+	 * Gets the root {@linkplain FileScannerResult}.
 	 *
-	 * @return The root {@linkplain FileScannerResult}.
+	 * @return the root {@linkplain FileScannerResult}.
 	 */
 	public FileScannerResult result() {
 		return this.result;
+	}
+
+	/**
+	 * Gets array of {@linkplain FileScannerResult} instances corresponding to the given {@linkplain FileScannerResult}
+	 * key.
+	 *
+	 * @param resultKey the {@linkplain FileScannerResult} key to resolve.
+	 * @return the resolved {@linkplain FileScannerResult} path.
+	 */
+	public FileScannerResult[] getResultPath(byte[] resultKey) {
+		Check.assertTrue((resultKey.length % 8) == 0);
+
+		StringBuilder resultKeyString = new StringBuilder();
+		List<FileScannerResult> results = new ArrayList<>();
+		FileScannerResult lastResult = this.result;
+
+		resultKeyString.append(HexFormat.formatLong(0));
+		results.add(lastResult);
+
+		int resultKeyIndex = 0;
+
+		while (resultKeyIndex < resultKey.length) {
+			long resultKeyStart = ((resultKey[resultKeyIndex] & 0xffl) << 56)
+					| ((resultKey[resultKeyIndex + 1] & 0xffl) << 48) | ((resultKey[resultKeyIndex + 2] & 0xffl) << 40)
+					| ((resultKey[resultKeyIndex + 3] & 0xffl) << 32) | ((resultKey[resultKeyIndex + 4] & 0xffl) << 24)
+					| ((resultKey[resultKeyIndex + 5] & 0xffl) << 16) | ((resultKey[resultKeyIndex + 6] & 0xffl) << 8)
+					| (resultKey[resultKeyIndex + 7] & 0xffl);
+
+			resultKeyString.append(", ").append(HexFormat.formatLong(resultKeyStart));
+
+			FileScannerResult[] lastResultChildren = lastResult.children();
+			int scanIndexFrom = 0;
+			int scanIndexTo = lastResultChildren.length;
+			FileScannerResult currentResult = null;
+
+			if (scanIndexTo > 0) {
+				while (scanIndexFrom <= scanIndexTo) {
+					int scanIndex = scanIndexFrom + ((scanIndexTo - scanIndexFrom) / 2);
+					FileScannerResult scanResult = lastResultChildren[scanIndex];
+					long scanResultStart = scanResult.start();
+
+					if (scanResultStart == resultKeyStart) {
+						currentResult = scanResult;
+						break;
+					} else if (resultKeyStart < scanResultStart) {
+						scanIndexTo = scanIndex - 1;
+					} else {
+						scanIndexFrom = scanIndex + 1;
+					}
+				}
+			}
+			if (currentResult == null) {
+				throw new IllegalArgumentException("Invalid result key: " + resultKeyString);
+			}
+			results.add(currentResult);
+			lastResult = currentResult;
+			resultKeyIndex += 8;
+		}
+		return results.toArray(new FileScannerResult[results.size()]);
 	}
 
 	@Override
