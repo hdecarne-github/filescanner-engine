@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
@@ -45,8 +47,9 @@ public final class FileScanner implements Closeable {
 
 	private static final Log LOG = new Log();
 
-	private static final int THREAD_COUNT = SystemProperties.intValue(
-			FileScanner.class.getPackage().getName() + ".threadCount", Runtime.getRuntime().availableProcessors());
+	private static final int THREAD_COUNT = SystemProperties.intValue(FileScanner.class, ".threadCount",
+			Runtime.getRuntime().availableProcessors());
+	private static final long STOP_TIMEOUT = SystemProperties.longValue(FileScanner.class, ".stopTimeout", 5000);
 
 	private final ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
 	private final FormatMatcherBuilder formatMatcherBuilder;
@@ -172,6 +175,35 @@ public final class FileScanner implements Closeable {
 	}
 
 	/**
+	 * Stops a currently running scan.
+	 * <p>
+	 * If the scan has already been completed or stopped this function does nothing.
+	 *
+	 * @param wait whether to wait for the scan to stop ({@code true}) or to return immediately after the stop has been
+	 *        requested ({@code false}).
+	 */
+	public void stop(boolean wait) {
+		if (!this.threadPool.isTerminated()) {
+			LOG.info("Stopping scan threads...");
+
+			this.threadPool.shutdownNow();
+			if (wait) {
+				try {
+					boolean terminated = this.threadPool.awaitTermination(STOP_TIMEOUT, TimeUnit.MILLISECONDS);
+
+					if (!terminated) {
+						LOG.warning("Failed to stop all scan threads");
+					}
+				} catch (InterruptedException e) {
+					LOG.warning(e, "Scan stop was interurrupted");
+
+					Thread.currentThread().interrupt();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Gets the current scan status of this {@linkplain FileScanner}.
 	 *
 	 * @return {@code true} if the scanner is currently scanning.
@@ -261,7 +293,7 @@ public final class FileScanner implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		this.threadPool.shutdownNow();
+		stop(true);
 		this.result.input().close();
 		this.inputDecodeCache.close();
 	}
@@ -270,26 +302,36 @@ public final class FileScanner implements Closeable {
 		synchronized (this) {
 			this.runningScanTasks++;
 		}
-		this.threadPool.execute(() -> {
-			try {
-				task.run();
-			} catch (InterruptedException e) {
-				Exceptions.ignore(e);
-				Thread.currentThread().interrupt();
-			} catch (Exception e) {
-				LOG.warning(e, "Scan thread failed with exception");
-			} finally {
-				boolean scanFinished;
+		try {
+			this.threadPool.execute(() -> {
+				try {
+					task.run();
+				} catch (InterruptedException e) {
+					Exceptions.ignore(e);
+					Thread.currentThread().interrupt();
+				} catch (Exception e) {
+					LOG.warning(e, "Scan thread failed with exception");
+				} finally {
+					cleanUpScanTask();
+				}
+			});
+		} catch (RejectedExecutionException e) {
+			Exceptions.ignore(e);
+			cleanUpScanTask();
+		}
+	}
 
-				synchronized (this) {
-					this.runningScanTasks--;
-					scanFinished = this.runningScanTasks == 0;
-				}
-				if (scanFinished) {
-					scanFinished();
-				}
-			}
-		});
+	private void cleanUpScanTask() {
+		boolean scanFinished;
+
+		synchronized (this) {
+			this.runningScanTasks--;
+			scanFinished = this.runningScanTasks == 0;
+		}
+		if (scanFinished) {
+			scanFinished();
+			this.threadPool.shutdown();
+		}
 	}
 
 	private void scanProgress(long totalInputBytesDelta, long scannedBytesDelta) {
