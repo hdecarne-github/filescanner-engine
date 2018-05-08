@@ -129,7 +129,6 @@ final class ZipFormatSpecs {
 
 		zipEntry.result(() -> String.format("Zip entry \"%1$s\"", LFH_FILE_NAME.get()));
 		zipEntry.add(LOCAL_FILE_HEADER);
-		zipEntry.add(FormatSpecs.COMMIT);
 		zipEntry.add(new EncodedInputSpec("file data").inputDecoder(ZipFormatSpecs::getInputDecoder)
 				.decodedInputName(LFH_FILE_NAME).encodedInputSize(ZipFormatSpecs::getEncodedInputSize));
 		zipEntry.add(new ConditionalSpec(ZipFormatSpecs::getDataDescriptorSpec));
