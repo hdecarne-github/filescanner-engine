@@ -83,7 +83,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 					if (!isRootSpec) {
 						formatSpecResult.updateAndCommit(position(), false);
 					}
-				}, true);
+				});
 				if (isRootSpec) {
 					commit(formatSpecResult);
 				}

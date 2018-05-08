@@ -54,7 +54,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	public void render(FileScannerResultOutput out, CompositeSpec formatSpec) throws IOException, InterruptedException {
 		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
-		run(() -> formatSpec.renderComposite(out, this), false);
+		run(() -> formatSpec.renderComposite(out, this));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 			throws IOException, InterruptedException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
-		run(() -> encodedInputSpec.inputDecoder().get().render(out), false);
+		run(() -> encodedInputSpec.inputDecoder().get().render(out));
 	}
 
 	/**
