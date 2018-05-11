@@ -131,6 +131,13 @@ public interface FileScannerResult {
 	void render(FileScannerResultOutput out) throws IOException, InterruptedException;
 
 	/**
+	 * Gets the available {@linkplain FileScannerResultExporter} instances for this {@linkplain FileScannerResult}.
+	 *
+	 * @return the available {@linkplain FileScannerResultExporter}.
+	 */
+	FileScannerResultExporter[] exporters();
+
+	/**
 	 * Sets the custom data object associated with this {@linkplain FileScannerResult}.
 	 *
 	 * @param data the data object to set.
@@ -149,7 +156,7 @@ public interface FileScannerResult {
 
 	/**
 	 * Gets the unique key of this {@linkplain FileScannerResult}.
-	 * 
+	 *
 	 * @return the unique key of this {@linkplain FileScannerResult}.
 	 */
 	byte[] key();

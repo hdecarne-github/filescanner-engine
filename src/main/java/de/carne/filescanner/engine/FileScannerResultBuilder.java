@@ -35,6 +35,7 @@ import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.text.MemoryUnitFormat;
@@ -51,6 +52,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private final Type type;
 	private final FileScannerInput input;
 	private final long start;
+	private final List<FileScannerResultExporter> customExporters = new ArrayList<>();
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
 	@Nullable
@@ -282,6 +284,21 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(size()));
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
 				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(size() * 1.0));
+	}
+
+	@Override
+	public FileScannerResultExporter[] exporters() {
+		FileScannerResultExporter[] exporters = new FileScannerResultExporter[1 + this.customExporters.size()];
+
+		exporters[0] = RawFileScannerResultExporter.EXPORTER;
+
+		int exporterIndex = 1;
+
+		for (FileScannerResultExporter customExporter : this.customExporters) {
+			exporters[exporterIndex] = customExporter;
+			exporterIndex++;
+		}
+		return exporters;
 	}
 
 	private static final class CommitState {
