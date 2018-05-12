@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.input.FileScannerInput;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * {@linkplain FileScanner} result object.
@@ -124,11 +124,11 @@ public interface FileScannerResult {
 	/**
 	 * Renders this {@linkplain FileScannerResult}.
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	void render(FileScannerResultOutput out) throws IOException, InterruptedException;
+	void render(RenderOutput out) throws IOException, InterruptedException;
 
 	/**
 	 * Gets the available {@linkplain FileScannerResultExporter} instances for this {@linkplain FileScannerResult}.

@@ -19,7 +19,7 @@ package de.carne.filescanner.provider.util;
 import java.io.IOException;
 
 import de.carne.filescanner.engine.format.AttributeRenderer;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 
 /**
@@ -37,19 +37,19 @@ public class DosTimeRenderer implements AttributeRenderer<Short> {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, Short value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, Short value) throws IOException, InterruptedException {
 		render(out, value.shortValue());
 	}
 
 	/**
 	 * Renders the given DOS time value.
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} buffer to render into.
+	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out, short value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, short value) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ").write(Dos.dosTimeToLocalTime(value).toString());
 	}
 

@@ -14,28 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.format;
+package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
-
-import de.carne.filescanner.engine.transfer.RenderOutput;
+import java.nio.channels.InterruptibleChannel;
+import java.nio.channels.WritableByteChannel;
 
 /**
- * Render function for {@linkplain AttributeSpec} elements.
- *
- * @param <T> the actual attribute value type.
+ * Export handler interface responsible for writing export data.
  */
-@FunctionalInterface
-public interface AttributeRenderer<T> {
+public interface ExportTarget extends WritableByteChannel, InterruptibleChannel {
 
 	/**
-	 * Renders an attribute value.
+	 * Sets the size of upcoming export data stream.
+	 * <p>
+	 * The given size is used to report export progress to the user. In order to work this size has to be set prior to
+	 * any {@link #write(java.nio.ByteBuffer)} call.
 	 *
-	 * @param out the {@linkplain RenderOutput} buffer to render into.
-	 * @param value the value to render.
+	 * @param size the size to set.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	void render(RenderOutput out, T value) throws IOException, InterruptedException;
+	void setSize(long size) throws IOException;
 
 }

@@ -17,10 +17,11 @@
 package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.channels.ReadableByteChannel;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultExporter;
+import de.carne.io.IOUtil;
 
 /**
  * {@linkplain FileScannerResultExporter} implementation for raw data export.
@@ -28,42 +29,56 @@ import de.carne.filescanner.engine.FileScannerResultExporter;
 public class RawFileScannerResultExporter implements FileScannerResultExporter {
 
 	/**
-	 * The single instance of this exporter.
+	 * Predefined APPLICATION_OCTET_STREAM exporter.
 	 */
-	public static final RawFileScannerResultExporter EXPORTER = new RawFileScannerResultExporter();
+	public static final RawFileScannerResultExporter APPLICATION_OCTET_STREAM_EXPORTER = new RawFileScannerResultExporter(
+			"Raw", Type.APPLICATION_OCTET_STREAM, ".bin");
 
-	private static final String NAME = "Raw";
+	private final String name;
+	private final Type type;
+	private final String extension;
 
-	private RawFileScannerResultExporter() {
-		// prevent instantiation
+	/**
+	 * Constructs a new {@linkplain RawFileScannerResultExporter} instance.
+	 *
+	 * @param name the exporter's name.
+	 * @param type the exporter's type.
+	 * @param extension the file name extension to use.
+	 */
+	public RawFileScannerResultExporter(String name, Type type, String extension) {
+		this.name = name;
+		this.type = type;
+		this.extension = extension;
 	}
 
 	@Override
 	public String name() {
-		return NAME;
+		return this.name;
 	}
 
 	@Override
 	public Type type() {
-		return Type.APPLICATION_BINARY;
+		return this.type;
 	}
 
 	@Override
-	public String defaultStreamName(FileScannerResult result) {
-		String streamName;
+	public String defaultFileName(FileScannerResult result) {
+		String fileName;
 
 		if (result.type() == FileScannerResult.Type.INPUT) {
-			streamName = result.input().name();
+			fileName = result.input().name();
 		} else {
-			// TODO: Mangle result name
-			streamName = result.name() + ".bin";
+			fileName = result.name() + this.extension;
 		}
-		return streamName;
+		return fileName;
 	}
 
 	@Override
-	public InputStream stream(FileScannerResult result) throws IOException {
-		return result.input().inputStream(result.start(), result.end());
+	public void export(FileScannerResult result, ExportTarget target) throws IOException {
+		target.setSize(result.size());
+		try (ReadableByteChannel resultChannel = result.input().byteChannel(result.start(), result.end())) {
+			IOUtil.copyChannel(target, resultChannel);
+		}
 	}
 
 }

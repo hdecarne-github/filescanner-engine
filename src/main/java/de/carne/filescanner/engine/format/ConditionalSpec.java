@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Conditional {@linkplain FormatSpec}.
@@ -67,7 +67,7 @@ public class ConditionalSpec implements FormatSpec {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void render(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		this.spec.get().render(out, context);
 	}

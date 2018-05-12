@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.input.InputDecoder;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -181,7 +181,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void render(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		// Nothing to do here
 	}

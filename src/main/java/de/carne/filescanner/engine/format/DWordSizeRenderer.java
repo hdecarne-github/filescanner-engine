@@ -18,7 +18,7 @@ package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.text.MemoryUnitFormat;
 
@@ -37,19 +37,19 @@ public class DWordSizeRenderer implements AttributeRenderer<Integer> {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, Integer value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, Integer value) throws IOException, InterruptedException {
 		render(out, value.intValue());
 	}
 
 	/**
 	 * Renders the given value.
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} buffer to render into.
+	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out, int value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, int value) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
 				.write(MemoryUnitFormat.getMemoryUnitInstance().format((value & 0xffffffffl) * 1.0));
 	}

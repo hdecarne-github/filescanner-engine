@@ -19,7 +19,7 @@ package de.carne.filescanner.engine.format;
 import java.io.IOException;
 import java.util.HashMap;
 
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 
 /**
@@ -34,7 +34,7 @@ public class SymbolRenderer<T> extends HashMap<T, String> implements AttributeRe
 	private static final long serialVersionUID = -7227668070648773298L;
 
 	@Override
-	public void render(FileScannerResultOutput out, T value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, T value) throws IOException, InterruptedException {
 		String symbol = get(value);
 
 		if (symbol != null) {

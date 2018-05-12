@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -92,7 +92,7 @@ public abstract class CompositeSpec implements FormatSpec {
 			throws IOException, InterruptedException;
 
 	@Override
-	public final void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public final void render(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		context.render(out, this);
 	}
@@ -100,12 +100,12 @@ public abstract class CompositeSpec implements FormatSpec {
 	/**
 	 * Renders this {@linkplain CompositeSpec} instance.
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public abstract void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public abstract void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException;
 
 }

@@ -34,7 +34,7 @@ import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
@@ -272,7 +272,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+	public void render(RenderOutput out) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.NORMAL).write("start");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(start()));
@@ -288,11 +288,11 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	public FileScannerResultExporter[] exporters() {
-		FileScannerResultExporter[] exporters = new FileScannerResultExporter[1 + this.customExporters.size()];
+		FileScannerResultExporter[] exporters = new FileScannerResultExporter[Math.max(1, this.customExporters.size())];
 
-		exporters[0] = RawFileScannerResultExporter.EXPORTER;
+		exporters[0] = RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
 
-		int exporterIndex = 1;
+		int exporterIndex = 0;
 
 		for (FileScannerResultExporter customExporter : this.customExporters) {
 			exporters[exporterIndex] = customExporter;
@@ -364,7 +364,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException, InterruptedException {
 			out.setStyle(RenderStyle.NORMAL).write("file");
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
 			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input().name()));
@@ -398,7 +398,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException, InterruptedException {
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
 			this.formatSpec.render(out, context);
@@ -437,7 +437,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException, InterruptedException {
 			super.render(out);
 
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);

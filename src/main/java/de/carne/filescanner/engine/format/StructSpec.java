@@ -23,7 +23,7 @@ import java.util.List;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Struct of {@linkplain FormatSpec}s.
@@ -91,7 +91,7 @@ public class StructSpec extends CompositeSpec {
 	}
 
 	@Override
-	public void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		for (FormatSpec element : this.elements) {
 			element.render(out, context);

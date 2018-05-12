@@ -32,7 +32,7 @@ import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerStatus;
 import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.PrintStreamRenderer;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.test.TestFiles;
@@ -140,7 +140,7 @@ class FileScannerTest {
 	}
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
-		FileScannerResultOutput.render(result, this.systemOutRenderer);
+		RenderOutput.render(result, this.systemOutRenderer);
 		for (FileScannerResult resultChild : result.children()) {
 			renderResult(resultChild);
 		}

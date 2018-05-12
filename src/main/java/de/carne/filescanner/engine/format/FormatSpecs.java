@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Utility class providing {@linkplain FormatSpec} related functions.
@@ -58,7 +58,7 @@ public final class FormatSpecs {
 		}
 
 		@Override
-		public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+		public void render(RenderOutput out, FileScannerResultRenderContext context)
 				throws IOException, InterruptedException {
 			// Nothing to do here
 		}
@@ -91,7 +91,7 @@ public final class FormatSpecs {
 		}
 
 		@Override
-		public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+		public void render(RenderOutput out, FileScannerResultRenderContext context)
 				throws IOException, InterruptedException {
 			// Nothing to do here
 		}

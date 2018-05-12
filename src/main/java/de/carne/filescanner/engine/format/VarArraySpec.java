@@ -23,7 +23,7 @@ import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Variable number of {@linkplain FormatSpec}s.
@@ -98,7 +98,7 @@ public class VarArraySpec extends CompositeSpec {
 	}
 
 	@Override
-	public void renderComposite(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		// Nothing to do here
 	}

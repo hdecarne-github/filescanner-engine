@@ -19,7 +19,7 @@ package de.carne.filescanner.engine.input;
 import java.io.IOException;
 
 import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.nio.compression.spi.Decoder;
 
@@ -89,11 +89,11 @@ public abstract class InputDecoder {
 	/**
 	 * Renders detailed decoder informations (if available).
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(FileScannerResultOutput out) throws IOException, InterruptedException {
+	public void render(RenderOutput out) throws IOException, InterruptedException {
 		out.setStyle(RenderStyle.NORMAL).write("decoder");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln("'" + this.name + "'");

@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Base interface for all format specification elements.
@@ -66,12 +66,12 @@ public interface FormatSpec {
 	/**
 	 * Renders input data.
 	 *
-	 * @param out the {@linkplain FileScannerResultOutput} to render to.
+	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	void render(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException;
 
 }

@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.transfer.FileScannerResultOutput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
@@ -218,7 +218,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	}
 
 	@Override
-	public void render(FileScannerResultOutput out, FileScannerResultRenderContext context)
+	public void render(RenderOutput out, FileScannerResultRenderContext context)
 			throws IOException, InterruptedException {
 		T value = decodeValue(context);
 

@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.FileScannerResult;
 /**
  * Class used to output file scanner results in a generic manner to different kind of outputs.
  */
-public final class FileScannerResultOutput implements Closeable {
+public final class RenderOutput implements Closeable {
 
 	private final Renderer renderer;
 	private final Set<RenderOption> options = new HashSet<>();
@@ -35,11 +35,11 @@ public final class FileScannerResultOutput implements Closeable {
 	private RenderStyle currentStyle = RenderStyle.NORMAL;
 
 	/**
-	 * Constructs a new {@linkplain FileScannerResultOutput} instance.
+	 * Constructs a new {@linkplain RenderOutput} instance.
 	 *
 	 * @param renderer the {@linkplain Renderer} to use for output generation.
 	 */
-	public FileScannerResultOutput(Renderer renderer) {
+	public RenderOutput(Renderer renderer) {
 		this.renderer = renderer;
 	}
 
@@ -52,7 +52,7 @@ public final class FileScannerResultOutput implements Closeable {
 	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
 	public static void render(FileScannerResult result, Renderer renderer) throws IOException, InterruptedException {
-		try (FileScannerResultOutput out = new FileScannerResultOutput(renderer)) {
+		try (RenderOutput out = new RenderOutput(renderer)) {
 			result.render(out);
 		}
 	}
@@ -72,9 +72,9 @@ public final class FileScannerResultOutput implements Closeable {
 	 * Render options can only be changed before the first output is generated.
 	 *
 	 * @param option the {@linkplain RenderOption} to enable.
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 */
-	public FileScannerResultOutput enableOption(RenderOption option) {
+	public RenderOutput enableOption(RenderOption option) {
 		Check.assertTrue(!this.prepared);
 		this.options.add(option);
 		return this;
@@ -86,9 +86,9 @@ public final class FileScannerResultOutput implements Closeable {
 	 * Render options can only be changed before the first output is generated.
 	 *
 	 * @param option the {@linkplain RenderOption} to disable.
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 */
-	public FileScannerResultOutput disableOption(RenderOption option) {
+	public RenderOutput disableOption(RenderOption option) {
 		Check.assertTrue(!this.prepared);
 		this.options.remove(option);
 		return this;
@@ -98,9 +98,9 @@ public final class FileScannerResultOutput implements Closeable {
 	 * Sets the {@linkplain RenderStyle} for subsequent write calls.
 	 *
 	 * @param style the {@linkplain RenderStyle} to set.
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 */
-	public FileScannerResultOutput setStyle(RenderStyle style) {
+	public RenderOutput setStyle(RenderStyle style) {
 		this.currentStyle = style;
 		return this;
 	}
@@ -109,11 +109,11 @@ public final class FileScannerResultOutput implements Closeable {
 	 * Writes simple text to the output using the currently selected {@linkplain RenderStyle}.
 	 *
 	 * @param text the text to write.
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public FileScannerResultOutput write(String text) throws IOException, InterruptedException {
+	public RenderOutput write(String text) throws IOException, InterruptedException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, text, false);
 		return this;
@@ -123,11 +123,11 @@ public final class FileScannerResultOutput implements Closeable {
 	 * Writes simple text as well as a line break to the output using the currently selected {@linkplain RenderStyle}.
 	 *
 	 * @param text the text to write.
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public FileScannerResultOutput writeln(String text) throws IOException, InterruptedException {
+	public RenderOutput writeln(String text) throws IOException, InterruptedException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, text, true);
 		return this;
@@ -136,11 +136,11 @@ public final class FileScannerResultOutput implements Closeable {
 	/**
 	 * Writes a line break to the output.
 	 *
-	 * @return the updated {@linkplain FileScannerResultOutput} for chaining.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public FileScannerResultOutput writeln() throws IOException, InterruptedException {
+	public RenderOutput writeln() throws IOException, InterruptedException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, "", true);
 		return this;
