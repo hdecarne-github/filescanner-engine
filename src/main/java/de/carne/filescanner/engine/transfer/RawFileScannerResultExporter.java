@@ -21,6 +21,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultExporter;
+import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
@@ -66,9 +67,9 @@ public class RawFileScannerResultExporter implements FileScannerResultExporter {
 		String fileName;
 
 		if (result.type() == FileScannerResult.Type.INPUT) {
-			fileName = result.input().name();
+			fileName = FileNames.normalizeFilePath(result.input().name());
 		} else {
-			fileName = result.name() + this.extension;
+			fileName = FileNames.mangleFileName(result.name()) + this.extension;
 		}
 		return fileName;
 	}
