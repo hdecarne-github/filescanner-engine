@@ -71,8 +71,10 @@ public final class InputDecodeCache implements Closeable {
 	public InputDecodeCache() throws IOException {
 		LOG.info("Creating decode cache...");
 
-		this.cacheFilePath = Files.createTempFile(FileUtil.TMP_DIR, getClass().getSimpleName(), null,
-				FileAttributes.userFileDefault(FileUtil.TMP_DIR));
+		Path tmpDir = FileUtil.tmpDir();
+
+		this.cacheFilePath = Files.createTempFile(tmpDir, getClass().getSimpleName(), null,
+				FileAttributes.userFileDefault(tmpDir));
 
 		FileChannelInput fileChannelInput = new FileChannelInput(this.cacheFilePath, StandardOpenOption.CREATE,
 				StandardOpenOption.WRITE, StandardOpenOption.READ);
