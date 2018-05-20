@@ -32,9 +32,9 @@ repositories {
 dependencies {
 	api("de.carne.common:java-default:8.5.0-SNAPSHOT")
 	implementation("de.carne.common:java-compression:4.0.0")
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.1.0")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.1.0")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.0.3")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.2.0")
 }
 
 jar {
