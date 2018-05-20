@@ -32,7 +32,7 @@ public class PngFormat extends Format {
 	 * Constructs a new {@linkplain PngFormat} instance.
 	 */
 	public PngFormat() {
-		super(PngFormatSpecs.FORMAT_NAME, ByteOrder.LITTLE_ENDIAN);
+		super(PngFormatSpecs.FORMAT_NAME, ByteOrder.BIG_ENDIAN);
 		registerHeaderSpec(PngFormatSpecs.PNG_FILE_SIGNATURE);
 	}
 

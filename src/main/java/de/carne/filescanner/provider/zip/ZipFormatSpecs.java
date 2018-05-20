@@ -93,19 +93,19 @@ final class ZipFormatSpecs {
 		StructSpec lfh = new StructSpec();
 
 		lfh.result("Local file header");
-		lfh.add(DWordSpec.hex("local file header signature").validate(0x04034b50));
+		lfh.add(DWordSpec.hex("local file header signature")).validate(0x04034b50);
 		lfh.add(WordSpec.hex("version needed to extract"));
-		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG.renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS));
-		lfh.add(LFH_COMPRESSION_METHOD.renderer(COMPRESSION_METHOD_SYMBOLS));
-		lfh.add(WordSpec.hex("last mod file time").renderer(DosTimeRenderer.RENDERER));
-		lfh.add(WordSpec.hex("last mod file date").renderer(DosDateRenderer.RENDERER));
+		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG).renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS);
+		lfh.add(LFH_COMPRESSION_METHOD).renderer(COMPRESSION_METHOD_SYMBOLS);
+		lfh.add(WordSpec.hex("last mod file time")).renderer(DosTimeRenderer.RENDERER);
+		lfh.add(WordSpec.hex("last mod file date")).renderer(DosDateRenderer.RENDERER);
 		lfh.add(DWordSpec.hex("crc-32"));
 		lfh.add(LFH_COMPRESSED_SIZE);
 		lfh.add(DWordSpec.size("uncompressed size"));
 		lfh.add(LFH_FILE_NAME_LENGTH);
 		lfh.add(LFH_EXTRA_FIELD_LENGTH);
 		lfh.add(LFH_FILE_NAME.size(LFH_FILE_NAME_LENGTH));
-		lfh.add(new ByteArraySpec("extra field").size(LFH_EXTRA_FIELD_LENGTH));
+		lfh.add(new ByteArraySpec("extra field")).size(LFH_EXTRA_FIELD_LENGTH);
 		LOCAL_FILE_HEADER = lfh;
 	}
 
@@ -149,9 +149,9 @@ final class ZipFormatSpecs {
 		cdh.add(WordSpec.hex("version made by"));
 		cdh.add(WordSpec.hex("version needed to extract"));
 		cdh.add(WordSpec.hex("general purpose bit flag").renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS));
-		cdh.add(WordSpec.hex("compression method").renderer(COMPRESSION_METHOD_SYMBOLS));
-		cdh.add(WordSpec.hex("last mod file time").renderer(DosTimeRenderer.RENDERER));
-		cdh.add(WordSpec.hex("last mod file date").renderer(DosDateRenderer.RENDERER));
+		cdh.add(WordSpec.hex("compression method")).renderer(COMPRESSION_METHOD_SYMBOLS);
+		cdh.add(WordSpec.hex("last mod file time")).renderer(DosTimeRenderer.RENDERER);
+		cdh.add(WordSpec.hex("last mod file date")).renderer(DosDateRenderer.RENDERER);
 		cdh.add(DWordSpec.hex("crc-32"));
 		cdh.add(DWordSpec.size("compressed size"));
 		cdh.add(DWordSpec.size("uncompressed size"));
@@ -163,8 +163,8 @@ final class ZipFormatSpecs {
 		cdh.add(DWordSpec.hex("external file attributes"));
 		cdh.add(DWordSpec.hex("relative offset of local header"));
 		cdh.add(CDH_FILE_NAME.size(CDH_FILE_NAME_LENGTH));
-		cdh.add(new ByteArraySpec("extra field").size(CDH_EXTRA_FIELD_LENGTH));
-		cdh.add(new FixedStringSpec("file comment").size(CDH_FILE_COMMENT_LENGTH));
+		cdh.add(new ByteArraySpec("extra field")).size(CDH_EXTRA_FIELD_LENGTH);
+		cdh.add(new FixedStringSpec("file comment")).size(CDH_FILE_COMMENT_LENGTH);
 		CENTRAL_DIRECTORY_HEADER = cdh;
 	}
 

@@ -19,7 +19,9 @@ package de.carne.filescanner.provider.png;
 import java.util.Arrays;
 
 import de.carne.filescanner.engine.format.ByteArraySpec;
+import de.carne.filescanner.engine.format.DWordSpec;
 import de.carne.filescanner.engine.format.StructSpec;
+import de.carne.filescanner.engine.format.VarArraySpec;
 
 final class PngFormatSpecs {
 
@@ -42,6 +44,36 @@ final class PngFormatSpecs {
 		PNG_FILE_SIGNATURE = fileSignature;
 	}
 
+	static final StructSpec GENERIC_CHUNK;
+	static final DWordSpec GENERIC_CHUNK_LENGTH = DWordSpec.size("Length");
+	static final DWordSpec GENERIC_CHUNK_TYPE = DWordSpec.hex("Chunk Type");
+
+	static {
+		StructSpec genericChunk = new StructSpec();
+
+		genericChunk.result("Chunk");
+		genericChunk.add(GENERIC_CHUNK_LENGTH);
+		genericChunk.add(GENERIC_CHUNK_TYPE).validate(value -> value.intValue() != 0x49454e44);
+		genericChunk.add(new ByteArraySpec("Chunk Data")).size(GENERIC_CHUNK_LENGTH);
+		genericChunk.add(DWordSpec.hex("CRC"));
+		GENERIC_CHUNK = genericChunk;
+	}
+
+	static final StructSpec IEND_CHUNK;
+	static final DWordSpec IEND_CHUNK_LENGTH = DWordSpec.size("Length");
+	static final DWordSpec IEND_CHUNK_TYPE = DWordSpec.hex("Chunk Type");
+
+	static {
+		StructSpec iendChunk = new StructSpec();
+
+		iendChunk.result("IEND Chunk");
+		iendChunk.add(IEND_CHUNK_LENGTH);
+		iendChunk.add(IEND_CHUNK_TYPE).validate(0x49454e44);
+		iendChunk.add(new ByteArraySpec("Chunk Data")).size(IEND_CHUNK_LENGTH);
+		iendChunk.add(DWordSpec.hex("CRC"));
+		IEND_CHUNK = iendChunk;
+	}
+
 	static final StructSpec FORMAT_SPEC;
 
 	static {
@@ -49,7 +81,17 @@ final class PngFormatSpecs {
 
 		formatSpec.result(FORMAT_NAME);
 		formatSpec.add(PNG_FILE_SIGNATURE);
+		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));
+		formatSpec.add(IEND_CHUNK);
 		FORMAT_SPEC = formatSpec;
+	}
+
+	// Setup bindings
+	static {
+		GENERIC_CHUNK_LENGTH.bind();
+		GENERIC_CHUNK_TYPE.bind();
+		IEND_CHUNK_LENGTH.bind();
+		IEND_CHUNK_TYPE.bind();
 	}
 
 }
