@@ -53,13 +53,12 @@ public final class FormatSpecs {
 		}
 
 		@Override
-		public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+		public void decode(FileScannerResultDecodeContext context) throws IOException {
 			// Nothing to do here
 		}
 
 		@Override
-		public void render(RenderOutput out, FileScannerResultRenderContext context)
-				throws IOException, InterruptedException {
+		public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 			// Nothing to do here
 		}
 
@@ -86,13 +85,12 @@ public final class FormatSpecs {
 		}
 
 		@Override
-		public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+		public void decode(FileScannerResultDecodeContext context) throws IOException {
 			context.commit();
 		}
 
 		@Override
-		public void render(RenderOutput out, FileScannerResultRenderContext context)
-				throws IOException, InterruptedException {
+		public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 			// Nothing to do here
 		}
 

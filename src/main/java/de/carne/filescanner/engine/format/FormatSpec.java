@@ -59,9 +59,8 @@ public interface FormatSpec {
 	 *
 	 * @param context the {@linkplain FileScannerResultDecodeContext} instance to use for decoding.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException;
+	void decode(FileScannerResultDecodeContext context) throws IOException;
 
 	/**
 	 * Renders input data.
@@ -69,9 +68,7 @@ public interface FormatSpec {
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	void render(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException;
+	void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException;
 
 }

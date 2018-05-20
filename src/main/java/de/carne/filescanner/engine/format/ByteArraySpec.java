@@ -94,7 +94,7 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	}
 
 	@Override
-	protected byte[] decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException {
+	protected byte[] decodeValue(FileScannerResultInputContext context) throws IOException {
 		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 

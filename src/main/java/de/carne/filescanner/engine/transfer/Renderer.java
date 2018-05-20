@@ -30,9 +30,8 @@ public interface Renderer extends Closeable {
 	 *
 	 * @param options The rendering options.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	default void emitPrologue(Set<RenderOption> options) throws IOException, InterruptedException {
+	default void emitPrologue(Set<RenderOption> options) throws IOException {
 		// Default is to emit nothing
 	}
 
@@ -43,17 +42,15 @@ public interface Renderer extends Closeable {
 	 * @param text the text to emit.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException, InterruptedException;
+	void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException;
 
 	/**
 	 * Emit any necessary epilogue output.
 	 *
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	default void emitEpilouge() throws IOException, InterruptedException {
+	default void emitEpilouge() throws IOException {
 		// Default is to emit nothing
 	}
 

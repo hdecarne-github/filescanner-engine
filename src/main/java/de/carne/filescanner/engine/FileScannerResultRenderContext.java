@@ -49,9 +49,8 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param formatSpec a {@linkplain CompositeSpec} to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public void render(RenderOutput out, CompositeSpec formatSpec) throws IOException, InterruptedException {
+	public void render(RenderOutput out, CompositeSpec formatSpec) throws IOException {
 		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
 		run(() -> formatSpec.renderComposite(out, this));
@@ -63,10 +62,8 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param encodedInputSpec a {@linkplain EncodedInputSpec} to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public void render(RenderOutput out, EncodedInputSpec encodedInputSpec)
-			throws IOException, InterruptedException {
+	public void render(RenderOutput out, EncodedInputSpec encodedInputSpec) throws IOException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
 		run(() -> encodedInputSpec.inputDecoder().get().render(out));

@@ -34,8 +34,8 @@ import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
-import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.text.MemoryUnitFormat;
@@ -272,7 +272,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public void render(RenderOutput out) throws IOException, InterruptedException {
+	public void render(RenderOutput out) throws IOException {
 		out.setStyle(RenderStyle.NORMAL).write("start");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(start()));
@@ -364,7 +364,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException {
 			out.setStyle(RenderStyle.NORMAL).write("file");
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
 			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input().name()));
@@ -398,7 +398,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException {
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
 			this.formatSpec.render(out, context);
@@ -437,7 +437,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException, InterruptedException {
+		public void render(RenderOutput out) throws IOException {
 			super.render(out);
 
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);

@@ -91,9 +91,8 @@ public abstract class InputDecoder {
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(RenderOutput out) throws IOException, InterruptedException {
+	public void render(RenderOutput out) throws IOException {
 		out.setStyle(RenderStyle.NORMAL).write("decoder");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln("'" + this.name + "'");

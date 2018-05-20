@@ -37,7 +37,7 @@ public class QWordSizeRenderer implements AttributeRenderer<Long> {
 	}
 
 	@Override
-	public void render(RenderOutput out, Long value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, Long value) throws IOException {
 		render(out, value.longValue());
 	}
 
@@ -47,9 +47,8 @@ public class QWordSizeRenderer implements AttributeRenderer<Long> {
 	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(RenderOutput out, long value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, long value) throws IOException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ")
 				.write(MemoryUnitFormat.getMemoryUnitInstance().format(value * 1.0));
 	}

@@ -126,9 +126,8 @@ public interface FileScannerResult {
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	void render(RenderOutput out) throws IOException, InterruptedException;
+	void render(RenderOutput out) throws IOException;
 
 	/**
 	 * Gets the available {@linkplain FileScannerResultExporter} instances for this {@linkplain FileScannerResult}.

@@ -34,8 +34,7 @@ public interface AttributeRenderer<T> {
 	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	void render(RenderOutput out, T value) throws IOException, InterruptedException;
+	void render(RenderOutput out, T value) throws IOException;
 
 }

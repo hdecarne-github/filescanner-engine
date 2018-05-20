@@ -31,7 +31,6 @@ import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;
 import de.carne.nio.file.attribute.FileAttributes;
 import de.carne.util.SystemProperties;
-import de.carne.util.Threads;
 
 /**
  * This class implements a file based cache for storing and accessing decoded input data during a scan in a single cache
@@ -95,10 +94,9 @@ public final class InputDecodeCache implements Closeable {
 	 * @param end the maximum position to read to during decoding.
 	 * @return a {@linkplain Decoded} instance containing the decode result.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
 	public synchronized Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
-			long end) throws IOException, InterruptedException {
+			long end) throws IOException {
 		long encodedSize = 0;
 		FileScannerInput decodedInput;
 
@@ -117,7 +115,6 @@ public final class InputDecodeCache implements Closeable {
 
 				while (decoder.decode(buffer, inputByteChannel) >= 0) {
 					encodedSize = decoder.totalIn();
-					Threads.checkInterrupted();
 					buffer.flip();
 					decodedInputEnd += this.cacheFileChannel.write(buffer);
 					buffer.clear();

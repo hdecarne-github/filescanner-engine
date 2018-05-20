@@ -184,9 +184,8 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @param context the {@linkplain FileScannerResultInputContext} to decode the value from.
 	 * @return the decoded value.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	protected abstract T decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException;
+	protected abstract T decodeValue(FileScannerResultInputContext context) throws IOException;
 
 	/**
 	 * Validates the attribute value against any defined validator.
@@ -199,7 +198,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public void decode(FileScannerResultDecodeContext context) throws IOException {
 		T value = decodeValue(context);
 
 		if (!validateValue(value)) {
@@ -218,8 +217,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	}
 
 	@Override
-	public void render(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		T value = decodeValue(context);
 
 		switch (this.bindMode) {

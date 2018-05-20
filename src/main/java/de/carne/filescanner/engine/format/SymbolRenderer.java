@@ -25,7 +25,7 @@ import de.carne.filescanner.engine.transfer.RenderStyle;
 /**
  * {@linkplain AttributeRenderer} implementation which renders a comment showing the attribute value's symbolic name (if
  * available).
- * 
+ *
  * @param <T> The actual attribute type.
  */
 public class SymbolRenderer<T> extends HashMap<T, String> implements AttributeRenderer<T> {
@@ -34,7 +34,7 @@ public class SymbolRenderer<T> extends HashMap<T, String> implements AttributeRe
 	private static final long serialVersionUID = -7227668070648773298L;
 
 	@Override
-	public void render(RenderOutput out, T value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, T value) throws IOException {
 		String symbol = get(value);
 
 		if (symbol != null) {

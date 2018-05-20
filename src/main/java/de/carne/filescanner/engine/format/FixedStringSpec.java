@@ -119,7 +119,7 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	}
 
 	@Override
-	protected String decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException {
+	protected String decodeValue(FileScannerResultInputContext context) throws IOException {
 		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 

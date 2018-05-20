@@ -57,7 +57,7 @@ public class StringRenderer implements Renderer {
 	}
 
 	@Override
-	public void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException, InterruptedException {
+	public void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
 		this.buffer.append(text);
 		if (lineBreak) {
 			this.buffer.append(System.lineSeparator());

@@ -176,13 +176,12 @@ public final class EncodedInputSpec implements FormatSpec {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public void decode(FileScannerResultDecodeContext context) throws IOException {
 		context.decode(this);
 	}
 
 	@Override
-	public void render(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		// Nothing to do here
 	}
 

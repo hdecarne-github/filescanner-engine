@@ -40,7 +40,7 @@ public class PrintStreamRenderer implements Renderer {
 	}
 
 	@Override
-	public void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException, InterruptedException {
+	public void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
 		if (lineBreak) {
 			this.ps.println(text);
 		} else {

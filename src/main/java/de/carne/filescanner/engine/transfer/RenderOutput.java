@@ -45,13 +45,12 @@ public final class RenderOutput implements Closeable {
 
 	/**
 	 * Convenience function for rendering the given {@linkplain FileScannerResult} to the given {@linkplain Renderer}.
-	 * 
+	 *
 	 * @param result the {@linkplain FileScannerResult} to render.
 	 * @param renderer the {@linkplain Renderer} to use for output generation.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public static void render(FileScannerResult result, Renderer renderer) throws IOException, InterruptedException {
+	public static void render(FileScannerResult result, Renderer renderer) throws IOException {
 		try (RenderOutput out = new RenderOutput(renderer)) {
 			result.render(out);
 		}
@@ -111,9 +110,8 @@ public final class RenderOutput implements Closeable {
 	 * @param text the text to write.
 	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public RenderOutput write(String text) throws IOException, InterruptedException {
+	public RenderOutput write(String text) throws IOException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, text, false);
 		return this;
@@ -125,9 +123,8 @@ public final class RenderOutput implements Closeable {
 	 * @param text the text to write.
 	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public RenderOutput writeln(String text) throws IOException, InterruptedException {
+	public RenderOutput writeln(String text) throws IOException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, text, true);
 		return this;
@@ -138,9 +135,8 @@ public final class RenderOutput implements Closeable {
 	 *
 	 * @return the updated {@linkplain RenderOutput} for chaining.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the rendering thread is interrupted.
 	 */
-	public RenderOutput writeln() throws IOException, InterruptedException {
+	public RenderOutput writeln() throws IOException {
 		prepareIfNeeded();
 		this.renderer.emitText(this.currentStyle, "", true);
 		return this;
@@ -149,17 +145,12 @@ public final class RenderOutput implements Closeable {
 	@Override
 	public void close() throws IOException {
 		if (this.prepared) {
-			try {
-				this.renderer.emitEpilouge();
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				throw new IOException(e);
-			}
+			this.renderer.emitEpilouge();
 		}
 		this.renderer.close();
 	}
 
-	private void prepareIfNeeded() throws IOException, InterruptedException {
+	private void prepareIfNeeded() throws IOException {
 		if (!this.prepared) {
 			this.renderer.emitPrologue(this.options);
 			this.prepared = true;

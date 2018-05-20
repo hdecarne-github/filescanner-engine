@@ -38,7 +38,6 @@ import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.util.SystemProperties;
-import de.carne.util.Threads;
 
 /**
  * FileScanner engine.
@@ -86,9 +85,6 @@ public final class FileScanner implements Closeable {
 		onScanResultCommit(inputResult);
 		try {
 			scanInputRange(inputResult, inputResult.input(), inputResult.start(), inputResult.end());
-		} catch (InterruptedException e) {
-			Exceptions.ignore(e);
-			Thread.currentThread().interrupt();
 		} catch (IOException e) {
 			LOG.warning(e, "An exception occurred while scanning input ''{0}''", inputResult.name());
 
@@ -98,21 +94,17 @@ public final class FileScanner implements Closeable {
 
 	@SuppressWarnings("squid:S3776")
 	private void scanInputRange(FileScannerResultBuilder parent, FileScannerInput input, long start, long end)
-			throws IOException, InterruptedException {
+			throws IOException {
 		Matcher formatMatcher = this.formatMatcherBuilder.matcher();
 		long scanPosition = start;
 		FileScannerInputRange scanRange = input.range(scanPosition, end);
 
 		while (scanPosition < end) {
-			Threads.checkInterrupted();
-
 			List<Format> matchingFormats = formatMatcher.match(scanRange, scanPosition);
 			FileScannerResult decodeResult = null;
 			long decodeResultSize = -1;
 
 			for (Format format : matchingFormats) {
-				Threads.checkInterrupted();
-
 				FileScannerResultDecodeContext context = new FileScannerResultDecodeContext(this, parent, scanRange,
 						scanPosition);
 
@@ -147,7 +139,7 @@ public final class FileScanner implements Closeable {
 	}
 
 	InputDecodeCache.Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
-			long end) throws IOException, InterruptedException {
+			long end) throws IOException {
 		return this.inputDecodeCache.decodeInput(name, inputDecoder, input, start, end);
 	}
 
@@ -306,9 +298,6 @@ public final class FileScanner implements Closeable {
 			this.threadPool.execute(() -> {
 				try {
 					task.run();
-				} catch (InterruptedException e) {
-					Exceptions.ignore(e);
-					Thread.currentThread().interrupt();
 				} catch (Exception e) {
 					LOG.warning(e, "Scan thread failed with exception");
 				} finally {

@@ -57,7 +57,7 @@ public class ConditionalSpec implements FormatSpec {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public void decode(FileScannerResultDecodeContext context) throws IOException {
 		FormatSpec resolvedSpec = this.spec.get();
 
 		if (!context.match(resolvedSpec)) {
@@ -67,8 +67,7 @@ public class ConditionalSpec implements FormatSpec {
 	}
 
 	@Override
-	public void render(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		this.spec.get().render(out, context);
 	}
 

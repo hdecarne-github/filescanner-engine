@@ -65,7 +65,7 @@ public abstract class FixedSizeAttributeSpec<T> extends AttributeSpec<T> {
 	}
 
 	@Override
-	protected T decodeValue(FileScannerResultInputContext context) throws IOException, InterruptedException {
+	protected T decodeValue(FileScannerResultInputContext context) throws IOException {
 		return context.readValue(size(), this::decodeValue);
 	}
 

@@ -37,7 +37,7 @@ public class DosTimeRenderer implements AttributeRenderer<Short> {
 	}
 
 	@Override
-	public void render(RenderOutput out, Short value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, Short value) throws IOException {
 		render(out, value.shortValue());
 	}
 
@@ -47,9 +47,8 @@ public class DosTimeRenderer implements AttributeRenderer<Short> {
 	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public void render(RenderOutput out, short value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, short value) throws IOException {
 		out.setStyle(RenderStyle.COMMENT).write(" // ").write(Dos.dosTimeToLocalTime(value).toString());
 	}
 

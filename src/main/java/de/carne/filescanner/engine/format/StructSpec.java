@@ -84,15 +84,14 @@ public class StructSpec extends CompositeSpec {
 	}
 
 	@Override
-	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 		for (FormatSpec element : this.elements) {
 			element.decode(context);
 		}
 	}
 
 	@Override
-	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		for (FormatSpec element : this.elements) {
 			element.render(out, context);
 		}

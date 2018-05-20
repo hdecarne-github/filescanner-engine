@@ -85,7 +85,7 @@ public class VarArraySpec extends CompositeSpec {
 	}
 
 	@Override
-	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 		int occurrenceCount = 0;
 
 		while (occurrenceCount <= this.maxOccurrence && context.match(this.elementSpec)) {
@@ -98,8 +98,7 @@ public class VarArraySpec extends CompositeSpec {
 	}
 
 	@Override
-	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		// Nothing to do here
 	}
 

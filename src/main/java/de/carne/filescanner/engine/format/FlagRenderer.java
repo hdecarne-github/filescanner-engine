@@ -34,7 +34,7 @@ public abstract class FlagRenderer<T> extends HashMap<T, String> implements Attr
 	private static final long serialVersionUID = -5863180152604163026L;
 
 	@Override
-	public void render(RenderOutput out, T value) throws IOException, InterruptedException {
+	public void render(RenderOutput out, T value) throws IOException {
 		Iterator<T> flags = flags();
 
 		while (flags.hasNext()) {

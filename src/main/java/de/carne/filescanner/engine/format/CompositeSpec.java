@@ -77,7 +77,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	@Override
-	public final void decode(FileScannerResultDecodeContext context) throws IOException, InterruptedException {
+	public final void decode(FileScannerResultDecodeContext context) throws IOException {
 		context.decode(this);
 	}
 
@@ -86,14 +86,11 @@ public abstract class CompositeSpec implements FormatSpec {
 	 *
 	 * @param context the {@linkplain FileScannerResultDecodeContext} instance to use for decoding.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public abstract void decodeComposite(FileScannerResultDecodeContext context)
-			throws IOException, InterruptedException;
+	public abstract void decodeComposite(FileScannerResultDecodeContext context) throws IOException;
 
 	@Override
-	public final void render(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException {
+	public final void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		context.render(out, this);
 	}
 
@@ -103,9 +100,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the render thread has been interrupted.
 	 */
-	public abstract void renderComposite(RenderOutput out, FileScannerResultRenderContext context)
-			throws IOException, InterruptedException;
+	public abstract void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException;
 
 }
