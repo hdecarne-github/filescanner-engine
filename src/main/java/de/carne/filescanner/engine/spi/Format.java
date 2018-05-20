@@ -177,10 +177,10 @@ public abstract class Format {
 	/**
 	 * Decodes the format.
 	 *
-	 * @param decoder the {@linkplain FileScannerResultDecodeContext} to use for decoding.
+	 * @param context the {@linkplain FileScannerResultDecodeContext} to use for decoding.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public abstract FileScannerResult decode(FileScannerResultDecodeContext decoder) throws IOException;
+	public abstract FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException;
 
 }

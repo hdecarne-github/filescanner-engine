@@ -38,7 +38,6 @@ public class ZipFormat extends Format {
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		context.setByteOrder(byteOrder());
 		return context.decode(ZipFormatSpecs.FORMAT_SPEC);
 	}
 

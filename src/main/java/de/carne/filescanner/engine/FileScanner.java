@@ -108,6 +108,7 @@ public final class FileScanner implements Closeable {
 				FileScannerResultDecodeContext context = new FileScannerResultDecodeContext(this, parent, scanRange,
 						scanPosition);
 
+				context.setByteOrder(format.byteOrder());
 				try {
 					decodeResult = format.decode(context);
 					decodeResultSize = decodeResult.size();
