@@ -41,9 +41,10 @@ public interface Renderer extends Closeable {
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param text the text to emit.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
+	 * @return the number of emitted characters (for output limiting).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void emitText(RenderStyle style, String text, boolean lineBreak) throws IOException;
+	int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException;
 
 	/**
 	 * Emit any necessary epilogue output.

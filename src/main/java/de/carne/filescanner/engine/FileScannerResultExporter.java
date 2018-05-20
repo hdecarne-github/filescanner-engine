@@ -30,7 +30,17 @@ public interface FileScannerResultExporter {
 	 */
 	enum Type {
 
-		APPLICATION_OCTET_STREAM("application/octet-stream");
+		APPLICATION_OCTET_STREAM("application/octet-stream"),
+
+		IMAGE_BMP("image/bmp"),
+
+		IMAGE_GIF("image/gif"),
+
+		IMAGE_JPEG("image/jpeg"),
+
+		IMAGE_PNG("image/png"),
+
+		IMAGE_TIFF("image/tiff");
 
 		private final String mimeType;
 

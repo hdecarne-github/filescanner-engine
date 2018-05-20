@@ -17,6 +17,7 @@
 package de.carne.filescanner.test.engine;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -33,8 +34,8 @@ import de.carne.filescanner.engine.FileScannerStatus;
 import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.transfer.PrintStreamRenderer;
 import de.carne.filescanner.engine.transfer.Renderer;
+import de.carne.filescanner.engine.transfer.SimpleTextRenderer;
 import de.carne.filescanner.test.TestFiles;
 import de.carne.text.MemoryUnitFormat;
 
@@ -45,7 +46,7 @@ class FileScannerTest {
 
 	static final Log LOG = new Log();
 
-	private final Renderer systemOutRenderer = new PrintStreamRenderer(System.out, false);
+	private final Renderer systemOutRenderer = new SimpleTextRenderer(new PrintWriter(System.out, true));
 
 	private static class Status implements FileScannerStatus {
 
