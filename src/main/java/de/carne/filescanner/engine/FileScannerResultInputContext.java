@@ -66,10 +66,11 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * Sets the read position for the next read operation.
 	 *
 	 * @param position the position to set.
+	 * @throws IOException if an I/O error occurs.
 	 */
-	protected void setPosition(long position) {
+	protected void setPosition(long position) throws IOException {
 		if (position < this.inputRange.start() || this.inputRange.end() < position) {
-			throw new IllegalArgumentException("Invalid position " + HexFormat.formatLong(position));
+			throw new InvalidPositionException(this.inputRange, position);
 		}
 		this.position = position;
 	}
@@ -102,6 +103,19 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 			match = (buffer.remaining() <= matchSize ? spec.matches(buffer) : false);
 		}
 		return match;
+	}
+
+	/**
+	 * Skips the given number of bytes and advances this context's position accordingly.
+	 *
+	 * @param size the number of bytes to skip.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public void skip(long size) throws IOException {
+		if (size < 0) {
+			throw new UnexpectedDataException(size);
+		}
+		setPosition(this.position + size);
 	}
 
 	/**

@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
- * Input data processor base class used during result rendering.
+ * Input data processor class used during result rendering.
  */
 public class FileScannerResultRenderContext extends FileScannerResultInputContext {
 

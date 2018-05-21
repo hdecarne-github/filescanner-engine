@@ -35,6 +35,12 @@ public class RawFileScannerResultExporter implements FileScannerResultExporter {
 	public static final RawFileScannerResultExporter APPLICATION_OCTET_STREAM_EXPORTER = new RawFileScannerResultExporter(
 			"Raw", Type.APPLICATION_OCTET_STREAM, ".bin");
 
+	/**
+	 * Predefined PNG_IMAGE exporter.
+	 */
+	public static final RawFileScannerResultExporter PNG_IMAGE_EXPORTER = new RawFileScannerResultExporter(
+			"PNG image file", Type.IMAGE_PNG, ".png");
+
 	private final String name;
 	private final Type type;
 	private final String extension;

@@ -81,6 +81,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			try {
 				run(() -> {
 					formatSpec.decodeComposite(this);
+					formatSpecResult.resolveExporters(formatSpec.exporters());
 					if (!isRootSpec) {
 						formatSpecResult.updateAndCommit(position(), false);
 					}

@@ -34,6 +34,7 @@ import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
+import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
@@ -190,6 +191,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
 
+	public void resolveExporters(List<Supplier<FileScannerResultExporter>> exporters) {
+		for (Supplier<FileScannerResultExporter> exporter : exporters) {
+			FileScannerResultExporter exporterInstance = exporter.get();
+
+			if (exporterInstance != null) {
+				this.customExporters.add(exporterInstance);
+			}
+		}
+	}
+
 	@Nullable
 	public synchronized FileScannerResultBuilder updateAndCommit(long commitPosition, boolean fullCommit) {
 		FileScannerResultBuilder commitResult = null;
@@ -299,6 +310,12 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			exporterIndex++;
 		}
 		return exporters;
+	}
+
+	@Override
+	public void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException {
+		// TODO Auto-generated method stub
+
 	}
 
 	private static final class CommitState {

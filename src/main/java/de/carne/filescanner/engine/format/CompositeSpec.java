@@ -18,10 +18,14 @@ package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.FileScannerResultExporter;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
@@ -34,6 +38,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	private boolean result = false;
 	private Supplier<String> resultName = FinalSupplier.of("<undefined>");
+	private List<Supplier<FileScannerResultExporter>> exporters = new ArrayList<>();
 
 	/**
 	 * Sets this {@linkplain CompositeSpec}'s byte order.
@@ -78,6 +83,28 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
+	 * Adds a {@linkplain FileScannerResultExporter} to this {@linkplain CompositeSpec}.
+	 *
+	 * @param exporter the {@linkplain FileScannerResultExporter} to add.
+	 * @return the updated {@linkplain CompositeSpec} for chaining.
+	 */
+	public CompositeSpec export(Supplier<FileScannerResultExporter> exporter) {
+		this.exporters.add(exporter);
+		return this;
+	}
+
+	/**
+	 * Adds a {@linkplain FileScannerResultExporter} to this {@linkplain CompositeSpec}.
+	 *
+	 * @param exporter the {@linkplain FileScannerResultExporter} to add.
+	 * @return the updated {@linkplain CompositeSpec} for chaining.
+	 */
+	public CompositeSpec export(FileScannerResultExporter exporter) {
+		this.exporters.add(FinalSupplier.of(exporter));
+		return this;
+	}
+
+	/**
 	 * Checks whether this instance is a result spec.
 	 *
 	 * @return {@code true} if this instance is a result spec.
@@ -96,6 +123,15 @@ public abstract class CompositeSpec implements FormatSpec {
 	public Supplier<String> resultName() {
 		Check.assertTrue(this.result);
 		return this.resultName;
+	}
+
+	/**
+	 * Gets this instance's exporters.
+	 * 
+	 * @return this instance's exporters.
+	 */
+	public List<Supplier<FileScannerResultExporter>> exporters() {
+		return Collections.unmodifiableList(this.exporters);
 	}
 
 	@Override

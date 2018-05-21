@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.input.FileScannerInput;
+import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
@@ -135,6 +136,15 @@ public interface FileScannerResult {
 	 * @return the available {@linkplain FileScannerResultExporter}.
 	 */
 	FileScannerResultExporter[] exporters();
+
+	/**
+	 * Exports this {@linkplain FileScannerResult}.
+	 *
+	 * @param target the {@linkplain ExportTarget} to to to.
+	 * @param exporter the {@linkplain FileScannerResultExporter} instance to use.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException;
 
 	/**
 	 * Sets the custom data object associated with this {@linkplain FileScannerResult}.

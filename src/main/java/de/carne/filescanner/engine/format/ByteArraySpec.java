@@ -54,9 +54,9 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this {@linkplain String} attribute.
+	 * Sets the size (in bytes) of this byte array attribute.
 	 *
-	 * @param sizeSupplier the size (in bytes) of this {@linkplain String} attribute.
+	 * @param sizeSupplier the size (in bytes) of this byte array attribute.
 	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
 	public ByteArraySpec size(Supplier<? extends Number> sizeSupplier) {
@@ -66,9 +66,9 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this {@linkplain String} attribute.
+	 * Sets the size (in bytes) of this byte array attribute.
 	 *
-	 * @param sizeValue the size (in bytes) of this {@linkplain String} attribute.
+	 * @param sizeValue the size (in bytes) of this byte array attribute.
 	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
 	public ByteArraySpec size(int sizeValue) {

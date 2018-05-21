@@ -18,11 +18,15 @@ package de.carne.filescanner.provider.png;
 
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.ByteArraySpec;
+import de.carne.filescanner.engine.format.ByteRangeSpec;
 import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.format.VarArraySpec;
+import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class PngFormatSpecs {
 
@@ -31,7 +35,7 @@ final class PngFormatSpecs {
 	}
 
 	// Format name
-	static final String FORMAT_NAME = "PNG image";
+	static final String FORMAT_NAME = "PNG image data";
 
 	// Format specs
 	static final StructSpec PNG_FILE_SIGNATURE;
@@ -54,10 +58,10 @@ final class PngFormatSpecs {
 		StructSpec genericChunk = new StructSpec();
 
 		genericChunk.byteOrder(ByteOrder.BIG_ENDIAN);
-		genericChunk.result("Chunk");
+		genericChunk.result(() -> formatChunkType(GENERIC_CHUNK_TYPE));
 		genericChunk.add(GENERIC_CHUNK_LENGTH);
 		genericChunk.add(GENERIC_CHUNK_TYPE).validate(value -> value.intValue() != 0x49454e44);
-		genericChunk.add(new ByteArraySpec("Chunk Data")).size(GENERIC_CHUNK_LENGTH);
+		genericChunk.add(new ByteRangeSpec("Chunk Data")).size(GENERIC_CHUNK_LENGTH);
 		genericChunk.add(DWordSpec.hex("CRC"));
 		GENERIC_CHUNK = genericChunk;
 	}
@@ -70,10 +74,10 @@ final class PngFormatSpecs {
 		StructSpec iendChunk = new StructSpec();
 
 		iendChunk.byteOrder(ByteOrder.BIG_ENDIAN);
-		iendChunk.result("IEND Chunk");
+		iendChunk.result("\"IEND\" chunk");
 		iendChunk.add(IEND_CHUNK_LENGTH);
 		iendChunk.add(IEND_CHUNK_TYPE).validate(0x49454e44);
-		iendChunk.add(new ByteArraySpec("Chunk Data")).size(IEND_CHUNK_LENGTH);
+		iendChunk.add(new ByteRangeSpec("Chunk Data")).size(IEND_CHUNK_LENGTH);
 		iendChunk.add(DWordSpec.hex("CRC"));
 		IEND_CHUNK = iendChunk;
 	}
@@ -83,7 +87,7 @@ final class PngFormatSpecs {
 	static {
 		StructSpec formatSpec = new StructSpec();
 
-		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN);
+		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN).export(RawFileScannerResultExporter.PNG_IMAGE_EXPORTER);
 		formatSpec.result(FORMAT_NAME);
 		formatSpec.add(PNG_FILE_SIGNATURE);
 		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));
@@ -97,6 +101,22 @@ final class PngFormatSpecs {
 		GENERIC_CHUNK_TYPE.bind();
 		IEND_CHUNK_LENGTH.bind();
 		IEND_CHUNK_TYPE.bind();
+	}
+
+	// Helpers
+	private static String formatChunkType(Supplier<Integer> type) {
+		int typeValue = type.get().intValue();
+		StringBuilder typeValueString = new StringBuilder();
+
+		typeValueString.append((char) ((typeValue >>> 24) & 0xff));
+		typeValueString.append((char) ((typeValue >>> 16) & 0xff));
+		typeValueString.append((char) ((typeValue >>> 8) & 0xff));
+		typeValueString.append((char) (typeValue & 0xff));
+
+		StringBuilder typeString = new StringBuilder();
+
+		PrettyFormat.formatString(typeString, typeValueString.toString()).append(" chunk");
+		return typeString.toString();
 	}
 
 }
