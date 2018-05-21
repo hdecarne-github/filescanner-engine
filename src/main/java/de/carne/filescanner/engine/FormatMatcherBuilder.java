@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import de.carne.filescanner.engine.format.FormatSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.spi.Format;
 
@@ -42,10 +42,10 @@ final class FormatMatcherBuilder {
 		int matchBufferSize = 0;
 
 		for (Format format : this.formats) {
-			for (FormatSpec headerSpec : format.headerSpecs()) {
+			for (CompositeSpec headerSpec : format.headerSpecs()) {
 				matchBufferSize = Math.max(matchBufferSize, headerSpec.matchSize());
 			}
-			for (FormatSpec trailerSpec : format.trailerSpecs()) {
+			for (CompositeSpec trailerSpec : format.trailerSpecs()) {
 				matchBufferSize = Math.max(matchBufferSize, trailerSpec.matchSize());
 			}
 		}
@@ -86,9 +86,9 @@ final class FormatMatcherBuilder {
 	private boolean matchTrailerSpecs(Format format, ByteBuffer matchBuffer) {
 		boolean match = false;
 
-		matchBuffer.order(format.byteOrder());
-		for (FormatSpec trailerSpec : format.trailerSpecs()) {
+		for (CompositeSpec trailerSpec : format.trailerSpecs()) {
 			matchBuffer.rewind();
+			matchBuffer.order(trailerSpec.byteOrder());
 
 			int matchPosition = matchBuffer.remaining() - trailerSpec.matchSize();
 
@@ -106,9 +106,9 @@ final class FormatMatcherBuilder {
 	private boolean matchHeaderSpecs(Format format, ByteBuffer matchBuffer) {
 		boolean match = false;
 
-		matchBuffer.order(format.byteOrder());
-		for (FormatSpec headerSpec : format.headerSpecs()) {
+		for (CompositeSpec headerSpec : format.headerSpecs()) {
 			matchBuffer.rewind();
+			matchBuffer.order(headerSpec.byteOrder());
 			if (headerSpec.matchSize() <= matchBuffer.remaining() && headerSpec.matches(matchBuffer)) {
 				match = true;
 				break;

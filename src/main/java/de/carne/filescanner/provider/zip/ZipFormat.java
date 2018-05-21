@@ -17,7 +17,6 @@
 package de.carne.filescanner.provider.zip;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
@@ -32,7 +31,7 @@ public class ZipFormat extends Format {
 	 * Constructs a new {@linkplain ZipFormat} instance.
 	 */
 	public ZipFormat() {
-		super(ZipFormatSpecs.FORMAT_NAME, ByteOrder.LITTLE_ENDIAN);
+		super(ZipFormatSpecs.FORMAT_NAME);
 		registerHeaderSpec(ZipFormatSpecs.LOCAL_FILE_HEADER);
 	}
 

@@ -77,10 +77,10 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	/**
 	 * Sets the {@linkplain ByteOrder} for the next context operation.
 	 *
-	 * @param byteOrder the {@linkplain ByteOrder} to set.
+	 * @param order the {@linkplain ByteOrder} to set.
 	 */
-	public void setByteOrder(ByteOrder byteOrder) {
-		this.byteOrder = byteOrder;
+	public void byteOrder(ByteOrder order) {
+		this.byteOrder = order;
 	}
 
 	/**

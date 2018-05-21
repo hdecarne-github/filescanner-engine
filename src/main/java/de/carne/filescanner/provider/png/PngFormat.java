@@ -17,7 +17,6 @@
 package de.carne.filescanner.provider.png;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
@@ -32,7 +31,7 @@ public class PngFormat extends Format {
 	 * Constructs a new {@linkplain PngFormat} instance.
 	 */
 	public PngFormat() {
-		super(PngFormatSpecs.FORMAT_NAME, ByteOrder.BIG_ENDIAN);
+		super(PngFormatSpecs.FORMAT_NAME);
 		registerHeaderSpec(PngFormatSpecs.PNG_FILE_SIGNATURE);
 	}
 

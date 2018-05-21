@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.provider.png;
 
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import de.carne.filescanner.engine.format.ByteArraySpec;
@@ -38,6 +39,7 @@ final class PngFormatSpecs {
 	static {
 		StructSpec fileSignature = new StructSpec();
 
+		fileSignature.byteOrder(ByteOrder.BIG_ENDIAN);
 		fileSignature.result("PNG file signature");
 		fileSignature.add(new ByteArraySpec("signature").size(8).validate(
 				value -> Arrays.equals(value, new byte[] { (byte) 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a })));
@@ -51,6 +53,7 @@ final class PngFormatSpecs {
 	static {
 		StructSpec genericChunk = new StructSpec();
 
+		genericChunk.byteOrder(ByteOrder.BIG_ENDIAN);
 		genericChunk.result("Chunk");
 		genericChunk.add(GENERIC_CHUNK_LENGTH);
 		genericChunk.add(GENERIC_CHUNK_TYPE).validate(value -> value.intValue() != 0x49454e44);
@@ -66,6 +69,7 @@ final class PngFormatSpecs {
 	static {
 		StructSpec iendChunk = new StructSpec();
 
+		iendChunk.byteOrder(ByteOrder.BIG_ENDIAN);
 		iendChunk.result("IEND Chunk");
 		iendChunk.add(IEND_CHUNK_LENGTH);
 		iendChunk.add(IEND_CHUNK_TYPE).validate(0x49454e44);
@@ -79,6 +83,7 @@ final class PngFormatSpecs {
 	static {
 		StructSpec formatSpec = new StructSpec();
 
+		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN);
 		formatSpec.result(FORMAT_NAME);
 		formatSpec.add(PNG_FILE_SIGNATURE);
 		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));

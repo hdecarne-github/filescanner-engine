@@ -69,6 +69,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			throw new IllegalArgumentException("Root format spec must be a result spec");
 		}
 
+		byteOrder(formatSpec.byteOrder());
+
 		FileScannerResultBuilder decodeResult = this.decodeStack.peek().builder();
 
 		if (isResultSpec) {

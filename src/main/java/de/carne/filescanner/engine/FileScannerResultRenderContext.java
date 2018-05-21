@@ -53,6 +53,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	public void render(RenderOutput out, CompositeSpec formatSpec) throws IOException {
 		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
+		byteOrder(formatSpec.byteOrder());
 		run(() -> formatSpec.renderComposite(out, this));
 	}
 

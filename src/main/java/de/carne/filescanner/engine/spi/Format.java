@@ -17,7 +17,6 @@
 package de.carne.filescanner.engine.spi;
 
 import java.io.IOException;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.format.FormatSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
 
 /**
  * Base class for all decodable file formats.
@@ -34,21 +33,18 @@ import de.carne.filescanner.engine.format.FormatSpec;
 public abstract class Format {
 
 	private final String name;
-	private final ByteOrder byteOrder;
 
-	private final List<FormatSpec> headerSpecs = new ArrayList<>();
-	private final List<FormatSpec> trailerSpecs = new ArrayList<>();
+	private final List<CompositeSpec> headerSpecs = new ArrayList<>();
+	private final List<CompositeSpec> trailerSpecs = new ArrayList<>();
 	private final List<Pattern> inputNamePatterns = new ArrayList<>();
 
 	/**
 	 * Constructs a new {@linkplain Format} instance.
 	 *
 	 * @param name the format's name.
-	 * @param byteOrder the format's byte order.
 	 */
-	protected Format(String name, ByteOrder byteOrder) {
+	protected Format(String name) {
 		this.name = name;
-		this.byteOrder = byteOrder;
 	}
 
 	/**
@@ -61,23 +57,23 @@ public abstract class Format {
 	}
 
 	/**
-	 * Registers a header {@linkplain FormatSpec} hinting at this {@linkplain Format} instance.
+	 * Registers a header {@linkplain CompositeSpec} hinting at this {@linkplain Format} instance.
 	 *
-	 * @param headerSpec the header {@linkplain FormatSpec} to register.
+	 * @param headerSpec the header {@linkplain CompositeSpec} to register.
 	 * @return the updated {@linkplain Format} instance for chaining.
 	 */
-	protected Format registerHeaderSpec(FormatSpec headerSpec) {
+	protected Format registerHeaderSpec(CompositeSpec headerSpec) {
 		this.headerSpecs.add(headerSpec);
 		return this;
 	}
 
 	/**
-	 * Registers a trailer {@linkplain FormatSpec} hinting at this {@linkplain Format} instance.
+	 * Registers a trailer {@linkplain CompositeSpec} hinting at this {@linkplain Format} instance.
 	 *
-	 * @param trailerSpec the trailer {@linkplain FormatSpec} to register.
+	 * @param trailerSpec the trailer {CompositeSpec CompositeSpec} to register.
 	 * @return the updated {@linkplain Format} instance for chaining.
 	 */
-	protected Format registerTrailerSpec(FormatSpec trailerSpec) {
+	protected Format registerTrailerSpec(CompositeSpec trailerSpec) {
 		this.trailerSpecs.add(trailerSpec);
 		return this;
 	}
@@ -103,53 +99,44 @@ public abstract class Format {
 	}
 
 	/**
-	 * Gets this format's byte order.
+	 * Checks whether this {@linkplain Format} instance has any header {@linkplain CompositeSpec}s defined.
 	 *
-	 * @return this format's byte order.
-	 */
-	public final ByteOrder byteOrder() {
-		return this.byteOrder;
-	}
-
-	/**
-	 * Checks whether this {@linkplain Format} instance has any header {@linkplain FormatSpec}s defined.
-	 *
-	 * @return {@code true} if at least one header {@linkplain FormatSpec} is associated with this {@linkplain Format}
-	 *         instance.
-	 * @see #registerHeaderSpec(FormatSpec)
+	 * @return {@code true} if at least one header {@linkplain CompositeSpec} is associated with this
+	 *         {@linkplain Format} instance.
+	 * @see #registerHeaderSpec(CompositeSpec)
 	 */
 	public boolean hasHeaderSpecs() {
 		return !this.headerSpecs.isEmpty();
 	}
 
 	/**
-	 * Gets the header {@linkplain FormatSpec}s hinting at this {@linkplain Format} instance.
+	 * Gets the header {@linkplain CompositeSpec}s hinting at this {@linkplain Format} instance.
 	 *
-	 * @return the header {@linkplain FormatSpec}s hinting at this {@linkplain Format} instance.
-	 * @see #registerHeaderSpec(FormatSpec)
+	 * @return the header {@linkplain CompositeSpec}s hinting at this {@linkplain Format} instance.
+	 * @see #registerHeaderSpec(CompositeSpec)
 	 */
-	public List<FormatSpec> headerSpecs() {
+	public List<CompositeSpec> headerSpecs() {
 		return Collections.unmodifiableList(this.headerSpecs);
 	}
 
 	/**
-	 * Checks whether this {@linkplain Format} instance has any trailer {@linkplain FormatSpec}s defined.
+	 * Checks whether this {@linkplain Format} instance has any trailer {@linkplain CompositeSpec}s defined.
 	 *
-	 * @return {@code true} if at least one trailer {@linkplain FormatSpec} is associated with this {@linkplain Format}
-	 *         instance.
-	 * @see #registerTrailerSpec(FormatSpec)
+	 * @return {@code true} if at least one trailer {@linkplain CompositeSpec} is associated with this
+	 *         {@linkplain Format} instance.
+	 * @see #registerTrailerSpec(CompositeSpec)
 	 */
 	public boolean hasTrailerSpecs() {
 		return !this.trailerSpecs.isEmpty();
 	}
 
 	/**
-	 * Gets the trailer {@linkplain FormatSpec}s hinting at this {@linkplain Format} instance.
+	 * Gets the trailer {@linkplain CompositeSpec}s hinting at this {@linkplain Format} instance.
 	 *
-	 * @return the trailer {@linkplain FormatSpec}s hinting at this {@linkplain Format} instance.
-	 * @see #registerTrailerSpec(FormatSpec)
+	 * @return the trailer {@linkplain CompositeSpec}s hinting at this {@linkplain Format} instance.
+	 * @see #registerTrailerSpec(CompositeSpec)
 	 */
-	public List<FormatSpec> trailerSpecs() {
+	public List<CompositeSpec> trailerSpecs() {
 		return Collections.unmodifiableList(this.trailerSpecs);
 	}
 

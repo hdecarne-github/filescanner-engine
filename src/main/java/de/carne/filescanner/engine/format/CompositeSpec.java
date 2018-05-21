@@ -17,6 +17,7 @@
 package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.function.Supplier;
 
 import de.carne.boot.check.Check;
@@ -30,8 +31,29 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public abstract class CompositeSpec implements FormatSpec {
 
+	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	private boolean result = false;
 	private Supplier<String> resultName = FinalSupplier.of("<undefined>");
+
+	/**
+	 * Sets this {@linkplain CompositeSpec}'s byte order.
+	 *
+	 * @param order the byte order to set.
+	 * @return the updated {@linkplain CompositeSpec} for chaining.
+	 */
+	public CompositeSpec byteOrder(ByteOrder order) {
+		this.byteOrder = order;
+		return this;
+	}
+
+	/**
+	 * Gets this {@linkplain CompositeSpec}'s byte order.
+	 *
+	 * @return this {@linkplain CompositeSpec}'s byte order.
+	 */
+	public ByteOrder byteOrder() {
+		return this.byteOrder;
+	}
 
 	/**
 	 * Marks this {@linkplain CompositeSpec} as a result spec.

@@ -30,7 +30,7 @@ class FormatTest {
 		Iterable<Format> formats = Format.providers();
 
 		for (Format format : formats) {
-			System.out.println(String.format("Format: '%1$s' (%2$s)", format.name(), format.byteOrder()));
+			System.out.println(String.format("Format: '%1$s'", format.name()));
 		}
 	}
 
