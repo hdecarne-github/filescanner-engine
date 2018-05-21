@@ -226,6 +226,7 @@ final class ZipFormatSpecs {
 		EOCD_ZIP_FILE_COMMENT_LENGTH.bind();
 	}
 
+	// Helpers
 	private static InputDecoder getInputDecoder() {
 		short compressionMethod = LFH_COMPRESSION_METHOD.get().shortValue();
 		InputDecoder inputDecoder;
