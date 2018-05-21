@@ -20,14 +20,15 @@ import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 
 import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultExporter;
+import de.carne.filescanner.engine.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
- * {@linkplain FileScannerResultExporter} implementation for raw data export.
+ * {@linkplain FileScannerResultExportHandler} implementation for raw data export.
  */
-public class RawFileScannerResultExporter implements FileScannerResultExporter {
+public class RawFileScannerResultExporter implements FileScannerResultExportHandler {
 
 	/**
 	 * Predefined APPLICATION_OCTET_STREAM exporter.
@@ -81,7 +82,9 @@ public class RawFileScannerResultExporter implements FileScannerResultExporter {
 	}
 
 	@Override
-	public void export(FileScannerResult result, ExportTarget target) throws IOException {
+	public void export(ExportTarget target, FileScannerResultRenderContext context) throws IOException {
+		FileScannerResult result = context.result();
+
 		target.setSize(result.size());
 		try (ReadableByteChannel resultChannel = result.input().byteChannel(result.start(), result.end())) {
 			IOUtil.copyChannel(target, resultChannel);

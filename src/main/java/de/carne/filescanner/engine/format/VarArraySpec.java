@@ -21,9 +21,7 @@ import java.nio.ByteBuffer;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Variable number of {@linkplain FormatSpec}s.
@@ -95,11 +93,6 @@ public class VarArraySpec extends CompositeSpec {
 		if (occurrenceCount < this.minOccurrence) {
 			throw new UnexpectedDataException();
 		}
-	}
-
-	@Override
-	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		// Nothing to do here
 	}
 
 }

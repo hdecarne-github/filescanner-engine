@@ -18,22 +18,22 @@ package de.carne.filescanner.engine;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.transfer.ExportTarget;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
- * Export function for {@linkplain FileScannerResult} instances.
+ * Render function for {@linkplain FileScannerResult} instances.
  */
 @FunctionalInterface
-public interface FileScannerResultExporter {
+public interface FileScannerResultRenderer {
 
 	/**
-	 * Exports the {@linkplain FileScannerResult} instances represented by the given
+	 * Renders the {@linkplain FileScannerResult} instances represented by the given
 	 * {@linkplain FileScannerResultRenderContext}.
-	 *
-	 * @param target the {@linkplain ExportTarget} to export to.
+	 * 
+	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @param context the {@linkplain FileScannerResultRenderContext} to render.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void export(ExportTarget target, FileScannerResultRenderContext context) throws IOException;
+	void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException;
 
 }

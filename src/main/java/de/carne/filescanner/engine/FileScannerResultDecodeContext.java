@@ -35,7 +35,7 @@ import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.util.Strings;
 
 /**
- * Input data processor base class used during result decoding.
+ * Input data processor class used during result decoding.
  */
 public class FileScannerResultDecodeContext extends FileScannerResultInputContext {
 
@@ -81,7 +81,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			try {
 				run(() -> {
 					formatSpec.decodeComposite(this);
-					formatSpecResult.resolveExporters(formatSpec.exporters());
+					formatSpecResult.resolveExportHandlers(formatSpec.exportHandlers());
 					if (!isRootSpec) {
 						formatSpecResult.updateAndCommit(position(), false);
 					}

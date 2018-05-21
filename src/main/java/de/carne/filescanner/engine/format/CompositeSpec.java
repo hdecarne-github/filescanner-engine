@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.carne.boot.check.Check;
+import de.carne.boot.check.Nullable;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.FileScannerResultExporter;
+import de.carne.filescanner.engine.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.FileScannerResultRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
@@ -38,7 +40,9 @@ public abstract class CompositeSpec implements FormatSpec {
 	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	private boolean result = false;
 	private Supplier<String> resultName = FinalSupplier.of("<undefined>");
-	private List<Supplier<FileScannerResultExporter>> exporters = new ArrayList<>();
+	@Nullable
+	private FileScannerResultRenderer customRenderer = null;
+	private List<Supplier<FileScannerResultExportHandler>> exportHandlers = new ArrayList<>();
 
 	/**
 	 * Sets this {@linkplain CompositeSpec}'s byte order.
@@ -83,24 +87,35 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
-	 * Adds a {@linkplain FileScannerResultExporter} to this {@linkplain CompositeSpec}.
-	 *
-	 * @param exporter the {@linkplain FileScannerResultExporter} to add.
+	 * Sets a custom {@linkplain FileScannerResultRenderer} for rendering this spec.
+	 * 
+	 * @param renderer the {@linkplain FileScannerResultRenderer} to use for rendering this spec.
 	 * @return the updated {@linkplain CompositeSpec} for chaining.
 	 */
-	public CompositeSpec export(Supplier<FileScannerResultExporter> exporter) {
-		this.exporters.add(exporter);
+	public CompositeSpec render(FileScannerResultRenderer renderer) {
+		this.customRenderer = renderer;
 		return this;
 	}
 
 	/**
-	 * Adds a {@linkplain FileScannerResultExporter} to this {@linkplain CompositeSpec}.
+	 * Adds a {@linkplain FileScannerResultExportHandler} to this {@linkplain CompositeSpec}.
 	 *
-	 * @param exporter the {@linkplain FileScannerResultExporter} to add.
+	 * @param exportHandler the {@linkplain FileScannerResultExportHandler} to add.
 	 * @return the updated {@linkplain CompositeSpec} for chaining.
 	 */
-	public CompositeSpec export(FileScannerResultExporter exporter) {
-		this.exporters.add(FinalSupplier.of(exporter));
+	public CompositeSpec export(Supplier<FileScannerResultExportHandler> exportHandler) {
+		this.exportHandlers.add(exportHandler);
+		return this;
+	}
+
+	/**
+	 * Adds a {@linkplain FileScannerResultExportHandler} to this {@linkplain CompositeSpec}.
+	 *
+	 * @param exportHandler the {@linkplain FileScannerResultExportHandler} to add.
+	 * @return the updated {@linkplain CompositeSpec} for chaining.
+	 */
+	public CompositeSpec export(FileScannerResultExportHandler exportHandler) {
+		this.exportHandlers.add(FinalSupplier.of(exportHandler));
 		return this;
 	}
 
@@ -126,12 +141,12 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
-	 * Gets this instance's exporters.
-	 * 
-	 * @return this instance's exporters.
+	 * Gets this instance's export handlers.
+	 *
+	 * @return this instance's export handlers.
 	 */
-	public List<Supplier<FileScannerResultExporter>> exporters() {
-		return Collections.unmodifiableList(this.exporters);
+	public List<Supplier<FileScannerResultExportHandler>> exportHandlers() {
+		return Collections.unmodifiableList(this.exportHandlers);
 	}
 
 	@Override
@@ -159,6 +174,12 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @param context the {@linkplain FileScannerResultRenderContext} instance to use for rendering.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public abstract void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException;
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		FileScannerResultRenderer checkedCustomRenderer = this.customRenderer;
+
+		if (checkedCustomRenderer != null) {
+			checkedCustomRenderer.render(out, context);
+		}
+	}
 
 }

@@ -53,7 +53,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private final Type type;
 	private final FileScannerInput input;
 	private final long start;
-	private final List<FileScannerResultExporter> customExporters = new ArrayList<>();
+	private final List<FileScannerResultExportHandler> exportHandlers = new ArrayList<>();
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
 	@Nullable
@@ -191,12 +191,12 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
 
-	public void resolveExporters(List<Supplier<FileScannerResultExporter>> exporters) {
-		for (Supplier<FileScannerResultExporter> exporter : exporters) {
-			FileScannerResultExporter exporterInstance = exporter.get();
+	public void resolveExportHandlers(List<Supplier<FileScannerResultExportHandler>> handlers) {
+		for (Supplier<FileScannerResultExportHandler> handler : handlers) {
+			FileScannerResultExportHandler handlerInstance = handler.get();
 
-			if (exporterInstance != null) {
-				this.customExporters.add(exporterInstance);
+			if (handlerInstance != null) {
+				this.exportHandlers.add(handlerInstance);
 			}
 		}
 	}
@@ -298,24 +298,26 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public FileScannerResultExporter[] exporters() {
-		FileScannerResultExporter[] exporters = new FileScannerResultExporter[Math.max(1, this.customExporters.size())];
+	public FileScannerResultExportHandler[] exportHandlers() {
+		FileScannerResultExportHandler[] handlers = new FileScannerResultExportHandler[Math.max(1,
+				this.exportHandlers.size())];
 
-		exporters[0] = RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+		handlers[0] = RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
 
-		int exporterIndex = 0;
+		int handlerIndex = 0;
 
-		for (FileScannerResultExporter customExporter : this.customExporters) {
-			exporters[exporterIndex] = customExporter;
-			exporterIndex++;
+		for (FileScannerResultExportHandler handler : this.exportHandlers) {
+			handlers[handlerIndex] = handler;
+			handlerIndex++;
 		}
-		return exporters;
+		return handlers;
 	}
 
 	@Override
 	public void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException {
-		// TODO Auto-generated method stub
+		FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
+		context.export(target, exporter);
 	}
 
 	private static final class CommitState {

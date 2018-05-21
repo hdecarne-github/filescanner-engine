@@ -26,10 +26,11 @@ import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
+import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
- * Input data processor class used during result rendering.
+ * Input data processor class used during result rendering and exporting.
  */
 public class FileScannerResultRenderContext extends FileScannerResultInputContext {
 
@@ -41,6 +42,15 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	FileScannerResultRenderContext(FileScannerResultBuilder result) throws IOException {
 		super(result.input().range(result.start(), result.end()), result.start());
 		this.result = result;
+	}
+
+	/**
+	 * Gets the {@linkplain FileScannerResult} processed by this context.
+	 *
+	 * @return the {@linkplain FileScannerResult} processed by this context.
+	 */
+	public FileScannerResult result() {
+		return this.result;
 	}
 
 	/**
@@ -89,6 +99,19 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 			value = this.result.getValue(attributeSpec, true);
 		}
 		return Check.isInstanceOf(value, attributeSpec.type());
+	}
+
+	/**
+	 * Executes the given {@linkplain FileScannerResultExporter} instance.
+	 * 
+	 * @param target the {@linkplain ExportTarget} to export to.
+	 * @param exporter the {@linkplain FileScannerResultExporter} instance to execute.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException {
+		LOG.debug("Executing exporter ''{0}''...", exporter);
+
+		run(() -> exporter.export(target, this));
 	}
 
 }

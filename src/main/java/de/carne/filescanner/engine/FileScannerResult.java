@@ -131,11 +131,11 @@ public interface FileScannerResult {
 	void render(RenderOutput out) throws IOException;
 
 	/**
-	 * Gets the available {@linkplain FileScannerResultExporter} instances for this {@linkplain FileScannerResult}.
+	 * Gets the available {@linkplain FileScannerResultExportHandler} instances for this {@linkplain FileScannerResult}.
 	 *
-	 * @return the available {@linkplain FileScannerResultExporter}.
+	 * @return the available {@linkplain FileScannerResultExportHandler}.
 	 */
-	FileScannerResultExporter[] exporters();
+	FileScannerResultExportHandler[] exportHandlers();
 
 	/**
 	 * Exports this {@linkplain FileScannerResult}.
