@@ -84,6 +84,13 @@ public final class TestFiles {
 			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip", "certmgr-1.1.0.zip");
 
 	/**
+	 * https://raw.githubusercontent.com/hdecarne/hdecarne.github.io/master/filescanner1.png
+	 */
+	public static final TestFile PNG_IMAGE = new TestFile(
+			"https://raw.githubusercontent.com/hdecarne/hdecarne.github.io/master/filescanner1.png",
+			"filescanner1.png");
+
+	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS = new TestFile(
