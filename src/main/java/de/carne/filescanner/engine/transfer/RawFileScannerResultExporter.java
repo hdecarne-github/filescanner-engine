@@ -34,28 +34,28 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 	 * Predefined APPLICATION_OCTET_STREAM exporter.
 	 */
 	public static final RawFileScannerResultExporter APPLICATION_OCTET_STREAM_EXPORTER = new RawFileScannerResultExporter(
-			"Raw", Type.APPLICATION_OCTET_STREAM, ".bin");
+			"Raw", TransferType.APPLICATION_OCTET_STREAM, ".bin");
 
 	/**
 	 * Predefined PNG_IMAGE exporter.
 	 */
 	public static final RawFileScannerResultExporter PNG_IMAGE_EXPORTER = new RawFileScannerResultExporter(
-			"PNG image file", Type.IMAGE_PNG, ".png");
+			"PNG image file", TransferType.IMAGE_PNG, ".png");
 
 	private final String name;
-	private final Type type;
+	private final TransferType transferType;
 	private final String extension;
 
 	/**
 	 * Constructs a new {@linkplain RawFileScannerResultExporter} instance.
 	 *
 	 * @param name the exporter's name.
-	 * @param type the exporter's type.
+	 * @param transferType the exporter's transfer data type.
 	 * @param extension the file name extension to use.
 	 */
-	public RawFileScannerResultExporter(String name, Type type, String extension) {
+	public RawFileScannerResultExporter(String name, TransferType transferType, String extension) {
 		this.name = name;
-		this.type = type;
+		this.transferType = transferType;
 		this.extension = extension;
 	}
 
@@ -65,8 +65,8 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 	}
 
 	@Override
-	public Type type() {
-		return this.type;
+	public TransferType transferType() {
+		return this.transferType;
 	}
 
 	@Override
