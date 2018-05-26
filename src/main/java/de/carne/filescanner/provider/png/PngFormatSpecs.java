@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 import de.carne.filescanner.engine.format.ByteArraySpec;
 import de.carne.filescanner.engine.format.ByteRangeSpec;
 import de.carne.filescanner.engine.format.DWordSpec;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.format.VarArraySpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
@@ -74,7 +73,7 @@ final class PngFormatSpecs {
 		StructSpec iendChunk = new StructSpec();
 
 		iendChunk.byteOrder(ByteOrder.BIG_ENDIAN);
-		iendChunk.result("\"IEND\" chunk");
+		iendChunk.result("IEND chunk");
 		iendChunk.add(IEND_CHUNK_LENGTH);
 		iendChunk.add(IEND_CHUNK_TYPE).validate(0x49454e44);
 		iendChunk.add(new ByteRangeSpec("Chunk Data")).size(IEND_CHUNK_LENGTH);
@@ -106,17 +105,18 @@ final class PngFormatSpecs {
 	// Helpers
 	private static String formatChunkType(Supplier<Integer> type) {
 		int typeValue = type.get().intValue();
-		StringBuilder typeValueString = new StringBuilder();
-
-		typeValueString.append((char) ((typeValue >>> 24) & 0xff));
-		typeValueString.append((char) ((typeValue >>> 16) & 0xff));
-		typeValueString.append((char) ((typeValue >>> 8) & 0xff));
-		typeValueString.append((char) (typeValue & 0xff));
-
 		StringBuilder typeString = new StringBuilder();
 
-		PrettyFormat.formatString(typeString, typeValueString.toString()).append(" chunk");
+		typeString.append(mapChunkTypeChar((typeValue >>> 24) & 0xff));
+		typeString.append(mapChunkTypeChar((typeValue >>> 16) & 0xff));
+		typeString.append(mapChunkTypeChar((typeValue >>> 8) & 0xff));
+		typeString.append(mapChunkTypeChar(typeValue & 0xff));
+		typeString.append(" chunk");
 		return typeString.toString();
+	}
+
+	private static char mapChunkTypeChar(int code) {
+		return ((65 <= code && code <= 90) || (97 <= code && code <= 122) ? (char) code : '?');
 	}
 
 }
