@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine;
+package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.transfer.ExportTarget;
+import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
 
 /**
  * Export function for {@linkplain FileScannerResult} instances.

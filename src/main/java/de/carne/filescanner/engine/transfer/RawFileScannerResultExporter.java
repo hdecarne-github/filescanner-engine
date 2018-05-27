@@ -21,9 +21,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
 import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.FileScannerResultRenderer;
 import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 

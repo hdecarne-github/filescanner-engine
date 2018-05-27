@@ -27,6 +27,7 @@ import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.transfer.ExportTarget;
+import de.carne.filescanner.engine.transfer.FileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
