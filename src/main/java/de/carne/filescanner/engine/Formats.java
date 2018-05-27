@@ -29,11 +29,11 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public final class Formats implements Iterable<Format> {
 
-	private final Set<Format> formats = new HashSet<>();
+	private final Set<Format> allFormats = new HashSet<>();
 	private final Set<String> disabledFormats = new HashSet<>();
 
 	private Formats() {
-		Format.providers().forEach(format -> this.formats.add(format));
+		Format.providers().forEach(this.allFormats::add);
 	}
 
 	/**
@@ -93,13 +93,13 @@ public final class Formats implements Iterable<Format> {
 	 * @return the currently enabled {@linkplain Format} instances.
 	 */
 	public Set<Format> enabledFormats() {
-		return this.formats.stream().filter(format -> !this.disabledFormats.contains(format.name()))
+		return this.allFormats.stream().filter(format -> !this.disabledFormats.contains(format.name()))
 				.collect(Collectors.toSet());
 	}
 
 	@Override
 	public Iterator<Format> iterator() {
-		return Collections.unmodifiableSet(this.formats).iterator();
+		return Collections.unmodifiableSet(this.allFormats).iterator();
 	}
 
 }
