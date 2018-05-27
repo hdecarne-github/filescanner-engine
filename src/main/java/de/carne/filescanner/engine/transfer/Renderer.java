@@ -62,6 +62,33 @@ public interface Renderer extends Closeable {
 	}
 
 	/**
+	 * Emit media data.
+	 * 
+	 * @param style the {@linkplain RenderStyle} to use.
+	 * @param source the media data to emit.
+	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
+	 * @return the number of emitted characters (for output limiting).
+	 * @throws IOException if an I/O error occurs.
+	 */
+	int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException;
+
+	/**
+	 * Emit simple text.
+	 *
+	 * @param style the {@linkplain RenderStyle} to use.
+	 * @param source the media data to emit.
+	 * @param href the position to link to.
+	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
+	 * @return the number of emitted characters (for output limiting).
+	 * @throws IOException if an I/O error occurs.
+	 */
+	default int emitMediaData(RenderStyle style, TransferSource source, long href, boolean lineBreak)
+			throws IOException {
+		// Default is to emit without a link
+		return emitMediaData(style, source, lineBreak);
+	}
+
+	/**
 	 * Emit any necessary epilogue output.
 	 *
 	 * @throws IOException if an I/O error occurs.

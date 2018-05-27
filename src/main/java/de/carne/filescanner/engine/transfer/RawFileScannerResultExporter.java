@@ -18,17 +18,19 @@ package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.FileScannerResultRenderer;
 import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
  * {@linkplain FileScannerResultExportHandler} implementation for raw data export.
  */
-public class RawFileScannerResultExporter implements FileScannerResultExportHandler {
+public class RawFileScannerResultExporter implements FileScannerResultExportHandler, FileScannerResultRenderer {
 
 	/**
 	 * Predefined APPLICATION_OCTET_STREAM exporter.
@@ -89,6 +91,45 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 		try (ReadableByteChannel resultChannel = result.input().byteChannel(result.start(), result.end())) {
 			IOUtil.copyChannel(target, resultChannel);
 		}
+	}
+
+	@Override
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		if (out.isEmpty()) {
+			out.enableOption(RenderOption.TRANSPARENCY);
+		}
+
+		FileScannerResult result = context.result();
+
+		out.writeln(new RawTransferSource(result));
+	}
+
+	private class RawTransferSource implements TransferSource {
+
+		private final FileScannerResult result;
+
+		public RawTransferSource(FileScannerResult result) {
+			this.result = result;
+		}
+
+		@Override
+		public String name() {
+			return RawFileScannerResultExporter.this.name();
+		}
+
+		@Override
+		public TransferType transferType() {
+			return RawFileScannerResultExporter.this.transferType();
+		}
+
+		@Override
+		public void transfer(WritableByteChannel target) throws IOException {
+			try (ReadableByteChannel resultChannel = this.result.input().byteChannel(this.result.start(),
+					this.result.end())) {
+				IOUtil.copyChannel(target, resultChannel);
+			}
+		}
+
 	}
 
 }

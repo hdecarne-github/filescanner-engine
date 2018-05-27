@@ -22,6 +22,7 @@ import java.util.Set;
 import de.carne.filescanner.engine.transfer.RenderOption;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.Renderer;
+import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.io.Closeables;
 
 /**
@@ -34,7 +35,7 @@ public class CombinedRenderer implements Renderer {
 
 	/**
 	 * Constructs a new {@linkplain CombinedRenderer} instance.
-	 * 
+	 *
 	 * @param renderers the {@linkplain Renderer} instances to combine.
 	 */
 	public CombinedRenderer(Renderer... renderers) {
@@ -59,6 +60,37 @@ public class CombinedRenderer implements Renderer {
 
 		for (Renderer renderer : this.renderers) {
 			emitted = Math.max(renderer.emitText(style, text, lineBreak), emitted);
+		}
+		return emitted;
+	}
+
+	@Override
+	public int emitText(RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
+		int emitted = 0;
+
+		for (Renderer renderer : this.renderers) {
+			emitted = Math.max(renderer.emitText(style, text, href, lineBreak), emitted);
+		}
+		return emitted;
+	}
+
+	@Override
+	public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
+		int emitted = 0;
+
+		for (Renderer renderer : this.renderers) {
+			emitted = Math.max(renderer.emitMediaData(style, source, lineBreak), emitted);
+		}
+		return emitted;
+	}
+
+	@Override
+	public int emitMediaData(RenderStyle style, TransferSource source, long href, boolean lineBreak)
+			throws IOException {
+		int emitted = 0;
+
+		for (Renderer renderer : this.renderers) {
+			emitted = Math.max(renderer.emitMediaData(style, source, href, lineBreak), emitted);
 		}
 		return emitted;
 	}

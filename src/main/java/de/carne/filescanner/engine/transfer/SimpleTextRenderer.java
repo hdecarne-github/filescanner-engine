@@ -55,6 +55,12 @@ public class SimpleTextRenderer implements Renderer {
 	}
 
 	@Override
+	public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
+		// Do nothing
+		return 0;
+	}
+
+	@Override
 	public String toString() {
 		return this.writer.toString();
 	}

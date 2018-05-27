@@ -20,19 +20,32 @@ import java.io.IOException;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * Export handler interface responsible for writing export data.
+ * Interface used to transfer byte based data during rendering.
  */
-public interface ExportTarget extends WritableByteChannel {
+public interface TransferSource {
 
 	/**
-	 * Sets the size of upcoming export data stream.
+	 * Gets the name of the data to transfer.
 	 * <p>
-	 * The given size is used to report export progress to the user. In order to work this size has to be set prior to
-	 * any {@link #write(java.nio.ByteBuffer)} call.
+	 * This name is used as a textual representation of the data (e.g. as the alternate name during HTML rendering).
 	 *
-	 * @param size the size to set.
+	 * @return the name of the data to transfer.
+	 */
+	String name();
+
+	/**
+	 * Gets the {@linkplain TransferType} of the data to transfer.
+	 *
+	 * @return the {@linkplain TransferType} of the data to transfer.
+	 */
+	TransferType transferType();
+
+	/**
+	 * Transfers the data.
+	 *
+	 * @param target the {@linkplain WritableByteChannel} to transfer the data to.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void setSize(long size) throws IOException;
+	void transfer(WritableByteChannel target) throws IOException;
 
 }

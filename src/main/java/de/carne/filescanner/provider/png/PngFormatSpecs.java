@@ -91,6 +91,7 @@ final class PngFormatSpecs {
 		formatSpec.add(PNG_FILE_SIGNATURE);
 		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));
 		formatSpec.add(IEND_CHUNK);
+		formatSpec.render(RawFileScannerResultExporter.PNG_IMAGE_EXPORTER);
 		FORMAT_SPEC = formatSpec;
 	}
 

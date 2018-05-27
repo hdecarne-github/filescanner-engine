@@ -167,6 +167,32 @@ public final class RenderOutput implements Closeable {
 	}
 
 	/**
+	 * Writes media data to the output using the currently selected {@linkplain RenderStyle}.
+	 *
+	 * @param source the media data to write.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public RenderOutput write(TransferSource source) throws IOException {
+		prepareIfNeeded();
+		this.emitted += this.renderer.emitMediaData(this.currentStyle, source, false);
+		return this;
+	}
+
+	/**
+	 * Writes media data as well as a line break to the output using the currently selected {@linkplain RenderStyle}.
+	 *
+	 * @param source the media data to write.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public RenderOutput writeln(TransferSource source) throws IOException {
+		prepareIfNeeded();
+		this.emitted += this.renderer.emitMediaData(this.currentStyle, source, true);
+		return this;
+	}
+
+	/**
 	 * Writes a line break to the output.
 	 *
 	 * @return the updated {@linkplain RenderOutput} for chaining.
