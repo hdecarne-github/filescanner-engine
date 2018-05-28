@@ -25,8 +25,8 @@ public final class FileNames {
 		// prevent instantiation
 	}
 
-	private static final String REMOVE_FILE_NAME_CHARS = "<|>|:|\\\\|/|\\\"|\\|\\?|\\*|\\R";
-	private static final String REPLACE_FILE_NAME_CHARS = " |\\.";
+	private static final String REMOVE_FILE_NAME_CHARS = "<|>|\\||:|\\\\|/|\\\"|\\?|\\*";
+	private static final String REPLACE_FILE_NAME_CHARS = " |\\r\\n|\\r|\\n|\\.";
 
 	/**
 	 * Removes a common set of invalid file name characters from a file name.

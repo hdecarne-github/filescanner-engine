@@ -36,6 +36,7 @@ import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.engine.transfer.SimpleTextRenderer;
+import de.carne.filescanner.engine.util.CombinedRenderer;
 import de.carne.filescanner.test.TestFiles;
 import de.carne.text.MemoryUnitFormat;
 
@@ -142,7 +143,7 @@ class FileScannerTest {
 	}
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
-		RenderOutput.render(result, this.systemOutRenderer);
+		RenderOutput.render(result, new CombinedRenderer(this.systemOutRenderer));
 		for (FileScannerResult resultChild : result.children()) {
 			renderResult(resultChild);
 		}
