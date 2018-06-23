@@ -23,6 +23,7 @@ import de.carne.filescanner.engine.format.ByteArraySpec;
 import de.carne.filescanner.engine.format.ByteFlagRenderer;
 import de.carne.filescanner.engine.format.ByteRangeSpec;
 import de.carne.filescanner.engine.format.ByteSpec;
+import de.carne.filescanner.engine.format.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.ConditionalSpec;
 import de.carne.filescanner.engine.format.FixedArraySpec;
 import de.carne.filescanner.engine.format.FixedStringSpec;
@@ -61,6 +62,24 @@ final class GifFormatSpecs {
 		ID_PACKED_FIELDS_SYMBOLS.put((byte) 0x20, "Sort Flag");
 		ID_PACKED_FIELDS_SYMBOLS.put((byte) 0x18, "Reserved");
 		ID_PACKED_FIELDS_SYMBOLS.put((byte) 0x07, "Size of Local Color Table");
+	}
+
+	static final ByteSymbolRenderer EXTENSION_TYPE_SYMBOLS = new ByteSymbolRenderer();
+
+	static {
+		EXTENSION_TYPE_SYMBOLS.put((byte) 0xf9, "Graphic Control Extension");
+		EXTENSION_TYPE_SYMBOLS.put((byte) 0xfe, "Comment Extension");
+		EXTENSION_TYPE_SYMBOLS.put((byte) 0x01, "Plain Text Extension");
+		EXTENSION_TYPE_SYMBOLS.put((byte) 0xff, "Application Extension");
+	}
+
+	static final ByteFlagRenderer GCE_PACKED_FIELDS_SYMBOLS = new ByteFlagRenderer();
+
+	static {
+		GCE_PACKED_FIELDS_SYMBOLS.put((byte) 0xe0, "Reserved");
+		GCE_PACKED_FIELDS_SYMBOLS.put((byte) 0x1c, "Disposal Method");
+		GCE_PACKED_FIELDS_SYMBOLS.put((byte) 0x02, "User Input Flag");
+		GCE_PACKED_FIELDS_SYMBOLS.put((byte) 0x01, "Transparent Color Flag");
 	}
 
 	// Format specs
@@ -170,7 +189,7 @@ final class GifFormatSpecs {
 
 		genericExtension.result("Extension Block");
 		genericExtension.add(ByteSpec.hex("Extension Introducer")).validate((byte) 0x21);
-		genericExtension.add(ByteSpec.hex("Extension Type"));
+		genericExtension.add(ByteSpec.hex("Extension Type")).renderer(EXTENSION_TYPE_SYMBOLS);
 
 		StructSpec dataBlock = new StructSpec();
 
@@ -186,12 +205,29 @@ final class GifFormatSpecs {
 		GENERIC_EXTENSION = genericExtension;
 	}
 
+	static final StructSpec GRAPHIC_CONTROL_EXTENSION;
+
+	static {
+		StructSpec gce = new StructSpec();
+
+		gce.result("Graphic Control Extension");
+		gce.add(ByteSpec.hex("Extension Introducer")).validate((byte) 0x21);
+		gce.add(ByteSpec.hex("Graphic Control Label")).validate((byte) 0xf9).renderer(EXTENSION_TYPE_SYMBOLS);
+		gce.add(ByteSpec.size("Block Size")).validate((byte) 4);
+		gce.add(ByteSpec.hex("<Packed Fields>")).renderer(GCE_PACKED_FIELDS_SYMBOLS);
+		gce.add(WordSpec.dec("Delay Time"));
+		gce.add(ByteSpec.dec("Transparent Color Index"));
+		gce.add(ByteSpec.size("Block Terminator")).validate((byte) 0);
+		GRAPHIC_CONTROL_EXTENSION = gce;
+	}
+
 	static final UnionSpec BLOCK;
 
 	static {
 		UnionSpec block = new UnionSpec();
 
 		block.add(IMAGE);
+		block.add(GRAPHIC_CONTROL_EXTENSION);
 		block.add(GENERIC_EXTENSION);
 		BLOCK = block;
 	}
