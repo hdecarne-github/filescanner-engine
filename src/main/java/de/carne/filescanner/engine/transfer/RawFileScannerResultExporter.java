@@ -37,9 +37,21 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 			"Raw", TransferType.APPLICATION_OCTET_STREAM, ".bin");
 
 	/**
-	 * Predefined PNG_IMAGE exporter.
+	 * Predefined IMAGE_BMP exporter.
 	 */
-	public static final RawFileScannerResultExporter PNG_IMAGE_EXPORTER = new RawFileScannerResultExporter(
+	public static final RawFileScannerResultExporter IMAGE_BMP_EXPORTER = new RawFileScannerResultExporter(
+			"BMP image file", TransferType.IMAGE_BMP, ".bmp");
+
+	/**
+	 * Predefined IMAGE_GIF exporter.
+	 */
+	public static final RawFileScannerResultExporter IMAGE_GIF_EXPORTER = new RawFileScannerResultExporter(
+			"GIF image file", TransferType.IMAGE_GIF, ".gif");
+
+	/**
+	 * Predefined IMAGE_PNG exporter.
+	 */
+	public static final RawFileScannerResultExporter IMAGE_PNG_EXPORTER = new RawFileScannerResultExporter(
 			"PNG image file", TransferType.IMAGE_PNG, ".png");
 
 	private final String name;

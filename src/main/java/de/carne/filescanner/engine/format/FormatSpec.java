@@ -37,12 +37,12 @@ public interface FormatSpec {
 	boolean isFixedSize();
 
 	/**
-	 * Gets the minimum buffer size required to match this format element.
+	 * Gets the maximum buffer size required to match this format element.
 	 * <p>
 	 * If this format element is of fixed size (see {@linkplain #isFixedSize()}) the match size is also the format
 	 * element's size.
 	 *
-	 * @return the minimum buffer size required to match this format element.
+	 * @return the maximum buffer size required to match this format element.
 	 */
 	int matchSize();
 

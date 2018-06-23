@@ -37,7 +37,7 @@ public class ZipFormat extends Format {
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decode(ZipFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(ZipFormatSpecs.FORMAT_SPEC);
 	}
 
 }

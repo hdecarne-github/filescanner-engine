@@ -32,6 +32,7 @@ import de.carne.filescanner.engine.UnexpectedDataException;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
+import de.carne.util.Strings;
 
 /**
  * Base class for bind-able attribute format elements.
@@ -229,8 +230,13 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 		case RESULT:
 			break;
 		}
-		out.setStyle(RenderStyle.NORMAL).write(this.name.get());
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+
+		String actualName = this.name.get();
+
+		if (Strings.notEmpty(actualName)) {
+			out.setStyle(RenderStyle.NORMAL).write(actualName);
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		}
 		out.setStyle(RenderStyle.VALUE).write(this.format.format(value));
 		for (AttributeRenderer<T> renderer : this.renderers) {
 			renderer.render(out, value);

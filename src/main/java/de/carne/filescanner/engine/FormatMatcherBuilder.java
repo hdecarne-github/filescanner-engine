@@ -109,7 +109,7 @@ final class FormatMatcherBuilder {
 		for (CompositeSpec headerSpec : format.headerSpecs()) {
 			matchBuffer.rewind();
 			matchBuffer.order(headerSpec.byteOrder());
-			if (headerSpec.matchSize() <= matchBuffer.remaining() && headerSpec.matches(matchBuffer)) {
+			if (headerSpec.matches(matchBuffer)) {
 				match = true;
 				break;
 			}

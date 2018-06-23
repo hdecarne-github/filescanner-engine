@@ -1,2 +1,5 @@
+de.carne.filescanner.provider.bmp.BmpFormat
+de.carne.filescanner.provider.gif.GifFormat
+de.carne.filescanner.provider.jpeg.JpegFormat
 de.carne.filescanner.provider.png.PngFormat
 de.carne.filescanner.provider.zip.ZipFormat

@@ -172,12 +172,12 @@ public final class EncodedInputSpec implements FormatSpec {
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decode(this);
+		context.decodeEncodedInput(this);
 	}
 
 	@Override

@@ -73,7 +73,12 @@ public class WordFlagRenderer extends FlagRenderer<Short> {
 	protected boolean testFlag(Short value, Short flag) {
 		short flagValue = flag.shortValue();
 
-		return (value.shortValue() & flagValue) == flagValue;
+		return (value.shortValue() & flagValue) != 0;
+	}
+
+	@Override
+	protected Short combineFlags(Short flag1, Short flag2) {
+		return Short.valueOf((short) ((flag1.shortValue() | flag2.shortValue()) & 0xffff));
 	}
 
 	@Override

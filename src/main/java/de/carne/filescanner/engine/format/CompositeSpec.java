@@ -151,7 +151,7 @@ public abstract class CompositeSpec implements FormatSpec {
 
 	@Override
 	public final void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decode(this);
+		context.decodeComposite(this);
 	}
 
 	/**

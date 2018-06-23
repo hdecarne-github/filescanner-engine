@@ -37,7 +37,7 @@ public class PngFormat extends Format {
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decode(PngFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(PngFormatSpecs.FORMAT_SPEC);
 	}
 
 }

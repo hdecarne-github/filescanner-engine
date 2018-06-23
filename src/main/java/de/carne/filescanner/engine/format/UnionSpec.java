@@ -26,11 +26,11 @@ import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
- * Struct of {@linkplain FormatSpec}s.
+ * Union of {@linkplain CompositeSpec}s.
  */
-public class StructSpec extends CompositeSpec {
+public class UnionSpec extends CompositeSpec {
 
-	private final List<FormatSpec> elements = new ArrayList<>();
+	private final List<CompositeSpec> elements = new ArrayList<>();
 	private int cachedFixedSize = -1;
 	private int cachedMatchSize = -1;
 
@@ -41,7 +41,7 @@ public class StructSpec extends CompositeSpec {
 	 * @param element the {@linkplain FormatSpec} to add.
 	 * @return the added {@linkplain FormatSpec}.
 	 */
-	public <T extends FormatSpec> T add(T element) {
+	public <T extends CompositeSpec> T add(T element) {
 		this.elements.add(element);
 		this.cachedFixedSize = -1;
 		this.cachedMatchSize = -1;
@@ -55,7 +55,7 @@ public class StructSpec extends CompositeSpec {
 
 	private synchronized boolean isFixedSize0() {
 		this.cachedFixedSize = 1;
-		for (FormatSpec element : this.elements) {
+		for (CompositeSpec element : this.elements) {
 			if (!element.isFixedSize()) {
 				this.cachedFixedSize = 0;
 				break;
@@ -71,11 +71,8 @@ public class StructSpec extends CompositeSpec {
 
 	private synchronized int matchSize0() {
 		this.cachedMatchSize = 0;
-		for (FormatSpec spec : this.elements) {
-			this.cachedMatchSize += spec.matchSize();
-			if (!spec.isFixedSize()) {
-				break;
-			}
+		for (CompositeSpec element : this.elements) {
+			this.cachedMatchSize = Math.max(this.cachedMatchSize, element.matchSize());
 		}
 		return this.cachedMatchSize;
 	}
@@ -84,9 +81,12 @@ public class StructSpec extends CompositeSpec {
 	public boolean matches(ByteBuffer buffer) {
 		boolean match = true;
 
-		for (FormatSpec element : this.elements) {
-			match = element.matches(buffer);
-			if (!match || !element.isFixedSize()) {
+		for (CompositeSpec element : this.elements) {
+			ByteBuffer matchBuffer = buffer.duplicate();
+
+			matchBuffer.order(element.byteOrder());
+			match = element.matches(matchBuffer);
+			if (match) {
 				break;
 			}
 		}
@@ -95,8 +95,11 @@ public class StructSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		for (FormatSpec element : this.elements) {
-			element.decode(context);
+		for (CompositeSpec element : this.elements) {
+			if (context.matchComposite(element)) {
+				context.decodeComposite(element);
+				break;
+			}
 		}
 	}
 
@@ -104,8 +107,10 @@ public class StructSpec extends CompositeSpec {
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
 		if (out.isEmpty()) {
-			for (FormatSpec element : this.elements) {
-				element.render(out, context);
+			for (CompositeSpec element : this.elements) {
+				if (context.matchComposite(element)) {
+					element.render(out, context);
+				}
 			}
 		}
 	}

@@ -53,14 +53,14 @@ public class ConditionalSpec implements FormatSpec {
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
 		FormatSpec resolvedSpec = this.spec.get();
 
-		if (!context.match(resolvedSpec)) {
+		if (!context.matchFormat(resolvedSpec)) {
 			throw new UnexpectedDataException();
 		}
 		resolvedSpec.decode(context);

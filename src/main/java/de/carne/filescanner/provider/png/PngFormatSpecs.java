@@ -22,8 +22,11 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.ByteArraySpec;
 import de.carne.filescanner.engine.format.ByteRangeSpec;
+import de.carne.filescanner.engine.format.ByteSpec;
+import de.carne.filescanner.engine.format.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.DWordSpec;
 import de.carne.filescanner.engine.format.StructSpec;
+import de.carne.filescanner.engine.format.UnionSpec;
 import de.carne.filescanner.engine.format.VarArraySpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
@@ -35,6 +38,36 @@ final class PngFormatSpecs {
 
 	// Format name
 	static final String FORMAT_NAME = "PNG image data";
+
+	// Symbols and flags
+	static final ByteSymbolRenderer COLOR_TYPE_SYMBOLS = new ByteSymbolRenderer();
+
+	static {
+		COLOR_TYPE_SYMBOLS.put((byte) 0, "Grayscale");
+		COLOR_TYPE_SYMBOLS.put((byte) 2, "RGB");
+		COLOR_TYPE_SYMBOLS.put((byte) 3, "Palette");
+		COLOR_TYPE_SYMBOLS.put((byte) 4, "Grayscale + Alpha");
+		COLOR_TYPE_SYMBOLS.put((byte) 6, "RGB + Alpha");
+	}
+
+	static final ByteSymbolRenderer COMPRESSION_METHOD_SYMBOLS = new ByteSymbolRenderer();
+
+	static {
+		COMPRESSION_METHOD_SYMBOLS.put((byte) 0, "deflate/inflate compression");
+	}
+
+	static final ByteSymbolRenderer FILTER_METHOD_SYMBOLS = new ByteSymbolRenderer();
+
+	static {
+		FILTER_METHOD_SYMBOLS.put((byte) 0, "adaptive filtering");
+	}
+
+	static final ByteSymbolRenderer INTERLACE_METHOD_SYMBOLS = new ByteSymbolRenderer();
+
+	static {
+		INTERLACE_METHOD_SYMBOLS.put((byte) 0, "no interlace");
+		INTERLACE_METHOD_SYMBOLS.put((byte) 1, "Adam7 interlace");
+	}
 
 	// Format specs
 	static final StructSpec PNG_FILE_SIGNATURE;
@@ -65,18 +98,35 @@ final class PngFormatSpecs {
 		GENERIC_CHUNK = genericChunk;
 	}
 
+	static final StructSpec IHDR_CHUNK;
+
+	static {
+		StructSpec ihdrChunk = new StructSpec();
+
+		ihdrChunk.byteOrder(ByteOrder.BIG_ENDIAN);
+		ihdrChunk.result("IHDR chunk");
+		ihdrChunk.add(DWordSpec.size("Length")).validate(13);
+		ihdrChunk.add(DWordSpec.hex("Chunk Type")).validate(0x49484452);
+		ihdrChunk.add(DWordSpec.dec("Width"));
+		ihdrChunk.add(DWordSpec.dec("Height"));
+		ihdrChunk.add(ByteSpec.dec("Bit depth"));
+		ihdrChunk.add(ByteSpec.hex("Color type")).renderer(COLOR_TYPE_SYMBOLS);
+		ihdrChunk.add(ByteSpec.hex("Compression method")).renderer(COMPRESSION_METHOD_SYMBOLS);
+		ihdrChunk.add(ByteSpec.hex("Filter method")).renderer(FILTER_METHOD_SYMBOLS);
+		ihdrChunk.add(ByteSpec.hex("Interlace method")).renderer(INTERLACE_METHOD_SYMBOLS);
+		ihdrChunk.add(DWordSpec.hex("CRC"));
+		IHDR_CHUNK = ihdrChunk;
+	}
+
 	static final StructSpec IEND_CHUNK;
-	static final DWordSpec IEND_CHUNK_LENGTH = DWordSpec.size("Length");
-	static final DWordSpec IEND_CHUNK_TYPE = DWordSpec.hex("Chunk Type");
 
 	static {
 		StructSpec iendChunk = new StructSpec();
 
 		iendChunk.byteOrder(ByteOrder.BIG_ENDIAN);
 		iendChunk.result("IEND chunk");
-		iendChunk.add(IEND_CHUNK_LENGTH);
-		iendChunk.add(IEND_CHUNK_TYPE).validate(0x49454e44);
-		iendChunk.add(new ByteRangeSpec("Chunk Data")).size(IEND_CHUNK_LENGTH);
+		iendChunk.add(DWordSpec.size("Length")).validate(0);
+		iendChunk.add(DWordSpec.hex("Chunk Type")).validate(0x49454e44);
 		iendChunk.add(DWordSpec.hex("CRC"));
 		IEND_CHUNK = iendChunk;
 	}
@@ -86,12 +136,18 @@ final class PngFormatSpecs {
 	static {
 		StructSpec formatSpec = new StructSpec();
 
-		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN).export(RawFileScannerResultExporter.PNG_IMAGE_EXPORTER);
+		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN).export(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		formatSpec.result(FORMAT_NAME);
 		formatSpec.add(PNG_FILE_SIGNATURE);
-		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));
+
+		UnionSpec chunkSpecs = new UnionSpec();
+
+		chunkSpecs.add(IHDR_CHUNK);
+		chunkSpecs.add(GENERIC_CHUNK);
+
+		formatSpec.add(new VarArraySpec(chunkSpecs));
 		formatSpec.add(IEND_CHUNK);
-		formatSpec.render(RawFileScannerResultExporter.PNG_IMAGE_EXPORTER);
+		formatSpec.render(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		FORMAT_SPEC = formatSpec;
 	}
 
@@ -99,8 +155,6 @@ final class PngFormatSpecs {
 	static {
 		GENERIC_CHUNK_LENGTH.bind();
 		GENERIC_CHUNK_TYPE.bind();
-		IEND_CHUNK_LENGTH.bind();
-		IEND_CHUNK_TYPE.bind();
 	}
 
 	// Helpers

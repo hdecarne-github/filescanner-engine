@@ -104,7 +104,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 
 	/**
 	 * Executes the given {@linkplain FileScannerResultExporter} instance.
-	 * 
+	 *
 	 * @param target the {@linkplain ExportTarget} to export to.
 	 * @param exporter the {@linkplain FileScannerResultExporter} instance to execute.
 	 * @throws IOException if an I/O error occurs.

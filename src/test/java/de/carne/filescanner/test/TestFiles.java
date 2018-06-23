@@ -78,17 +78,34 @@ public final class TestFiles {
 	}
 
 	/**
+	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.bmp
+	 */
+	public static final TestFile BMP_IMAGE = new TestFile(
+			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.bmp", "w3c_home.bmp");
+
+	/**
+	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.gif
+	 */
+	public static final TestFile GIF_IMAGE = new TestFile(
+			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.gif", "w3c_home.gif");
+
+	/**
+	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.jpg
+	 */
+	public static final TestFile JPEG_IMAGE = new TestFile(
+			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.jpg", "w3c_home.jpg");
+
+	/**
+	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png
+	 */
+	public static final TestFile PNG_IMAGE = new TestFile(
+			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png", "w3c_home.png");
+
+	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip
 	 */
 	public static final TestFile ZIP_ARCHIVE = new TestFile(
 			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip", "certmgr-1.1.0.zip");
-
-	/**
-	 * https://raw.githubusercontent.com/hdecarne/hdecarne.github.io/master/filescanner1.png
-	 */
-	public static final TestFile PNG_IMAGE = new TestFile(
-			"https://raw.githubusercontent.com/hdecarne/hdecarne.github.io/master/filescanner1.png",
-			"filescanner1.png");
 
 	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe

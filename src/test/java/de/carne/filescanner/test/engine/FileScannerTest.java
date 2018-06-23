@@ -109,6 +109,8 @@ class FileScannerTest {
 
 		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), formats);
 		runFileScanner(TestFiles.PNG_IMAGE.path(), formats);
+		runFileScanner(TestFiles.GIF_IMAGE.path(), formats);
+		runFileScanner(TestFiles.BMP_IMAGE.path(), formats);
 		// runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), formats);
 		// runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(), formats);
 		// runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), formats);

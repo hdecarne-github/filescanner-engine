@@ -73,7 +73,12 @@ public class ByteFlagRenderer extends FlagRenderer<Byte> {
 	protected boolean testFlag(Byte value, Byte flag) {
 		byte flagValue = flag.byteValue();
 
-		return (value.byteValue() & flagValue) == flagValue;
+		return (value.byteValue() & flagValue) != 0;
+	}
+
+	@Override
+	protected Byte combineFlags(Byte flag1, Byte flag2) {
+		return Byte.valueOf((byte) ((flag1.byteValue() | flag2.byteValue()) & 0xff));
 	}
 
 	@Override

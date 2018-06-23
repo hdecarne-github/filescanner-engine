@@ -59,7 +59,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public FileScannerResult decode(CompositeSpec formatSpec) throws IOException {
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec) throws IOException {
 		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
 
 		boolean isRootSpec = this.decodeStack.size() == 1;
@@ -107,9 +107,9 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public FileScannerResult decode(CompositeSpec formatSpec, long position) throws IOException, InterruptedException {
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position) throws IOException, InterruptedException {
 		setPosition(position);
-		return decode(formatSpec);
+		return decodeComposite(formatSpec);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public FileScannerResult decode(EncodedInputSpec encodedInputSpec) throws IOException {
+	public FileScannerResult decodeEncodedInput(EncodedInputSpec encodedInputSpec) throws IOException {
 		LOG.debug("Decoding encoded input spec ''{0}''...", encodedInputSpec);
 
 		long decodeStart = position();

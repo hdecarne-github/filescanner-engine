@@ -17,8 +17,9 @@
 package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
@@ -28,7 +29,7 @@ import de.carne.filescanner.engine.transfer.RenderStyle;
  *
  * @param <T> The actual attribute type.
  */
-public abstract class FlagRenderer<T> extends HashMap<T, String> implements AttributeRenderer<T> {
+public abstract class FlagRenderer<T> extends LinkedHashMap<T, String> implements AttributeRenderer<T> {
 
 	// Serialization support
 	private static final long serialVersionUID = -5863180152604163026L;
@@ -36,16 +37,42 @@ public abstract class FlagRenderer<T> extends HashMap<T, String> implements Attr
 	@Override
 	public void render(RenderOutput out, T value) throws IOException {
 		Iterator<T> flags = flags();
+		Iterator<Map.Entry<T, String>> symbolEntries = entrySet().iterator();
+		T currentSymbolFlag = null;
+		T nextSymbolFlag = (symbolEntries.hasNext() ? symbolEntries.next().getKey() : null);
+		T unknownFlags = null;
 
 		while (flags.hasNext()) {
 			T flag = flags.next();
 
-			if (containsKey(flag) || testFlag(value, flag)) {
-				out.writeln();
-				out.setStyle(RenderStyle.VALUE).write(formatFlag(value, flag));
-				out.setStyle(RenderStyle.COMMENT).write(" // ").write(getOrDefault(flag, "?"));
+			if (currentSymbolFlag != null && !testFlag(currentSymbolFlag, flag)) {
+				renderFlag(out, value, currentSymbolFlag);
+				currentSymbolFlag = null;
+			}
+			if (currentSymbolFlag == null) {
+				if (nextSymbolFlag != null && testFlag(nextSymbolFlag, flag)) {
+					if (unknownFlags != null && testFlag(value, unknownFlags)) {
+						renderFlag(out, value, unknownFlags);
+						unknownFlags = null;
+					}
+					currentSymbolFlag = nextSymbolFlag;
+					nextSymbolFlag = (symbolEntries.hasNext() ? symbolEntries.next().getKey() : null);
+				} else {
+					unknownFlags = (unknownFlags != null ? combineFlags(unknownFlags, flag) : flag);
+				}
 			}
 		}
+		if (currentSymbolFlag != null) {
+			renderFlag(out, value, currentSymbolFlag);
+		} else if (unknownFlags != null && testFlag(value, unknownFlags)) {
+			renderFlag(out, value, unknownFlags);
+		}
+	}
+
+	private void renderFlag(RenderOutput out, T value, T flag) throws IOException {
+		out.writeln();
+		out.setStyle(RenderStyle.VALUE).write(formatFlag(value, flag));
+		out.setStyle(RenderStyle.COMMENT).write(" // ").write(getOrDefault(flag, "?"));
 	}
 
 	/**
@@ -63,6 +90,15 @@ public abstract class FlagRenderer<T> extends HashMap<T, String> implements Attr
 	 * @return {@code true} if the flag is set.
 	 */
 	protected abstract boolean testFlag(T value, T flag);
+
+	/**
+	 * Combines two flag values into one.
+	 *
+	 * @param flag1 the first flag to combine.
+	 * @param flag2 the second flag to combine.
+	 * @return the combined flag.
+	 */
+	protected abstract T combineFlags(T flag1, T flag2);
 
 	/**
 	 * Formats a a single flag.

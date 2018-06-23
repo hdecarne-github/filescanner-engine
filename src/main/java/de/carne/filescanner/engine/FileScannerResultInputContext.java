@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
@@ -92,7 +93,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 *         {@linkplain FormatSpec}.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public boolean match(FormatSpec spec) throws IOException {
+	public boolean matchFormat(FormatSpec spec) throws IOException {
 		int matchSize = spec.matchSize();
 		boolean match = true;
 
@@ -100,9 +101,22 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 			ByteBuffer buffer = this.inputRange.read(this.position, matchSize);
 
 			buffer.order(this.byteOrder);
-			match = (buffer.remaining() <= matchSize ? spec.matches(buffer) : false);
+			match = spec.matches(buffer);
 		}
 		return match;
+	}
+
+	/**
+	 * Matches the given {@linkplain CompositeSpec} against the input data at the current position.
+	 *
+	 * @param spec the {@linkplain FormatSpec} to match.
+	 * @return {@code true} if the remaining input data size is sufficient and matches the given
+	 *         {@linkplain FormatSpec}.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public boolean matchComposite(CompositeSpec spec) throws IOException {
+		this.byteOrder = spec.byteOrder();
+		return matchFormat(spec);
 	}
 
 	/**

@@ -73,7 +73,12 @@ public class DWordFlagRenderer extends FlagRenderer<Integer> {
 	protected boolean testFlag(Integer value, Integer flag) {
 		int flagValue = flag.intValue();
 
-		return (value.intValue() & flagValue) == flagValue;
+		return (value.intValue() & flagValue) != 0;
+	}
+
+	@Override
+	protected Integer combineFlags(Integer flag1, Integer flag2) {
+		return Integer.valueOf(flag1.intValue() | flag2.intValue());
 	}
 
 	@Override
