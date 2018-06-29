@@ -96,7 +96,8 @@ final class ZipFormatSpecs {
 		lfh.add(DWordSpec.hex("local file header signature")).validate(0x04034b50);
 		lfh.add(WordSpec.hex("version needed to extract"));
 		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG).renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS);
-		lfh.add(LFH_COMPRESSION_METHOD).renderer(COMPRESSION_METHOD_SYMBOLS);
+		lfh.add(LFH_COMPRESSION_METHOD).validate(COMPRESSION_METHOD_SYMBOLS.keySet())
+				.renderer(COMPRESSION_METHOD_SYMBOLS);
 		lfh.add(WordSpec.hex("last mod file time")).renderer(DosTimeRenderer.RENDERER);
 		lfh.add(WordSpec.hex("last mod file date")).renderer(DosDateRenderer.RENDERER);
 		lfh.add(DWordSpec.hex("crc-32"));
