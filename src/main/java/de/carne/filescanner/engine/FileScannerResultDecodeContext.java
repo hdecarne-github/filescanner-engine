@@ -107,7 +107,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position) throws IOException, InterruptedException {
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position)
+			throws IOException, InterruptedException {
 		setPosition(position);
 		return decodeComposite(formatSpec);
 	}
@@ -177,7 +178,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param value the attribute value to bind.
 	 */
 	public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
-		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute, Strings.decode(value.toString()));
+		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute, Strings.encode(value.toString()));
 
 		this.decodeStack.peek().builder().bindResultValue(scope, attribute, value);
 	}
@@ -191,7 +192,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		T value = (contextValue != null ? Check.isInstanceOf(contextValue, attribute.type())
 				: result.builder().getValue(attribute, false));
 
-		LOG.debug("Resolved attribute value ''{0}'' = ''{1}''", attribute, Strings.decode(value.toString()));
+		LOG.debug("Resolved attribute value ''{0}'' = ''{1}''", attribute, Strings.encode(value.toString()));
 
 		return value;
 	}
