@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.InvalidPositionException;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;
@@ -97,6 +98,10 @@ public final class InputDecodeCache implements Closeable {
 	 */
 	public synchronized Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
 			long end) throws IOException {
+		if (end >= input.size()) {
+			throw new InvalidPositionException(input, end);
+		}
+
 		long encodedSize = 0;
 		FileScannerInput decodedInput;
 
