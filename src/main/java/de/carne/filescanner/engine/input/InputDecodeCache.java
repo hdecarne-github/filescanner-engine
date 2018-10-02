@@ -76,6 +76,7 @@ public final class InputDecodeCache implements Closeable {
 		this.cacheFilePath = Files.createTempFile(tmpDir, getClass().getSimpleName(), null,
 				FileAttributes.userFileDefault(tmpDir));
 
+		@SuppressWarnings("resource")
 		FileChannelInput fileChannelInput = new FileChannelInput(this.cacheFilePath, StandardOpenOption.CREATE,
 				StandardOpenOption.WRITE, StandardOpenOption.READ);
 

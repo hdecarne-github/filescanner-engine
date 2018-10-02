@@ -118,36 +118,39 @@ class FileScannerTest {
 
 	private Status runFileScanner(Path file, Collection<Format> formats) throws IOException, InterruptedException {
 		Status status = new Status();
-		FileScanner fileScanner = FileScanner.scan(file, formats, status);
 
-		do {
-			synchronized (fileScanner) {
-				fileScanner.wait();
-			}
-		} while (fileScanner.isScanning());
+		try (FileScanner fileScanner = FileScanner.scan(file, formats, status)) {
+			do {
+				synchronized (fileScanner) {
+					fileScanner.wait();
+				}
+			} while (fileScanner.isScanning());
 
-		Assertions.assertEquals(1, status.scanStartedCount.get());
-		Assertions.assertEquals(1, status.scanFinishedCount.get());
+			Assertions.assertEquals(1, status.scanStartedCount.get());
+			Assertions.assertEquals(1, status.scanFinishedCount.get());
 
-		FileScannerProgress progress = fileScanner.progress();
-		long elapsedNanos = System.nanoTime() - progress.scanStartedNanos();
+			FileScannerProgress progress = fileScanner.progress();
+			long elapsedNanos = System.nanoTime() - progress.scanStartedNanos();
 
-		Assertions.assertTrue(elapsedNanos >= 0);
-		Assertions.assertTrue(progress.scanTimeNanos() >= 0);
-		Assertions.assertTrue(elapsedNanos >= progress.scanTimeNanos());
-		Assertions.assertTrue(Files.size(file) <= progress.totalInputBytes());
-		Assertions.assertEquals(progress.totalInputBytes(), progress.scannedBytes());
-		Assertions.assertEquals(100, progress.scanProgress());
-		Assertions.assertTrue(progress.scanRate() >= -1);
+			Assertions.assertTrue(elapsedNanos >= 0);
+			Assertions.assertTrue(progress.scanTimeNanos() >= 0);
+			Assertions.assertTrue(elapsedNanos >= progress.scanTimeNanos());
+			Assertions.assertTrue(Files.size(file) <= progress.totalInputBytes());
+			Assertions.assertEquals(progress.totalInputBytes(), progress.scannedBytes());
+			Assertions.assertEquals(100, progress.scanProgress());
+			Assertions.assertTrue(progress.scanRate() >= -1);
 
-		renderResult(fileScanner.result());
+			renderResult(fileScanner.result());
+		}
 		return status;
 	}
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
-		RenderOutput.render(result, new CombinedRenderer(this.systemOutRenderer));
-		for (FileScannerResult resultChild : result.children()) {
-			renderResult(resultChild);
+		try (Renderer renderer = new CombinedRenderer(this.systemOutRenderer)) {
+			RenderOutput.render(result, renderer);
+			for (FileScannerResult resultChild : result.children()) {
+				renderResult(resultChild);
+			}
 		}
 	}
 

@@ -49,6 +49,7 @@ public abstract class FileScannerInput implements Closeable {
 	 * @return the opened {@linkplain FileScannerInput}.
 	 * @throws IOException if an I/O error occurs.
 	 */
+	@SuppressWarnings("resource")
 	public static FileScannerInput open(Path file) throws IOException {
 		return new BufferedFileScannerInput(new FileChannelInput(file, StandardOpenOption.READ));
 	}

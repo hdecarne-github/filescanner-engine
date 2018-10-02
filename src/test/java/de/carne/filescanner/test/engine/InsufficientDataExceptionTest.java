@@ -32,12 +32,12 @@ class InsufficientDataExceptionTest {
 
 	@Test
 	void testExceptionMessage() throws IOException {
-		FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path());
-
-		Assertions.assertEquals(
-				"Insufficient data while reading from input '" + input
-						+ "' position 0000000000000042h (requested: 42 available: 12)",
-				new InsufficientDataException(input, 0x42, 42, 12).getMessage());
+		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+			Assertions.assertEquals(
+					"Insufficient data while reading from input '" + input
+							+ "' position 0000000000000042h (requested: 42 available: 12)",
+					new InsufficientDataException(input, 0x42, 42, 12).getMessage());
+		}
 	}
 
 }
