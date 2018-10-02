@@ -99,7 +99,7 @@ public final class InputDecodeCache implements Closeable {
 	 */
 	public synchronized Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
 			long end) throws IOException {
-		if (end >= input.size()) {
+		if (end > input.size()) {
 			throw new InvalidPositionException(input, end);
 		}
 
