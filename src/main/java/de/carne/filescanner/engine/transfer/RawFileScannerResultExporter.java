@@ -82,13 +82,18 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 	}
 
 	@Override
+	public String defaultFileExtension() {
+		return this.extension;
+	}
+
+	@Override
 	public String defaultFileName(FileScannerResult result) {
 		String fileName;
 
 		if (result.type() == FileScannerResult.Type.INPUT) {
 			fileName = FileNames.normalizeFilePath(result.input().name());
 		} else {
-			fileName = FileNames.mangleFileName(result.name()) + this.extension;
+			fileName = FileNames.mangleFileName(result.name()) + defaultFileExtension();
 		}
 		return fileName;
 	}

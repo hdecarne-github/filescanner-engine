@@ -38,6 +38,13 @@ public interface FileScannerResultExportHandler extends FileScannerResultExporte
 	TransferType transferType();
 
 	/**
+	 * Gets the default file extension to use for a file export.
+	 * 
+	 * @return the default file extension to use for a file export.
+	 */
+	String defaultFileExtension();
+
+	/**
 	 * Gets the default file name to use for a file export.
 	 *
 	 * @param result the {@linkplain FileScannerResult} instance to export.
