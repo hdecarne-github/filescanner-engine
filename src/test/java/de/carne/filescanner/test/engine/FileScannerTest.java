@@ -33,6 +33,7 @@ import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerStatus;
 import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.engine.transfer.SimpleTextRenderer;
@@ -148,6 +149,10 @@ class FileScannerTest {
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
 		try (Renderer renderer = new CombinedRenderer(this.systemOutRenderer)) {
 			RenderOutput.render(result, renderer);
+			for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
+				Assertions.assertTrue(
+						exportHandler.defaultFileName(result).endsWith(exportHandler.defaultFileExtension()));
+			}
 			for (FileScannerResult resultChild : result.children()) {
 				renderResult(resultChild);
 			}
