@@ -150,8 +150,7 @@ class FileScannerTest {
 		try (Renderer renderer = new CombinedRenderer(this.systemOutRenderer)) {
 			RenderOutput.render(result, renderer);
 			for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
-				Assertions.assertTrue(
-						exportHandler.defaultFileName(result).endsWith(exportHandler.defaultFileExtension()));
+				exportHandler.defaultFileName(result);
 			}
 			for (FileScannerResult resultChild : result.children()) {
 				renderResult(resultChild);
