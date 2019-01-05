@@ -1,27 +1,35 @@
-sudo: false
-
 language: java
-
-addons:
-  sonarcloud:
-    organization: "hdecarne-github"
 
 jdk:
   - oraclejdk8
 
 os:
   - linux
+  - osx
+
+dist: trusty
+osx_image: xcode9.3
+
+env:
+  JAVA_OPTS="-Xmx2g -Dfile.encoding=UTF-8"
+
+addons:
+  sonarcloud:
+    organization: "hdecarne-github"
 
 git:
   depth: false  
-  
+
 script:
-  - ./gradlew --stacktrace build artifactoryPublish sonarqube
+  - ./gradlew --stacktrace clean build
+
+after_success:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew --stacktrace artifactoryPublish sonarqube; fi
 
 notifications:
-  email:
-    recipients:
-      - hdecarne@gmail.com
+  email: false
+  slack:
+    secure: "oJwwZn0aRlvqVfHSm4XSzuh+WXEOr+xUM9dz/SWQPxkYuE94p9hvcEmRZvOkbKTQk7d/VSOmluZVhyu8GHiqPnB4m/w5Xqqvg2NZw7Uo9itweKprcPiPmozs2kHSgdwf5FZYieBU8NSGHp0YAZwYl86m2GzdIls/8harcz3EXLAbSvaUHc0sqljwri9Dthxh5YE5Zolqg4aXc4XJdES4ZHB9vysHmV/LReVeyWIuxvjrmeVZEjJggrxmD3JmxVisFf68n7gxgQ9zK+L4QVWUVNBdgvS+np6kayS8xA6T2OiWOeNEWBBxqU9VaEdkFeEN3GHvrhP60aVyILWaX5J/9AQxLBZPO48VpfWvbpoCQKZ1cMuDFVtL5ylTLZuByp5oPgl+WQmQeA2z0XbFEP8lobHvlnNiUDMN3s7I5GCExDt0V3wEzjgJjQnvQlrpBIULvaH6c9wXr3NoWcmcAMg4GA8Wa+CD2bMRaypOo9RZrGrd1thZDfFyRCu6LJvu3c3VkTESwJCSH+tJ36NHNHJpOi7R/wb6LDc+8UUpT09dOHWLvHNV4OakL/m5B95MsT0sqg/tKzLOk2AnpJ92ZOskOUDqB5VolUyBrRThO/Pfk3u31NeMgxHGRGF6C0d9jzqkoX500Nb8h3KA+ezNKKCUyTeCkXEwDiscnY5N2nb7da8="
       
 # See https://docs.travis-ci.com/user/languages/java/#caching
 before_cache:
@@ -31,4 +39,3 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - $HOME/.filescanner-tests/
