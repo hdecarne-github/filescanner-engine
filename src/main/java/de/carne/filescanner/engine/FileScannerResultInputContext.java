@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import de.carne.filescanner.engine.format.CompositeSpec;
-import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 
 /**

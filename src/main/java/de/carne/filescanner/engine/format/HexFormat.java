@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.format;
 
+import de.carne.filescanner.engine.format.spec.AttributeFormatter;
+
 /**
  * Hexadecimal format support.
  */

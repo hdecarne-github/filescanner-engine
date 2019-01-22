@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
 
 /**
  * Base class for all decodable file formats.

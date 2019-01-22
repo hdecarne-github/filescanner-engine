@@ -19,20 +19,20 @@ package de.carne.filescanner.provider.gif;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import de.carne.filescanner.engine.format.ByteArraySpec;
-import de.carne.filescanner.engine.format.ByteFlagRenderer;
-import de.carne.filescanner.engine.format.ByteRangeSpec;
-import de.carne.filescanner.engine.format.ByteSpec;
-import de.carne.filescanner.engine.format.ByteSymbolRenderer;
-import de.carne.filescanner.engine.format.ConditionalSpec;
-import de.carne.filescanner.engine.format.FixedArraySpec;
-import de.carne.filescanner.engine.format.FixedStringSpec;
-import de.carne.filescanner.engine.format.FormatSpec;
-import de.carne.filescanner.engine.format.FormatSpecs;
-import de.carne.filescanner.engine.format.StructSpec;
-import de.carne.filescanner.engine.format.UnionSpec;
-import de.carne.filescanner.engine.format.VarArraySpec;
-import de.carne.filescanner.engine.format.WordSpec;
+import de.carne.filescanner.engine.format.spec.ByteArraySpec;
+import de.carne.filescanner.engine.format.spec.ByteFlagRenderer;
+import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.ByteSpec;
+import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.ConditionalSpec;
+import de.carne.filescanner.engine.format.spec.FixedArraySpec;
+import de.carne.filescanner.engine.format.spec.FixedStringSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.StructSpec;
+import de.carne.filescanner.engine.format.spec.UnionSpec;
+import de.carne.filescanner.engine.format.spec.VarArraySpec;
+import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class GifFormatSpecs {

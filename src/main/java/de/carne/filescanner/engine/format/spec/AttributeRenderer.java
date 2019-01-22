@@ -14,42 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.util;
+package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.spec.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.transfer.RenderStyle;
 
 /**
- * {@linkplain AttributeRenderer} used for rendering of DOS date values.
+ * Render function for {@linkplain AttributeSpec} elements.
+ *
+ * @param <T> the actual attribute value type.
  */
-public class DosDateRenderer implements AttributeRenderer<Short> {
+@FunctionalInterface
+public interface AttributeRenderer<T> {
 
 	/**
-	 * The single renderer instance.
-	 */
-	public static final DosDateRenderer RENDERER = new DosDateRenderer();
-
-	private DosDateRenderer() {
-		// Prevent instantiation
-	}
-
-	@Override
-	public void render(RenderOutput out, Short value) throws IOException {
-		render(out, value.shortValue());
-	}
-
-	/**
-	 * Renders the given DOS date value.
+	 * Renders an attribute value.
 	 *
 	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public void render(RenderOutput out, short value) throws IOException {
-		out.setStyle(RenderStyle.COMMENT).write(" // ").write(Dos.dosDateToLocalDate(value).toString());
-	}
+	void render(RenderOutput out, T value) throws IOException;
 
 }

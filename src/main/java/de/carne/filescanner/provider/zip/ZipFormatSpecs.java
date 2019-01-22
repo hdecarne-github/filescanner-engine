@@ -16,19 +16,19 @@
  */
 package de.carne.filescanner.provider.zip;
 
-import de.carne.filescanner.engine.format.ByteArraySpec;
-import de.carne.filescanner.engine.format.ConditionalSpec;
-import de.carne.filescanner.engine.format.DWordSpec;
-import de.carne.filescanner.engine.format.EncodedInputSpec;
-import de.carne.filescanner.engine.format.FixedStringSpec;
-import de.carne.filescanner.engine.format.FormatSpec;
-import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.StructSpec;
-import de.carne.filescanner.engine.format.VarArraySpec;
-import de.carne.filescanner.engine.format.WordFlagRenderer;
-import de.carne.filescanner.engine.format.WordSpec;
-import de.carne.filescanner.engine.format.WordSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.ByteArraySpec;
+import de.carne.filescanner.engine.format.spec.ConditionalSpec;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
+import de.carne.filescanner.engine.format.spec.FixedStringSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.StructSpec;
+import de.carne.filescanner.engine.format.spec.VarArraySpec;
+import de.carne.filescanner.engine.format.spec.WordFlagRenderer;
+import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.format.spec.WordSymbolRenderer;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.provider.util.DosDateRenderer;
 import de.carne.filescanner.provider.util.DosTimeRenderer;
@@ -96,8 +96,7 @@ final class ZipFormatSpecs {
 		lfh.add(DWordSpec.hex("local file header signature")).validate(0x04034b50);
 		lfh.add(WordSpec.hex("version needed to extract"));
 		lfh.add(LFH_GENERAL_PURPOSE_BIT_FLAG).renderer(GENERAL_PURPOSE_BIT_FLAG_SYMBOLS);
-		lfh.add(LFH_COMPRESSION_METHOD).validate(COMPRESSION_METHOD_SYMBOLS.keySet())
-				.renderer(COMPRESSION_METHOD_SYMBOLS);
+		lfh.add(LFH_COMPRESSION_METHOD).validate(COMPRESSION_METHOD_SYMBOLS).renderer(COMPRESSION_METHOD_SYMBOLS);
 		lfh.add(WordSpec.hex("last mod file time")).renderer(DosTimeRenderer.RENDERER);
 		lfh.add(WordSpec.hex("last mod file date")).renderer(DosDateRenderer.RENDERER);
 		lfh.add(DWordSpec.hex("crc-32"));

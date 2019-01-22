@@ -18,7 +18,7 @@ package de.carne.filescanner.engine;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.AttributeSpec;
+import de.carne.filescanner.engine.format.spec.AttributeSpec;
 
 /**
  * Input data processor base class responsible for context specific attribute value access.

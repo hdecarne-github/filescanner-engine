@@ -20,14 +20,14 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import de.carne.filescanner.engine.format.ByteArraySpec;
-import de.carne.filescanner.engine.format.ByteRangeSpec;
-import de.carne.filescanner.engine.format.ByteSpec;
-import de.carne.filescanner.engine.format.ByteSymbolRenderer;
-import de.carne.filescanner.engine.format.DWordSpec;
-import de.carne.filescanner.engine.format.StructSpec;
-import de.carne.filescanner.engine.format.UnionSpec;
-import de.carne.filescanner.engine.format.VarArraySpec;
+import de.carne.filescanner.engine.format.spec.ByteArraySpec;
+import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.ByteSpec;
+import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.StructSpec;
+import de.carne.filescanner.engine.format.spec.UnionSpec;
+import de.carne.filescanner.engine.format.spec.VarArraySpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class PngFormatSpecs {

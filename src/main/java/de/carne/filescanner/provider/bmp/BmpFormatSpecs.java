@@ -16,17 +16,17 @@
  */
 package de.carne.filescanner.provider.bmp;
 
-import de.carne.filescanner.engine.format.ByteArraySpec;
-import de.carne.filescanner.engine.format.ByteRangeSpec;
-import de.carne.filescanner.engine.format.ConditionalSpec;
-import de.carne.filescanner.engine.format.DWordSpec;
-import de.carne.filescanner.engine.format.DWordSymbolRenderer;
-import de.carne.filescanner.engine.format.FixedArraySpec;
-import de.carne.filescanner.engine.format.FormatSpec;
-import de.carne.filescanner.engine.format.FormatSpecs;
-import de.carne.filescanner.engine.format.StructSpec;
-import de.carne.filescanner.engine.format.WordSpec;
-import de.carne.filescanner.engine.format.WordSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.ByteArraySpec;
+import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.ConditionalSpec;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.DWordSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.FixedArraySpec;
+import de.carne.filescanner.engine.format.spec.FormatSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.StructSpec;
+import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.format.spec.WordSymbolRenderer;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class BmpFormatSpecs {

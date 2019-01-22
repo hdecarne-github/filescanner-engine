@@ -14,42 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.util;
+package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.spec.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.text.MemoryUnitFormat;
 
 /**
- * {@linkplain AttributeRenderer} used for rendering of DOS date values.
+ * {@linkplain AttributeRenderer} used for rendering of quad word based size values.
  */
-public class DosDateRenderer implements AttributeRenderer<Short> {
+public class QWordSizeRenderer implements AttributeRenderer<Long> {
 
 	/**
 	 * The single renderer instance.
 	 */
-	public static final DosDateRenderer RENDERER = new DosDateRenderer();
+	public static final QWordSizeRenderer RENDERER = new QWordSizeRenderer();
 
-	private DosDateRenderer() {
+	private QWordSizeRenderer() {
 		// Prevent instantiation
 	}
 
 	@Override
-	public void render(RenderOutput out, Short value) throws IOException {
-		render(out, value.shortValue());
+	public void render(RenderOutput out, Long value) throws IOException {
+		render(out, value.longValue());
 	}
 
 	/**
-	 * Renders the given DOS date value.
+	 * Renders the given value.
 	 *
 	 * @param out the {@linkplain RenderOutput} buffer to render into.
 	 * @param value the value to render.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public void render(RenderOutput out, short value) throws IOException {
-		out.setStyle(RenderStyle.COMMENT).write(" // ").write(Dos.dosDateToLocalDate(value).toString());
+	public void render(RenderOutput out, long value) throws IOException {
+		out.setStyle(RenderStyle.COMMENT).write(" // ")
+				.write(MemoryUnitFormat.getMemoryUnitInstance().format(value * 1.0));
 	}
 
 }

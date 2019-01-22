@@ -22,16 +22,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
-import de.carne.boot.check.Nullable;
-import de.carne.filescanner.engine.format.AttributeSpec;
-import de.carne.filescanner.engine.format.CompositeSpec;
-import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.format.spec.AttributeSpec;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.ExportTarget;
@@ -175,10 +178,10 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	protected FileScannerResultBuilder parent() {
-		return Check.notNull(this.parent);
+		return Objects.requireNonNull(this.parent);
 	}
 
-	protected synchronized <T> void bindValue(AttributeSpec<T> attribute, T value) {
+	protected synchronized <T> void bindValue(AttributeSpec<T> attribute, @NonNull T value) {
 		modifyState().getValues().put(attribute, value);
 	}
 
@@ -439,7 +442,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			T value = getResultValue(attribute, committed);
+			@Nullable T value = getResultValue(attribute, committed);
 
 			return (value != null ? value : parent().getValue(attribute, committed));
 		}
