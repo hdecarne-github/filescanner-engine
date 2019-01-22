@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import de.carne.boot.check.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
 
 class FileScannerInputInputStream extends InputStream {
 
@@ -46,7 +46,7 @@ class FileScannerInputInputStream extends InputStream {
 	}
 
 	@Override
-	public synchronized int read(@Nullable byte[] b, int off, int len) throws IOException {
+	public synchronized int read(byte @Nullable [] b, int off, int len) throws IOException {
 		if (b == null) {
 			throw new IllegalArgumentException();
 		}

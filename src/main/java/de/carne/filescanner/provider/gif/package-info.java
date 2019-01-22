@@ -17,4 +17,4 @@
 @NonNullByDefault
 package de.carne.filescanner.provider.gif;
 
-import de.carne.boot.check.NonNullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

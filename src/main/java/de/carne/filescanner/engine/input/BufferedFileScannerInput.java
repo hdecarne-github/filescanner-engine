@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.util.SystemProperties;
@@ -87,7 +89,7 @@ public class BufferedFileScannerInput extends FileScannerInput {
 
 	private static class Buffer {
 
-		private SoftReference<ByteBuffer> bufferReference = new SoftReference<>(null);
+		private SoftReference<@Nullable ByteBuffer> bufferReference = new SoftReference<>(null);
 		private long bufferPosition = -1;
 
 		public Buffer() {

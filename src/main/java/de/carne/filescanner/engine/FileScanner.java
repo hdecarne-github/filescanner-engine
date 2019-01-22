@@ -27,6 +27,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
@@ -172,7 +174,7 @@ public final class FileScanner implements Closeable {
 	 * If the scan has already been completed or stopped this function does nothing.
 	 *
 	 * @param wait whether to wait for the scan to stop ({@code true}) or to return immediately after the stop has been
-	 *        requested ({@code false}).
+	 * requested ({@code false}).
 	 */
 	public void stop(boolean wait) {
 		if (!this.threadPool.isTerminated()) {
@@ -280,7 +282,7 @@ public final class FileScanner implements Closeable {
 			lastResult = currentResult;
 			resultKeyIndex += 8;
 		}
-		return results.toArray(new FileScannerResult[results.size()]);
+		return results.toArray(new @Nullable FileScannerResult[results.size()]);
 	}
 
 	@Override

@@ -17,4 +17,4 @@
 @NonNullByDefault
 package de.carne.filescanner.engine.transfer;
 
-import de.carne.boot.check.NonNullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

@@ -17,4 +17,4 @@
 @NonNullByDefault
 package de.carne.filescanner.test.engine.spi;
 
-import de.carne.boot.check.NonNullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

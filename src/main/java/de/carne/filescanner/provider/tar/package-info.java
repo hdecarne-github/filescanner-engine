@@ -15,6 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @NonNullByDefault
-package de.carne.filescanner.engine.format;
+package de.carne.filescanner.provider.tar;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;

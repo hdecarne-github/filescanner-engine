@@ -24,7 +24,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import de.carne.nio.compression.Check;
+import de.carne.boot.check.Check;
 
 /**
  * Base class for all kinds of scan input data streams.
