@@ -1,0 +1,206 @@
+/*
+ * Copyright (c) 2007-2018 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// Zip file format: https://en.wikipedia.org/wiki/Zip_(file_format)
+//
+
+// Symbols
+
+GENERAL_PURPOSE_BIT_FLAG_SYMBOLS:
+word_flag_symbols {
+	0x2000: "Central directory encrypted"
+	0x0800: "UTF-8 strings"
+	0x0040: "Strong encryption"
+	0x0020: "Compressed patched data"
+	0x0010: "Enhanced deflating"
+	0x0008: "crc-32: compressed size and uncompressed size are in data descriptor"
+	0x0004: "Compression flag 2"
+	0x0002: "Compression flag 1"
+	0x0001: "Encryption"
+}
+
+COMPRESSION_METHOD_SYMBOLS:
+word_symbols {
+	0: "Stored (no compression)"
+	1: "Shrunk"
+	2: "Reduced with compression factor 1"
+	3: "Reduced with compression factor 2"
+	4: "Reduced with compression factor 3"
+	5: "Reduced with compression factor 4"
+	6: "Imploded"
+	7: "Tokenizing compression algorithm"
+	8: "Deflated"
+	9: "Enhanced Deflating using Deflate64(tm)"
+	10: "PKWARE Data Compression Library Imploding (old IBM TERSE)"
+	12: "BZIP2 algorithm"
+	14: "LZMA (EFS)"
+	18: "IBM TERSE (new)"
+	19: "IBM LZ77 z Architecture (PFS)"
+	97: "WavPack compressed data"
+	98: "PPMd version I, Rev 1"
+}
+
+// Specs
+
+LOCAL_FILE_HEADER:
+struct "Local file header" {
+	dword "local file header signature"
+		->validate(0x04034b50)
+	word "version needed to extract"
+LFH_GENERAL_PURPOSE_BIT_FLAG@ZIP_ENTRY:
+	word "general purpose bit flag"
+		->renderer(@GENERAL_PURPOSE_BIT_FLAG_SYMBOLS)
+LFH_COMPRESSION_METHOD@ZIP_ENTRY:
+	word "compression method"
+		->validate(@COMPRESSION_METHOD_SYMBOLS)
+		->renderer(@COMPRESSION_METHOD_SYMBOLS)
+	word "last mod file time"
+		->renderer(@DOS_TIME_RENDERER)
+	word "last mod file date"
+		->renderer(@DOS_TIME_RENDERER)
+	dword "crc-32"
+LFH_COMPRESSED_SIZE@ZIP_ENTRY:
+	dword "compressed size"
+		->format(@PrettyFormat)
+		->renderer(@DWordSizeRenderer)
+	dword "uncompressed size"
+		->format(@PrettyFormat)
+		->renderer(@DWordSizeRenderer)
+LFH_FILE_NAME_LENGTH:
+	word "file name length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+LFH_EXTRA_FIELD_LENGTH:
+	word "extra field length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+LFH_FILE_NAME@ZIP_ENTRY:
+	char[@LFH_FILE_NAME_LENGTH] "file name"
+	byte[@LFH_EXTRA_FIELD_LENGTH] "extra field"
+}
+
+DATA_DESCRIPTOR:
+union "Data Descriptor" {
+	struct {
+		dword "data descriptor signature"
+			-> validate(0x08074b50)
+		dword "crc-32"
+		dword "compressed size"
+			->format(@PrettyFormat)
+			->renderer(@DWordSizeRenderer)
+		dword "uncompressed size"
+			->format(@PrettyFormat)
+			->renderer(@DWordSizeRenderer)
+	}
+	struct {
+		dword "crc-32"
+		dword "compressed size"
+			->format(@PrettyFormat)
+			->renderer(@DWordSizeRenderer)
+		dword "uncompressed size"
+			->format(@PrettyFormat)
+			->renderer(@DWordSizeRenderer)
+	}
+} 
+
+ZIP_ENTRY:
+struct text("Zip entry \"%1$s\"", @LFH_FILE_NAME) {
+	@LOCAL_FILE_HEADER
+	encoded "file data" #decodeZipEntry(@LFH_FILE_NAME,
+	                                    @LFH_COMPRESSION_METHOD,
+	                                    @LFH_GENERAL_PURPOSE_BIT_FLAG,
+	                                    @LFH_COMPRESSED_SIZE)
+	conditional #getDataDescriptorSpec(@LFH_GENERAL_PURPOSE_BIT_FLAG)
+}	
+
+CENTRAL_DIRECTORY_HEADER:
+struct text("Central directory header \"%1$s\"", @DFH_FILE_NAME) {
+	dword "central file header signature"
+		->validate(0x02014b50)
+	word "version made by"
+	word "version needed to extract"
+	word "general purpose bit flag"
+		->renderer(@GENERAL_PURPOSE_BIT_FLAG_SYMBOLS)
+	word "compression method"
+		->renderer(@COMPRESSION_METHOD_SYMBOLS)
+	word "last mod file time"
+		->renderer(@DosTimeRenderer)
+	word "last mod file date"
+		->renderer(@DosDateRenderer)
+	dword "crc-32"
+	dword "compressed size"
+		->renderer(@DWordSizeRenderer)
+	dword "uncompressed size"
+		->renderer(@DWordSizeRenderer)
+CDH_FILE_NAME_LENGTH:
+	word "file name length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+CDH_EXTRA_FIELD_LENGTH:
+	word "extra field length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+CDH_FILE_COMMENT_LENGTH:
+	word "file comment length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+	word "disk number start"
+		->format(@PrettyFormat)
+	word "internal file attributes"
+	dword "external file attributes"
+	dword "relative offset of local header"
+CDH_FILE_NAME@ZIP_ENTRY:
+	char[@CDH_FILE_NAME_LENGTH] "file name"
+	byte[@CDH_EXTRA_FIELD_LENGTH] "extra field"
+	char[@CDH_FILE_COMMENT_LENGTH] "file comment"
+}
+
+END_OF_CENTRAL_DIRECTORY:
+struct "End of central directory" {
+	dword "end of central dir signature"
+		->validate(0x06054b50)
+	word "number of this disk"
+		->format(@PrettyFormat)
+	word "number of the disk with the start of the central directory"
+		->format(@PrettyFormat)
+	word "total number of entries in the central directory on this disk"
+		->format(@PrettyFormat)
+	word "total number of entries in the central directory"
+		->format(@PrettyFormat)
+	dword "size of the central directory"
+		->format(@PrettyFormat)
+		->renderer(@DWordSizeRenderer)
+	dword "offset of start of central directory"
+EOCD_ZIP_FILE_COMMENT_LENGTH:
+	word ".ZIP file comment length"
+		->format(@PrettyFormat)
+		->renderer(@WordSizeRenderer)
+	char[@EOCD_ZIP_FILE_COMMENT_LENGTH] ".ZIP file comment"
+}
+
+CENTRAL_DIRECTORY:
+struct "Central directory" {
+	sequence @CENTRAL_DIRECTORY_HEADER
+	@END_OF_CENTRAL_DIRECTORY
+}
+
+ZIP_ARCHIVE:
+format_spec "ZIP archive" {
+	sequence @ZIP_ENTRY
+	@CENTRAL_DIRECTORY
+}

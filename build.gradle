@@ -1,11 +1,13 @@
 // Plugins
 plugins {
 	id "java-library"
+	id "antlr"
 	id "jacoco"
 	id "maven-publish"
 	id "eclipse"
+	id "de.carne.java-tools" version "0.7.1"
 	id "org.sonarqube" version "2.6.2"
-	id "com.jfrog.artifactory" version "4.7.5" 
+	id "com.jfrog.artifactory" version "4.9.0" 
 	id "com.jfrog.bintray" version "1.8.4"
 }
 // Build helpers
@@ -15,7 +17,7 @@ def resolveProperty(propertyName, envName) {
 	def resolved = (project.findProperty(propertyName) ?: System.getenv(envName));
 
 	if(resolved == null) {
-		throw new GradleException("Missing property/environment variable: '${propertyName}'/'${envName}")
+		throw new GradleException("Missing property/environment variable: '${propertyName}'/'${envName}'")
 	}
 	return resolved; 
 }
@@ -33,11 +35,25 @@ repositories {
 	maven { url "https://oss.jfrog.org/libs-release/" }
 }
 
+// To handle current somewhat mixed up antlr dependencies (https://github.com/gradle/gradle/issues/820)
+configurations {
+	compile {
+		extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+	}
+}
+
 dependencies {
-	api("de.carne.common:java-default:8.6.0")
-	implementation("de.carne.common:java-compression:4.0.0")
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+	compileOnly(group: "org.eclipse.jdt", name: "org.eclipse.jdt.annotation", version: project.annotationVersion)
+	testCompileOnly(group: "org.eclipse.jdt", name: "org.eclipse.jdt.annotation", version: project.annotationVersion)
+	api(group: "de.carne.common", name: "java-default", version: project.javaDefaultVersion)
+	implementation(group: "de.carne.common", name: "java-compression", version: project.javaCompressionVersion)
+	implementation(group: "org.antlr", name: "antlr4-runtime", version: project.antlrVersion)
+	antlr(group: "org.antlr", name: "antlr4", version: project.antlrVersion)
+	testImplementation(group: "de.carne.common", name: "java-test", version: project.javaTestVersion)
+}
+
+generateGrammarSource {
+	arguments += [ "-visitor" ]
 }
 
 jar {
@@ -153,5 +169,22 @@ eclipse {
 	classpath {
 		downloadSources = true
 		downloadJavadoc = true
+		file {
+			whenMerged {
+				def eeaPath = project.findProperty("eclipse.eeaPath");
+				 
+				entries.forEach {
+					if(it.path.startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+						if(eeaPath != null) {
+							it.entryAttributes.put("annotationpath", eeaPath)
+						}
+					} else if(it.path.contains("/caches/modules-2/")) {
+						if(eeaPath != null) {
+							it.entryAttributes.put("annotationpath", eeaPath)
+						}
+					}
+				}
+			}
+		}
 	}
 }
