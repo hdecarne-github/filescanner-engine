@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.UnionSpec;
-import de.carne.filescanner.engine.format.spec.VarArraySpec;
+import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class PngFormatSpecs {
@@ -145,7 +145,7 @@ final class PngFormatSpecs {
 		chunkSpecs.add(IHDR_CHUNK);
 		chunkSpecs.add(GENERIC_CHUNK);
 
-		formatSpec.add(new VarArraySpec(chunkSpecs));
+		formatSpec.add(new SequenceSpec(chunkSpecs));
 		formatSpec.add(IEND_CHUNK);
 		formatSpec.render(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		FORMAT_SPEC = formatSpec;

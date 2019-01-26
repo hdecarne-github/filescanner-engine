@@ -30,14 +30,14 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public class ConditionalSpec implements FormatSpec {
 
-	private final Supplier<FormatSpec> spec;
+	private final Supplier<CompositeSpec> spec;
 
 	/**
 	 * Constructs a new {@linkplain ConditionalSpec} instance.
 	 *
 	 * @param spec the {@linkplain Supplier} instance used to resolve the actual {@linkplain FormatSpec}.
 	 */
-	public ConditionalSpec(Supplier<FormatSpec> spec) {
+	public ConditionalSpec(Supplier<CompositeSpec> spec) {
 		this.spec = spec;
 	}
 
@@ -58,17 +58,17 @@ public class ConditionalSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		FormatSpec resolvedSpec = this.spec.get();
+		CompositeSpec resolvedSpec = this.spec.get();
 
-		if (!context.matchFormat(resolvedSpec)) {
+		if (!context.matchComposite(resolvedSpec)) {
 			throw new UnexpectedDataException();
 		}
-		resolvedSpec.decode(context);
+		resolvedSpec.decodeComposite(context);
 	}
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		this.spec.get().render(out, context);
+		this.spec.get().renderComposite(out, context);
 	}
 
 }

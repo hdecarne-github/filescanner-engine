@@ -108,7 +108,7 @@ public class ByteRangeSpec implements FormatSpec {
 		long sizeValue = this.size.get().longValue();
 
 		out.setStyle(RenderStyle.VALUE).write(sizeValue > 0 ? "{ ... }" : "{ }");
-		QWordSizeRenderer.RENDERER.render(out, sizeValue);
+		SizeRenderer.renderLongSize(out, sizeValue);
 		out.writeln();
 	}
 

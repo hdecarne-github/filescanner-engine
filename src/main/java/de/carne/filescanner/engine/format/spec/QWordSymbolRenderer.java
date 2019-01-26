@@ -14,26 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.engine.format.spec;
+package de.carne.filescanner.engine.format.spec;
 
-import java.io.IOException;
-import java.util.Objects;
-
-import org.junit.jupiter.api.Test;
-
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
-import de.carne.filescanner.provider.zip.ZipFormat;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * Test {@FormatSpecDefinition} class.
+ * Quad word attribute {@linkplain SymbolRenderer}.
  */
-class FormatSpecDefinitionTest {
+public class QWordSymbolRenderer extends SymbolRenderer<Long> {
 
-	@Test
-	void testFormatSpecDefinition() throws IOException {
-		FormatSpecDefinition fsd = new FormatSpecDefinition();
+	// Serialization support
+	private static final long serialVersionUID = -71370635649997078L;
 
-		fsd.load(Objects.requireNonNull(ZipFormat.class.getResource("Zip.formatspec")));
+	/**
+	 * Adds a value symbol.
+	 *
+	 * @param value the value to add the symbol for.
+	 * @param symbol the symbol to add.
+	 * @return the previously associated symbol (may be {@code null}).
+	 */
+	@Nullable
+	public String put(long value, String symbol) {
+		return put(Long.valueOf(value), symbol);
 	}
 
 }

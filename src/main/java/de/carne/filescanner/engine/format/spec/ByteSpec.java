@@ -119,7 +119,7 @@ public final class ByteSpec extends NumberAttributeSpec<Byte> {
 
 	private static ByteSpec size(ByteSpec spec) {
 		spec.format(PrettyFormat.BYTE_FORMATTER);
-		spec.renderer(ByteSizeRenderer.RENDERER);
+		spec.renderer(SizeRenderer.BYTE_RENDERER);
 		return spec;
 	}
 

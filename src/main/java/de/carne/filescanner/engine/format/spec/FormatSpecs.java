@@ -33,9 +33,9 @@ public final class FormatSpecs {
 	}
 
 	/**
-	 * Empty {@linkplain FormatSpec} with no decode result.
+	 * Empty {@linkplain CompositeSpec} with no decode result.
 	 */
-	public static final FormatSpec EMPTY = new FormatSpec() {
+	public static final CompositeSpec EMPTY = new CompositeSpec() {
 
 		@Override
 		public boolean isFixedSize() {
@@ -53,12 +53,12 @@ public final class FormatSpecs {
 		}
 
 		@Override
-		public void decode(FileScannerResultDecodeContext context) throws IOException {
+		public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 			// Nothing to do here
 		}
 
 		@Override
-		public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 			// Nothing to do here
 		}
 

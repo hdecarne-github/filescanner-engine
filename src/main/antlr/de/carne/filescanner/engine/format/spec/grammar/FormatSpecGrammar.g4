@@ -144,7 +144,7 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket compositeSpecElement+ RCBracket
+	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket
 	;
 
 structSpec
@@ -152,15 +152,7 @@ structSpec
 	;
 	
 anonymousStructSpec
-	: Struct textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecExportModifier))*
-	;
-
-unionSpec
-	: specIdentifier Colon anonymousUnionSpec
-	;
-	
-anonymousUnionSpec
-	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecExportModifier))*
+	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecExportModifier))*
 	;
 	
 sequenceSpec
@@ -168,15 +160,27 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? compositeSpecElement (Apply (compositeSpecExportModifier))*
+	: Sequence textExpression? formatSpecElement (Apply (compositeSpecExportModifier))*
 	;
-	
-compositeSpecElement
-	: (elementReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedSpec)
+
+unionSpec
+	: specIdentifier Colon anonymousUnionSpec
+	;
+
+anonymousUnionSpec
+	: Union textExpression? LCBracket compositeSpecElement+ RCBracket
 	;
 	
 compositeSpecExportModifier
 	: Export LBracket expression RBracket
+	;
+	
+formatSpecElement
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedSpec)
+	;
+	
+compositeSpecElement
+	: (specReference|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedSpec)
 	;
 	
 conditionalSpec
@@ -208,23 +212,23 @@ qwordAttributeSpec
 	;
 
 byteArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket expression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 wordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket expression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 dwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket expression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 qwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket expression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 charArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket expression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 	
 attributeValidateModifier
@@ -247,6 +251,14 @@ scopeIdentifier
 	: Identifier
 	;
 
+numberExpression
+	: (specReference|externalReference|numberValue)
+	;
+
+numberValue
+	: Number
+	;
+
 textExpression
 	: (simpleText|Text LBracket formatText (Comma (expression))* RBracket)
 	;
@@ -259,11 +271,11 @@ formatText
 	: QuotedString
 	;
 
-elementReference
-	: At referencedElement
+specReference
+	: At referencedSpec
 	;
 	
-referencedElement
+referencedSpec
 	: Identifier
 	;
 
@@ -275,10 +287,6 @@ referencedExternal
 	: Identifier
 	;
 
-numberValue
-	: Number
-	;
-
 numberArrayValue
 	: NumberArray
 	;
@@ -288,5 +296,5 @@ charArrayValue
 	;
 
 expression
-	: (elementReference|externalReference|textExpression|numberValue|numberArrayValue|charArrayValue)
+	: (specReference|externalReference|textExpression|numberExpression|numberArrayValue|charArrayValue)
 	;

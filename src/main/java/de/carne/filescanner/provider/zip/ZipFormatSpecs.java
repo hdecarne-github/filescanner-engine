@@ -18,14 +18,14 @@ package de.carne.filescanner.provider.zip;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.format.spec.FixedStringSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
-import de.carne.filescanner.engine.format.spec.VarArraySpec;
 import de.carne.filescanner.engine.format.spec.WordFlagRenderer;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.format.spec.WordSymbolRenderer;
@@ -193,7 +193,7 @@ final class ZipFormatSpecs {
 		StructSpec cd = new StructSpec();
 
 		cd.result("Central directory");
-		cd.add(new VarArraySpec(CENTRAL_DIRECTORY_HEADER));
+		cd.add(new SequenceSpec(CENTRAL_DIRECTORY_HEADER));
 		cd.add(END_OF_CENTRAL_DIRECTORY);
 		CENTRAL_DIRECTORY = cd;
 	}
@@ -204,7 +204,7 @@ final class ZipFormatSpecs {
 		StructSpec formatSpec = new StructSpec();
 
 		formatSpec.result(FORMAT_NAME);
-		formatSpec.add(new VarArraySpec(ZIP_ENTRY));
+		formatSpec.add(new SequenceSpec(ZIP_ENTRY));
 		formatSpec.add(CENTRAL_DIRECTORY);
 		FORMAT_SPEC = formatSpec;
 	}
@@ -251,7 +251,7 @@ final class ZipFormatSpecs {
 				: -1l);
 	}
 
-	private static FormatSpec getDataDescriptorSpec() {
+	private static CompositeSpec getDataDescriptorSpec() {
 		return ((LFH_GENERAL_PURPOSE_BIT_FLAG.get().intValue() & 0x0008) == 0 ? FormatSpecs.EMPTY : DATA_DESCRIPTOR);
 	}
 

@@ -115,7 +115,7 @@ public final class DWordSpec extends NumberAttributeSpec<Integer> {
 
 	private static DWordSpec size(DWordSpec spec) {
 		spec.format(PrettyFormat.INT_FORMATTER);
-		spec.renderer(DWordSizeRenderer.RENDERER);
+		spec.renderer(SizeRenderer.INT_RENDERER);
 		return spec;
 	}
 

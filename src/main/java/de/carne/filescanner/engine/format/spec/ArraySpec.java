@@ -32,7 +32,7 @@ import de.carne.util.Strings;
  * <p>
  * The array length has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class FixedArraySpec extends CompositeSpec {
+public class ArraySpec extends CompositeSpec {
 
 	private final Supplier<String> elementName;
 	private final FormatSpec elementSpec;
@@ -40,23 +40,23 @@ public class FixedArraySpec extends CompositeSpec {
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 
 	/**
-	 * Constructs a new {@linkplain FixedArraySpec} instance.
+	 * Constructs a new {@linkplain ArraySpec} instance.
 	 *
 	 * @param elementName the array element's name.
 	 * @param elementSpec the array element's {@linkplain FormatSpec}.
 	 */
-	public FixedArraySpec(Supplier<String> elementName, FormatSpec elementSpec) {
+	public ArraySpec(Supplier<String> elementName, FormatSpec elementSpec) {
 		this.elementName = elementName;
 		this.elementSpec = elementSpec;
 	}
 
 	/**
-	 * Constructs a new {@linkplain FixedArraySpec} instance.
+	 * Constructs a new {@linkplain ArraySpec} instance.
 	 *
 	 * @param elementName the array element's name.
 	 * @param elementSpec the array element's {@linkplain FormatSpec}.
 	 */
-	public FixedArraySpec(String elementName, FormatSpec elementSpec) {
+	public ArraySpec(String elementName, FormatSpec elementSpec) {
 		this(FinalSupplier.of(elementName), elementSpec);
 	}
 
@@ -66,7 +66,7 @@ public class FixedArraySpec extends CompositeSpec {
 	 * @param sizeSupplier the size (in number of elements) of this array.
 	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
 	 */
-	public FixedArraySpec size(Supplier<? extends Number> sizeSupplier) {
+	public ArraySpec size(Supplier<? extends Number> sizeSupplier) {
 		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
@@ -78,7 +78,7 @@ public class FixedArraySpec extends CompositeSpec {
 	 * @param sizeValue the size (in number of elements) of this array.
 	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
 	 */
-	public FixedArraySpec size(int sizeValue) {
+	public ArraySpec size(int sizeValue) {
 		this.fixedSize = true;
 		this.size = Integer.valueOf(sizeValue)::intValue;
 		return this;

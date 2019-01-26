@@ -119,7 +119,7 @@ public final class WordSpec extends NumberAttributeSpec<Short> {
 
 	private static WordSpec size(WordSpec spec) {
 		spec.format(PrettyFormat.SHORT_FORMATTER);
-		spec.renderer(WordSizeRenderer.RENDERER);
+		spec.renderer(SizeRenderer.SHORT_RENDERER);
 		return spec;
 	}
 

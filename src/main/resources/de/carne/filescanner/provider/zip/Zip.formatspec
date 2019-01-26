@@ -77,18 +77,18 @@ LFH_COMPRESSION_METHOD@ZIP_ENTRY:
 LFH_COMPRESSED_SIZE@ZIP_ENTRY:
 	dword "compressed size"
 		->format(@PrettyFormat)
-		->renderer(@DWordSizeRenderer)
+		->renderer(@SizeRenderer)
 	dword "uncompressed size"
 		->format(@PrettyFormat)
-		->renderer(@DWordSizeRenderer)
+		->renderer(@SizeRenderer)
 LFH_FILE_NAME_LENGTH:
 	word "file name length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 LFH_EXTRA_FIELD_LENGTH:
 	word "extra field length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 LFH_FILE_NAME@ZIP_ENTRY:
 	char[@LFH_FILE_NAME_LENGTH] "file name"
 	byte[@LFH_EXTRA_FIELD_LENGTH] "extra field"
@@ -102,19 +102,19 @@ union "Data Descriptor" {
 		dword "crc-32"
 		dword "compressed size"
 			->format(@PrettyFormat)
-			->renderer(@DWordSizeRenderer)
+			->renderer(@SizeRenderer)
 		dword "uncompressed size"
 			->format(@PrettyFormat)
-			->renderer(@DWordSizeRenderer)
+			->renderer(@SizeRenderer)
 	}
 	struct {
 		dword "crc-32"
 		dword "compressed size"
 			->format(@PrettyFormat)
-			->renderer(@DWordSizeRenderer)
+			->renderer(@SizeRenderer)
 		dword "uncompressed size"
 			->format(@PrettyFormat)
-			->renderer(@DWordSizeRenderer)
+			->renderer(@SizeRenderer)
 	}
 } 
 
@@ -144,21 +144,21 @@ struct text("Central directory header \"%1$s\"", @DFH_FILE_NAME) {
 		->renderer(@DosDateRenderer)
 	dword "crc-32"
 	dword "compressed size"
-		->renderer(@DWordSizeRenderer)
+		->renderer(@SizeRenderer)
 	dword "uncompressed size"
-		->renderer(@DWordSizeRenderer)
+		->renderer(@SizeRenderer)
 CDH_FILE_NAME_LENGTH:
 	word "file name length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 CDH_EXTRA_FIELD_LENGTH:
 	word "extra field length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 CDH_FILE_COMMENT_LENGTH:
 	word "file comment length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 	word "disk number start"
 		->format(@PrettyFormat)
 	word "internal file attributes"
@@ -184,12 +184,12 @@ struct "End of central directory" {
 		->format(@PrettyFormat)
 	dword "size of the central directory"
 		->format(@PrettyFormat)
-		->renderer(@DWordSizeRenderer)
+		->renderer(@SizeRenderer)
 	dword "offset of start of central directory"
 EOCD_ZIP_FILE_COMMENT_LENGTH:
 	word ".ZIP file comment length"
 		->format(@PrettyFormat)
-		->renderer(@WordSizeRenderer)
+		->renderer(@SizeRenderer)
 	char[@EOCD_ZIP_FILE_COMMENT_LENGTH] ".ZIP file comment"
 }
 

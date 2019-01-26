@@ -19,19 +19,19 @@ package de.carne.filescanner.provider.gif;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteFlagRenderer;
 import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
-import de.carne.filescanner.engine.format.spec.FixedArraySpec;
 import de.carne.filescanner.engine.format.spec.FixedStringSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.UnionSpec;
-import de.carne.filescanner.engine.format.spec.VarArraySpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
@@ -109,11 +109,11 @@ final class GifFormatSpecs {
 		LOGICAL_SCREEN_DESCRIPTOR = lsd;
 	}
 
-	static final FixedArraySpec GLOBAL_COLOR_TABLE;
+	static final ArraySpec GLOBAL_COLOR_TABLE;
 
 	static {
 		ByteArraySpec gctEntry = new ByteArraySpec("").size(3);
-		FixedArraySpec gct = new FixedArraySpec("color[%1$d]", gctEntry);
+		ArraySpec gct = new ArraySpec("color[%1$d]", gctEntry);
 
 		gct.result("Global Color Table");
 		gct.size(GifFormatSpecs::getGlobalColorTableSize);
@@ -136,11 +136,11 @@ final class GifFormatSpecs {
 		IMAGE_DESCRIPTOR = id;
 	}
 
-	static final FixedArraySpec LOCAL_COLOR_TABLE;
+	static final ArraySpec LOCAL_COLOR_TABLE;
 
 	static {
 		ByteArraySpec lctEntry = new ByteArraySpec("").size(3);
-		FixedArraySpec lct = new FixedArraySpec("color[%1$d]", lctEntry);
+		ArraySpec lct = new ArraySpec("color[%1$d]", lctEntry);
 
 		lct.result("Local Color Table");
 		lct.size(GifFormatSpecs::getLocalColorTableSize);
@@ -160,7 +160,7 @@ final class GifFormatSpecs {
 		dataBlock.add(IMAGE_DATA_BLOCK_SIZE).validate(b -> b.byteValue() != 0);
 		dataBlock.add(new ByteRangeSpec("Block Data")).size(GifFormatSpecs::getImageDataBlockSize);
 
-		id.add(new VarArraySpec(dataBlock));
+		id.add(new SequenceSpec(dataBlock));
 
 		StructSpec terminatorBlock = new StructSpec();
 
@@ -196,7 +196,7 @@ final class GifFormatSpecs {
 		dataBlock.add(GENERIC_EXTENSION_BLOCK_SIZE).validate(b -> b.byteValue() != 0);
 		dataBlock.add(new ByteRangeSpec("Block Data")).size(GifFormatSpecs::getGenericExtensionBlockSize);
 
-		genericExtension.add(new VarArraySpec(dataBlock));
+		genericExtension.add(new SequenceSpec(dataBlock));
 
 		StructSpec terminatorBlock = new StructSpec();
 
@@ -252,7 +252,7 @@ final class GifFormatSpecs {
 		formatSpec.add(HEADER);
 		formatSpec.add(LOGICAL_SCREEN_DESCRIPTOR);
 		formatSpec.add(new ConditionalSpec(GifFormatSpecs::getGlobalColorTableSpec));
-		formatSpec.add(new VarArraySpec(BLOCK));
+		formatSpec.add(new SequenceSpec(BLOCK));
 		formatSpec.add(TRAILER);
 		formatSpec.render(RawFileScannerResultExporter.IMAGE_GIF_EXPORTER);
 		FORMAT_SPEC = formatSpec;
@@ -271,7 +271,7 @@ final class GifFormatSpecs {
 		return 2 << (LSD_PACKED_FIELDS.get().byteValue() & 0x07);
 	}
 
-	private static FormatSpec getGlobalColorTableSpec() {
+	private static CompositeSpec getGlobalColorTableSpec() {
 		return ((LSD_PACKED_FIELDS.get().byteValue() & 0x80) != 0 ? GLOBAL_COLOR_TABLE : FormatSpecs.EMPTY);
 	}
 
@@ -279,7 +279,7 @@ final class GifFormatSpecs {
 		return 2 << (ID_PACKED_FIELDS.get().byteValue() & 0x07);
 	}
 
-	private static FormatSpec getLocalColorTableSpec() {
+	private static CompositeSpec getLocalColorTableSpec() {
 		return ((ID_PACKED_FIELDS.get().byteValue() & 0x80) != 0 ? LOCAL_COLOR_TABLE : FormatSpecs.EMPTY);
 	}
 

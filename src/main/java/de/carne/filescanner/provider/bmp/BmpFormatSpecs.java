@@ -16,13 +16,13 @@
  */
 package de.carne.filescanner.provider.bmp;
 
+import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.DWordSymbolRenderer;
-import de.carne.filescanner.engine.format.spec.FixedArraySpec;
-import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
@@ -116,11 +116,11 @@ final class BmpFormatSpecs {
 		BIT_FIELDS = bitFields;
 	}
 
-	static final FixedArraySpec RGB_QUAD_COLOR_TABLE;
+	static final ArraySpec RGB_QUAD_COLOR_TABLE;
 
 	static {
 		ByteArraySpec rgbQuadSpec = new ByteArraySpec("").size(4);
-		FixedArraySpec colorTable = new FixedArraySpec("color[%1$d]", rgbQuadSpec);
+		ArraySpec colorTable = new ArraySpec("color[%1$d]", rgbQuadSpec);
 
 		colorTable.result("COLORTABLE");
 		colorTable.size(BmpFormatSpecs::getColorTableSize);
@@ -164,8 +164,8 @@ final class BmpFormatSpecs {
 	}
 
 	// Helpers
-	private static FormatSpec getColorTableSpec() {
-		FormatSpec ctSpec;
+	private static CompositeSpec getColorTableSpec() {
+		CompositeSpec ctSpec;
 
 		if (BI_COMPRESSION.get().intValue() == 3) {
 			ctSpec = BIT_FIELDS;

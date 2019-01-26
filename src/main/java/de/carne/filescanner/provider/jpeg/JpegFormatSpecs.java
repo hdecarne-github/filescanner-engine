@@ -24,7 +24,7 @@ import de.carne.filescanner.engine.format.spec.ByteArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
-import de.carne.filescanner.engine.format.spec.VarArraySpec;
+import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class JpegFormatSpecs {
@@ -89,7 +89,7 @@ final class JpegFormatSpecs {
 		formatSpec.byteOrder(ByteOrder.BIG_ENDIAN).export(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		formatSpec.result(FORMAT_NAME);
 		formatSpec.add(PNG_FILE_SIGNATURE);
-		formatSpec.add(new VarArraySpec(GENERIC_CHUNK));
+		formatSpec.add(new SequenceSpec(GENERIC_CHUNK));
 		formatSpec.add(IEND_CHUNK);
 		formatSpec.render(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		FORMAT_SPEC = formatSpec;

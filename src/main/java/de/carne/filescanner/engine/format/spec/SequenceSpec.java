@@ -28,39 +28,39 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 /**
  * Variable number of {@linkplain FormatSpec}s.
  */
-public class VarArraySpec extends CompositeSpec {
+public class SequenceSpec extends CompositeSpec {
 
 	private final FormatSpec elementSpec;
 	private final int minOccurrence;
 	private final int maxOccurrence;
 
 	/**
-	 * Constructs a new {@linkplain VarArraySpec} instance.
+	 * Constructs a new {@linkplain SequenceSpec} instance.
 	 *
 	 * @param elementSpec the array element's {@linkplain FormatSpec}.
 	 */
-	public VarArraySpec(FormatSpec elementSpec) {
+	public SequenceSpec(FormatSpec elementSpec) {
 		this(elementSpec, 0, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * Constructs a new {@linkplain VarArraySpec} instance.
+	 * Constructs a new {@linkplain SequenceSpec} instance.
 	 *
 	 * @param elementSpec the array element's {@linkplain FormatSpec}.
 	 * @param minOccurrence the minimum number of array elements.
 	 */
-	public VarArraySpec(FormatSpec elementSpec, int minOccurrence) {
+	public SequenceSpec(FormatSpec elementSpec, int minOccurrence) {
 		this(elementSpec, minOccurrence, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * Constructs a new {@linkplain VarArraySpec} instance.
+	 * Constructs a new {@linkplain SequenceSpec} instance.
 	 *
 	 * @param elementSpec the array element's {@linkplain FormatSpec}.
 	 * @param minOccurrence the minimum number of array elements.
 	 * @param maxOccurrence the maximum number of array elements.
 	 */
-	public VarArraySpec(FormatSpec elementSpec, int minOccurrence, int maxOccurrence) {
+	public SequenceSpec(FormatSpec elementSpec, int minOccurrence, int maxOccurrence) {
 		Check.assertTrue(0 <= minOccurrence);
 		Check.assertTrue(minOccurrence <= maxOccurrence);
 

@@ -17,11 +17,12 @@
 package de.carne.filescanner.engine.format;
 
 import de.carne.filescanner.engine.format.spec.AttributeFormatter;
+import de.carne.util.Strings;
 
 /**
  * Pretty I18N aware and user ready format support.
  */
-public class PrettyFormat {
+public final class PrettyFormat {
 
 	private PrettyFormat() {
 		// Prevent instantiation
@@ -30,7 +31,7 @@ public class PrettyFormat {
 	private static final String NUMBER_FORMAT = "%1$,d";
 
 	/**
-	 * {@linkplain AttributeFormatter} for {@linkplain Byte} values..
+	 * {@linkplain AttributeFormatter} for {@linkplain Byte} values.
 	 */
 	public static final AttributeFormatter<Byte> BYTE_FORMATTER = PrettyFormat::formatByteNumber;
 
@@ -45,7 +46,7 @@ public class PrettyFormat {
 	}
 
 	/**
-	 * {@linkplain AttributeFormatter} for {@linkplain Short} values..
+	 * {@linkplain AttributeFormatter} for {@linkplain Short} values.
 	 */
 	public static final AttributeFormatter<Short> SHORT_FORMATTER = PrettyFormat::formatShortNumber;
 
@@ -60,7 +61,7 @@ public class PrettyFormat {
 	}
 
 	/**
-	 * {@linkplain AttributeFormatter} for {@linkplain Integer} values..
+	 * {@linkplain AttributeFormatter} for {@linkplain Integer} values.
 	 */
 	public static final AttributeFormatter<Integer> INT_FORMATTER = PrettyFormat::formatIntNumber;
 
@@ -75,7 +76,7 @@ public class PrettyFormat {
 	}
 
 	/**
-	 * {@linkplain AttributeFormatter} for {@linkplain Long} values..
+	 * {@linkplain AttributeFormatter} for {@linkplain Long} values.
 	 */
 	public static final AttributeFormatter<Long> LONG_FORMATTER = PrettyFormat::formatLongNumber;
 
@@ -90,7 +91,7 @@ public class PrettyFormat {
 	}
 
 	/**
-	 * {@linkplain AttributeFormatter} for {@linkplain String} values..
+	 * {@linkplain AttributeFormatter} for {@linkplain String} values.
 	 */
 	public static final AttributeFormatter<String> STRING_FORMATTER = PrettyFormat::formatString;
 
@@ -103,38 +104,7 @@ public class PrettyFormat {
 	 */
 	public static StringBuilder formatString(StringBuilder buffer, String value) {
 		buffer.append("\"");
-		value.chars().forEach(c -> {
-			if (c == '"') {
-				buffer.append("\\\"");
-			} else if (c == '\\') {
-				buffer.append("\\\\");
-			} else if (32 <= c && c <= 126) {
-				buffer.append((char) c);
-			} else {
-				switch (c) {
-				case 0:
-					buffer.append("\\0");
-					break;
-				case 8:
-					buffer.append("\\b");
-					break;
-				case 9:
-					buffer.append("\\t");
-					break;
-				case 10:
-					buffer.append("\\n");
-					break;
-				case 12:
-					buffer.append("\\f");
-					break;
-				case 13:
-					buffer.append("\\r");
-					break;
-				default:
-					buffer.append("\\u").append(HexFormat.formatShort((short) (c & 0xffff)));
-				}
-			}
-		});
+		Strings.encode(buffer, value);
 		buffer.append('"');
 		return buffer;
 	}
