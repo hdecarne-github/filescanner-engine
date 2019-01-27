@@ -25,21 +25,21 @@ BYTE_SYMBOLS:
 byte_symbols {
 	0: "Byte 0x00"
 	02: "Byte 0x10"
-	0x7F: "Byte 0x7f"
+	0xfF: "Byte 0xff"
 }
 
 WORD_SYMBOLS:
 word_symbols {
 	0: "Word 0x0000"
 	02: "Word 0x0010"
-	0x7ffF: "Word 0x7fff"
+	0xfffF: "Word 0xffff"
 }
 
 DWORD_SYMBOLS:
 dword_symbols {
 	0: "DWord 0x00000000"
 	02: "DWord 0x00000010"
-	0x7ffffffF: "DWord 0x7fffffff"
+	0xfffffffF: "DWord 0xffffffff"
 }
 
 QWORD_SYMBOLS:

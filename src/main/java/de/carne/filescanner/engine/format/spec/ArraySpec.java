@@ -64,7 +64,7 @@ public class ArraySpec extends CompositeSpec {
 	 * Sets the size (in number of elements) of this array.
 	 *
 	 * @param sizeSupplier the size (in number of elements) of this array.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
 	public ArraySpec size(Supplier<? extends Number> sizeSupplier) {
 		this.fixedSize = false;
@@ -76,7 +76,7 @@ public class ArraySpec extends CompositeSpec {
 	 * Sets the size (in number of elements) of this array.
 	 *
 	 * @param sizeValue the size (in number of elements) of this array.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
 	public ArraySpec size(int sizeValue) {
 		this.fixedSize = true;

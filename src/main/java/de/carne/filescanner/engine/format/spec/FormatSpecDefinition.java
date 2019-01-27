@@ -49,6 +49,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.A
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousStructSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousUnionSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeFormatModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeValidateNumberModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteArrayAttributeSpecContext;
@@ -92,7 +93,11 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.W
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordSymbolsContext;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.filescanner.engine.util.FinalSupplier;
+import de.carne.filescanner.engine.util.IntHelper;
+import de.carne.filescanner.engine.util.LongHelper;
+import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Strings;
 
 /**
@@ -364,7 +369,7 @@ public abstract class FormatSpecDefinition {
 				String byteSymbolsIdentifier = byteSymbolsCtx.symbolsIdentifier().getText();
 				ByteSymbolRenderer byteSymbols = new ByteSymbolRenderer();
 
-				loadSymbolDefinitions(byteSymbols, byteSymbolsCtx.symbolDefinition(), Byte::decode);
+				loadSymbolDefinitions(byteSymbols, byteSymbolsCtx.symbolDefinition(), ByteHelper::decodeUnsigned);
 				addByteAttributeRenderer(byteSymbolsIdentifier, byteSymbols);
 			}
 
@@ -374,7 +379,7 @@ public abstract class FormatSpecDefinition {
 				String wordSymbolsIdentifier = wordSymbolsCtx.symbolsIdentifier().getText();
 				WordSymbolRenderer wordSymbols = new WordSymbolRenderer();
 
-				loadSymbolDefinitions(wordSymbols, wordSymbolsCtx.symbolDefinition(), Short::decode);
+				loadSymbolDefinitions(wordSymbols, wordSymbolsCtx.symbolDefinition(), ShortHelper::decodeUnsigned);
 				addWordAttributeRenderer(wordSymbolsIdentifier, wordSymbols);
 			}
 
@@ -384,7 +389,7 @@ public abstract class FormatSpecDefinition {
 				String dwordSymbolsIdentifier = dwordSymbolsCtx.symbolsIdentifier().getText();
 				DWordSymbolRenderer dwordSymbols = new DWordSymbolRenderer();
 
-				loadSymbolDefinitions(dwordSymbols, dwordSymbolsCtx.symbolDefinition(), Integer::decode);
+				loadSymbolDefinitions(dwordSymbols, dwordSymbolsCtx.symbolDefinition(), IntHelper::decodeUnsigned);
 				addDWordAttributeRenderer(dwordSymbolsIdentifier, dwordSymbols);
 			}
 
@@ -394,7 +399,7 @@ public abstract class FormatSpecDefinition {
 				String qwordSymbolsIdentifier = qwordSymbolsCtx.symbolsIdentifier().getText();
 				QWordSymbolRenderer qwordSymbols = new QWordSymbolRenderer();
 
-				loadSymbolDefinitions(qwordSymbols, qwordSymbolsCtx.symbolDefinition(), Long::decode);
+				loadSymbolDefinitions(qwordSymbols, qwordSymbolsCtx.symbolDefinition(), LongHelper::decodeUnsigned);
 				addQWordAttributeRenderer(qwordSymbolsIdentifier, qwordSymbols);
 			}
 		}
@@ -405,7 +410,8 @@ public abstract class FormatSpecDefinition {
 				String byteFlagSymbolsIdentifier = byteFlagSymbolsCtx.symbolsIdentifier().getText();
 				ByteFlagRenderer byteFlagSymbols = new ByteFlagRenderer();
 
-				loadSymbolDefinitions(byteFlagSymbols, byteFlagSymbolsCtx.symbolDefinition(), Byte::decode);
+				loadSymbolDefinitions(byteFlagSymbols, byteFlagSymbolsCtx.symbolDefinition(),
+						ByteHelper::decodeUnsigned);
 				addByteFlagRenderer(byteFlagSymbolsIdentifier, byteFlagSymbols);
 			}
 
@@ -415,7 +421,8 @@ public abstract class FormatSpecDefinition {
 				String wordFlagSymbolsIdentifier = wordFlagSymbolsCtx.symbolsIdentifier().getText();
 				WordFlagRenderer wordFlagSymbols = new WordFlagRenderer();
 
-				loadSymbolDefinitions(wordFlagSymbols, wordFlagSymbolsCtx.symbolDefinition(), Short::decode);
+				loadSymbolDefinitions(wordFlagSymbols, wordFlagSymbolsCtx.symbolDefinition(),
+						ShortHelper::decodeUnsigned);
 				addWordFlagRenderer(wordFlagSymbolsIdentifier, wordFlagSymbols);
 			}
 
@@ -425,7 +432,8 @@ public abstract class FormatSpecDefinition {
 				String dwordFlagSymbolsIdentifier = dwordFlagSymbolsCtx.symbolsIdentifier().getText();
 				DWordFlagRenderer dwordFlagSymbols = new DWordFlagRenderer();
 
-				loadSymbolDefinitions(dwordFlagSymbols, dwordFlagSymbolsCtx.symbolDefinition(), Integer::decode);
+				loadSymbolDefinitions(dwordFlagSymbols, dwordFlagSymbolsCtx.symbolDefinition(),
+						IntHelper::decodeUnsigned);
 				addDWordFlagRenderer(dwordFlagSymbolsIdentifier, dwordFlagSymbols);
 			}
 
@@ -435,7 +443,8 @@ public abstract class FormatSpecDefinition {
 				String qwordFlagSymbolsIdentifier = qwordFlagSymbolsCtx.symbolsIdentifier().getText();
 				QWordFlagRenderer qwordFlagSymbols = new QWordFlagRenderer();
 
-				loadSymbolDefinitions(qwordFlagSymbols, qwordFlagSymbolsCtx.symbolDefinition(), Long::decode);
+				loadSymbolDefinitions(qwordFlagSymbols, qwordFlagSymbolsCtx.symbolDefinition(),
+						LongHelper::decodeUnsigned);
 				addQWordFlagRenderer(qwordFlagSymbolsIdentifier, qwordFlagSymbols);
 			}
 		}
@@ -621,7 +630,8 @@ public abstract class FormatSpecDefinition {
 		ByteSpec spec = new ByteSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), Byte::decode);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ByteHelper::decodeUnsigned);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
 	}
@@ -631,7 +641,8 @@ public abstract class FormatSpecDefinition {
 		WordSpec spec = new WordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), Short::decode);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ShortHelper::decodeUnsigned);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
 	}
@@ -641,7 +652,8 @@ public abstract class FormatSpecDefinition {
 		DWordSpec spec = new DWordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), Integer::decode);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), IntHelper::decodeUnsigned);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
 	}
@@ -651,7 +663,8 @@ public abstract class FormatSpecDefinition {
 		QWordSpec spec = new QWordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), Long::decode);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), LongHelper::decodeUnsigned);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
 	}
@@ -693,12 +706,35 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private FixedStringSpec loadCharArraySpec(CharArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
-		FixedStringSpec spec = new FixedStringSpec(loadTextExpression(specCtx.textExpression()));
+	private CharArraySpec loadCharArraySpec(CharArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
+		CharArraySpec spec = new CharArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private <T> void applyFormatModifier(AttributeSpec<T> spec, List<AttributeFormatModifierContext> modifierCtx,
+			Map<String, AttributeFormatter<T>> formatters) {
+		for (AttributeFormatModifierContext formatCtx : modifierCtx) {
+			FormatTextContext formatTextCtx;
+			SpecReferenceContext specReferenceCtx;
+
+			if ((formatTextCtx = formatCtx.formatText()) != null) {
+				spec.format(decodeQuotedString(formatTextCtx.getText()));
+			} else if ((specReferenceCtx = formatCtx.specReference()) != null) {
+				String specIdentifier = specReferenceCtx.referencedSpec().getText();
+				AttributeFormatter<T> formatter = formatters.get(specIdentifier);
+
+				if (formatter == null) {
+					throw newLoadException(specReferenceCtx, "Unknown formatter reference @%s", specIdentifier);
+				}
+				spec.format(formatter);
+			} else {
+				throw newLoadException(formatCtx, "Unexpected format modifier");
+			}
+		}
 	}
 
 	@SuppressWarnings("null")
@@ -721,24 +757,21 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private <T> void applyFormatModifier(AttributeSpec<T> spec, List<AttributeFormatModifierContext> modifierCtx,
-			Map<String, AttributeFormatter<T>> formatters) {
-		for (AttributeFormatModifierContext formatCtx : modifierCtx) {
-			FormatTextContext formatTextCtx;
+	private <T> void applyRendererModifier(AttributeSpec<T> spec, List<AttributeRendererModifierContext> modifierCtx,
+			Map<String, AttributeRenderer<T>> formatters) {
+		for (AttributeRendererModifierContext formatCtx : modifierCtx) {
 			SpecReferenceContext specReferenceCtx;
 
-			if ((formatTextCtx = formatCtx.formatText()) != null) {
-				spec.format(decodeQuotedString(formatTextCtx.getText()));
-			} else if ((specReferenceCtx = formatCtx.specReference()) != null) {
+			if ((specReferenceCtx = formatCtx.specReference()) != null) {
 				String specIdentifier = specReferenceCtx.referencedSpec().getText();
-				AttributeFormatter<T> formatter = formatters.get(specIdentifier);
+				AttributeRenderer<T> renderer = formatters.get(specIdentifier);
 
-				if (formatter == null) {
-					throw newLoadException(specReferenceCtx, "Unknown formatter reference @%s", specIdentifier);
+				if (renderer == null) {
+					throw newLoadException(specReferenceCtx, "Unknown renderer reference @%s", specIdentifier);
 				}
-				spec.format(formatter);
+				spec.renderer(renderer);
 			} else {
-				throw newLoadException(formatCtx, "Unexpected format modifier");
+				throw newLoadException(formatCtx, "Unexpected renderer modifier");
 			}
 		}
 	}

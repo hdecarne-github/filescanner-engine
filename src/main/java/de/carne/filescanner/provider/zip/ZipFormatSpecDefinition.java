@@ -23,7 +23,7 @@ import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.FixedStringSpec;
+import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
@@ -44,7 +44,7 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<WordSpec> lfhCompressionMethod = new Lazy<>(
 			() -> resolveSpec("LFH_COMPRESSION_METHOD", WordSpec.class));
 	private Lazy<DWordSpec> lfhCompressedSize = new Lazy<>(() -> resolveSpec("LFH_COMPRESSED_SIZE", DWordSpec.class));
-	private Lazy<FixedStringSpec> lfhFileName = new Lazy<>(() -> resolveSpec("LFH_FILE_NAME", FixedStringSpec.class));
+	private Lazy<CharArraySpec> lfhFileName = new Lazy<>(() -> resolveSpec("LFH_FILE_NAME", CharArraySpec.class));
 
 	public CompositeSpec getZipFormatSpec() {
 		return this.zipFormatSpec.get();

@@ -31,28 +31,28 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  * <p>
  * The string length has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class FixedStringSpec extends AttributeSpec<String> {
+public class CharArraySpec extends AttributeSpec<String> {
 
 	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 	private Supplier<Charset> charset = FinalSupplier.of(StandardCharsets.US_ASCII);
 
 	/**
-	 * Constructs a new {@linkplain FixedStringSpec} instance.
+	 * Constructs a new {@linkplain CharArraySpec} instance.
 	 *
 	 * @param name the attribute's name.
 	 */
-	public FixedStringSpec(Supplier<String> name) {
+	public CharArraySpec(Supplier<String> name) {
 		super(String.class, name);
 		format(PrettyFormat.STRING_FORMATTER);
 	}
 
 	/**
-	 * Constructs a new {@linkplain FixedStringSpec} instance.
+	 * Constructs a new {@linkplain CharArraySpec} instance.
 	 *
 	 * @param name The attribute's name.
 	 */
-	public FixedStringSpec(String name) {
+	public CharArraySpec(String name) {
 		super(String.class, name);
 		format(PrettyFormat.STRING_FORMATTER);
 	}
@@ -61,9 +61,9 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 * Sets the size (in bytes) of this {@linkplain String} attribute.
 	 *
 	 * @param sizeSupplier the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec size(Supplier<? extends Number> sizeSupplier) {
+	public CharArraySpec size(Supplier<? extends Number> sizeSupplier) {
 		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
@@ -73,9 +73,9 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 * Sets the size (in bytes) of this {@linkplain String} attribute.
 	 *
 	 * @param sizeValue the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec size(int sizeValue) {
+	public CharArraySpec size(int sizeValue) {
 		this.fixedSize = true;
 		this.size = Integer.valueOf(sizeValue)::intValue;
 		return this;
@@ -85,9 +85,9 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
 	 *
 	 * @param charsetSupplier the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec charset(Supplier<Charset> charsetSupplier) {
+	public CharArraySpec charset(Supplier<Charset> charsetSupplier) {
 		this.charset = charsetSupplier;
 		return this;
 	}
@@ -96,9 +96,9 @@ public class FixedStringSpec extends AttributeSpec<String> {
 	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
 	 *
 	 * @param charsetValue the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain FixedStringSpec} instance for chaining.
+	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
-	public FixedStringSpec charset(Charset charsetValue) {
+	public CharArraySpec charset(Charset charsetValue) {
 		this.charset = () -> charsetValue;
 		return this;
 	}

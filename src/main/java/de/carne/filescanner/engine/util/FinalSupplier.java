@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.engine.util;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -50,7 +51,7 @@ public class FinalSupplier<T> implements Supplier<T> {
 
 	@Override
 	public String toString() {
-		return this.value.toString();
+		return Objects.toString(this.value);
 	}
 
 }

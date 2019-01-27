@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
-import de.carne.filescanner.engine.format.spec.FixedStringSpec;
+import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
@@ -89,8 +89,8 @@ final class GifFormatSpecs {
 		StructSpec header = new StructSpec();
 
 		header.result("Header");
-		header.add(new FixedStringSpec("Signature")).size(3).validate("GIF");
-		header.add(new FixedStringSpec("Version")).size(3).validate(new HashSet<>(Arrays.asList("87a", "89a")));
+		header.add(new CharArraySpec("Signature")).size(3).validate("GIF");
+		header.add(new CharArraySpec("Version")).size(3).validate(new HashSet<>(Arrays.asList("87a", "89a")));
 		HEADER = header;
 	}
 
