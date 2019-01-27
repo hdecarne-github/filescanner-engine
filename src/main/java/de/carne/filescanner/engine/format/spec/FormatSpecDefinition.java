@@ -119,11 +119,6 @@ public abstract class FormatSpecDefinition {
 	private final Map<String, AttributeRenderer<Integer>> dwordAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<Long>> qwordAttributeRenderer = new HashMap<>();
 
-	// private final Map<String, FlagRenderer<Byte>> byteFlagRenderer = new HashMap<>();
-	// private final Map<String, FlagRenderer<Short>> wordFlagRenderer = new HashMap<>();
-	// private final Map<String, FlagRenderer<Integer>> dwordFlagRenderer = new HashMap<>();
-	// private final Map<String, FlagRenderer<Long>> qwordFlagRenderer = new HashMap<>();
-
 	private final Map<String, Supplier<FormatSpec>> specs = new HashMap<>();
 
 	private final List<Runnable> lateBindings = new LinkedList<>();
