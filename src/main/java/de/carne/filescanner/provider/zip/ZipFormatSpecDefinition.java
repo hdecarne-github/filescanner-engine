@@ -20,10 +20,10 @@ import java.net.URL;
 import java.util.Objects;
 
 import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
@@ -35,16 +35,14 @@ import de.carne.util.Lazy;
  */
 final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
-	private Lazy<CompositeSpec> zipFormatSpec = new Lazy<>(() -> resolveSpec("ZIP_ARCHIVE", CompositeSpec.class));
-	private Lazy<CompositeSpec> lfhSpec = new Lazy<>(() -> resolveSpec("LOCAL_FILE_HEADER", CompositeSpec.class));
-	private Lazy<CompositeSpec> ddSpec = new Lazy<>(() -> resolveSpec("DATA_DESCRIPTOR", CompositeSpec.class));
+	private Lazy<CompositeSpec> zipFormatSpec = resolveLazy("ZIP_ARCHIVE", CompositeSpec.class);
+	private Lazy<CompositeSpec> lfhSpec = resolveLazy("LOCAL_FILE_HEADER", CompositeSpec.class);
+	private Lazy<CompositeSpec> ddSpec = resolveLazy("DATA_DESCRIPTOR", CompositeSpec.class);
 
-	private Lazy<WordSpec> lfhGenerapPurposeBitFlag = new Lazy<>(
-			() -> resolveSpec("LFH_GENERAL_PURPOSE_BIT_FLAG", WordSpec.class));
-	private Lazy<WordSpec> lfhCompressionMethod = new Lazy<>(
-			() -> resolveSpec("LFH_COMPRESSION_METHOD", WordSpec.class));
-	private Lazy<DWordSpec> lfhCompressedSize = new Lazy<>(() -> resolveSpec("LFH_COMPRESSED_SIZE", DWordSpec.class));
-	private Lazy<CharArraySpec> lfhFileName = new Lazy<>(() -> resolveSpec("LFH_FILE_NAME", CharArraySpec.class));
+	private Lazy<WordSpec> lfhGenerapPurposeBitFlag = resolveLazy("LFH_GENERAL_PURPOSE_BIT_FLAG", WordSpec.class);
+	private Lazy<WordSpec> lfhCompressionMethod = resolveLazy("LFH_COMPRESSION_METHOD", WordSpec.class);
+	private Lazy<DWordSpec> lfhCompressedSize = resolveLazy("LFH_COMPRESSED_SIZE", DWordSpec.class);
+	private Lazy<CharArraySpec> lfhFileName = resolveLazy("LFH_FILE_NAME", CharArraySpec.class);
 
 	public CompositeSpec getZipFormatSpec() {
 		return this.zipFormatSpec.get();

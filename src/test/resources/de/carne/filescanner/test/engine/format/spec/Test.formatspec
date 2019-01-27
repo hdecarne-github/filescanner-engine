@@ -119,6 +119,7 @@ TEST_STRUCT:
 struct text("Test struct [%d]", @LOCAL_BIND) {
 	byte "byte attribute"
 	word "word attribute" 
+ARRAY_SIZE:
 	dword "dword attribute" 
 	qword "qword attribute"
 	byte "test formatted & rendered byte attribute"
@@ -133,6 +134,8 @@ struct text("Test struct [%d]", @LOCAL_BIND) {
 	qword "test formatted & rendered qword attribute"
 		->format(@TestFormat)
 		->renderer(@TestRenderer)
+	char[@ARRAY_SIZE] "char array attribute"
+		->charset("UTF-8")
 LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:

@@ -18,12 +18,9 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -31,11 +28,10 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  * <p>
  * The string length has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class CharArraySpec extends AttributeSpec<String> {
+public class CharArraySpec extends StringAttributeSpec {
 
 	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
-	private Supplier<Charset> charset = FinalSupplier.of(StandardCharsets.US_ASCII);
 
 	/**
 	 * Constructs a new {@linkplain CharArraySpec} instance.
@@ -43,8 +39,7 @@ public class CharArraySpec extends AttributeSpec<String> {
 	 * @param name the attribute's name.
 	 */
 	public CharArraySpec(Supplier<String> name) {
-		super(String.class, name);
-		format(PrettyFormat.STRING_FORMATTER);
+		super(name);
 	}
 
 	/**
@@ -53,8 +48,7 @@ public class CharArraySpec extends AttributeSpec<String> {
 	 * @param name The attribute's name.
 	 */
 	public CharArraySpec(String name) {
-		super(String.class, name);
-		format(PrettyFormat.STRING_FORMATTER);
+		super(FinalSupplier.of(name));
 	}
 
 	/**
@@ -78,28 +72,6 @@ public class CharArraySpec extends AttributeSpec<String> {
 	public CharArraySpec size(int sizeValue) {
 		this.fixedSize = true;
 		this.size = Integer.valueOf(sizeValue)::intValue;
-		return this;
-	}
-
-	/**
-	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
-	 *
-	 * @param charsetSupplier the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
-	 */
-	public CharArraySpec charset(Supplier<Charset> charsetSupplier) {
-		this.charset = charsetSupplier;
-		return this;
-	}
-
-	/**
-	 * Sets the {@linkplain Charset} of this {@linkplain String} attribute.
-	 *
-	 * @param charsetValue the size (in bytes) of this {@linkplain String} attribute.
-	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
-	 */
-	public CharArraySpec charset(Charset charsetValue) {
-		this.charset = () -> charsetValue;
 		return this;
 	}
 
@@ -129,7 +101,7 @@ public class CharArraySpec extends AttributeSpec<String> {
 
 		slice.limit(this.size.get().intValue());
 
-		String value = this.charset.get().decode(slice).toString();
+		String value = charset().decode(slice).toString();
 
 		buffer.position(buffer.position() + slice.position());
 		return value;

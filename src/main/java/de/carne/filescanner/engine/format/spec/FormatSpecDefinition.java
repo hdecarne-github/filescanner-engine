@@ -21,12 +21,14 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -83,6 +85,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.S
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StructSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolDefinitionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolsContext;
@@ -100,6 +103,7 @@ import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.filescanner.provider.util.DosDateRenderer;
 import de.carne.filescanner.provider.util.DosTimeRenderer;
+import de.carne.util.Lazy;
 import de.carne.util.Strings;
 
 /**
@@ -108,6 +112,11 @@ import de.carne.util.Strings;
 public abstract class FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
+
+	private final Map<String, Set<Byte>> byteSymbolsMap = new HashMap<>();
+	private final Map<String, Set<Short>> wordSymbolsMap = new HashMap<>();
+	private final Map<String, Set<Integer>> dwordSymbolsMap = new HashMap<>();
+	private final Map<String, Set<Long>> qwordSymbolsMap = new HashMap<>();
 
 	private final Map<String, AttributeFormatter<Byte>> byteAttributeFormatter = new HashMap<>();
 	private final Map<String, AttributeFormatter<Short>> wordAttributeFormatter = new HashMap<>();
@@ -315,6 +324,7 @@ public abstract class FormatSpecDefinition {
 				ByteSymbolRenderer byteSymbols = new ByteSymbolRenderer();
 
 				loadSymbolDefinitions(byteSymbols, byteSymbolsCtx.symbolDefinition(), ByteHelper::decodeUnsigned);
+				this.byteSymbolsMap.put(byteSymbolsIdentifier, byteSymbols.keySet());
 				addByteAttributeRenderer(byteSymbolsIdentifier, byteSymbols);
 			}
 
@@ -325,6 +335,7 @@ public abstract class FormatSpecDefinition {
 				WordSymbolRenderer wordSymbols = new WordSymbolRenderer();
 
 				loadSymbolDefinitions(wordSymbols, wordSymbolsCtx.symbolDefinition(), ShortHelper::decodeUnsigned);
+				this.wordSymbolsMap.put(wordSymbolsIdentifier, wordSymbols.keySet());
 				addWordAttributeRenderer(wordSymbolsIdentifier, wordSymbols);
 			}
 
@@ -335,6 +346,7 @@ public abstract class FormatSpecDefinition {
 				DWordSymbolRenderer dwordSymbols = new DWordSymbolRenderer();
 
 				loadSymbolDefinitions(dwordSymbols, dwordSymbolsCtx.symbolDefinition(), IntHelper::decodeUnsigned);
+				this.dwordSymbolsMap.put(dwordSymbolsIdentifier, dwordSymbols.keySet());
 				addDWordAttributeRenderer(dwordSymbolsIdentifier, dwordSymbols);
 			}
 
@@ -345,6 +357,7 @@ public abstract class FormatSpecDefinition {
 				QWordSymbolRenderer qwordSymbols = new QWordSymbolRenderer();
 
 				loadSymbolDefinitions(qwordSymbols, qwordSymbolsCtx.symbolDefinition(), LongHelper::decodeUnsigned);
+				this.qwordSymbolsMap.put(qwordSymbolsIdentifier, qwordSymbols.keySet());
 				addQWordAttributeRenderer(qwordSymbolsIdentifier, qwordSymbols);
 			}
 		}
@@ -575,7 +588,8 @@ public abstract class FormatSpecDefinition {
 		ByteSpec spec = new ByteSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ByteHelper::decodeUnsigned);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ByteHelper::decodeUnsigned,
+				this.byteSymbolsMap);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -586,7 +600,8 @@ public abstract class FormatSpecDefinition {
 		WordSpec spec = new WordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ShortHelper::decodeUnsigned);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ShortHelper::decodeUnsigned,
+				this.wordSymbolsMap);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -597,7 +612,8 @@ public abstract class FormatSpecDefinition {
 		DWordSpec spec = new DWordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), IntHelper::decodeUnsigned);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), IntHelper::decodeUnsigned,
+				this.dwordSymbolsMap);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -608,7 +624,8 @@ public abstract class FormatSpecDefinition {
 		QWordSpec spec = new QWordSpec(loadTextExpression(specCtx.textExpression()));
 
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
-		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), LongHelper::decodeUnsigned);
+		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), LongHelper::decodeUnsigned,
+				this.qwordSymbolsMap);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -655,6 +672,7 @@ public abstract class FormatSpecDefinition {
 		CharArraySpec spec = new CharArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		applyCharsetModifier(spec, specCtx.stringAttributeCharsetModifier());
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
 	}
@@ -684,24 +702,30 @@ public abstract class FormatSpecDefinition {
 
 	@SuppressWarnings("null")
 	private <T extends Number> void applyValidateNumberModifier(NumberAttributeSpec<T> spec,
-			List<AttributeValidateNumberModifierContext> modifierCtx, Function<String, Number> decode) {
+			List<AttributeValidateNumberModifierContext> modifierCtx, Function<String, Number> decode,
+			Map<String, Set<T>> symbolsMap) {
 		for (AttributeValidateNumberModifierContext validateCtx : modifierCtx) {
 			NumberValueContext numberValueCtx;
-			SpecIdentifierContext specIdentifierCtx;
+			SpecReferenceContext specReferenceCtx;
 
 			if ((numberValueCtx = validateCtx.numberValue()) != null) {
 				Number numberValue = decode.apply(numberValueCtx.getText());
 
 				spec.validate(numberValue::equals);
-			} else if ((specIdentifierCtx = validateCtx.specIdentifier()) != null) {
+			} else if ((specReferenceCtx = validateCtx.specReference()) != null) {
+				String specIdentifier = specReferenceCtx.referencedSpec().getText();
+				Set<T> symbols = symbolsMap.get(specIdentifier);
 
+				if (symbols == null) {
+					throw newLoadException(specReferenceCtx, "Unknown symbols reference @%s", specIdentifier);
+				}
+				spec.validate(symbols);
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate modifier");
 			}
 		}
 	}
 
-	@SuppressWarnings("null")
 	private <T> void applyRendererModifier(AttributeSpec<T> spec, List<AttributeRendererModifierContext> modifierCtx,
 			Map<String, AttributeRenderer<T>> formatters) {
 		for (AttributeRendererModifierContext formatCtx : modifierCtx) {
@@ -717,6 +741,22 @@ public abstract class FormatSpecDefinition {
 				spec.renderer(renderer);
 			} else {
 				throw newLoadException(formatCtx, "Unexpected renderer modifier");
+			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applyCharsetModifier(StringAttributeSpec spec,
+			List<StringAttributeCharsetModifierContext> modifierCtx) {
+		for (StringAttributeCharsetModifierContext charsetCtx : modifierCtx) {
+			SimpleTextContext simpleTextCtx;
+
+			if ((simpleTextCtx = charsetCtx.simpleText()) != null) {
+				String charsetName = decodeQuotedString(simpleTextCtx.getText());
+
+				spec.charset(Charset.forName(charsetName));
+			} else {
+				throw newLoadException(charsetCtx, "Unexpected charset modifier");
 			}
 		}
 	}
@@ -961,6 +1001,18 @@ public abstract class FormatSpecDefinition {
 					specType.getSimpleName(), resolvedSpecType.getSimpleName()));
 		}
 		return specType.cast(resolvedSpec);
+	}
+
+	/**
+	 * Lazily resolves a previously loaded {@linkplain FormatSpec} instance.
+	 *
+	 * @param <T> the actual {@linkplain FormatSpec} type to resolve.
+	 * @param specIdentifier the identifier of the {@linkplain FormatSpec} instance to resolve.
+	 * @param specType the type of the {@linkplain FormatSpec} instance to resolve.
+	 * @return the resolved {@linkplain FormatSpec} instance.
+	 */
+	protected <T extends FormatSpec> Lazy<T> resolveLazy(String specIdentifier, Class<T> specType) {
+		return new Lazy<>(() -> resolveSpec(specIdentifier, specType));
 	}
 
 	private IllegalArgumentException newLoadException(ParserRuleContext ctx, String format, Object... args) {

@@ -45,6 +45,7 @@ Renderer: 'renderer';
 Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
+Charset: 'charset';
 
 Byte: 'byte';
 Word: 'word';
@@ -234,7 +235,7 @@ qwordArrayAttributeSpec
 	;
 
 charArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateStringModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateStringModifier|attributeRendererModifier|stringAttributeCharsetModifier))*
 	;
 	
 attributeFormatModifier
@@ -242,7 +243,7 @@ attributeFormatModifier
 	;
 	
 attributeValidateNumberModifier
-	: Validate LBracket (numberValue|specIdentifier) RBracket
+	: Validate LBracket (numberValue|specReference) RBracket
 	;
 	
 attributeValidateNumberArrayModifier
@@ -255,6 +256,10 @@ attributeValidateStringModifier
 	
 attributeRendererModifier
 	: Renderer LBracket specReference RBracket
+	;
+	
+stringAttributeCharsetModifier
+	: Charset LBracket simpleText RBracket
 	;
 	
 specIdentifier
