@@ -18,7 +18,9 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +35,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.jdt.annotation.Nullable;
 
+import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
@@ -49,13 +52,16 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.B
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CharArrayAttributeSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecByteOrderModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecElementContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExportModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.EncodedSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ExternalReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecElementContext;
@@ -81,13 +87,14 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.W
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordSymbolsContext;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.util.Strings;
 
 /**
- *
+ * Base class for all kinds {@linkplain FormatSpec} based format definitions.
  */
-public final class FormatSpecDefinition {
+public abstract class FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
@@ -108,12 +115,12 @@ public final class FormatSpecDefinition {
 
 	private final Map<String, Supplier<FormatSpec>> specs = new HashMap<>();
 
-	private final List<Runnable> bindings = new LinkedList<>();
+	private final List<Runnable> lateBindings = new LinkedList<>();
 
 	/**
 	 * Constructs a new {@linkplain FormatSpecDefinition} instance.
 	 */
-	public FormatSpecDefinition() {
+	protected FormatSpecDefinition() {
 		// @PrettyFormat
 		this.byteAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.BYTE_FORMATTER);
 		this.wordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.SHORT_FORMATTER);
@@ -130,6 +137,14 @@ public final class FormatSpecDefinition {
 		this.dwordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.INT_RENDERER);
 		this.qwordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.LONG_RENDERER);
 	}
+
+	/**
+	 * Gets the resource containing the actual format spec definitions (using the grammar defined in
+	 * FormatSpecGrammar.g4).
+	 *
+	 * @return the resource containing the actual format spec definitions.
+	 */
+	protected abstract URL getFormatSpecResource();
 
 	/**
 	 * Adds a byte {@linkplain AttributeFormatter}.
@@ -300,14 +315,14 @@ public final class FormatSpecDefinition {
 	}
 
 	/**
-	 * Loads and initializes the {@linkplain FormatSpecDefinition} from a resource.
+	 * Loads and initializes the {@linkplain FormatSpecDefinition}.
 	 *
-	 * @param resourceUrl the resource {@linkplain URL} to read from.
-	 * @return the loaded {@linkplain FormatSpecDefinition}.
 	 * @throws IOException if the resource cannot be loaded or parsed.
 	 */
-	public FormatSpecDefinition load(URL resourceUrl) throws IOException {
-		try (InputStream resourceStream = resourceUrl.openStream()) {
+	public void load() throws IOException {
+		URL formatSpecResourceUrl = getFormatSpecResource();
+
+		try (InputStream resourceStream = formatSpecResourceUrl.openStream()) {
 			CharStream input = CharStreams.fromStream(resourceStream);
 			FormatSpecGrammarLexer lexer = new FormatSpecGrammarLexer(input);
 			TokenStream tokens = new CommonTokenStream(lexer);
@@ -315,12 +330,13 @@ public final class FormatSpecDefinition {
 			Loader loader = new Loader(this::loadHelper);
 
 			loader.visitFormatSpecs(parser.formatSpecs());
+		} catch (RuntimeException e) {
+			throw new IOException("Failed to load format spec resource: " + formatSpecResourceUrl, e);
 		}
-		for (Runnable binding : this.bindings) {
-			binding.run();
+		for (Runnable lateBinding : this.lateBindings) {
+			lateBinding.run();
 		}
-		this.bindings.clear();
-		return this;
+		this.lateBindings.clear();
 	}
 
 	private static class Loader extends FormatSpecGrammarBaseVisitor<FormatSpecDefinition> {
@@ -450,6 +466,8 @@ public final class FormatSpecDefinition {
 			spec.add(loadFormatSpecElement(elementCtx, rootCtx));
 		}
 		spec.result(loadTextExpression(specCtx.textExpression()));
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		this.specs.put(specIdentifier, () -> spec);
 	}
 
@@ -478,6 +496,8 @@ public final class FormatSpecDefinition {
 		if (textExpression != null) {
 			spec.result(loadTextExpression(specCtx.textExpression()));
 		}
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
 	}
 
@@ -506,6 +526,8 @@ public final class FormatSpecDefinition {
 		if (textExpression != null) {
 			spec.result(loadTextExpression(specCtx.textExpression()));
 		}
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
 	}
 
@@ -530,7 +552,26 @@ public final class FormatSpecDefinition {
 		if (textExpression != null) {
 			spec.result(loadTextExpression(specCtx.textExpression()));
 		}
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
+	}
+
+	private void applyByteOrderModifier(CompositeSpec spec, List<CompositeSpecByteOrderModifierContext> modifierCtx) {
+		for (CompositeSpecByteOrderModifierContext byteOrderCtx : modifierCtx) {
+			if (byteOrderCtx.LittleEndian() != null) {
+				spec.byteOrder(ByteOrder.LITTLE_ENDIAN);
+			} else {
+				spec.byteOrder(ByteOrder.BIG_ENDIAN);
+			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applyExportModifier(CompositeSpec spec, List<CompositeSpecExportModifierContext> modifierCtx) {
+		for (CompositeSpecExportModifierContext exportCtx : modifierCtx) {
+			spec.export(resolveExternalReference(exportCtx.externalReference(), FileScannerResultExportHandler.class));
+		}
 	}
 
 	private AttributeSpec<?> loadAttributeSpec(AttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
@@ -656,7 +697,7 @@ public final class FormatSpecDefinition {
 			reserveSpecIdentifier(specIdentifier);
 			if (scopeIdentiferCtx != null) {
 				String scopeIdentifier = scopeIdentiferCtx.getText();
-				this.bindings.add(() -> spec.bind(resolveSpec(rootCtx, scopeIdentifier, CompositeSpec.class)));
+				this.lateBindings.add(() -> spec.bind(resolveSpec(rootCtx, scopeIdentifier, CompositeSpec.class)));
 			} else {
 				spec.bind();
 			}
@@ -767,6 +808,34 @@ public final class FormatSpecDefinition {
 		return Strings.decode(quotedString.substring(1, quotedString.length() - 1));
 	}
 
+	private static final String UNKNOWN_EXTERNAL_REFERENCE = "Unknown reference #%s";
+	private static final String INVALID_EXTERNAL_REFERENCE = "Invalid reference #%s (expected type: %s actual type: %s)";
+
+	private <T> Supplier<T> resolveExternalReference(ExternalReferenceContext externalReferenceCtx, Class<T> type) {
+		String methodIdentifier = externalReferenceCtx.referencedExternal().getText();
+		Method method;
+
+		try {
+			method = getClass().getDeclaredMethod(methodIdentifier);
+		} catch (NoSuchMethodException e) {
+			throw new IllegalArgumentException(String.format(UNKNOWN_EXTERNAL_REFERENCE, methodIdentifier), e);
+		}
+
+		Class<?> methodType = method.getReturnType();
+
+		if (!type.isAssignableFrom(methodType)) {
+			throw new IllegalArgumentException(String.format(INVALID_EXTERNAL_REFERENCE, methodIdentifier,
+					type.getSimpleName(), methodType.getSimpleName()));
+		}
+		return () -> {
+			try {
+				return type.cast(method.invoke(this));
+			} catch (ReflectiveOperationException e) {
+				throw Exceptions.toRuntime(e);
+			}
+		};
+	}
+
 	private void reserveSpecIdentifier(String specIdentifier) {
 		if (this.specs.containsKey(specIdentifier)) {
 			throw new IllegalArgumentException("Duplicate spec identifier: " + specIdentifier);
@@ -777,6 +846,9 @@ public final class FormatSpecDefinition {
 	private CompositeSpec unresolvedSpec(String identifier) {
 		throw new IllegalArgumentException("Cyclic reference @" + identifier);
 	}
+
+	private static final String UNKNOWN_SPEC_REFERENCE = "Unknown reference @%s";
+	private static final String INVALID_SPEC_REFERENCE = "Invalid reference @%s (expected type: %s actual type: %s)";
 
 	@SuppressWarnings("squid:S3776")
 	private <T extends FormatSpec> T resolveSpec(FormatSpecsContext rootCtx, String specIdentifier, Class<T> specType) {
@@ -803,14 +875,14 @@ public final class FormatSpecDefinition {
 			resolvedSpec = resolvedSpecSupplier.get();
 		}
 		if (resolvedSpec == null) {
-			throw new IllegalArgumentException("Unknown spec identifier: " + specIdentifier);
+			throw new IllegalArgumentException(String.format(UNKNOWN_SPEC_REFERENCE, specIdentifier));
 		}
 
 		Class<?> resolvedSpecType = resolvedSpec.getClass();
 
 		if (!specType.isAssignableFrom(resolvedSpecType)) {
-			throw new IllegalArgumentException("Invalid reference @" + specIdentifier + "(expected type: "
-					+ specType.getSimpleName() + "; actual type: " + resolvedSpecType.getSimpleName() + " )");
+			throw new IllegalArgumentException(String.format(INVALID_SPEC_REFERENCE, specIdentifier,
+					specType.getSimpleName(), resolvedSpecType.getSimpleName()));
 		}
 		return specType.cast(resolvedSpec);
 	}
@@ -819,15 +891,15 @@ public final class FormatSpecDefinition {
 		Supplier<FormatSpec> resolvedSpecSupplier = this.specs.get(specIdentifier);
 
 		if (resolvedSpecSupplier == null) {
-			throw new IllegalArgumentException("Unknown spec identifier: " + specIdentifier);
+			throw new IllegalArgumentException(String.format(UNKNOWN_SPEC_REFERENCE, specIdentifier));
 		}
 
 		FormatSpec resolvedSpec = resolvedSpecSupplier.get();
 		Class<?> resolvedSpecType = resolvedSpec.getClass();
 
 		if (!specType.isAssignableFrom(resolvedSpecType)) {
-			throw new IllegalArgumentException("Invalid reference @" + specIdentifier + "(expected type: "
-					+ specType.getSimpleName() + "; actual type: " + resolvedSpecType.getSimpleName() + " )");
+			throw new IllegalArgumentException(String.format(INVALID_SPEC_REFERENCE, specIdentifier,
+					specType.getSimpleName(), resolvedSpecType.getSimpleName()));
 		}
 		return specType.cast(resolvedSpec);
 	}

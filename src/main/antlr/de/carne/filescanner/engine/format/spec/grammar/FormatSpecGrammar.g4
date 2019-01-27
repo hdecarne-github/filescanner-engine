@@ -43,6 +43,8 @@ Text: 'text';
 Format: 'format';
 Renderer: 'renderer';
 Export: 'export';
+LittleEndian: 'littleEndian';
+BigEndian: 'bigEndian';
 
 Byte: 'byte';
 Word: 'word';
@@ -144,7 +146,7 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket
+	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
 	;
 
 structSpec
@@ -152,7 +154,7 @@ structSpec
 	;
 	
 anonymousStructSpec
-	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecExportModifier))*
+	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
 	;
 	
 sequenceSpec
@@ -160,7 +162,7 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? formatSpecElement (Apply (compositeSpecExportModifier))*
+	: Sequence textExpression? formatSpecElement (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
 	;
 
 unionSpec
@@ -168,11 +170,15 @@ unionSpec
 	;
 
 anonymousUnionSpec
-	: Union textExpression? LCBracket compositeSpecElement+ RCBracket
+	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	;
+	
+compositeSpecByteOrderModifier
+	: (LittleEndian|BigEndian) LBracket RBracket
 	;
 	
 compositeSpecExportModifier
-	: Export LBracket expression RBracket
+	: Export LBracket externalReference RBracket
 	;
 	
 formatSpecElement
@@ -252,7 +258,7 @@ scopeIdentifier
 	;
 
 numberExpression
-	: (specReference|externalReference|numberValue)
+	: (numberValue|specReference|externalReference)
 	;
 
 numberValue
@@ -280,7 +286,7 @@ referencedSpec
 	;
 
 externalReference
-	: Hash referencedExternal LBracket (expression (Comma expression)* )? RBracket
+	: Hash referencedExternal
 	;
 	
 referencedExternal

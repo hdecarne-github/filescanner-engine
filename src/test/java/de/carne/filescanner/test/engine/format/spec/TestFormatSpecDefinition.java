@@ -16,20 +16,22 @@
  */
 package de.carne.filescanner.test.engine.format.spec;
 
-import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
-import org.junit.jupiter.api.Test;
+import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
-/**
- * Test {@FormatSpecDefinition} class.
- */
-class FormatSpecDefinitionTest {
+final class TestFormatSpecDefinition extends FormatSpecDefinition {
 
-	@Test
-	void testFormatSpecDefinition() throws IOException {
-		TestFormatSpecDefinition testFormat = new TestFormatSpecDefinition();
+	@Override
+	protected URL getFormatSpecResource() {
+		return Objects.requireNonNull(getClass().getResource("Test.formatspec"));
+	}
 
-		testFormat.load();
+	protected FileScannerResultExportHandler specialExport() {
+		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
 	}
 
 }

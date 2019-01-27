@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// Test format spec exploring all grammar features
+//
+
+// Symbols
+
+BYTE_SYMBOLS:
+byte_symbols {
+	0: "Byte 0x00"
+	02: "Byte 0x10"
+	0x7F: "Byte 0x7f"
+}
+
+WORD_SYMBOLS:
+word_symbols {
+	0: "Word 0x0000"
+	02: "Word 0x0010"
+	0x7ffF: "Word 0x7fff"
+}
+
+DWORD_SYMBOLS:
+dword_symbols {
+	0: "DWord 0x00000000"
+	02: "DWord 0x00000010"
+	0x7ffffffF: "DWord 0x7fffffff"
+}
+
+QWORD_SYMBOLS:
+qword_symbols {
+	0: "QWord 0x0000000000000000"
+	02: "QWord 0x0000000000000010"
+	0x7ffffffffffffffF: "QWord 0x7fffffffffffffff"
+}
+
+BYTE_FLAG_SYMBOLS:
+byte_flag_symbols {
+	1: "Byte 0x01"
+	16: "Byte 0x10"
+}
+
+WORD_FLAG_SYMBOLS:
+word_flag_symbols {
+	1: "Word 0x0001"
+	16: "Word 0x0010"
+}
+
+DWORD_FLAG_SYMBOLS:
+dword_flag_symbols {
+	1: "DWord 0x00000001"
+	16: "DWord 0x00000010"
+}
+
+QWORD_FLAG_SYMBOLS:
+qword_flag_symbols {
+	1: "QWord 0x0000000000000001"
+	16: "QWord 0x0000000000000010"
+}
+
+// Specs
+
+TEST_FORMAT:
+format_spec "Test format" {
+	struct "inline struct" {
+		byte "byte_magic"
+			->validate(0x12)
+		word "word_magic"
+			->validate(0x1234)
+		dword "dword_magic"
+			->validate(0x12345678)
+		qword "qword_magic"
+			->validate(0x123456789abcdef0)
+	}
+	@TEST_HEADER
+	@TEST_STRUCT
+	union "inline union" {
+		struct "nested struct 1" {
+			byte "byte attribute"
+		}
+		struct "nested struct 2" {
+			byte "byte attribute"
+		}
+	}
+	@TEST_UNION
+}
+
+TEST_HEADER:
+struct "Test header" {
+	byte "byte_magic"
+		->validate(0x12)
+	word "word_magic"
+		->validate(0x1234)
+	dword "dword_magic"
+		->validate(0x12345678)
+	qword "qword_magic"
+		->validate(0x123456789abcdef0)
+}	->littleEndian()
+	->export(#specialExport)
+
+TEST_STRUCT:
+struct "Test struct" {
+	byte "byte attribute"
+	word "word attribute" 
+	dword "dword attribute" 
+	qword "qword attribute"
+LOCAL_BIND:
+	byte "local bind"
+SCOPED_BIND@TEST_FORMAT:
+	byte "scoped bind"
+}	->bigEndian()
+	->export(#specialExport)
+
+TEST_UNION:
+union "Test union" {
+	@TEST_HEADER
+	@TEST_STRUCT
+}	->bigEndian()
+	->export(#specialExport)

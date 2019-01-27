@@ -14,22 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.engine.format.spec;
+package de.carne.filescanner.provider.zip;
 
-import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
-import org.junit.jupiter.api.Test;
+import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 
 /**
- * Test {@FormatSpecDefinition} class.
+ *
  */
-class FormatSpecDefinitionTest {
+final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
-	@Test
-	void testFormatSpecDefinition() throws IOException {
-		TestFormatSpecDefinition testFormat = new TestFormatSpecDefinition();
-
-		testFormat.load();
+	@Override
+	protected URL getFormatSpecResource() {
+		return Objects.requireNonNull(getClass().getResource("Zip.formatspec"));
 	}
 
 }
