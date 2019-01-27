@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,6 @@ import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
-import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
@@ -552,8 +552,10 @@ public abstract class FormatSpecDefinition {
 		for (CompositeSpecByteOrderModifierContext byteOrderCtx : modifierCtx) {
 			if (byteOrderCtx.LittleEndian() != null) {
 				spec.byteOrder(ByteOrder.LITTLE_ENDIAN);
-			} else {
+			} else if (byteOrderCtx.BigEndian() != null) {
 				spec.byteOrder(ByteOrder.BIG_ENDIAN);
+			} else {
+				throw newLoadException(byteOrderCtx, "Unexpected byte order modifier");
 			}
 		}
 	}
@@ -596,7 +598,7 @@ public abstract class FormatSpecDefinition {
 		} else if ((charArrayAttributeSpecCtx = specCtx.charArrayAttributeSpec()) != null) {
 			spec = loadCharArraySpec(charArrayAttributeSpecCtx, rootCtx);
 		} else {
-			throw Check.fail();
+			throw newLoadException(specCtx, "Unexpected attribute spec");
 		}
 		return spec;
 	}
@@ -701,7 +703,7 @@ public abstract class FormatSpecDefinition {
 				}
 				spec.format(formatter);
 			} else {
-				throw Check.fail();
+				throw newLoadException(formatCtx, "Unexpected format modifier");
 			}
 		}
 	}
@@ -748,7 +750,7 @@ public abstract class FormatSpecDefinition {
 		} else if ((encodedSpecCtx = elementCtx.encodedSpec()) != null) {
 			element = FormatSpecs.EMPTY;
 		} else {
-			throw Check.fail();
+			throw newLoadException(elementCtx, "Unexpected format spec element");
 		}
 		return element;
 	}
@@ -776,7 +778,7 @@ public abstract class FormatSpecDefinition {
 		} else if ((encodedSpecCtx = elementCtx.encodedSpec()) != null) {
 			spec = FormatSpecs.EMPTY;
 		} else {
-			throw Check.fail();
+			throw newLoadException(elementCtx, "Unexpected composite spec element");
 		}
 		return spec;
 	}
@@ -793,7 +795,7 @@ public abstract class FormatSpecDefinition {
 		} else if ((numberValueCtx = ctx.numberValue()) != null) {
 			numberExpression = FinalSupplier.of(Integer.decode(numberValueCtx.getText()));
 		} else {
-			throw Check.fail();
+			throw newLoadException(ctx, "Unexpected number expression");
 		}
 		return numberExpression;
 	}
@@ -801,17 +803,24 @@ public abstract class FormatSpecDefinition {
 	@SuppressWarnings("null")
 	private Supplier<String> loadTextExpression(TextExpressionContext ctx) {
 		Supplier<String> textExpression;
-		FormatTextContext formatTextCtx;
 		SimpleTextContext simpleTextCtx;
+		FormatTextContext formatTextCtx;
+		ExternalReferenceContext externalReferenceCtx;
 
-		if ((formatTextCtx = ctx.formatText()) != null) {
-			String formatText = decodeQuotedString(formatTextCtx.getText());
-
-			textExpression = () -> String.format(formatText);
-		} else if ((simpleTextCtx = ctx.simpleText()) != null) {
+		if ((simpleTextCtx = ctx.simpleText()) != null) {
 			textExpression = FinalSupplier.of(decodeQuotedString(simpleTextCtx.getText()));
+		} else if ((formatTextCtx = ctx.formatText()) != null) {
+			String formatText = decodeQuotedString(formatTextCtx.getText());
+			List<AttributeSpec<?>> argumentSpecs = new ArrayList<>();
+
+			for (SpecReferenceContext specReferenceCtx : ctx.specReference()) {
+				argumentSpecs.add(resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(), AttributeSpec.class));
+			}
+			textExpression = () -> String.format(formatText, argumentSpecs.stream().map(Supplier::get).toArray());
+		} else if ((externalReferenceCtx = ctx.externalReference()) != null) {
+			textExpression = resolveExternalReference(externalReferenceCtx, String.class);
 		} else {
-			throw Check.fail();
+			throw newLoadException(ctx, "Unexpected text expression");
 		}
 		return textExpression;
 	}
@@ -830,7 +839,7 @@ public abstract class FormatSpecDefinition {
 		try {
 			method = getClass().getDeclaredMethod(methodIdentifier);
 		} catch (NoSuchMethodException e) {
-			throw loadException(e, externalReferenceCtx, UNKNOWN_EXTERNAL_REFERENCE, methodIdentifier);
+			throw newLoadException(e, externalReferenceCtx, UNKNOWN_EXTERNAL_REFERENCE, methodIdentifier);
 		}
 
 		Class<?> methodType = method.getReturnType();
@@ -922,10 +931,10 @@ public abstract class FormatSpecDefinition {
 	}
 
 	private IllegalArgumentException newLoadException(ParserRuleContext ctx, String format, Object... args) {
-		return loadException(null, ctx, format, args);
+		return newLoadException(null, ctx, format, args);
 	}
 
-	private IllegalArgumentException loadException(@Nullable Throwable cause, ParserRuleContext ctx, String format,
+	private IllegalArgumentException newLoadException(@Nullable Throwable cause, ParserRuleContext ctx, String format,
 			Object... args) {
 		StringBuilder message = new StringBuilder();
 

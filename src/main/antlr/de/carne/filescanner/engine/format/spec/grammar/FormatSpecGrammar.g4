@@ -266,7 +266,7 @@ numberValue
 	;
 
 textExpression
-	: (simpleText|Text LBracket formatText (Comma (expression))* RBracket)
+	: (simpleText|Text LBracket formatText (Comma (specReference))* RBracket|externalReference)
 	;
 	
 simpleText

@@ -98,10 +98,12 @@ format_spec "Test format" {
 		}
 	}
 	@TEST_UNION
+	sequence "inline sequence" @TEST_STRUCT
+	@TEST_SEQUENCE
 }
 
 TEST_HEADER:
-struct "Test header" {
+struct {
 	byte "byte_magic"
 		->validate(0x12)
 	word "word_magic"
@@ -114,7 +116,7 @@ struct "Test header" {
 	->export(#specialExport)
 
 TEST_STRUCT:
-struct "Test struct" {
+struct text("Test struct [%d]", @LOCAL_BIND) {
 	byte "byte attribute"
 	word "word attribute" 
 	dword "dword attribute" 
@@ -139,8 +141,13 @@ SCOPED_BIND@TEST_FORMAT:
 	->export(#specialExport)
 
 TEST_UNION:
-union "Test union" {
+union {
 	@TEST_HEADER
 	@TEST_STRUCT
 }	->bigEndian()
+	->export(#specialExport)
+
+TEST_SEQUENCE:
+sequence @TEST_STRUCT
+	->bigEndian()
 	->export(#specialExport)
