@@ -119,6 +119,18 @@ struct "Test struct" {
 	word "word attribute" 
 	dword "dword attribute" 
 	qword "qword attribute"
+	byte "test formatted & rendered byte attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	word "test formatted & rendered word attribute" 
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	dword "test formatted & rendered dword attribute" 
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	qword "test formatted & rendered qword attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
 LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:

@@ -20,6 +20,9 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.format.spec.SizeRenderer;
+
 /**
  * Test {@FormatSpecDefinition} class.
  */
@@ -29,6 +32,14 @@ class FormatSpecDefinitionTest {
 	void testFormatSpecDefinition() throws IOException {
 		TestFormatSpecDefinition testFormat = new TestFormatSpecDefinition();
 
+		testFormat.addByteAttributeFormatter("TestFormat", PrettyFormat.BYTE_FORMATTER);
+		testFormat.addWordAttributeFormatter("TestFormat", PrettyFormat.SHORT_FORMATTER);
+		testFormat.addDWordAttributeFormatter("TestFormat", PrettyFormat.INT_FORMATTER);
+		testFormat.addQWordAttributeFormatter("TestFormat", PrettyFormat.LONG_FORMATTER);
+		testFormat.addByteAttributeRenderer("TestRenderer", SizeRenderer.BYTE_RENDERER);
+		testFormat.addWordAttributeRenderer("TestRenderer", SizeRenderer.SHORT_RENDERER);
+		testFormat.addDWordAttributeRenderer("TestRenderer", SizeRenderer.INT_RENDERER);
+		testFormat.addQWordAttributeRenderer("TestRenderer", SizeRenderer.LONG_RENDERER);
 		testFormat.load();
 	}
 

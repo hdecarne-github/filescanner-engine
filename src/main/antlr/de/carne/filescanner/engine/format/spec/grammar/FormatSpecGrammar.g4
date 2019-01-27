@@ -242,7 +242,7 @@ attributeValidateModifier
 	;
 	
 attributeFormatModifier
-	: Format LBracket expression RBracket
+	: Format LBracket (formatText|specReference) RBracket
 	;
 	
 attributeRendererModifier
@@ -254,7 +254,7 @@ specIdentifier
 	;
 	
 scopeIdentifier
-	: Identifier
+	: specIdentifier
 	;
 
 numberExpression
@@ -282,7 +282,7 @@ specReference
 	;
 	
 referencedSpec
-	: Identifier
+	: specIdentifier
 	;
 
 externalReference
