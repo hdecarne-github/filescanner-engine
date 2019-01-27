@@ -24,7 +24,6 @@ import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Encoded input data stream specification.
@@ -34,27 +33,15 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public final class EncodedInputSpec implements FormatSpec {
 
-	private final Supplier<String> encodedInputName;
-	private Supplier<Long> encodedInputSize = FinalSupplier.of(Long.valueOf(-1l));
-	private Supplier<InputDecoder> inputDecoder = FinalSupplier.of(InputDecoder.NONE);
-	private Supplier<String> decodedInputName = FinalSupplier.of("<decoded data>");
+	private final EncodedInputSpecConfig encodedInputConfig;
 
 	/**
 	 * Constructs a new {@linkplain EncodedInputSpec} instance.
 	 *
-	 * @param encodedInputName the encoded input's name.
+	 * @param encodedInputConfig the configuration to use for input decoding.
 	 */
-	public EncodedInputSpec(Supplier<String> encodedInputName) {
-		this.encodedInputName = encodedInputName;
-	}
-
-	/**
-	 * Constructs a new {@linkplain EncodedInputSpec} instance.
-	 *
-	 * @param encodedInputName the encoded input's name.
-	 */
-	public EncodedInputSpec(String encodedInputName) {
-		this(FinalSupplier.of(encodedInputName));
+	public EncodedInputSpec(EncodedInputSpecConfig encodedInputConfig) {
+		this.encodedInputConfig = encodedInputConfig;
 	}
 
 	/**
@@ -63,28 +50,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the encoded input's name.
 	 */
 	public Supplier<String> encodedInputName() {
-		return this.encodedInputName;
-	}
-
-	/**
-	 * Sets the encoded input's size.
-	 *
-	 * @param size the size to set.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec encodedInputSize(Supplier<Long> size) {
-		this.encodedInputSize = size;
-		return this;
-	}
-
-	/**
-	 * Sets the encoded input's size.
-	 *
-	 * @param size the size to set.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec encodedInputSize(Long size) {
-		return encodedInputSize(FinalSupplier.of(size));
+		return this.encodedInputConfig.encodedInputName();
 	}
 
 	/**
@@ -95,29 +61,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the encoded input's size.
 	 */
 	public Supplier<Long> encodedInputSize() {
-		return this.encodedInputSize;
-	}
-
-	/**
-	 * Sets the input decoder.
-	 *
-	 * @param decoder the decoder to set.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec inputDecoder(Supplier<InputDecoder> decoder) {
-		this.inputDecoder = decoder;
-		return this;
-	}
-
-	/**
-	 * Sets the input decoder.
-	 *
-	 * @param decoder the decoder to set.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec inputDecoder(InputDecoder decoder) {
-		this.inputDecoder = FinalSupplier.of(decoder);
-		return this;
+		return this.encodedInputConfig.encodedInputSize();
 	}
 
 	/**
@@ -126,29 +70,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the input decoder.
 	 */
 	public Supplier<InputDecoder> inputDecoder() {
-		return this.inputDecoder;
-	}
-
-	/**
-	 * Sets the decoded input's name.
-	 *
-	 * @param name the decoded input's name.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec decodedInputName(Supplier<String> name) {
-		this.decodedInputName = name;
-		return this;
-	}
-
-	/**
-	 * Sets the decoded input's name.
-	 *
-	 * @param name the decoded input's name.
-	 * @return the updated {@linkplain EncodedInputSpec} for chaining.
-	 */
-	public EncodedInputSpec decodedInputName(String name) {
-		this.decodedInputName = FinalSupplier.of(name);
-		return this;
+		return this.encodedInputConfig.inputDecoder();
 	}
 
 	/**
@@ -157,7 +79,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the decoded input's name.
 	 */
 	public Supplier<String> decodedInputName() {
-		return this.decodedInputName;
+		return this.encodedInputConfig.decodedInputName();
 	}
 
 	@Override

@@ -182,19 +182,19 @@ compositeSpecExportModifier
 	;
 	
 formatSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedInputSpec)
 	;
 	
 compositeSpecElement
-	: (specReference|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedSpec)
+	: (specReference|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec)
 	;
 	
 conditionalSpec
 	: Conditional externalReference
 	;
 	
-encodedSpec
-	: Encoded textExpression externalReference
+encodedInputSpec
+	: Encoded externalReference
 	;
 	
 attributeSpec

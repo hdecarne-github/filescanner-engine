@@ -63,7 +63,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.D
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordSymbolsContext;
-import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.EncodedSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.EncodedInputSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ExternalReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecContext;
@@ -572,6 +572,12 @@ public abstract class FormatSpecDefinition {
 		return new ConditionalSpec(resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
 	}
 
+	@SuppressWarnings("null")
+	private EncodedInputSpec loadEncodedInputSpec(EncodedInputSpecContext specCtx) {
+		return new EncodedInputSpec(
+				resolveExternalReference(specCtx.externalReference(), EncodedInputSpecConfig.class).get());
+	}
+
 	private AttributeSpec<?> loadAttributeSpec(AttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		AttributeSpec<?> spec;
 		ByteAttributeSpecContext byteAttributeSpecCtx;
@@ -738,7 +744,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
-		EncodedSpecContext encodedSpecCtx;
+		EncodedInputSpecContext encodedInputSpecCtx;
 
 		if ((specReferenceCtx = elementCtx.specReference()) != null) {
 			element = resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), FormatSpec.class);
@@ -752,8 +758,8 @@ public abstract class FormatSpecDefinition {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
 			element = loadConditionalSpec(conditionalSpecCtx);
-		} else if ((encodedSpecCtx = elementCtx.encodedSpec()) != null) {
-			element = FormatSpecs.EMPTY;
+		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
+			element = loadEncodedInputSpec(encodedInputSpecCtx);
 		} else {
 			throw newLoadException(elementCtx, "Unexpected format spec element");
 		}
@@ -767,8 +773,6 @@ public abstract class FormatSpecDefinition {
 		AnonymousStructSpecContext anonymousStructSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
-		ConditionalSpecContext conditionalSpecCtx;
-		EncodedSpecContext encodedSpecCtx;
 
 		if ((specReferenceCtx = elementCtx.specReference()) != null) {
 			spec = resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
@@ -778,10 +782,6 @@ public abstract class FormatSpecDefinition {
 			spec = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
 		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
 			spec = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
-		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
-			spec = FormatSpecs.EMPTY;
-		} else if ((encodedSpecCtx = elementCtx.encodedSpec()) != null) {
-			spec = FormatSpecs.EMPTY;
 		} else {
 			throw newLoadException(elementCtx, "Unexpected composite spec element");
 		}
@@ -853,6 +853,7 @@ public abstract class FormatSpecDefinition {
 			throw newLoadException(externalReferenceCtx, INVALID_EXTERNAL_REFERENCE, methodIdentifier,
 					type.getSimpleName(), methodType.getSimpleName());
 		}
+		method.setAccessible(true);
 		return () -> {
 			try {
 				return type.cast(method.invoke(this));

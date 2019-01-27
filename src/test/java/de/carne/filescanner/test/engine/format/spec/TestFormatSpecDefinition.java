@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
@@ -42,6 +43,10 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 
 	protected CompositeSpec conditionalSpec() {
 		return FormatSpecs.EMPTY;
+	}
+
+	protected EncodedInputSpecConfig encodedInputSpecConfig() {
+		return new EncodedInputSpecConfig(".");
 	}
 
 }
