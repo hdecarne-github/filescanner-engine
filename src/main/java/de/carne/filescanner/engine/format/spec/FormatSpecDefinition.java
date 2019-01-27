@@ -98,6 +98,8 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
+import de.carne.filescanner.provider.util.DosDateRenderer;
+import de.carne.filescanner.provider.util.DosTimeRenderer;
 import de.carne.util.Strings;
 
 /**
@@ -117,10 +119,10 @@ public abstract class FormatSpecDefinition {
 	private final Map<String, AttributeRenderer<Integer>> dwordAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<Long>> qwordAttributeRenderer = new HashMap<>();
 
-	private final Map<String, FlagRenderer<Byte>> byteFlagRenderer = new HashMap<>();
-	private final Map<String, FlagRenderer<Short>> wordFlagRenderer = new HashMap<>();
-	private final Map<String, FlagRenderer<Integer>> dwordFlagRenderer = new HashMap<>();
-	private final Map<String, FlagRenderer<Long>> qwordFlagRenderer = new HashMap<>();
+	// private final Map<String, FlagRenderer<Byte>> byteFlagRenderer = new HashMap<>();
+	// private final Map<String, FlagRenderer<Short>> wordFlagRenderer = new HashMap<>();
+	// private final Map<String, FlagRenderer<Integer>> dwordFlagRenderer = new HashMap<>();
+	// private final Map<String, FlagRenderer<Long>> qwordFlagRenderer = new HashMap<>();
 
 	private final Map<String, Supplier<FormatSpec>> specs = new HashMap<>();
 
@@ -145,6 +147,10 @@ public abstract class FormatSpecDefinition {
 		this.wordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.SHORT_RENDERER);
 		this.dwordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.INT_RENDERER);
 		this.qwordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.LONG_RENDERER);
+		// @DosTimeRenderer
+		this.wordAttributeRenderer.put(DosTimeRenderer.class.getSimpleName(), DosTimeRenderer.RENDERER);
+		// @DosDateRenderer
+		this.wordAttributeRenderer.put(DosDateRenderer.class.getSimpleName(), DosDateRenderer.RENDERER);
 	}
 
 	/**
@@ -268,62 +274,6 @@ public abstract class FormatSpecDefinition {
 	}
 
 	/**
-	 * Adds a byte {@linkplain FlagRenderer}.
-	 *
-	 * @param identifier the renderer identifier.
-	 * @param renderer the {@linkplain FlagRenderer} to add.
-	 * @return the update {@linkplain FormatSpecDefinition}.
-	 */
-	public FormatSpecDefinition addByteFlagRenderer(String identifier, FlagRenderer<Byte> renderer) {
-		if (this.byteFlagRenderer.put(identifier, renderer) != null) {
-			LOG.warning("Redefinition of byte flag renderer ''{0}''", identifier);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds a word {@linkplain FlagRenderer}.
-	 *
-	 * @param identifier the renderer identifier.
-	 * @param renderer the {@linkplain FlagRenderer} to add.
-	 * @return the update {@linkplain FormatSpecDefinition}.
-	 */
-	public FormatSpecDefinition addWordFlagRenderer(String identifier, FlagRenderer<Short> renderer) {
-		if (this.wordFlagRenderer.put(identifier, renderer) != null) {
-			LOG.warning("Redefinition of word flag renderer ''{0}''", identifier);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds a double word {@linkplain FlagRenderer}.
-	 *
-	 * @param identifier the renderer identifier.
-	 * @param renderer the {@linkplain FlagRenderer} to add.
-	 * @return the update {@linkplain FormatSpecDefinition}.
-	 */
-	public FormatSpecDefinition addDWordFlagRenderer(String identifier, FlagRenderer<Integer> renderer) {
-		if (this.dwordFlagRenderer.put(identifier, renderer) != null) {
-			LOG.warning("Redefinition of dword flag renderer ''{0}''", identifier);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds a quad word {@linkplain FlagRenderer}.
-	 *
-	 * @param identifier the renderer identifier.
-	 * @param renderer the {@linkplain FlagRenderer} to add.
-	 * @return the update {@linkplain FormatSpecDefinition}.
-	 */
-	public FormatSpecDefinition addQWordFlagRenderer(String identifier, FlagRenderer<Long> renderer) {
-		if (this.qwordFlagRenderer.put(identifier, renderer) != null) {
-			LOG.warning("Redefinition of qword flag renderer ''{0}''", identifier);
-		}
-		return this;
-	}
-
-	/**
 	 * Loads and initializes the {@linkplain FormatSpecDefinition}.
 	 */
 	public void load() {
@@ -412,7 +362,7 @@ public abstract class FormatSpecDefinition {
 
 				loadSymbolDefinitions(byteFlagSymbols, byteFlagSymbolsCtx.symbolDefinition(),
 						ByteHelper::decodeUnsigned);
-				addByteFlagRenderer(byteFlagSymbolsIdentifier, byteFlagSymbols);
+				addByteAttributeRenderer(byteFlagSymbolsIdentifier, byteFlagSymbols);
 			}
 
 			WordFlagSymbolsContext wordFlagSymbolsCtx = flagSymbolsCtx.wordFlagSymbols();
@@ -423,7 +373,7 @@ public abstract class FormatSpecDefinition {
 
 				loadSymbolDefinitions(wordFlagSymbols, wordFlagSymbolsCtx.symbolDefinition(),
 						ShortHelper::decodeUnsigned);
-				addWordFlagRenderer(wordFlagSymbolsIdentifier, wordFlagSymbols);
+				addWordAttributeRenderer(wordFlagSymbolsIdentifier, wordFlagSymbols);
 			}
 
 			DwordFlagSymbolsContext dwordFlagSymbolsCtx = flagSymbolsCtx.dwordFlagSymbols();
@@ -434,7 +384,7 @@ public abstract class FormatSpecDefinition {
 
 				loadSymbolDefinitions(dwordFlagSymbols, dwordFlagSymbolsCtx.symbolDefinition(),
 						IntHelper::decodeUnsigned);
-				addDWordFlagRenderer(dwordFlagSymbolsIdentifier, dwordFlagSymbols);
+				addDWordAttributeRenderer(dwordFlagSymbolsIdentifier, dwordFlagSymbols);
 			}
 
 			QwordFlagSymbolsContext qwordFlagSymbolsCtx = flagSymbolsCtx.qwordFlagSymbols();
@@ -445,7 +395,7 @@ public abstract class FormatSpecDefinition {
 
 				loadSymbolDefinitions(qwordFlagSymbols, qwordFlagSymbolsCtx.symbolDefinition(),
 						LongHelper::decodeUnsigned);
-				addQWordFlagRenderer(qwordFlagSymbolsIdentifier, qwordFlagSymbols);
+				addQWordAttributeRenderer(qwordFlagSymbolsIdentifier, qwordFlagSymbols);
 			}
 		}
 		for (FormatSpecContext formatSpecCtx : ctx.formatSpec()) {
