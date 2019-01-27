@@ -134,6 +134,10 @@ ARRAY_SIZE:
 	qword "test formatted & rendered qword attribute"
 		->format(@TestFormat)
 		->renderer(@TestRenderer)
+	byte[@ARRAY_SIZE] "byte array attribute"
+	word[@ARRAY_SIZE] "word array attribute"
+	dword[@ARRAY_SIZE] "dword array attribute"
+	qword[@ARRAY_SIZE] "qword array attribute"
 	char[@ARRAY_SIZE] "char array attribute"
 		->charset("UTF-8")
 LOCAL_BIND:
