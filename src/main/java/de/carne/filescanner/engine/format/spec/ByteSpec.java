@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Byte (8-bit) format attribute specification.
@@ -34,6 +35,7 @@ public final class ByteSpec extends NumberAttributeSpec<Byte> {
 	 */
 	public ByteSpec(Supplier<String> name) {
 		super(Byte.class, name);
+		format(HexFormat.BYTE_FORMATTER);
 	}
 
 	/**
@@ -42,7 +44,7 @@ public final class ByteSpec extends NumberAttributeSpec<Byte> {
 	 * @param name the attribute's name.
 	 */
 	public ByteSpec(String name) {
-		super(Byte.class, name);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

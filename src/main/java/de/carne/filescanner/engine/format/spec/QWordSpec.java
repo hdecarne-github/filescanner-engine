@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Quad word (64-bit) format attribute specification.
@@ -34,6 +35,7 @@ public final class QWordSpec extends NumberAttributeSpec<Long> {
 	 */
 	public QWordSpec(Supplier<String> name) {
 		super(Long.class, name);
+		format(HexFormat.LONG_FORMATTER);
 	}
 
 	/**
@@ -42,8 +44,7 @@ public final class QWordSpec extends NumberAttributeSpec<Long> {
 	 * @param name the attribute's name.
 	 */
 	public QWordSpec(String name) {
-		super(Long.class, name);
-		format(HexFormat.LONG_FORMATTER);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

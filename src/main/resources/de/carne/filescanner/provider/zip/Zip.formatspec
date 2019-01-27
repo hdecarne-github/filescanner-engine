@@ -72,7 +72,7 @@ LFH_COMPRESSION_METHOD@ZIP_ENTRY:
 	word "last mod file time"
 		->renderer(@DosTimeRenderer)
 	word "last mod file date"
-		->renderer(@DosTimeRenderer)
+		->renderer(@DosDateRenderer)
 	dword "crc-32"
 LFH_COMPRESSED_SIZE@ZIP_ENTRY:
 	dword "compressed size"

@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Word (16-bit) format attribute specification.
@@ -34,6 +35,7 @@ public final class WordSpec extends NumberAttributeSpec<Short> {
 	 */
 	public WordSpec(Supplier<String> name) {
 		super(Short.class, name);
+		format(HexFormat.SHORT_FORMATTER);
 	}
 
 	/**
@@ -42,7 +44,7 @@ public final class WordSpec extends NumberAttributeSpec<Short> {
 	 * @param name the attribute's name.
 	 */
 	public WordSpec(String name) {
-		super(Short.class, name);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

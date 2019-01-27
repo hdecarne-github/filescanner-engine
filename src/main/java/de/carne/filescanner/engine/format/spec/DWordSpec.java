@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Double word (32-bit) format attribute specification.
@@ -34,6 +35,7 @@ public final class DWordSpec extends NumberAttributeSpec<Integer> {
 	 */
 	public DWordSpec(Supplier<String> name) {
 		super(Integer.class, name);
+		format(HexFormat.INT_FORMATTER);
 	}
 
 	/**
@@ -42,8 +44,7 @@ public final class DWordSpec extends NumberAttributeSpec<Integer> {
 	 * @param name the attribute's name.
 	 */
 	public DWordSpec(String name) {
-		super(Integer.class, name);
-		format(HexFormat.INT_FORMATTER);
+		this(FinalSupplier.of(name));
 	}
 
 	/**
