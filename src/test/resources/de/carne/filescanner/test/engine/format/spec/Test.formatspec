@@ -76,7 +76,7 @@ qword_flag_symbols {
 // Specs
 
 TEST_FORMAT:
-format_spec "Test format" {
+format_spec #specialText {
 	struct "inline struct" {
 		byte "byte_magic"
 			->validate(0x12)
@@ -143,7 +143,14 @@ SCOPED_BIND@TEST_FORMAT:
 TEST_UNION:
 union {
 	@TEST_HEADER
-	@TEST_STRUCT
+	struct {
+		byte "byte"
+	}
+	union {
+		@TEST_HEADER
+	}
+	sequence @TEST_HEADER
+	conditional #conditionalSpec
 }	->bigEndian()
 	->export(#specialExport)
 

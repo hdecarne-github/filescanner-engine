@@ -567,6 +567,11 @@ public abstract class FormatSpecDefinition {
 		}
 	}
 
+	@SuppressWarnings("null")
+	private ConditionalSpec loadConditionalSpec(ConditionalSpecContext specCtx) {
+		return new ConditionalSpec(resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
+	}
+
 	private AttributeSpec<?> loadAttributeSpec(AttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		AttributeSpec<?> spec;
 		ByteAttributeSpecContext byteAttributeSpecCtx;
@@ -746,7 +751,7 @@ public abstract class FormatSpecDefinition {
 		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
-			element = FormatSpecs.EMPTY;
+			element = loadConditionalSpec(conditionalSpecCtx);
 		} else if ((encodedSpecCtx = elementCtx.encodedSpec()) != null) {
 			element = FormatSpecs.EMPTY;
 		} else {

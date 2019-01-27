@@ -19,7 +19,9 @@ package de.carne.filescanner.test.engine.format.spec;
 import java.net.URL;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
@@ -30,8 +32,16 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 		return Objects.requireNonNull(getClass().getResource("Test.formatspec"));
 	}
 
+	protected String specialText() {
+		return getClass().getSimpleName();
+	}
+
 	protected FileScannerResultExportHandler specialExport() {
 		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+	}
+
+	protected CompositeSpec conditionalSpec() {
+		return FormatSpecs.EMPTY;
 	}
 
 }
