@@ -137,7 +137,9 @@ LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:
 	byte "scoped bind"
-	conditional #conditionalSpec
+	conditional #conditionalSpec {
+		@TEST_UNION
+	}
 	encoded #encodedInputSpecConfig
 }	->bigEndian()
 	->export(#specialExport)

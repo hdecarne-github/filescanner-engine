@@ -190,7 +190,7 @@ compositeSpecElement
 	;
 	
 conditionalSpec
-	: Conditional externalReference
+	: Conditional externalReference LCBracket specReference* RCBracket
 	;
 	
 encodedInputSpec
@@ -202,43 +202,51 @@ attributeSpec
 	;
 
 byteAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 wordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 dwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 qwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 byteArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 wordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 dwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 qwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 charArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 	
-attributeValidateModifier
-	: Validate LBracket expression RBracket
+attributeValidateNumberModifier
+	: Validate LBracket (numberValue|specIdentifier) RBracket
+	;
+	
+attributeValidateNumberArrayModifier
+	: Validate LBracket (numberArrayValue|specReference) RBracket
+	;
+
+attributeValidateStringModifier
+	: Validate LBracket (simpleText|specReference) RBracket
 	;
 	
 attributeFormatModifier
@@ -246,7 +254,7 @@ attributeFormatModifier
 	;
 	
 attributeRendererModifier
-	: Renderer LBracket expression RBracket
+	: Renderer LBracket specReference RBracket
 	;
 	
 specIdentifier
@@ -263,6 +271,10 @@ numberExpression
 
 numberValue
 	: Number
+	;
+
+numberArrayValue
+	: NumberArray
 	;
 
 textExpression
@@ -291,16 +303,4 @@ externalReference
 	
 referencedExternal
 	: Identifier
-	;
-
-numberArrayValue
-	: NumberArray
-	;
-
-charArrayValue
-	: QutoedCharArray
-	;
-
-expression
-	: (specReference|externalReference|textExpression|numberExpression|numberArrayValue|charArrayValue)
 	;

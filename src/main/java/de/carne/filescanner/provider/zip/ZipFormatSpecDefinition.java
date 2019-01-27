@@ -19,16 +19,85 @@ package de.carne.filescanner.provider.zip;
 import java.net.URL;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
+import de.carne.filescanner.engine.format.spec.FixedStringSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.util.Lazy;
 
 /**
  *
  */
 final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
+	private Lazy<CompositeSpec> zipFormatSpec = new Lazy<>(() -> resolveSpec("ZIP_ARCHIVE", CompositeSpec.class));
+	private Lazy<CompositeSpec> lfhSpec = new Lazy<>(() -> resolveSpec("LOCAL_FILE_HEADER", CompositeSpec.class));
+	private Lazy<CompositeSpec> ddSpec = new Lazy<>(() -> resolveSpec("DATA_DESCRIPTOR", CompositeSpec.class));
+
+	private Lazy<WordSpec> lfhGenerapPurposeBitFlag = new Lazy<>(
+			() -> resolveSpec("LFH_GENERAL_PURPOSE_BIT_FLAG", WordSpec.class));
+	private Lazy<WordSpec> lfhCompressionMethod = new Lazy<>(
+			() -> resolveSpec("LFH_COMPRESSION_METHOD", WordSpec.class));
+	private Lazy<DWordSpec> lfhCompressedSize = new Lazy<>(() -> resolveSpec("LFH_COMPRESSED_SIZE", DWordSpec.class));
+	private Lazy<FixedStringSpec> lfhFileName = new Lazy<>(() -> resolveSpec("LFH_FILE_NAME", FixedStringSpec.class));
+
+	public CompositeSpec getZipFormatSpec() {
+		return this.zipFormatSpec.get();
+	}
+
+	public CompositeSpec getLocalFileHeaderSpec() {
+		return this.lfhSpec.get();
+	}
+
 	@Override
 	protected URL getFormatSpecResource() {
 		return Objects.requireNonNull(getClass().getResource("Zip.formatspec"));
+	}
+
+	protected EncodedInputSpecConfig getZipEntryEncodedInputConfig() {
+		return new EncodedInputSpecConfig("file data").encodedInputSize(this::getEncodedInputSize)
+				.inputDecoder(this::getInputDecoder).decodedInputName(this::getDecodedInputName);
+	}
+
+	private long getEncodedInputSize() {
+		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
+		boolean ddPresent = (bitFlag & 0x0008) != 0;
+
+		return (ddPresent ? -1l : Integer.toUnsignedLong(this.lfhCompressedSize.get().get().intValue()));
+	}
+
+	private InputDecoder getInputDecoder() {
+		short compressionMethod = this.lfhCompressionMethod.get().get().shortValue();
+		InputDecoder inputDecoder;
+
+		switch (compressionMethod) {
+		case 0x00:
+			inputDecoder = InputDecoder.NONE;
+			break;
+		case 0x08:
+			inputDecoder = DeflatedInputDecoder.DECODER;
+			break;
+		default:
+			inputDecoder = InputDecoder
+					.unsupportedInputDecoder("ZIP compression method " + HexFormat.formatShort(compressionMethod));
+		}
+		return inputDecoder;
+	}
+
+	private String getDecodedInputName() {
+		return this.lfhFileName.get().get();
+	}
+
+	protected CompositeSpec getDataDescriptorSpec() {
+		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
+		boolean ddPresent = (bitFlag & 0x0008) != 0;
+
+		return (ddPresent ? this.ddSpec.get() : FormatSpecs.EMPTY);
 	}
 
 }

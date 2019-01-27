@@ -121,12 +121,14 @@ union "Data Descriptor" {
 ZIP_ENTRY:
 struct text("Zip entry \"%1$s\"", @LFH_FILE_NAME) {
 	@LOCAL_FILE_HEADER
-	encoded "file data" #decodeZipEntry
-	conditional #getDataDescriptorSpec
+	encoded #getZipEntryEncodedInputConfig
+	conditional #getDataDescriptorSpec {
+		@DATA_DESCRIPTOR
+	}
 }	
 
 CENTRAL_DIRECTORY_HEADER:
-struct text("Central directory header \"%1$s\"", @DFH_FILE_NAME) {
+struct text("Central directory header \"%1$s\"", @CDH_FILE_NAME) {
 	dword "central file header signature"
 		->validate(0x02014b50)
 	word "version made by"
@@ -161,7 +163,7 @@ CDH_FILE_COMMENT_LENGTH:
 	word "internal file attributes"
 	dword "external file attributes"
 	dword "relative offset of local header"
-CDH_FILE_NAME@ZIP_ENTRY:
+CDH_FILE_NAME:
 	char[@CDH_FILE_NAME_LENGTH] "file name"
 	byte[@CDH_EXTRA_FIELD_LENGTH] "extra field"
 	char[@CDH_FILE_COMMENT_LENGTH] "file comment"

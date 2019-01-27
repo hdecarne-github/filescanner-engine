@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResultContext;
@@ -130,7 +131,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @param value the valid value.
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
-	public AttributeSpec<T> validate(T value) {
+	public AttributeSpec<T> validate(@NonNull T value) {
 		return validate(value::equals);
 	}
 

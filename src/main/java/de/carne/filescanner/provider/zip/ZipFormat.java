@@ -27,17 +27,23 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class ZipFormat extends Format {
 
+	private static final String FORMAT_NAME = "ZIP archive";
+
+	private final ZipFormatSpecDefinition zipFormatSpecDefinition;
+
 	/**
 	 * Constructs a new {@linkplain ZipFormat} instance.
 	 */
 	public ZipFormat() {
-		super(ZipFormatSpecs.FORMAT_NAME);
-		registerHeaderSpec(ZipFormatSpecs.LOCAL_FILE_HEADER);
+		super(FORMAT_NAME);
+		this.zipFormatSpecDefinition = new ZipFormatSpecDefinition();
+		this.zipFormatSpecDefinition.load();
+		registerHeaderSpec(this.zipFormatSpecDefinition.getLocalFileHeaderSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(ZipFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(this.zipFormatSpecDefinition.getZipFormatSpec());
 	}
 
 }
