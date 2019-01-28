@@ -105,16 +105,28 @@ class FileScannerTest {
 	}
 
 	@Test
-	void testFileScanner() throws IOException, InterruptedException {
-		Collection<Format> formats = Formats.all().enabledFormats();
+	void testBmpImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.BMP_IMAGE.path(), Formats.all().enabledFormats());
+	}
 
-		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), formats);
-		runFileScanner(TestFiles.PNG_IMAGE.path(), formats);
-		runFileScanner(TestFiles.GIF_IMAGE.path(), formats);
-		runFileScanner(TestFiles.BMP_IMAGE.path(), formats);
-		// runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), formats);
-		// runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(), formats);
-		// runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), formats);
+	@Test
+	void testGifImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.GIF_IMAGE.path(), Formats.all().enabledFormats());
+	}
+
+	@Test
+	void testJpegImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.JPEG_IMAGE.path(), Formats.all().enabledFormats());
+	}
+
+	@Test
+	void testPngImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.PNG_IMAGE.path(), Formats.all().enabledFormats());
+	}
+
+	@Test
+	void testZipArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats());
 	}
 
 	private Status runFileScanner(Path file, Collection<Format> formats) throws IOException, InterruptedException {

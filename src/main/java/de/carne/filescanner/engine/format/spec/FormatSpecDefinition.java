@@ -412,12 +412,13 @@ public abstract class FormatSpecDefinition {
 		return this;
 	}
 
-	private static <T extends Number> void loadSymbolDefinitions(Map<T, String> symbols,
+	@SuppressWarnings("null")
+	private <T extends Number> void loadSymbolDefinitions(Map<T, String> symbols,
 			List<SymbolDefinitionContext> symbolDefinitions, Function<String, T> parser) {
 		for (SymbolDefinitionContext symbolDefinitionCtx : symbolDefinitions) {
-			String numberString = Objects.requireNonNull(symbolDefinitionCtx.symbolValue().getText());
+			String numberString = symbolDefinitionCtx.symbolValue().getText();
 			T number = parser.apply(numberString);
-			String symbol = Objects.requireNonNull(symbolDefinitionCtx.symbol().getText());
+			String symbol = decodeQuotedString(symbolDefinitionCtx.symbol().getText());
 
 			symbols.put(number, symbol);
 		}

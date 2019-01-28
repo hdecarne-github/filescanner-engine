@@ -21,6 +21,51 @@
 
 // Symbols
 
+APP0_VERSIONS:
+word_symbols {
+	0x0101: "1.01"
+	0x0102: "1.02"
+}
+
+APP0_UNITS:
+byte_symbols {
+	0: "no units, X and Y specify the pixel aspect ratio"
+	1: "X and Y are dots per inch"
+	2: "X and Y are dots per cm"
+}
 
 // Specs
 
+JPEG_START_MARKER:
+struct {
+	struct "SOI marker" {
+		word "marker"
+			->validate(0xffd8)
+	}	->bigEndian()
+	struct "APP0 marker" {
+		word "marker"
+			->validate(0xffe0)
+		word "length"
+			->validate(0x0010)
+		char[5] "identifier"
+			->validate("JFIF\u0000")
+		word "version"
+			->validate(@APP0_VERSIONS)
+			->renderer(@APP0_VERSIONS)
+		byte "units"
+			->renderer(@APP0_UNITS)
+		word "Xdensity"
+			->format(@PrettyFormat)
+		word "Ydensity"
+			->format(@PrettyFormat)
+		byte "Xthumbnail"
+			->format(@PrettyFormat)
+		byte "Ythumbnail"
+			->format(@PrettyFormat)
+	}	->bigEndian()
+}	->bigEndian()
+
+JPEG_FORMAT:
+format_spec "JPEG File Interchange Format" {
+	@JPEG_START_MARKER
+}	->bigEndian()

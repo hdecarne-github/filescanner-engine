@@ -31,7 +31,7 @@ import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.util.Lazy;
 
 /**
- *
+ * See Zip.formatspec
  */
 final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
