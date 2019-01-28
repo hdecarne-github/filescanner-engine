@@ -22,7 +22,7 @@ import java.util.HashSet;
 import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteFlagRenderer;
-import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
@@ -158,7 +158,7 @@ final class GifFormatSpecs {
 		StructSpec dataBlock = new StructSpec();
 
 		dataBlock.add(IMAGE_DATA_BLOCK_SIZE).validate(b -> b.byteValue() != 0);
-		dataBlock.add(new ByteRangeSpec("Block Data")).size(GifFormatSpecs::getImageDataBlockSize);
+		dataBlock.add(new RangeSpec("Block Data")).size(GifFormatSpecs::getImageDataBlockSize);
 
 		id.add(new SequenceSpec(dataBlock));
 
@@ -194,7 +194,7 @@ final class GifFormatSpecs {
 		StructSpec dataBlock = new StructSpec();
 
 		dataBlock.add(GENERIC_EXTENSION_BLOCK_SIZE).validate(b -> b.byteValue() != 0);
-		dataBlock.add(new ByteRangeSpec("Block Data")).size(GifFormatSpecs::getGenericExtensionBlockSize);
+		dataBlock.add(new RangeSpec("Block Data")).size(GifFormatSpecs::getGenericExtensionBlockSize);
 
 		genericExtension.add(new SequenceSpec(dataBlock));
 

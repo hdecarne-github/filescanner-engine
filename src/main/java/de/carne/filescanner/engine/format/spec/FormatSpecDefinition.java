@@ -80,6 +80,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.Q
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RangeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
@@ -535,6 +536,12 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private RangeSpec loadRangeSpec(RangeSpecContext specCtx) {
+		return new RangeSpec(loadTextExpression(specCtx.textExpression()))
+				.size(loadNumberExpression(specCtx.numberExpression()));
+	}
+
+	@SuppressWarnings("null")
 	private ConditionalSpec loadConditionalSpec(ConditionalSpecContext specCtx, FormatSpecsContext rootCtx) {
 		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
 			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
@@ -786,6 +793,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousStructSpecContext anonymousStructSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
+		RangeSpecContext rangeSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
 
@@ -799,6 +807,8 @@ public abstract class FormatSpecDefinition {
 			element = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
 		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
+		} else if ((rangeSpecCtx = elementCtx.rangeSpec()) != null) {
+			element = loadRangeSpec(rangeSpecCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
 			element = loadConditionalSpec(conditionalSpecCtx, rootCtx);
 		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
@@ -834,14 +844,17 @@ public abstract class FormatSpecDefinition {
 	@SuppressWarnings({ "null", "unchecked" })
 	private Supplier<? extends Number> loadNumberExpression(NumberExpressionContext ctx) {
 		Supplier<? extends Number> numberExpression;
-		SpecReferenceContext specReferenceCtx;
 		NumberValueContext numberValueCtx;
+		SpecReferenceContext specReferenceCtx;
+		ExternalReferenceContext externalReferenceCtx;
 
-		if ((specReferenceCtx = ctx.specReference()) != null) {
+		if ((numberValueCtx = ctx.numberValue()) != null) {
+			numberExpression = FinalSupplier.of(Integer.decode(numberValueCtx.getText()));
+		} else if ((specReferenceCtx = ctx.specReference()) != null) {
 			numberExpression = resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(),
 					NumberAttributeSpec.class);
-		} else if ((numberValueCtx = ctx.numberValue()) != null) {
-			numberExpression = FinalSupplier.of(Integer.decode(numberValueCtx.getText()));
+		} else if ((externalReferenceCtx = ctx.externalReference()) != null) {
+			numberExpression = resolveExternalReference(externalReferenceCtx, Number.class);
 		} else {
 			throw newLoadException(ctx, "Unexpected number expression");
 		}

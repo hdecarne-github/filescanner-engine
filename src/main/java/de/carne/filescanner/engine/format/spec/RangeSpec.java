@@ -31,27 +31,27 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  * <p>
  * The range size has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class ByteRangeSpec implements FormatSpec {
+public class RangeSpec implements FormatSpec {
 
 	private final Supplier<String> name;
 	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 
 	/**
-	 * Constructs a new {@linkplain ByteRangeSpec} instance.
+	 * Constructs a new {@linkplain RangeSpec} instance.
 	 *
 	 * @param name the byte range's name.
 	 */
-	public ByteRangeSpec(Supplier<String> name) {
+	public RangeSpec(Supplier<String> name) {
 		this.name = name;
 	}
 
 	/**
-	 * Constructs a new {@linkplain ByteRangeSpec} instance.
+	 * Constructs a new {@linkplain RangeSpec} instance.
 	 *
 	 * @param name the byte range's name.
 	 */
-	public ByteRangeSpec(String name) {
+	public RangeSpec(String name) {
 		this.name = FinalSupplier.of(name);
 	}
 
@@ -59,9 +59,9 @@ public class ByteRangeSpec implements FormatSpec {
 	 * Sets the size (in bytes) of this byte range.
 	 *
 	 * @param sizeSupplier the size (in bytes) of this byte range.
-	 * @return the updated {@linkplain ByteRangeSpec} instance for chaining.
+	 * @return the updated {@linkplain RangeSpec} instance for chaining.
 	 */
-	public ByteRangeSpec size(Supplier<? extends Number> sizeSupplier) {
+	public RangeSpec size(Supplier<? extends Number> sizeSupplier) {
 		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
@@ -71,9 +71,9 @@ public class ByteRangeSpec implements FormatSpec {
 	 * Sets the size (in bytes) of this byte range.
 	 *
 	 * @param sizeValue the size (in bytes) of this byte range.
-	 * @return the updated {@linkplain ByteRangeSpec} instance for chaining.
+	 * @return the updated {@linkplain RangeSpec} instance for chaining.
 	 */
-	public ByteRangeSpec size(int sizeValue) {
+	public RangeSpec size(int sizeValue) {
 		this.fixedSize = true;
 		this.size = Integer.valueOf(sizeValue)::intValue;
 		return this;

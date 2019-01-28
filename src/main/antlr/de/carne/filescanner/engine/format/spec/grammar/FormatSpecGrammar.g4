@@ -36,6 +36,7 @@ FormatSpec: 'format_spec';
 Struct: 'struct';
 Union: 'union';
 Sequence: 'sequence';
+Range: 'range';
 Conditional: 'conditional';
 Encoded: 'encoded';
 Validate: 'validate';
@@ -78,7 +79,7 @@ QutoedCharArray: LCBracket (QuotedChar (Comma QuotedChar)* )? RCBracket;
 
 SingleLineComment: '//' ~[\r\n]* -> skip;
 MultiLineComment: '/*' .*? '*/' -> skip;
-Whitespace:	[ \t\r\n]+ -> skip;
+Whitespace: [ \t\r\n]+ -> skip;
 
 // Rules
 
@@ -183,11 +184,15 @@ compositeSpecExportModifier
 	;
 	
 formatSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|conditionalSpec|encodedInputSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|rangeSpec|conditionalSpec|encodedInputSpec)
 	;
-	
+
 compositeSpecElement
 	: (specReference|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec)
+	;
+
+rangeSpec
+	: Range LSBracket numberExpression RSBracket textExpression
 	;
 	
 conditionalSpec

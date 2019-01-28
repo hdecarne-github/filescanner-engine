@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
-import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
@@ -93,7 +93,7 @@ final class PngFormatSpecs {
 		genericChunk.result(() -> formatChunkType(GENERIC_CHUNK_TYPE));
 		genericChunk.add(GENERIC_CHUNK_LENGTH);
 		genericChunk.add(GENERIC_CHUNK_TYPE).validate(value -> value.intValue() != 0x49454e44);
-		genericChunk.add(new ByteRangeSpec("Chunk Data")).size(GENERIC_CHUNK_LENGTH);
+		genericChunk.add(new RangeSpec("Chunk Data")).size(GENERIC_CHUNK_LENGTH);
 		genericChunk.add(DWordSpec.hex("CRC"));
 		GENERIC_CHUNK = genericChunk;
 	}

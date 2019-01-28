@@ -18,7 +18,7 @@ package de.carne.filescanner.provider.bmp;
 
 import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
-import de.carne.filescanner.engine.format.spec.ByteRangeSpec;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
@@ -133,7 +133,7 @@ final class BmpFormatSpecs {
 		StructSpec imageData = new StructSpec();
 
 		imageData.result("IMAGEDATA");
-		imageData.add(new ByteRangeSpec("image bytes").size(BmpFormatSpecs::getImageSize));
+		imageData.add(new RangeSpec("image bytes").size(BmpFormatSpecs::getImageSize));
 		IMAGE_DATA = imageData;
 	}
 

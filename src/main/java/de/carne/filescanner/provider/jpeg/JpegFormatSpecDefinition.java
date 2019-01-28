@@ -19,6 +19,7 @@ package de.carne.filescanner.provider.jpeg;
 import java.net.URL;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.util.Lazy;
@@ -31,6 +32,9 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> jpegFormatSpec = resolveLazy("JPEG_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> jpegStartMarkerSpec = resolveLazy("JPEG_START_MARKER", CompositeSpec.class);
 
+	private Lazy<ByteSpec> xThumbnail = resolveLazy("X_THUMBNAIL", ByteSpec.class);
+	private Lazy<ByteSpec> yThumbnail = resolveLazy("Y_THUMBNAIL", ByteSpec.class);
+
 	public CompositeSpec getJpegFormatSpec() {
 		return this.jpegFormatSpec.get();
 	}
@@ -42,6 +46,11 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 	@Override
 	protected URL getFormatSpecResource() {
 		return Objects.requireNonNull(getClass().getResource("JPEG.formatspec"));
+	}
+
+	protected Integer thumbnailSize() {
+		return Byte.toUnsignedInt(this.xThumbnail.get().get().byteValue())
+				* Byte.toUnsignedInt(this.yThumbnail.get().get().byteValue());
 	}
 
 }

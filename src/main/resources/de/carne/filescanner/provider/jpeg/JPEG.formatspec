@@ -58,10 +58,13 @@ struct {
 			->format(@PrettyFormat)
 		word "Ydensity"
 			->format(@PrettyFormat)
+X_THUMBNAIL:
 		byte "Xthumbnail"
 			->format(@PrettyFormat)
+Y_THUMBNAIL:
 		byte "Ythumbnail"
 			->format(@PrettyFormat)
+		range[#thumbnailSize] "thumbnail"
 	}	->bigEndian()
 }	->bigEndian()
 
