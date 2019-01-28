@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
@@ -147,8 +150,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		FileScannerInput decodedInput = decoded.decodedInput();
 
 		if (decodedInput.size() > 0) {
-			FileScannerResultBuilder decodedInputResult = FileScannerResultBuilder
-					.inputResult(decodeResult, decodedInput).updateAndCommit(-1, false);
+			FileScannerResultBuilder decodedInputResult = Objects.requireNonNull(
+					FileScannerResultBuilder.inputResult(decodeResult, decodedInput).updateAndCommit(-1, false));
 
 			this.pendingInputResults.add(decodedInputResult);
 		}
@@ -163,8 +166,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param attribute the attribute to bind.
 	 * @param value the attribute value to bind.
 	 */
-	public <T> void bindContextValue(AttributeSpec<T> attribute, T value) {
-		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.decode(value.toString()));
+	public <T> void bindContextValue(AttributeSpec<T> attribute, @NonNull T value) {
+		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.decode(Objects.toString(value)));
 
 		this.decodeStack.peek().contextValues().put(attribute, value);
 	}
@@ -177,8 +180,9 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param attribute the attribute to bind.
 	 * @param value the attribute value to bind.
 	 */
-	public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
-		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute, Strings.encode(value.toString()));
+	public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value) {
+		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute,
+				Strings.encode(Objects.toString(value)));
 
 		this.decodeStack.peek().builder().bindResultValue(scope, attribute, value);
 	}
@@ -192,7 +196,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		T value = (contextValue != null ? Check.isInstanceOf(contextValue, attribute.type())
 				: result.builder().getValue(attribute, false));
 
-		LOG.debug("Resolved attribute value ''{0}'' = ''{1}''", attribute, Strings.encode(value.toString()));
+		LOG.debug("Resolved attribute value ''{0}'' = ''{1}''", attribute, Strings.encode(Objects.toString(value)));
 
 		return value;
 	}

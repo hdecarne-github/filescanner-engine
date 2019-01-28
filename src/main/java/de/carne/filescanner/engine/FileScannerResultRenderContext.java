@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.spec.AttributeBindMode;
@@ -88,7 +90,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	 * @param attribute the attribute to bind.
 	 * @param value the attribute value to bind.
 	 */
-	public <T> void bindContextValue(AttributeSpec<T> attribute, T value) {
+	public <T> void bindContextValue(AttributeSpec<T> attribute, @NonNull T value) {
 		this.contextValues.put(attribute, value);
 	}
 

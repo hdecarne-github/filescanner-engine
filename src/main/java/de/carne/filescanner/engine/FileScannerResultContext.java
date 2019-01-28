@@ -18,6 +18,8 @@ package de.carne.filescanner.engine;
 
 import java.io.IOException;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.filescanner.engine.format.spec.AttributeSpec;
 
 /**
@@ -25,7 +27,7 @@ import de.carne.filescanner.engine.format.spec.AttributeSpec;
  */
 public abstract class FileScannerResultContext {
 
-	private static final ThreadLocal<FileScannerResultContext> CONTEXT = new ThreadLocal<>();
+	private static final ThreadLocal<@Nullable FileScannerResultContext> CONTEXT = new ThreadLocal<>();
 
 	/**
 	 * Gets the {@linkplain FileScannerResultContext} instance attached to the current decoder or render call.

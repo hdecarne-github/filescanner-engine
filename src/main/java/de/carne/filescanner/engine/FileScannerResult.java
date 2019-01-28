@@ -18,6 +18,7 @@ package de.carne.filescanner.engine;
 
 import java.io.IOException;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.input.FileScannerInput;
@@ -123,6 +124,7 @@ public interface FileScannerResult {
 	 *
 	 * @return this {@linkplain FileScannerResult} children results.
 	 */
+	@NonNull
 	FileScannerResult[] children();
 
 	/**

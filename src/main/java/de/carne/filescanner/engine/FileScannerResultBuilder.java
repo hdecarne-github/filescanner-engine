@@ -185,7 +185,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		modifyState().getValues().put(attribute, value);
 	}
 
-	public abstract <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value);
+	public abstract <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value);
 
 	@Nullable
 	protected synchronized <T> T getResultValue(AttributeSpec<T> attribute, boolean committed) {
@@ -198,11 +198,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	public void resolveExportHandlers(List<Supplier<FileScannerResultExportHandler>> handlers) {
 		for (Supplier<FileScannerResultExportHandler> handler : handlers) {
-			FileScannerResultExportHandler handlerInstance = handler.get();
-
-			if (handlerInstance != null) {
-				this.exportHandlers.add(handlerInstance);
-			}
+			this.exportHandlers.add(handler.get());
 		}
 	}
 
@@ -432,7 +428,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
+		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value) {
 			if (this.formatSpec.equals(scope)) {
 				bindValue(attribute, value);
 			} else {

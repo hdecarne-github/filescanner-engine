@@ -102,7 +102,7 @@ public abstract class Format {
 	 * Checks whether this {@linkplain Format} instance has any header {@linkplain CompositeSpec}s defined.
 	 *
 	 * @return {@code true} if at least one header {@linkplain CompositeSpec} is associated with this
-	 *         {@linkplain Format} instance.
+	 * {@linkplain Format} instance.
 	 * @see #registerHeaderSpec(CompositeSpec)
 	 */
 	public boolean hasHeaderSpecs() {
@@ -123,7 +123,7 @@ public abstract class Format {
 	 * Checks whether this {@linkplain Format} instance has any trailer {@linkplain CompositeSpec}s defined.
 	 *
 	 * @return {@code true} if at least one trailer {@linkplain CompositeSpec} is associated with this
-	 *         {@linkplain Format} instance.
+	 * {@linkplain Format} instance.
 	 * @see #registerTrailerSpec(CompositeSpec)
 	 */
 	public boolean hasTrailerSpecs() {
@@ -144,7 +144,7 @@ public abstract class Format {
 	 * Checks whether this {@linkplain Format} instance has any input name {@linkplain Pattern}s defined.
 	 *
 	 * @return {@code true} if at least one input name {@linkplain Pattern} is associated with this {@linkplain Format}
-	 *         instance.
+	 * instance.
 	 * @see #registerInputNamePattern(Pattern)
 	 */
 	public boolean hasInputNamePatterns() {

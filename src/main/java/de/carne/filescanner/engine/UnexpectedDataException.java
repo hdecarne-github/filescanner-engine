@@ -17,6 +17,9 @@
 package de.carne.filescanner.engine;
 
 import java.lang.reflect.Array;
+import java.util.Objects;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.util.Strings;
@@ -45,14 +48,17 @@ public class UnexpectedDataException extends FormatDecodeException {
 		super(formatData(new StringBuilder(), data).toString());
 	}
 
-	private static StringBuilder formatData(StringBuilder buffer, Object data) {
+	@SuppressWarnings("squid:AssignmentInSubExpressionCheck")
+	private static StringBuilder formatData(StringBuilder buffer, @Nullable Object data) {
 		if (buffer.length() == 0) {
 			buffer.append("Unexpected data: ");
 		}
 
-		Class<?> dataType = data.getClass();
+		Class<?> dataType;
 
-		if (dataType.isArray()) {
+		if (data == null) {
+			buffer.append("null");
+		} else if ((dataType = data.getClass()).isArray()) {
 			buffer.append("{ ");
 
 			int length = Array.getLength(data);
@@ -73,7 +79,7 @@ public class UnexpectedDataException extends FormatDecodeException {
 		} else if (dataType.equals(Byte.class)) {
 			buffer.append(HexFormat.formatByte((Byte) data));
 		} else {
-			buffer.append(Strings.encode(data.toString()));
+			buffer.append(Strings.encode(Objects.toString(data)));
 		}
 		return buffer;
 	}

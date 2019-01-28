@@ -16,8 +16,6 @@
  */
 package de.carne.filescanner.test.engine.format.spec;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 
 import de.carne.filescanner.engine.format.PrettyFormat;
@@ -28,18 +26,21 @@ import de.carne.filescanner.engine.format.spec.SizeRenderer;
  */
 class FormatSpecDefinitionTest {
 
+	private static final String TEST_FORMAT = "TestFormat";
+	private static final String TEST_RENDERER = "TestRenderer";
+
 	@Test
-	void testFormatSpecDefinition() throws IOException {
+	void testFormatSpecDefinition() {
 		TestFormatSpecDefinition testFormat = new TestFormatSpecDefinition();
 
-		testFormat.addByteAttributeFormatter("TestFormat", PrettyFormat.BYTE_FORMATTER);
-		testFormat.addWordAttributeFormatter("TestFormat", PrettyFormat.SHORT_FORMATTER);
-		testFormat.addDWordAttributeFormatter("TestFormat", PrettyFormat.INT_FORMATTER);
-		testFormat.addQWordAttributeFormatter("TestFormat", PrettyFormat.LONG_FORMATTER);
-		testFormat.addByteAttributeRenderer("TestRenderer", SizeRenderer.BYTE_RENDERER);
-		testFormat.addWordAttributeRenderer("TestRenderer", SizeRenderer.SHORT_RENDERER);
-		testFormat.addDWordAttributeRenderer("TestRenderer", SizeRenderer.INT_RENDERER);
-		testFormat.addQWordAttributeRenderer("TestRenderer", SizeRenderer.LONG_RENDERER);
+		testFormat.addByteAttributeFormatter(TEST_FORMAT, PrettyFormat.BYTE_FORMATTER);
+		testFormat.addWordAttributeFormatter(TEST_FORMAT, PrettyFormat.SHORT_FORMATTER);
+		testFormat.addDWordAttributeFormatter(TEST_FORMAT, PrettyFormat.INT_FORMATTER);
+		testFormat.addQWordAttributeFormatter(TEST_FORMAT, PrettyFormat.LONG_FORMATTER);
+		testFormat.addByteAttributeRenderer(TEST_RENDERER, SizeRenderer.BYTE_RENDERER);
+		testFormat.addWordAttributeRenderer(TEST_RENDERER, SizeRenderer.SHORT_RENDERER);
+		testFormat.addDWordAttributeRenderer(TEST_RENDERER, SizeRenderer.INT_RENDERER);
+		testFormat.addQWordAttributeRenderer(TEST_RENDERER, SizeRenderer.LONG_RENDERER);
 		testFormat.load();
 	}
 

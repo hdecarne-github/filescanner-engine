@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 
@@ -38,9 +40,9 @@ public abstract class FlagRenderer<T> extends LinkedHashMap<T, String> implement
 	public void render(RenderOutput out, T value) throws IOException {
 		Iterator<T> flags = flags();
 		Iterator<Map.Entry<T, String>> symbolEntries = entrySet().iterator();
-		T currentSymbolFlag = null;
-		T nextSymbolFlag = (symbolEntries.hasNext() ? symbolEntries.next().getKey() : null);
-		T unknownFlags = null;
+		@Nullable T currentSymbolFlag = null;
+		@Nullable T nextSymbolFlag = (symbolEntries.hasNext() ? symbolEntries.next().getKey() : null);
+		@Nullable T unknownFlags = null;
 
 		while (flags.hasNext()) {
 			T flag = flags.next();
