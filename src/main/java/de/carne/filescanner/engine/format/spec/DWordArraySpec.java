@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
+import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -40,7 +41,7 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 	 */
 	public DWordArraySpec(Supplier<String> name) {
 		super(int[].class, name);
-		// TODO: format(HexFormat.INTS_FORMATTER);
+		format(HexFormat.INT_ARRAY_FORMATTER);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
+import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -40,7 +41,7 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 	 */
 	public WordArraySpec(Supplier<String> name) {
 		super(short[].class, name);
-		// TODO: format(HexFormat.SHORTS_FORMATTER);
+		format(HexFormat.SHORT_ARRAY_FORMATTER);
 	}
 
 	/**

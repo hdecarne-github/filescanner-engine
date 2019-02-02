@@ -62,7 +62,7 @@ public final class HexFormat {
 	/**
 	 * Hexadecimal {@linkplain AttributeFormatter} for {@code byte[]} values..
 	 */
-	public static final AttributeFormatter<byte[]> BYTES_FORMATTER = HexFormat::formatBytes;
+	public static final AttributeFormatter<byte[]> BYTE_ARRAY_FORMATTER = HexFormat::formatByteArray;
 
 	/**
 	 * Formats {@code byte[]} value to hexadecimal.
@@ -71,12 +71,10 @@ public final class HexFormat {
 	 * @param value the value to format.
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
-	public static StringBuilder formatBytes(StringBuilder buffer, byte[] value) {
+	public static StringBuilder formatByteArray(StringBuilder buffer, byte[] value) {
 		buffer.append("{ ");
 		for (byte valueElement : value) {
-			buffer.append(HEX_CHARS[(valueElement >> 4) & 0xf]);
-			buffer.append(HEX_CHARS[valueElement & 0xf]);
-			buffer.append("h ");
+			formatByte(buffer, valueElement);
 		}
 		buffer.append('}');
 		return buffer;
@@ -88,8 +86,8 @@ public final class HexFormat {
 	 * @param value the value to format.
 	 * @return the formatted value.
 	 */
-	public static String formatBytes(byte[] value) {
-		return formatBytes(new StringBuilder(), value).toString();
+	public static String formatByteArray(byte[] value) {
+		return formatByteArray(new StringBuilder(), value).toString();
 	}
 
 	/**
@@ -121,6 +119,37 @@ public final class HexFormat {
 	 */
 	public static String formatShort(short value) {
 		return formatShort(new StringBuilder(), value).toString();
+	}
+
+	/**
+	 * Hexadecimal {@linkplain AttributeFormatter} for {@code short[]} values..
+	 */
+	public static final AttributeFormatter<short[]> SHORT_ARRAY_FORMATTER = HexFormat::formatShortArray;
+
+	/**
+	 * Formats {@code short[]} value to hexadecimal.
+	 *
+	 * @param buffer the {@linkplain StringBuilder} to format into.
+	 * @param value the value to format.
+	 * @return the updated {@linkplain StringBuilder} for chaining.
+	 */
+	public static StringBuilder formatShortArray(StringBuilder buffer, short[] value) {
+		buffer.append("{ ");
+		for (short valueElement : value) {
+			formatShort(buffer, valueElement);
+		}
+		buffer.append('}');
+		return buffer;
+	}
+
+	/**
+	 * Formats {@code short[]} value to hexadecimal.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatShortArray(short[] value) {
+		return formatShortArray(new StringBuilder(), value).toString();
 	}
 
 	/**
@@ -156,6 +185,37 @@ public final class HexFormat {
 	 */
 	public static String formatInt(int value) {
 		return formatInt(new StringBuilder(), value).toString();
+	}
+
+	/**
+	 * Hexadecimal {@linkplain AttributeFormatter} for {@code int[]} values..
+	 */
+	public static final AttributeFormatter<int[]> INT_ARRAY_FORMATTER = HexFormat::formatIntArray;
+
+	/**
+	 * Formats {@code int[]} value to hexadecimal.
+	 *
+	 * @param buffer the {@linkplain StringBuilder} to format into.
+	 * @param value the value to format.
+	 * @return the updated {@linkplain StringBuilder} for chaining.
+	 */
+	public static StringBuilder formatIntArray(StringBuilder buffer, int[] value) {
+		buffer.append("{ ");
+		for (int valueElement : value) {
+			formatInt(buffer, valueElement);
+		}
+		buffer.append('}');
+		return buffer;
+	}
+
+	/**
+	 * Formats {@code int[]} value to hexadecimal.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatIntArray(int[] value) {
+		return formatIntArray(new StringBuilder(), value).toString();
 	}
 
 	/**
@@ -199,6 +259,37 @@ public final class HexFormat {
 	 */
 	public static String formatLong(long value) {
 		return formatLong(new StringBuilder(), value).toString();
+	}
+
+	/**
+	 * Hexadecimal {@linkplain AttributeFormatter} for {@code long[]} values..
+	 */
+	public static final AttributeFormatter<long[]> LONG_ARRAY_FORMATTER = HexFormat::formatLongArray;
+
+	/**
+	 * Formats {@code long[]} value to hexadecimal.
+	 *
+	 * @param buffer the {@linkplain StringBuilder} to format into.
+	 * @param value the value to format.
+	 * @return the updated {@linkplain StringBuilder} for chaining.
+	 */
+	public static StringBuilder formatLongArray(StringBuilder buffer, long[] value) {
+		buffer.append("{ ");
+		for (long valueElement : value) {
+			formatLong(buffer, valueElement);
+		}
+		buffer.append('}');
+		return buffer;
+	}
+
+	/**
+	 * Formats {@code long[]} value to hexadecimal.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatLongArray(long[] value) {
+		return formatLongArray(new StringBuilder(), value).toString();
 	}
 
 }

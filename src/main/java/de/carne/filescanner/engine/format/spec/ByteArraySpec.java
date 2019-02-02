@@ -41,7 +41,7 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	 */
 	public ByteArraySpec(Supplier<String> name) {
 		super(byte[].class, name);
-		format(HexFormat.BYTES_FORMATTER);
+		format(HexFormat.BYTE_ARRAY_FORMATTER);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	 */
 	public ByteArraySpec(String name) {
 		super(byte[].class, name);
-		format(HexFormat.BYTES_FORMATTER);
+		format(HexFormat.BYTE_ARRAY_FORMATTER);
 	}
 
 	/**
