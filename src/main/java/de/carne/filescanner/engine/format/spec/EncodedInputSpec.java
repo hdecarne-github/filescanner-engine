@@ -33,7 +33,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public final class EncodedInputSpec implements FormatSpec {
 
-	private final EncodedInputSpecConfig encodedInputConfig;
+	private final EncodedInputSpecConfig config;
 
 	/**
 	 * Constructs a new {@linkplain EncodedInputSpec} instance.
@@ -41,7 +41,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @param encodedInputConfig the configuration to use for input decoding.
 	 */
 	public EncodedInputSpec(EncodedInputSpecConfig encodedInputConfig) {
-		this.encodedInputConfig = encodedInputConfig;
+		this.config = encodedInputConfig;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the encoded input's name.
 	 */
 	public Supplier<String> encodedInputName() {
-		return this.encodedInputConfig.encodedInputName();
+		return this.config.encodedInputName();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the encoded input's size.
 	 */
 	public Supplier<Long> encodedInputSize() {
-		return this.encodedInputConfig.encodedInputSize();
+		return this.config.encodedInputSize();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the input decoder.
 	 */
 	public Supplier<InputDecoder> inputDecoder() {
-		return this.encodedInputConfig.inputDecoder();
+		return this.config.inputDecoder();
 	}
 
 	/**
@@ -79,7 +79,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 * @return the decoded input's name.
 	 */
 	public Supplier<String> decodedInputName() {
-		return this.encodedInputConfig.decodedInputName();
+		return this.config.decodedInputName();
 	}
 
 	@Override

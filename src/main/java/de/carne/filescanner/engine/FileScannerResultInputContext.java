@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpec;
@@ -90,7 +91,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 *
 	 * @param spec the {@linkplain FormatSpec} to match.
 	 * @return {@code true} if the remaining input data size is sufficient and matches the given
-	 *         {@linkplain FormatSpec}.
+	 * {@linkplain FormatSpec}.
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public boolean matchFormat(FormatSpec spec) throws IOException {
@@ -111,7 +112,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 *
 	 * @param spec the {@linkplain FormatSpec} to match.
 	 * @return {@code true} if the remaining input data size is sufficient and matches the given
-	 *         {@linkplain FormatSpec}.
+	 * {@linkplain FormatSpec}.
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public boolean matchComposite(CompositeSpec spec) throws IOException {
@@ -133,13 +134,13 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	}
 
 	/**
-	 * Reads and decodes a value.
+	 * Reads and decodes an integral value.
 	 *
-	 * @param <T> the actual attribute type.
+	 * @param <T> the actual value type.
 	 * @param size the size of the value to decode.
 	 * @param decoder the decoder to use.
 	 * @return the read value.
-	 * @throws IOException if an I/O error occurs.
+	 * @throws IOException if an I/O or decode error occurs.
 	 */
 	public <T> T readValue(int size, InputDecoder<T> decoder) throws IOException {
 		ByteBuffer buffer = readComplete(size);
@@ -150,6 +151,49 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 
 		this.position += size;
 		return value;
+	}
+
+	/**
+	 * Reads and decodes a streamed value.
+	 *
+	 * @param <T> the actual attribute type.
+	 * @param size the chunk size to read and to decode.
+	 * @param step the step size to use for decoding.
+	 * @param decoder the stream decoder to use.
+	 * @return the decoded value.
+	 * @throws IOException if an I/O or decode error occurs.
+	 */
+	public <T> T readValue(int size, int step, StreamInputDecoder<T> decoder) throws IOException {
+		Check.assertTrue(step > 0);
+		Check.assertTrue(size >= step);
+
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+
+		buffer.order(this.byteOrder);
+
+		boolean done = false;
+
+		while (!done) {
+			buffer.rewind();
+
+			int read = this.inputRange.read(buffer, this.position);
+
+			buffer.flip();
+			switch (decoder.stream(buffer)) {
+			case CONTINUE:
+				this.position += Math.min(step, read);
+				done = read < 0;
+				break;
+			case STOP_AND_SKIP:
+				this.position += Math.min(step, read);
+				done = true;
+				break;
+			case STOP:
+				done = true;
+				break;
+			}
+		}
+		return decoder.decode();
 	}
 
 	private ByteBuffer readComplete(int size) throws IOException {

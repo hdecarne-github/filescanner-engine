@@ -153,7 +153,13 @@ class FileScannerTest {
 			Assertions.assertEquals(100, progress.scanProgress());
 			Assertions.assertTrue(progress.scanRate() >= -1);
 
+			FileScannerResult result = fileScanner.result();
+
 			renderResult(fileScanner.result());
+
+			FileScannerResult[] formatResult = result.children();
+
+			Assertions.assertEquals(1, formatResult.length);
 		}
 		return status;
 	}

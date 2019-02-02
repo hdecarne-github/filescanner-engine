@@ -34,8 +34,9 @@ QWordFlagSymbols: 'qword_flag_symbols';
 
 FormatSpec: 'format_spec';
 Struct: 'struct';
-Union: 'union';
 Sequence: 'sequence';
+Union: 'union';
+Scan: 'scan';
 Range: 'range';
 Conditional: 'conditional';
 Encoded: 'encoded';
@@ -46,6 +47,7 @@ Renderer: 'renderer';
 Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
+StopAfer: 'stopAfter';
 Charset: 'charset';
 
 Byte: 'byte';
@@ -84,7 +86,7 @@ Whitespace: [ \t\r\n]+ -> skip;
 // Rules
 
 formatSpecs
-	: (symbols|flagSymbols|formatSpec|structSpec|unionSpec|sequenceSpec)*
+	: (symbols|flagSymbols|formatSpec|structSpec|sequenceSpec|unionSpec|scanSpec)*
 	;
 
 // Symbol rules
@@ -164,7 +166,11 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? formatSpecElement (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: Sequence textExpression? formatSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	;
+	
+sequenceSpecStopAfterModifier
+	: StopAfer LBracket specReference RBracket
 	;
 
 unionSpec
@@ -173,6 +179,14 @@ unionSpec
 
 anonymousUnionSpec
 	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	;
+	
+scanSpec
+	: specIdentifier Colon anonymousScanSpec
+	;
+
+anonymousScanSpec
+	: Scan textExpression? externalReference (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
 	;
 	
 compositeSpecByteOrderModifier
@@ -184,11 +198,11 @@ compositeSpecExportModifier
 	;
 	
 formatSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec|rangeSpec|conditionalSpec|encodedInputSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|rangeSpec|conditionalSpec|encodedInputSpec)
 	;
 
 compositeSpecElement
-	: (specReference|anonymousStructSpec|anonymousUnionSpec|anonymousSequenceSpec)
+	: (specReference|anonymousStructSpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec)
 	;
 
 rangeSpec

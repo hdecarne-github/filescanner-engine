@@ -38,7 +38,7 @@ public class JpegFormat extends Format {
 		super(FORMAT_NAME);
 		this.jpegFormatSpecDefinition = new JpegFormatSpecDefinition();
 		this.jpegFormatSpecDefinition.load();
-		registerHeaderSpec(this.jpegFormatSpecDefinition.getJpegStartMarkerSpec());
+		registerHeaderSpec(this.jpegFormatSpecDefinition.getJpegHeaderSpec());
 	}
 
 	@Override

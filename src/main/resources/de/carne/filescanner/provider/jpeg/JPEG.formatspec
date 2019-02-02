@@ -36,7 +36,7 @@ byte_symbols {
 
 // Specs
 
-JPEG_START_MARKER:
+JPEG_SOI_APP0_MARKER:
 struct {
 	struct "SOI marker" {
 		word "marker"
@@ -64,11 +64,44 @@ X_THUMBNAIL:
 Y_THUMBNAIL:
 		byte "Ythumbnail"
 			->format(@PrettyFormat)
-		range[#thumbnailSize] "thumbnail"
+		range[#getAPP0ThumbnailSize] "thumbnail"
 	}	->bigEndian()
 }	->bigEndian()
 
+JPEG_SOS_MARKER:
+struct "SOS marker" {
+	word "marker"
+		->validate(0xffda)
+	word "length"
+	scan #scanSosConfig
+		->bigEndian()
+}	->bigEndian()
+
+JPEG_EOI_MARKER:
+struct "EOI marker" {
+		word "marker"
+			->validate(0xffd9)
+}	->bigEndian()
+
+JPEG_GENERIC_MARKER:
+struct text("%x marker", @GENERIC_MARKER) {
+GENERIC_MARKER:
+	word "marker"
+GENERIC_LENGTH:
+	word "length"
+	range[#getGenericDataSize] "data"
+}	->bigEndian()
+
+JPEG_MARKER:
+union {
+	@JPEG_SOS_MARKER
+	@JPEG_EOI_MARKER
+	@JPEG_GENERIC_MARKER
+}
+
 JPEG_FORMAT:
-format_spec "JPEG File Interchange Format" {
-	@JPEG_START_MARKER
+format_spec "JPEG image data" {
+	@JPEG_SOI_APP0_MARKER
+	sequence @JPEG_MARKER
+		->stopAfter(@JPEG_EOI_MARKER)
 }	->bigEndian()

@@ -89,6 +89,9 @@ format_spec #specialText {
 	}
 	@TEST_HEADER
 	@TEST_STRUCT
+	@TEST_SEQUENCE
+	sequence "inline sequence" @TEST_STRUCT
+	@TEST_UNION
 	union "inline union" {
 		struct "nested struct 1" {
 			byte "byte attribute"
@@ -97,9 +100,9 @@ format_spec #specialText {
 			byte "byte attribute"
 		}
 	}
-	@TEST_UNION
-	sequence "inline sequence" @TEST_STRUCT
-	@TEST_SEQUENCE
+	@TEST_SCAN
+	scan "inline scan" #scanConfig
+	range[42] "data"
 }
 
 TEST_HEADER:
@@ -151,6 +154,12 @@ SCOPED_BIND@TEST_FORMAT:
 }	->bigEndian()
 	->export(#specialExport)
 
+TEST_SEQUENCE:
+sequence @TEST_STRUCT
+	->stopAfter(@TEST_STRUCT)
+	->bigEndian()
+	->export(#specialExport)
+
 TEST_UNION:
 union {
 	@TEST_HEADER
@@ -164,7 +173,5 @@ union {
 }	->bigEndian()
 	->export(#specialExport)
 
-TEST_SEQUENCE:
-sequence @TEST_STRUCT
-	->bigEndian()
-	->export(#specialExport)
+TEST_SCAN:
+scan "scan" #scanConfig

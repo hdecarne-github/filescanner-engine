@@ -19,10 +19,10 @@ package de.carne.filescanner.engine.format.spec;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import de.carne.boot.check.Check;
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.UnexpectedDataException;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
@@ -31,42 +31,26 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 public class SequenceSpec extends CompositeSpec {
 
 	private final FormatSpec elementSpec;
-	private final int minOccurrence;
-	private final int maxOccurrence;
+	private @Nullable FormatSpec stopSpec = null;
 
 	/**
 	 * Constructs a new {@linkplain SequenceSpec} instance.
 	 *
-	 * @param elementSpec the array element's {@linkplain FormatSpec}.
+	 * @param elementSpec the sequence element's {@linkplain FormatSpec}.
 	 */
 	public SequenceSpec(FormatSpec elementSpec) {
-		this(elementSpec, 0, Integer.MAX_VALUE);
-	}
-
-	/**
-	 * Constructs a new {@linkplain SequenceSpec} instance.
-	 *
-	 * @param elementSpec the array element's {@linkplain FormatSpec}.
-	 * @param minOccurrence the minimum number of array elements.
-	 */
-	public SequenceSpec(FormatSpec elementSpec, int minOccurrence) {
-		this(elementSpec, minOccurrence, Integer.MAX_VALUE);
-	}
-
-	/**
-	 * Constructs a new {@linkplain SequenceSpec} instance.
-	 *
-	 * @param elementSpec the array element's {@linkplain FormatSpec}.
-	 * @param minOccurrence the minimum number of array elements.
-	 * @param maxOccurrence the maximum number of array elements.
-	 */
-	public SequenceSpec(FormatSpec elementSpec, int minOccurrence, int maxOccurrence) {
-		Check.assertTrue(0 <= minOccurrence);
-		Check.assertTrue(minOccurrence <= maxOccurrence);
-
 		this.elementSpec = elementSpec;
-		this.minOccurrence = minOccurrence;
-		this.maxOccurrence = maxOccurrence;
+	}
+
+	/**
+	 * Sets the last sequence element's {@linkplain FormatSpec}.
+	 *
+	 * @param stopAfterSpec the last sequence element's {@linkplain FormatSpec}.
+	 * @return the updated {@linkplain SequenceSpec}.
+	 */
+	public SequenceSpec stopAfter(FormatSpec stopAfterSpec) {
+		this.stopSpec = stopAfterSpec;
+		return this;
 	}
 
 	@Override
@@ -86,14 +70,19 @@ public class SequenceSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		int occurrenceCount = 0;
+		boolean done = false;
 
-		while (occurrenceCount <= this.maxOccurrence && context.matchFormat(this.elementSpec)) {
-			this.elementSpec.decode(context);
-			occurrenceCount++;
-		}
-		if (occurrenceCount < this.minOccurrence) {
-			throw new UnexpectedDataException();
+		while (!done) {
+			FormatSpec checkedStopSpec = this.stopSpec;
+
+			if (checkedStopSpec != null && context.matchFormat(checkedStopSpec)) {
+				checkedStopSpec.decode(context);
+				done = true;
+			} else if (context.matchFormat(this.elementSpec)) {
+				this.elementSpec.decode(context);
+			} else {
+				done = true;
+			}
 		}
 	}
 

@@ -16,12 +16,18 @@
  */
 package de.carne.filescanner.provider.jpeg;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.StreamStatus;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.ScanSpecConfig;
+import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.nio.compression.InsufficientDataException;
 import de.carne.util.Lazy;
 
 /**
@@ -30,17 +36,18 @@ import de.carne.util.Lazy;
 final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 
 	private Lazy<CompositeSpec> jpegFormatSpec = resolveLazy("JPEG_FORMAT", CompositeSpec.class);
-	private Lazy<CompositeSpec> jpegStartMarkerSpec = resolveLazy("JPEG_START_MARKER", CompositeSpec.class);
+	private Lazy<CompositeSpec> jpegHeaderSpec = resolveLazy("JPEG_SOI_APP0_MARKER", CompositeSpec.class);
 
 	private Lazy<ByteSpec> xThumbnail = resolveLazy("X_THUMBNAIL", ByteSpec.class);
 	private Lazy<ByteSpec> yThumbnail = resolveLazy("Y_THUMBNAIL", ByteSpec.class);
+	private Lazy<WordSpec> genericLength = resolveLazy("GENERIC_LENGTH", WordSpec.class);
 
 	public CompositeSpec getJpegFormatSpec() {
 		return this.jpegFormatSpec.get();
 	}
 
-	public CompositeSpec getJpegStartMarkerSpec() {
-		return this.jpegStartMarkerSpec.get();
+	public CompositeSpec getJpegHeaderSpec() {
+		return this.jpegHeaderSpec.get();
 	}
 
 	@Override
@@ -48,9 +55,32 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 		return Objects.requireNonNull(getClass().getResource("JPEG.formatspec"));
 	}
 
-	protected Integer thumbnailSize() {
+	protected Integer getAPP0ThumbnailSize() {
 		return Byte.toUnsignedInt(this.xThumbnail.get().get().byteValue())
 				* Byte.toUnsignedInt(this.yThumbnail.get().get().byteValue());
+	}
+
+	protected Integer getGenericDataSize() {
+		return Short.toUnsignedInt(this.genericLength.get().get().shortValue()) - 2;
+	}
+
+	protected ScanSpecConfig scanSosConfig() {
+		return new ScanSpecConfig(2, this::matchMarker);
+	}
+
+	private StreamStatus matchMarker(ByteBuffer buffer) throws IOException {
+		if (buffer.remaining() < Short.BYTES) {
+			throw new InsufficientDataException(Short.BYTES, buffer.remaining());
+		}
+
+		StreamStatus matchStatus = StreamStatus.CONTINUE;
+		int markerValue = (buffer.getShort() & 0xffff);
+
+		if ((markerValue & 0xff00) == 0xff00 && markerValue != 0xff00 && markerValue != 0xffff
+				&& (markerValue < 0xffd0 || 0xffd7 < markerValue)) {
+			matchStatus = StreamStatus.STOP;
+		}
+		return matchStatus;
 	}
 
 }

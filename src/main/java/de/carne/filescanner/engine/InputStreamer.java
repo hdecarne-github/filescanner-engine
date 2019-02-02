@@ -20,20 +20,21 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Decode function for integral input data.
- *
- * @param <T> the actual decode result type.
+ * Functional interface for streamed input data processing.
  */
 @FunctionalInterface
-public interface InputDecoder<T> {
+public interface InputStreamer {
 
 	/**
-	 * Decode input data.
+	 * Stream input data.
+	 * <p>
+	 * The submitted buffer may contain less bytes than the requested chunk size.
+	 * </p>
 	 *
 	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return the decoded input data.
+	 * @return the {@linkplain StreamStatus}.
 	 * @throws IOException if a decode error occurs.
 	 */
-	T decode(ByteBuffer buffer) throws IOException;
+	StreamStatus stream(ByteBuffer buffer) throws IOException;
 
 }

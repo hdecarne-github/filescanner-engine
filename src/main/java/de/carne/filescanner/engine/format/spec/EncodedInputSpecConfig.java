@@ -22,7 +22,7 @@ import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- * Configuration parameters for {@linkplain EncodedInputSpec}.
+ * Configuration parameters for an {@linkplain EncodedInputSpec}.
  */
 public final class EncodedInputSpecConfig {
 
@@ -122,7 +122,7 @@ public final class EncodedInputSpecConfig {
 
 	/**
 	 * Gets the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
-	 * 
+	 *
 	 * @return the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
 	 */
 	public Supplier<InputDecoder> inputDecoder() {

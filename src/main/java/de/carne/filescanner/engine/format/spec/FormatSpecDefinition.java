@@ -47,6 +47,7 @@ import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarBaseVisitor;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarLexer;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousSequenceSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousStructSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousUnionSpecContext;
@@ -81,8 +82,10 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.Q
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RangeSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
@@ -467,6 +470,30 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private SequenceSpec loadSequenceSpec(SequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
+		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
+		SequenceSpec spec = loadAnonymousSequenceSpec(specCtx.anonymousSequenceSpec(), rootCtx);
+
+		this.specs.put(specIdentifier, () -> spec);
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
+		FormatSpec elementSpec = loadFormatSpecElement(specCtx.formatSpecElement(), rootCtx);
+		SequenceSpec spec = new SequenceSpec(elementSpec);
+		TextExpressionContext textExpression = specCtx.textExpression();
+
+		if (textExpression != null) {
+			spec.result(loadTextExpression(specCtx.textExpression()));
+		}
+		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+		return spec;
+	}
+
+	@SuppressWarnings("null")
 	private UnionSpec loadUnionSpec(UnionSpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		UnionSpec spec = loadAnonymousUnionSpec(specCtx.anonymousUnionSpec(), rootCtx);
@@ -494,26 +521,30 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private SequenceSpec loadSequenceSpec(SequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
+	private ScanSpec loadScanSpec(ScanSpecContext specCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
-		SequenceSpec spec = loadAnonymousSequenceSpec(specCtx.anonymousSequenceSpec(), rootCtx);
+		ScanSpec spec = loadAnonymousScanSpec(specCtx.anonymousScanSpec());
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
 	}
 
 	@SuppressWarnings("null")
-	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
-		FormatSpec elementSpec = loadFormatSpecElement(specCtx.formatSpecElement(), rootCtx);
-		SequenceSpec spec = new SequenceSpec(elementSpec);
-		TextExpressionContext textExpression = specCtx.textExpression();
+	private ScanSpec loadAnonymousScanSpec(AnonymousScanSpecContext specCtx) {
+		ScanSpec spec = new ScanSpec(resolveExternalReference(specCtx.externalReference(), ScanSpecConfig.class).get());
 
-		if (textExpression != null) {
-			spec.result(loadTextExpression(specCtx.textExpression()));
-		}
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private void applyStopAfterModifier(SequenceSpec spec, List<SequenceSpecStopAfterModifierContext> modifierCtx,
+			FormatSpecsContext rootCtx) {
+		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
+			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
+					FormatSpec.class));
+		}
 	}
 
 	private void applyByteOrderModifier(CompositeSpec spec, List<CompositeSpecByteOrderModifierContext> modifierCtx) {
@@ -791,8 +822,9 @@ public abstract class FormatSpecDefinition {
 		SpecReferenceContext specReferenceCtx;
 		AttributeSpecContext attributeSpecCtx;
 		AnonymousStructSpecContext anonymousStructSpecCtx;
-		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
+		AnonymousUnionSpecContext anonymousUnionSpecCtx;
+		AnonymousScanSpecContext anonymousScanSpecCtx;
 		RangeSpecContext rangeSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
@@ -803,10 +835,12 @@ public abstract class FormatSpecDefinition {
 			element = loadAttributeSpec(attributeSpecCtx, rootCtx);
 		} else if ((anonymousStructSpecCtx = elementCtx.anonymousStructSpec()) != null) {
 			element = loadAnonymousStructSpec(anonymousStructSpecCtx, rootCtx);
-		} else if ((anonymousUnionSpecCtx = elementCtx.anonymousUnionSpec()) != null) {
-			element = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
 		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
+		} else if ((anonymousUnionSpecCtx = elementCtx.anonymousUnionSpec()) != null) {
+			element = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
+		} else if ((anonymousScanSpecCtx = elementCtx.anonymousScanSpec()) != null) {
+			element = loadAnonymousScanSpec(anonymousScanSpecCtx);
 		} else if ((rangeSpecCtx = elementCtx.rangeSpec()) != null) {
 			element = loadRangeSpec(rangeSpecCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
@@ -956,6 +990,11 @@ public abstract class FormatSpecDefinition {
 			for (SequenceSpecContext sequenceSpecCtx : rootCtx.sequenceSpec()) {
 				if (specIdentifier.equals(sequenceSpecCtx.specIdentifier().getText())) {
 					resolvedSpec = loadSequenceSpec(sequenceSpecCtx, rootCtx);
+				}
+			}
+			for (ScanSpecContext scanSpecCtx : rootCtx.scanSpec()) {
+				if (specIdentifier.equals(scanSpecCtx.specIdentifier().getText())) {
+					resolvedSpec = loadScanSpec(scanSpecCtx);
 				}
 			}
 		} else {

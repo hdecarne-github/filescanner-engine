@@ -17,23 +17,20 @@
 package de.carne.filescanner.engine;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
- * Decode function for integral input data.
+ * Decode interface for streamed input data.
  *
  * @param <T> the actual decode result type.
  */
-@FunctionalInterface
-public interface InputDecoder<T> {
+public interface StreamInputDecoder<T> extends InputStreamer {
 
 	/**
-	 * Decode input data.
+	 * Decode the previously streamed input data.
 	 *
-	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return the decoded input data.
+	 * @return the decoded value.
 	 * @throws IOException if a decode error occurs.
 	 */
-	T decode(ByteBuffer buffer) throws IOException;
+	T decode() throws IOException;
 
 }

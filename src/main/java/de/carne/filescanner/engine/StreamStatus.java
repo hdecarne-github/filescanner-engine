@@ -16,24 +16,26 @@
  */
 package de.carne.filescanner.engine;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 /**
- * Decode function for integral input data.
+ * Stream status for stream input decoding.
  *
- * @param <T> the actual decode result type.
+ * @see StreamInputDecoder
  */
-@FunctionalInterface
-public interface InputDecoder<T> {
+public enum StreamStatus {
 
 	/**
-	 * Decode input data.
-	 *
-	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return the decoded input data.
-	 * @throws IOException if a decode error occurs.
+	 * Continue streaming and skip the last streamed chunk.
 	 */
-	T decode(ByteBuffer buffer) throws IOException;
+	CONTINUE,
+
+	/**
+	 * Stop streaming and skip the last streamed chunk.
+	 */
+	STOP_AND_SKIP,
+
+	/**
+	 * Stop streaming and without skipping the last streamed chunk.
+	 */
+	STOP
 
 }
