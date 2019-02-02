@@ -119,6 +119,9 @@ public abstract class FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
+	private static final String LOG_LOADED_SPEC = "Loaded spec: {0}";
+	private static final String LOG_ASSIGNED_SPEC = "Assigned spec {0}: {1}";
+
 	private final Map<String, Set<Byte>> byteSymbolsMap = new HashMap<>();
 	private final Map<String, Set<Short>> wordSymbolsMap = new HashMap<>();
 	private final Map<String, Set<Integer>> dwordSymbolsMap = new HashMap<>();
@@ -443,7 +446,7 @@ public abstract class FormatSpecDefinition {
 		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 
-		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 	}
@@ -453,7 +456,7 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		StructSpec spec = loadAnonymousStructSpec(specCtx.anonymousStructSpec(), rootCtx);
 
-		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -470,6 +473,9 @@ public abstract class FormatSpecDefinition {
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -478,7 +484,7 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		SequenceSpec spec = loadAnonymousSequenceSpec(specCtx.anonymousSequenceSpec(), rootCtx);
 
-		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -494,6 +500,9 @@ public abstract class FormatSpecDefinition {
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -511,7 +520,7 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		UnionSpec spec = loadAnonymousUnionSpec(specCtx.anonymousUnionSpec(), rootCtx);
 
-		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -528,6 +537,9 @@ public abstract class FormatSpecDefinition {
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -536,7 +548,7 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		ScanSpec spec = loadAnonymousScanSpec(specCtx.anonymousScanSpec());
 
-		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -549,6 +561,9 @@ public abstract class FormatSpecDefinition {
 		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -586,8 +601,12 @@ public abstract class FormatSpecDefinition {
 
 	@SuppressWarnings("null")
 	private RangeSpec loadRangeSpec(RangeSpecContext specCtx) {
-		return new RangeSpec(loadTextExpression(specCtx.textExpression()))
+		RangeSpec spec = new RangeSpec(loadTextExpression(specCtx.textExpression()))
 				.size(loadNumberExpression(specCtx.numberExpression()));
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
 	}
 
 	@SuppressWarnings("null")
@@ -595,13 +614,23 @@ public abstract class FormatSpecDefinition {
 		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
 			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
 		}
-		return new ConditionalSpec(resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
+
+		ConditionalSpec spec = new ConditionalSpec(
+				resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
 	}
 
 	@SuppressWarnings("null")
 	private EncodedInputSpec loadEncodedInputSpec(EncodedInputSpecContext specCtx) {
-		return new EncodedInputSpec(
+		EncodedInputSpec spec = new EncodedInputSpec(
 				resolveExternalReference(specCtx.externalReference(), EncodedInputSpecConfig.class).get());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
 	}
 
 	private AttributeSpec<?> loadAttributeSpec(AttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
@@ -649,6 +678,9 @@ public abstract class FormatSpecDefinition {
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -661,6 +693,9 @@ public abstract class FormatSpecDefinition {
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -673,6 +708,9 @@ public abstract class FormatSpecDefinition {
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -685,6 +723,9 @@ public abstract class FormatSpecDefinition {
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -694,6 +735,9 @@ public abstract class FormatSpecDefinition {
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -703,6 +747,9 @@ public abstract class FormatSpecDefinition {
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -712,6 +759,9 @@ public abstract class FormatSpecDefinition {
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -721,6 +771,9 @@ public abstract class FormatSpecDefinition {
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
 	}
 
@@ -731,30 +784,10 @@ public abstract class FormatSpecDefinition {
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		applyCharsetModifier(spec, specCtx.stringAttributeCharsetModifier());
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
 		return spec;
-	}
-
-	@SuppressWarnings("null")
-	private <T> void applyFormatModifier(AttributeSpec<T> spec, List<AttributeFormatModifierContext> modifierCtx,
-			Map<String, AttributeFormatter<T>> formatters) {
-		for (AttributeFormatModifierContext formatCtx : modifierCtx) {
-			FormatTextContext formatTextCtx;
-			SpecReferenceContext specReferenceCtx;
-
-			if ((formatTextCtx = formatCtx.formatText()) != null) {
-				spec.format(decodeQuotedString(formatTextCtx.getText()));
-			} else if ((specReferenceCtx = formatCtx.specReference()) != null) {
-				String specIdentifier = specReferenceCtx.referencedSpec().getText();
-				AttributeFormatter<T> formatter = formatters.get(specIdentifier);
-
-				if (formatter == null) {
-					throw newLoadException(specReferenceCtx, "Unknown formatter reference @%s", specIdentifier);
-				}
-				spec.format(formatter);
-			} else {
-				throw newLoadException(formatCtx, "Unexpected format modifier");
-			}
-		}
 	}
 
 	@SuppressWarnings("null")
@@ -779,6 +812,29 @@ public abstract class FormatSpecDefinition {
 				spec.validate(symbols);
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate modifier");
+			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private <T> void applyFormatModifier(AttributeSpec<T> spec, List<AttributeFormatModifierContext> modifierCtx,
+			Map<String, AttributeFormatter<T>> formatters) {
+		for (AttributeFormatModifierContext formatCtx : modifierCtx) {
+			FormatTextContext formatTextCtx;
+			SpecReferenceContext specReferenceCtx;
+
+			if ((formatTextCtx = formatCtx.formatText()) != null) {
+				spec.format(decodeQuotedString(formatTextCtx.getText()));
+			} else if ((specReferenceCtx = formatCtx.specReference()) != null) {
+				String specIdentifier = specReferenceCtx.referencedSpec().getText();
+				AttributeFormatter<T> formatter = formatters.get(specIdentifier);
+
+				if (formatter == null) {
+					throw newLoadException(specReferenceCtx, "Unknown formatter reference @%s", specIdentifier);
+				}
+				spec.format(formatter);
+			} else {
+				throw newLoadException(formatCtx, "Unexpected format modifier");
 			}
 		}
 	}
@@ -831,7 +887,7 @@ public abstract class FormatSpecDefinition {
 				spec.bind();
 			}
 
-			LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+			LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 			this.specs.put(specIdentifier, () -> spec);
 		}

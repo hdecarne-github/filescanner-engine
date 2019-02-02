@@ -267,11 +267,22 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append('(');
-		buffer.append(this.type.getName());
+		formatType(buffer, this.type);
 		buffer.append(")'");
 		buffer.append(this.name);
 		buffer.append("'");
 		return buffer.toString();
+	}
+
+	private static void formatType(StringBuilder buffer, Class<?> type) {
+		Class<?> componenentType = type.getComponentType();
+
+		if (componenentType != null) {
+			formatType(buffer, componenentType);
+			buffer.append("[]");
+		} else {
+			buffer.append(type.getName());
+		}
 	}
 
 }

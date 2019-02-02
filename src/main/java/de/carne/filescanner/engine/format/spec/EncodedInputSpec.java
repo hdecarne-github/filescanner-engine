@@ -107,4 +107,12 @@ public final class EncodedInputSpec implements FormatSpec {
 		// Nothing to do here
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append('(').append(getClass().getTypeName()).append(')');
+		return buffer.toString();
+	}
+
 }

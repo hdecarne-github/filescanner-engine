@@ -71,4 +71,12 @@ public class ConditionalSpec implements FormatSpec {
 		this.spec.get().renderComposite(out, context);
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append('(').append(getClass().getTypeName()).append(')');
+		return buffer.toString();
+	}
+
 }

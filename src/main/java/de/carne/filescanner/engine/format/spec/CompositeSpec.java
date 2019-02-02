@@ -191,4 +191,17 @@ public abstract class CompositeSpec implements FormatSpec {
 		}
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append('(').append(getClass().getTypeName()).append(')');
+		if (this.result) {
+			buffer.append('\'').append(this.resultName).append('\'');
+		} else {
+			buffer.append("<anonoymous>");
+		}
+		return buffer.toString();
+	}
+
 }
