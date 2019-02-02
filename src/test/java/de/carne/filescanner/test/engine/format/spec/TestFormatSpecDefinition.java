@@ -26,6 +26,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.ScanSpecConfig;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
 import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 
 final class TestFormatSpecDefinition extends FormatSpecDefinition {
@@ -39,7 +40,11 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 		return getClass().getSimpleName();
 	}
 
-	protected FileScannerResultExportHandler specialExport() {
+	protected FileScannerResultRenderer customRenderer() {
+		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+	}
+
+	protected FileScannerResultExportHandler customExport() {
 		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
 	}
 

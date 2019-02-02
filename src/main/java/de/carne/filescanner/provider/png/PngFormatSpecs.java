@@ -147,7 +147,7 @@ final class PngFormatSpecs {
 
 		formatSpec.add(new SequenceSpec(chunkSpecs));
 		formatSpec.add(IEND_CHUNK);
-		formatSpec.render(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
+		formatSpec.renderer(RawFileScannerResultExporter.IMAGE_PNG_EXPORTER);
 		FORMAT_SPEC = formatSpec;
 	}
 

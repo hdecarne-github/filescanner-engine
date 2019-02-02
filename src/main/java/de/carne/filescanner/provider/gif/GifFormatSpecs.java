@@ -254,7 +254,7 @@ final class GifFormatSpecs {
 		formatSpec.add(new ConditionalSpec(GifFormatSpecs::getGlobalColorTableSpec));
 		formatSpec.add(new SequenceSpec(BLOCK));
 		formatSpec.add(TRAILER);
-		formatSpec.render(RawFileScannerResultExporter.IMAGE_GIF_EXPORTER);
+		formatSpec.renderer(RawFileScannerResultExporter.IMAGE_GIF_EXPORTER);
 		FORMAT_SPEC = formatSpec;
 	}
 

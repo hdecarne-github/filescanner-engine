@@ -27,6 +27,9 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.ScanSpecConfig;
 import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
+import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
 import de.carne.nio.compression.InsufficientDataException;
 import de.carne.util.Lazy;
 
@@ -55,16 +58,24 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 		return Objects.requireNonNull(getClass().getResource("JPEG.formatspec"));
 	}
 
-	protected Integer getAPP0ThumbnailSize() {
+	protected FileScannerResultRenderer jpegRenderer() {
+		return RawFileScannerResultExporter.IMAGE_JPEG_EXPORTER;
+	}
+
+	protected FileScannerResultExportHandler jpegExporter() {
+		return RawFileScannerResultExporter.IMAGE_JPEG_EXPORTER;
+	}
+
+	protected Integer app0ThumbnailSize() {
 		return Byte.toUnsignedInt(this.xThumbnail.get().get().byteValue())
 				* Byte.toUnsignedInt(this.yThumbnail.get().get().byteValue());
 	}
 
-	protected Integer getGenericDataSize() {
+	protected Integer genericMarkerDataSize() {
 		return Short.toUnsignedInt(this.genericLength.get().get().shortValue()) - 2;
 	}
 
-	protected ScanSpecConfig scanSosConfig() {
+	protected ScanSpecConfig sosScanConfig() {
 		return new ScanSpecConfig(2, this::matchMarker);
 	}
 

@@ -21,6 +21,73 @@
 
 // Symbols
 
+MARKER_NAMES:
+word_symbols {
+	0xffc0: "SOF\u2080: Baseline DCT"
+	0xffc1: "SOF\u2081: Extended sequential DCT"
+	0xffc2: "SOF\u2082: Progressive DCT"
+	0xffc3: "SOF\u2083: Lossless (sequential)"
+	0xffc3: "DHT: Define Huffman table(s)"
+	0xffc5: "SOF\u2085: Differential sequential DCT"
+	0xffc6: "SOF\u2086: Differential progressive DCT"
+	0xffc7: "SOF\u2087: Differential lossless (sequential)"
+	0xffc8: "JPG: Reserved for JPEG extensions"
+	0xffc9: "SOF\u2089: Extended sequential DCT"
+	0xffca: "SOF\u2081\u2080: Progressive DCT"
+	0xffcb: "SOF\u2081\u2081: Lossless (sequential)"
+	0xffcc: "DAC: Define arithmetic coding conditioning(s)"
+	0xffcd: "SOF\u2081\u2083: Differential sequential DCT"
+	0xffce: "SOF\u2081\u2084: Differential progressive DCT"
+	0xffcf: "SOF\u2081\u2085: Differential lossless (sequential)"
+	0xffd0: "RSTm: Restart with modulo 8 count m"
+	0xffd1: "RSTm: Restart with modulo 8 count m"
+	0xffd2: "RSTm: Restart with modulo 8 count m"
+	0xffd3: "RSTm: Restart with modulo 8 count m"
+	0xffd4: "RSTm: Restart with modulo 8 count m"
+	0xffd5: "RSTm: Restart with modulo 8 count m"
+	0xffd6: "RSTm: Restart with modulo 8 count m"
+	0xffd7: "RSTm: Restart with modulo 8 count m"
+	0xffd8: "SOI: Start of image"
+	0xffd9: "EOI: End of image"
+	0xffda: "SOS: Start of scan"
+	0xffdb: "DQT: Define quantization table(s)"
+	0xffdc: "DNL: Define number of lines"
+	0xffdd: "DRI: Define restart interval"
+	0xffde: "DHP: Define hierarchical progression"
+	0xffdf: "EXP: Expand reference component(s)"
+	0xffe0: "APP\u2080: Reserved for application segments"
+	0xffe1: "APP\u2081: Reserved for application segments"
+	0xffe2: "APP\u2082: Reserved for application segments"
+	0xffe3: "APP\u2083: Reserved for application segments"
+	0xffe4: "APP\u2084: Reserved for application segments"
+	0xffe5: "APP\u2085: Reserved for application segments"
+	0xffe6: "APP\u2086: Reserved for application segments"
+	0xffe7: "APP\u2087: Reserved for application segments"
+	0xffe8: "APP\u2088: Reserved for application segments"
+	0xffe9: "APP\u2089: Reserved for application segments"
+	0xffea: "APP\u2081\u2080: Reserved for application segments"
+	0xffeb: "APP\u2081\u2081: Reserved for application segments"
+	0xffec: "APP\u2081\u2082: Reserved for application segments"
+	0xffed: "APP\u2081\u2083: Reserved for application segments"
+	0xffee: "APP\u2081\u2084: Reserved for application segments"
+	0xffef: "APP\u2081\u2085: Reserved for application segments"
+	0xfff0: "JPG\u2080: Reserved for JPEG extensions"
+	0xfff1: "JPG\u2081: Reserved for JPEG extensions"
+	0xfff2: "JPG\u2082: Reserved for JPEG extensions"
+	0xfff3: "JPG\u2083: Reserved for JPEG extensions"
+	0xfff4: "JPG\u2084: Reserved for JPEG extensions"
+	0xfff5: "JPG\u2085: Reserved for JPEG extensions"
+	0xfff6: "JPG\u2086: Reserved for JPEG extensions"
+	0xfff7: "JPG\u2087: Reserved for JPEG extensions"
+	0xfff8: "JPG\u2088: Reserved for JPEG extensions"
+	0xfff9: "JPG\u2089: Reserved for JPEG extensions"
+	0xfffa: "JPG\u2081\u2080: Reserved for JPEG extensions"
+	0xfffb: "JPG\u2081\u2081: Reserved for JPEG extensions"
+	0xfffc: "JPG\u2081\u2082: Reserved for JPEG extensions"
+	0xfffd: "JPG\u2081\u2083: Reserved for JPEG extensions"
+	0xfffe: "COM: Comment"
+}
+
 APP0_VERSIONS:
 word_symbols {
 	0x0101: "1.01"
@@ -41,12 +108,16 @@ struct {
 	struct "SOI marker" {
 		word "marker"
 			->validate(0xffd8)
+			->renderer(@MARKER_NAMES)
 	}	->bigEndian()
-	struct "APP0 marker" {
+	struct "APP\u2080 marker" {
 		word "marker"
 			->validate(0xffe0)
+			->renderer(@MARKER_NAMES)
 		word "length"
 			->validate(0x0010)
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
 		char[5] "identifier"
 			->validate("JFIF\u0000")
 		word "version"
@@ -64,16 +135,24 @@ X_THUMBNAIL:
 Y_THUMBNAIL:
 		byte "Ythumbnail"
 			->format(@PrettyFormat)
-		range[#getAPP0ThumbnailSize] "thumbnail"
+		range[#app0ThumbnailSize] "thumbnail"
 	}	->bigEndian()
 }	->bigEndian()
 
 JPEG_SOS_MARKER:
-struct "SOS marker" {
-	word "marker"
-		->validate(0xffda)
-	word "length"
-	scan #scanSosConfig
+struct {
+	struct "SOS marker" {
+		word "marker"
+			->validate(0xffda)
+			->renderer(@MARKER_NAMES)
+		word "length"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+	NUMBER_OF_COMPONENTS:
+		byte "number of components"
+			->format(@PrettyFormat)
+	}	->bigEndian()
+	scan "Image data" #sosScanConfig
 		->bigEndian()
 }	->bigEndian()
 
@@ -81,15 +160,19 @@ JPEG_EOI_MARKER:
 struct "EOI marker" {
 		word "marker"
 			->validate(0xffd9)
+			->renderer(@MARKER_NAMES)
 }	->bigEndian()
 
 JPEG_GENERIC_MARKER:
-struct text("%x marker", @GENERIC_MARKER) {
+struct text("X'%X' marker", @GENERIC_MARKER) {
 GENERIC_MARKER:
 	word "marker"
+		->renderer(@MARKER_NAMES)
 GENERIC_LENGTH:
 	word "length"
-	range[#getGenericDataSize] "data"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	range[#genericMarkerDataSize] "data"
 }	->bigEndian()
 
 JPEG_MARKER:
@@ -105,3 +188,5 @@ format_spec "JPEG image data" {
 	sequence @JPEG_MARKER
 		->stopAfter(@JPEG_EOI_MARKER)
 }	->bigEndian()
+	->renderer(#jpegRenderer)
+	->export(#jpegExporter)

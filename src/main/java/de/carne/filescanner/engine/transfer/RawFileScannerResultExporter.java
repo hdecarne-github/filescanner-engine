@@ -49,6 +49,12 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 			"GIF image file", TransferType.IMAGE_GIF, ".gif");
 
 	/**
+	 * Predefined IMAGE_JPEG exporter.
+	 */
+	public static final RawFileScannerResultExporter IMAGE_JPEG_EXPORTER = new RawFileScannerResultExporter(
+			"JPEG image file", TransferType.IMAGE_JPEG, ".jpg");
+
+	/**
 	 * Predefined IMAGE_PNG exporter.
 	 */
 	public static final RawFileScannerResultExporter IMAGE_PNG_EXPORTER = new RawFileScannerResultExporter(

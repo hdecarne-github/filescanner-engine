@@ -148,7 +148,7 @@ final class BmpFormatSpecs {
 		formatSpec.add(BMP_INFO_HEADER);
 		formatSpec.add(new ConditionalSpec(BmpFormatSpecs::getColorTableSpec));
 		formatSpec.add(IMAGE_DATA);
-		formatSpec.render(RawFileScannerResultExporter.IMAGE_BMP_EXPORTER);
+		formatSpec.renderer(RawFileScannerResultExporter.IMAGE_BMP_EXPORTER);
 		FORMAT_SPEC = formatSpec;
 	}
 

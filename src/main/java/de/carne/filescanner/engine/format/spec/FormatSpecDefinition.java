@@ -63,6 +63,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.C
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecByteOrderModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExportModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordAttributeSpecContext;
@@ -100,6 +101,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.W
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordSymbolsContext;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
 import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.IntHelper;
@@ -436,8 +438,9 @@ public abstract class FormatSpecDefinition {
 		for (FormatSpecElementContext elementCtx : specCtx.formatSpecElement()) {
 			spec.add(loadFormatSpecElement(elementCtx, rootCtx));
 		}
-		spec.result(loadTextExpression(specCtx.textExpression()));
+		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		this.specs.put(specIdentifier, () -> spec);
 	}
@@ -458,13 +461,9 @@ public abstract class FormatSpecDefinition {
 		for (FormatSpecElementContext elementCtx : specCtx.formatSpecElement()) {
 			spec.add(loadFormatSpecElement(elementCtx, rootCtx));
 		}
-
-		TextExpressionContext textExpression = specCtx.textExpression();
-
-		if (textExpression != null) {
-			spec.result(loadTextExpression(specCtx.textExpression()));
-		}
+		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
 	}
@@ -482,15 +481,22 @@ public abstract class FormatSpecDefinition {
 	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
 		FormatSpec elementSpec = loadFormatSpecElement(specCtx.formatSpecElement(), rootCtx);
 		SequenceSpec spec = new SequenceSpec(elementSpec);
-		TextExpressionContext textExpression = specCtx.textExpression();
 
-		if (textExpression != null) {
-			spec.result(loadTextExpression(specCtx.textExpression()));
-		}
 		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
+		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private void applyStopAfterModifier(SequenceSpec spec, List<SequenceSpecStopAfterModifierContext> modifierCtx,
+			FormatSpecsContext rootCtx) {
+		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
+			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
+					FormatSpec.class));
+		}
 	}
 
 	@SuppressWarnings("null")
@@ -509,13 +515,9 @@ public abstract class FormatSpecDefinition {
 		for (CompositeSpecElementContext elementCtx : specCtx.compositeSpecElement()) {
 			spec.add(loadCompositeSpecElement(elementCtx, rootCtx));
 		}
-
-		TextExpressionContext textExpression = specCtx.textExpression();
-
-		if (textExpression != null) {
-			spec.result(loadTextExpression(specCtx.textExpression()));
-		}
+		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
 	}
@@ -533,17 +535,15 @@ public abstract class FormatSpecDefinition {
 	private ScanSpec loadAnonymousScanSpec(AnonymousScanSpecContext specCtx) {
 		ScanSpec spec = new ScanSpec(resolveExternalReference(specCtx.externalReference(), ScanSpecConfig.class).get());
 
+		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
 		return spec;
 	}
 
-	@SuppressWarnings("null")
-	private void applyStopAfterModifier(SequenceSpec spec, List<SequenceSpecStopAfterModifierContext> modifierCtx,
-			FormatSpecsContext rootCtx) {
-		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
-			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
-					FormatSpec.class));
+	private void applyResultModifier(CompositeSpec spec, @Nullable TextExpressionContext modiferCtx) {
+		if (modiferCtx != null) {
+			spec.result(loadTextExpression(modiferCtx));
 		}
 	}
 
@@ -556,6 +556,13 @@ public abstract class FormatSpecDefinition {
 			} else {
 				throw newLoadException(byteOrderCtx, "Unexpected byte order modifier");
 			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applyRendererModifier(CompositeSpec spec, List<CompositeSpecRendererModifierContext> modifierCtx) {
+		for (CompositeSpecRendererModifierContext rendererCtx : modifierCtx) {
+			spec.renderer(resolveExternalReference(rendererCtx.externalReference(), FileScannerResultRenderer.class));
 		}
 	}
 
@@ -626,9 +633,9 @@ public abstract class FormatSpecDefinition {
 	private ByteSpec loadByteSpec(ByteAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		ByteSpec spec = new ByteSpec(loadTextExpression(specCtx.textExpression()));
 
-		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
 		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ByteHelper::decodeUnsigned,
 				this.byteSymbolsMap);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -638,9 +645,9 @@ public abstract class FormatSpecDefinition {
 	private WordSpec loadWordSpec(WordAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		WordSpec spec = new WordSpec(loadTextExpression(specCtx.textExpression()));
 
-		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
 		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), ShortHelper::decodeUnsigned,
 				this.wordSymbolsMap);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -650,9 +657,9 @@ public abstract class FormatSpecDefinition {
 	private DWordSpec loadDWordSpec(DwordAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		DWordSpec spec = new DWordSpec(loadTextExpression(specCtx.textExpression()));
 
-		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
 		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), IntHelper::decodeUnsigned,
 				this.dwordSymbolsMap);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;
@@ -662,9 +669,9 @@ public abstract class FormatSpecDefinition {
 	private QWordSpec loadQWordSpec(QwordAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		QWordSpec spec = new QWordSpec(loadTextExpression(specCtx.textExpression()));
 
-		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
 		applyValidateNumberModifier(spec, specCtx.attributeValidateNumberModifier(), LongHelper::decodeUnsigned,
 				this.qwordSymbolsMap);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 		return spec;

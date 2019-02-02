@@ -150,7 +150,7 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 
 structSpec
@@ -158,7 +158,7 @@ structSpec
 	;
 	
 anonymousStructSpec
-	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpec
@@ -166,7 +166,7 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? formatSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: Sequence textExpression? formatSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpecStopAfterModifier
@@ -178,7 +178,7 @@ unionSpec
 	;
 
 anonymousUnionSpec
-	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 scanSpec
@@ -186,7 +186,7 @@ scanSpec
 	;
 
 anonymousScanSpec
-	: Scan textExpression? externalReference (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier))*
+	: Scan textExpression? externalReference (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 compositeSpecByteOrderModifier
@@ -195,6 +195,10 @@ compositeSpecByteOrderModifier
 	
 compositeSpecExportModifier
 	: Export LBracket externalReference RBracket
+	;
+	
+compositeSpecRendererModifier
+	: Renderer LBracket externalReference RBracket
 	;
 	
 formatSpecElement

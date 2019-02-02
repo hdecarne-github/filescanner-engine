@@ -116,7 +116,8 @@ struct {
 	qword "qword_magic"
 		->validate(0x123456789abcdef0)
 }	->littleEndian()
-	->export(#specialExport)
+	->renderer(#customRenderer)
+	->export(#customExport)
 
 TEST_STRUCT:
 struct text("Test struct [%d]", @LOCAL_BIND) {
@@ -152,13 +153,15 @@ SCOPED_BIND@TEST_FORMAT:
 	}
 	encoded #encodedInputSpecConfig
 }	->bigEndian()
-	->export(#specialExport)
+	->renderer(#customRenderer)
+	->export(#customExport)
 
 TEST_SEQUENCE:
 sequence @TEST_STRUCT
 	->stopAfter(@TEST_STRUCT)
 	->bigEndian()
-	->export(#specialExport)
+	->renderer(#customRenderer)
+	->export(#customExport)
 
 TEST_UNION:
 union {
@@ -171,7 +174,8 @@ union {
 	}
 	sequence @TEST_HEADER
 }	->bigEndian()
-	->export(#specialExport)
+	->renderer(#customRenderer)
+	->export(#customExport)
 
 TEST_SCAN:
 scan "scan" #scanConfig

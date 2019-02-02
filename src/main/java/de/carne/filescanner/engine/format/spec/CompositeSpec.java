@@ -41,8 +41,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	private boolean result = false;
 	private Supplier<String> resultName = FinalSupplier.of("<undefined>");
-	@Nullable
-	private FileScannerResultRenderer customRenderer = null;
+	private @Nullable Supplier<FileScannerResultRenderer> customRenderer = null;
 	private List<Supplier<FileScannerResultExportHandler>> exportHandlers = new ArrayList<>();
 
 	/**
@@ -93,7 +92,18 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @param renderer the {@linkplain FileScannerResultRenderer} to use for rendering this spec.
 	 * @return the updated {@linkplain CompositeSpec} for chaining.
 	 */
-	public CompositeSpec render(FileScannerResultRenderer renderer) {
+	public CompositeSpec renderer(FileScannerResultRenderer renderer) {
+		this.customRenderer = FinalSupplier.of(renderer);
+		return this;
+	}
+
+	/**
+	 * Sets a custom {@linkplain FileScannerResultRenderer} for rendering this spec.
+	 *
+	 * @param renderer the {@linkplain FileScannerResultRenderer} to use for rendering this spec.
+	 * @return the updated {@linkplain CompositeSpec} for chaining.
+	 */
+	public CompositeSpec renderer(Supplier<FileScannerResultRenderer> renderer) {
 		this.customRenderer = renderer;
 		return this;
 	}
@@ -176,10 +186,8 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		FileScannerResultRenderer checkedCustomRenderer = this.customRenderer;
-
-		if (checkedCustomRenderer != null) {
-			checkedCustomRenderer.render(out, context);
+		if (this.customRenderer != null) {
+			this.customRenderer.get().render(out, context);
 		}
 	}
 
