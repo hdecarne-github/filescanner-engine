@@ -442,6 +442,9 @@ public abstract class FormatSpecDefinition {
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
 		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
 		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+
 		this.specs.put(specIdentifier, () -> spec);
 	}
 
@@ -449,6 +452,8 @@ public abstract class FormatSpecDefinition {
 	private StructSpec loadStructSpec(StructSpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		StructSpec spec = loadAnonymousStructSpec(specCtx.anonymousStructSpec(), rootCtx);
+
+		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -472,6 +477,8 @@ public abstract class FormatSpecDefinition {
 	private SequenceSpec loadSequenceSpec(SequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		SequenceSpec spec = loadAnonymousSequenceSpec(specCtx.anonymousSequenceSpec(), rootCtx);
+
+		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -504,6 +511,8 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		UnionSpec spec = loadAnonymousUnionSpec(specCtx.anonymousUnionSpec(), rootCtx);
 
+		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
 	}
@@ -526,6 +535,8 @@ public abstract class FormatSpecDefinition {
 	private ScanSpec loadScanSpec(ScanSpecContext specCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		ScanSpec spec = loadAnonymousScanSpec(specCtx.anonymousScanSpec());
+
+		LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
 		return spec;
@@ -819,6 +830,9 @@ public abstract class FormatSpecDefinition {
 			} else {
 				spec.bind();
 			}
+
+			LOG.debug("Loaded spec {0}: {1}", specIdentifier, spec);
+
 			this.specs.put(specIdentifier, () -> spec);
 		}
 	}

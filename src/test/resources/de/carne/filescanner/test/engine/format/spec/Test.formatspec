@@ -80,12 +80,16 @@ format_spec #specialText {
 	struct "inline struct" {
 		byte "byte_magic"
 			->validate(0x12)
+			->format("%x")
 		word "word_magic"
 			->validate(0x1234)
+			->format("%x")
 		dword "dword_magic"
 			->validate(0x12345678)
+			->format("%x")
 		qword "qword_magic"
 			->validate(0x123456789abcdef0)
+			->format("%x")
 	}
 	@TEST_HEADER
 	@TEST_STRUCT
