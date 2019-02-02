@@ -72,7 +72,6 @@ Number: DecimalNumber|OctalNumber|HexaDecimalNumber;
 fragment DecimalNumber: '0'|[1-9][0-9]*;
 fragment OctalNumber: '0'[1-7][0-7]*;
 fragment HexaDecimalNumber: '0x'[0-9a-fA-F]+;
-NumberArray: LCBracket (Number (Comma Number)* )? RCBracket;
 
 Identifier: [a-zA-Z][a-zA-Z0-9_]*;
 QuotedString: '"' (~["\\\r\n]|'\\'[btnfr"\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])* '"';
@@ -226,43 +225,39 @@ attributeSpec
 	;
 
 byteAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeFormatModifier|attributeValidateNumberModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 wordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeFormatModifier|attributeValidateNumberModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 dwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeFormatModifier|attributeValidateNumberModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 qwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeFormatModifier|attributeValidateNumberModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 byteArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateNumberArrayModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 wordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateNumberArrayModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 dwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateNumberArrayModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 qwordArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateNumberArrayModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateNumberArrayModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
 charArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeFormatModifier|attributeValidateStringModifier|attributeRendererModifier|stringAttributeCharsetModifier))*
-	;
-	
-attributeFormatModifier
-	: Format LBracket (formatText|specReference) RBracket
+	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|attributeFormatModifier|attributeRendererModifier|stringAttributeCharsetModifier))*
 	;
 	
 attributeValidateNumberModifier
@@ -279,6 +274,10 @@ attributeValidateStringModifier
 	
 attributeRendererModifier
 	: Renderer LBracket specReference RBracket
+	;
+	
+attributeFormatModifier
+	: Format LBracket (formatText|specReference) RBracket
 	;
 	
 stringAttributeCharsetModifier
@@ -302,7 +301,7 @@ numberValue
 	;
 
 numberArrayValue
-	: NumberArray
+	: LCBracket (numberValue (Comma numberValue)* )? RCBracket
 	;
 
 textExpression

@@ -119,6 +119,14 @@ struct {
 		->validate(0x12345678)
 	qword "qword_magic"
 		->validate(0x123456789abcdef0)
+	byte[2] "bytes_magic"
+		->validate({0x01, 0x7f})
+	word[2] "words_magic"
+		->validate({0x0001, 0x7fff})
+	dword[2] "dwords_magic"
+		->validate({0x00000001, 0x7fffffff})
+	qword[2] "qwords_magic"
+		->validate({0x0000000000000001, 0x7fffffffffffffff})
 }	->littleEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)
