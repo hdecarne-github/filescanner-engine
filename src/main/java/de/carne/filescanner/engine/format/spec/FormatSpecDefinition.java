@@ -963,7 +963,7 @@ public abstract class FormatSpecDefinition {
 				}
 				spec.validate(symbols);
 			} else {
-				throw newLoadException(validateCtx, "Unexpected validate modifier");
+				throw newLoadException(validateCtx, "Unexpected validate number modifier");
 			}
 		}
 	}
@@ -977,7 +977,7 @@ public abstract class FormatSpecDefinition {
 			if ((numberArrayValueCtx = validateCtx.numberArrayValue()) != null) {
 				spec.validate(decodeNumberArrayValue(numberArrayValueCtx.numberValue(), decode));
 			} else {
-				throw newLoadException(validateCtx, "Unexpected validate modifier");
+				throw newLoadException(validateCtx, "Unexpected validate number array modifier");
 			}
 		}
 	}
@@ -1002,7 +1002,7 @@ public abstract class FormatSpecDefinition {
 			if ((simpleTextCtx = validateCtx.simpleText()) != null) {
 				spec.validate(decodeQuotedString(simpleTextCtx.getText()));
 			} else {
-				throw newLoadException(validateCtx, "Unexpected validate modifier");
+				throw newLoadException(validateCtx, "Unexpected validate string modifier");
 			}
 		}
 	}
