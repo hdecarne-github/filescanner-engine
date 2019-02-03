@@ -150,12 +150,21 @@ ARRAY_SIZE:
 	qword "test formatted & rendered qword attribute"
 		->format(@TestFormat)
 		->renderer(@TestRenderer)
-	byte[@ARRAY_SIZE] "byte array attribute"
-	word[@ARRAY_SIZE] "word array attribute"
-	dword[@ARRAY_SIZE] "dword array attribute"
-	qword[@ARRAY_SIZE] "qword array attribute"
+	byte[@ARRAY_SIZE] "test formatted & rendered byte array attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	word[@ARRAY_SIZE] "test formatted & rendered word array attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	dword[@ARRAY_SIZE] "test formatted & rendered dword array attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
+	qword[@ARRAY_SIZE] "test formatted & rendered qword array attribute"
+		->format(@TestFormat)
+		->renderer(@TestRenderer)
 	char[@ARRAY_SIZE] "char array attribute"
 		->charset("UTF-8")
+		->validate("abcdABCD")
 LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:

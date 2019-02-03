@@ -36,7 +36,7 @@ public abstract class StringAttributeSpec extends AttributeSpec<String> {
 	 * @param name the attribute's name.
 	 */
 	public StringAttributeSpec(Supplier<String> name) {
-		super(String.class, name);
+		super(String.class, String::equals, name);
 		format(PrettyFormat.STRING_FORMATTER);
 	}
 

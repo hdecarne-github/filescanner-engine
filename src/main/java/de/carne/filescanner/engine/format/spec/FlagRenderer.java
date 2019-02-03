@@ -37,6 +37,7 @@ public abstract class FlagRenderer<T> extends LinkedHashMap<T, String> implement
 	private static final long serialVersionUID = -5863180152604163026L;
 
 	@Override
+	@SuppressWarnings("squid:S3776")
 	public void render(RenderOutput out, T value) throws IOException {
 		Iterator<T> flags = flags();
 		Iterator<Map.Entry<T, String>> symbolEntries = entrySet().iterator();

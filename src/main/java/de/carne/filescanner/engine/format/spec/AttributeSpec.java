@@ -17,11 +17,13 @@
 package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -45,6 +47,7 @@ import de.carne.util.Strings;
 public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 
 	private final Class<T> type;
+	private final BiPredicate<T, T> typeEquals;
 	private final Supplier<String> name;
 	private AttributeFormatter<T> format = Object::toString;
 	private final List<AttributeValidator<T>> validators = new ArrayList<>();
@@ -57,10 +60,12 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * Constructs a new {@linkplain AttributeSpec} instance.
 	 *
 	 * @param type the attribute's type.
+	 * @param typeEquals the attribute's equal function.
 	 * @param name the attribute's name.
 	 */
-	protected AttributeSpec(Class<T> type, Supplier<String> name) {
+	protected AttributeSpec(Class<T> type, BiPredicate<T, T> typeEquals, Supplier<String> name) {
 		this.type = type;
+		this.typeEquals = typeEquals;
 		this.name = name;
 	}
 
@@ -68,11 +73,11 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * Constructs a new {@linkplain AttributeSpec} instance.
 	 *
 	 * @param type the attribute's type.
+	 * @param typeEquals the attribute's equal function.
 	 * @param name The attribute's name.
 	 */
-	protected AttributeSpec(Class<T> type, String name) {
-		this.type = type;
-		this.name = FinalSupplier.of(name);
+	protected AttributeSpec(Class<T> type, BiPredicate<T, T> typeEquals, String name) {
+		this(type, typeEquals, FinalSupplier.of(name));
 	}
 
 	/**
@@ -111,7 +116,27 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> format(String formatter) {
-		return format(value -> String.format(formatter, value));
+		AttributeFormatter<T> attributeFormatter;
+
+		if (this.type.isArray()) {
+			attributeFormatter = value -> {
+				StringBuilder buffer = new StringBuilder();
+				int length = Array.getLength(value);
+
+				buffer.append("{ ");
+				for (int index = 0; index < length; index++) {
+					if (index > 0) {
+						buffer.append(", ");
+					}
+					buffer.append(String.format(formatter, Array.get(value, index)));
+				}
+				buffer.append(length > 0 ? " }" : "}");
+				return buffer.toString();
+			};
+		} else {
+			attributeFormatter = value -> String.format(formatter, value);
+		}
+		return format(attributeFormatter);
 	}
 
 	/**
@@ -132,7 +157,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> validate(@NonNull T value) {
-		return validate(value::equals);
+		return validate(value2 -> this.typeEquals.test(value2, value));
 	}
 
 	/**
@@ -199,7 +224,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the decoded value.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	protected abstract T decodeValue(FileScannerResultInputContext context) throws IOException;
+	protected abstract @NonNull T decodeValue(FileScannerResultInputContext context) throws IOException;
 
 	/**
 	 * Validates the attribute value against any defined validator.

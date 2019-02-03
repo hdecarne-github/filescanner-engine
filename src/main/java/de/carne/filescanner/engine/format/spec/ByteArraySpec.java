@@ -18,6 +18,7 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
@@ -40,7 +41,7 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	 * @param name the attribute's name.
 	 */
 	public ByteArraySpec(Supplier<String> name) {
-		super(byte[].class, name);
+		super(byte[].class, Arrays::equals, name);
 		format(HexFormat.BYTE_ARRAY_FORMATTER);
 	}
 
@@ -50,8 +51,7 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	 * @param name The attribute's name.
 	 */
 	public ByteArraySpec(String name) {
-		super(byte[].class, name);
-		format(HexFormat.BYTE_ARRAY_FORMATTER);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

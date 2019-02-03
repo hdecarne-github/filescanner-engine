@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.util;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
  * Utility class providing {@linkplain Short} related functions.
  */
@@ -31,13 +33,29 @@ public final class ShortHelper {
 	 * @param string the input to decode.
 	 * @return the decoded value.
 	 */
-	public static Short decodeUnsigned(String string) {
+	public static short decodeUnsigned(String string) {
 		int value = Integer.decode(string).intValue();
 
 		if (value > 0xffff) {
 			throw new NumberFormatException("Value " + value + " out of range from input " + string);
 		}
-		return Short.valueOf((short) (value & 0xffff));
+		return (short) (value & 0xffff);
+	}
+
+	/**
+	 * Decode unsigned {@code short[]} value.
+	 *
+	 * @param stringArray the input to decode.
+	 * @return the decoded value.
+	 */
+	public static short[] decodeUnsignedArray(@NonNull String[] stringArray) {
+		int length = stringArray.length;
+		short[] valueArray = new short[length];
+
+		for (int index = 0; index < length; index++) {
+			valueArray[index] = decodeUnsigned(stringArray[index]);
+		}
+		return valueArray;
 	}
 
 }

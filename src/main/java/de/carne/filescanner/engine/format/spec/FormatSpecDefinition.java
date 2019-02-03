@@ -54,7 +54,9 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.A
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeFormatModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeValidateNumberArrayModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeValidateNumberModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeValidateStringModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteFlagSymbolsContext;
@@ -76,6 +78,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.F
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatTextContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberArrayValueContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberValueContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordArrayAttributeSpecContext;
@@ -131,11 +134,19 @@ public abstract class FormatSpecDefinition {
 	private final Map<String, AttributeFormatter<Short>> wordAttributeFormatter = new HashMap<>();
 	private final Map<String, AttributeFormatter<Integer>> dwordAttributeFormatter = new HashMap<>();
 	private final Map<String, AttributeFormatter<Long>> qwordAttributeFormatter = new HashMap<>();
+	private final Map<String, AttributeFormatter<byte[]>> byteArrayAttributeFormatter = new HashMap<>();
+	private final Map<String, AttributeFormatter<short[]>> wordArrayAttributeFormatter = new HashMap<>();
+	private final Map<String, AttributeFormatter<int[]>> dwordArrayAttributeFormatter = new HashMap<>();
+	private final Map<String, AttributeFormatter<long[]>> qwordArrayAttributeFormatter = new HashMap<>();
 
 	private final Map<String, AttributeRenderer<Byte>> byteAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<Short>> wordAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<Integer>> dwordAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<Long>> qwordAttributeRenderer = new HashMap<>();
+	private final Map<String, AttributeRenderer<byte[]>> byteArrayAttributeRenderer = new HashMap<>();
+	private final Map<String, AttributeRenderer<short[]>> wordArrayAttributeRenderer = new HashMap<>();
+	private final Map<String, AttributeRenderer<int[]>> dwordArrayAttributeRenderer = new HashMap<>();
+	private final Map<String, AttributeRenderer<long[]>> qwordArrayAttributeRenderer = new HashMap<>();
 
 	private final Map<String, Supplier<FormatSpec>> specs = new HashMap<>();
 
@@ -150,11 +161,19 @@ public abstract class FormatSpecDefinition {
 		this.wordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.SHORT_FORMATTER);
 		this.dwordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.INT_FORMATTER);
 		this.qwordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.LONG_FORMATTER);
+		this.byteArrayAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.BYTE_ARRAY_FORMATTER);
+		this.wordArrayAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.SHORT_ARRAY_FORMATTER);
+		this.dwordArrayAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.INT_ARRAY_FORMATTER);
+		this.qwordArrayAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.LONG_ARRAY_FORMATTER);
 		// @HexFormat
 		this.byteAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.BYTE_FORMATTER);
 		this.wordAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.SHORT_FORMATTER);
 		this.dwordAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.INT_FORMATTER);
 		this.qwordAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.LONG_FORMATTER);
+		this.byteArrayAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.BYTE_ARRAY_FORMATTER);
+		this.wordArrayAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.SHORT_ARRAY_FORMATTER);
+		this.dwordArrayAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.INT_ARRAY_FORMATTER);
+		this.qwordArrayAttributeFormatter.put(HexFormat.class.getSimpleName(), HexFormat.LONG_ARRAY_FORMATTER);
 		// @SizeRenderer
 		this.byteAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.BYTE_RENDERER);
 		this.wordAttributeRenderer.put(SizeRenderer.class.getSimpleName(), SizeRenderer.SHORT_RENDERER);
@@ -231,6 +250,66 @@ public abstract class FormatSpecDefinition {
 	}
 
 	/**
+	 * Adds a byte array {@linkplain AttributeFormatter}.
+	 *
+	 * @param identifier the formatter identifier.
+	 * @param formatter the {@linkplain AttributeFormatter} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addByteArrayAttributeFormatter(String identifier,
+			AttributeFormatter<byte[]> formatter) {
+		if (this.byteArrayAttributeFormatter.put(identifier, formatter) != null) {
+			LOG.warning("Redefinition of byte array attribute formatter ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a word array {@linkplain AttributeFormatter}.
+	 *
+	 * @param identifier the formatter identifier.
+	 * @param formatter the {@linkplain AttributeFormatter} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addWordArrayAttributeFormatter(String identifier,
+			AttributeFormatter<short[]> formatter) {
+		if (this.wordArrayAttributeFormatter.put(identifier, formatter) != null) {
+			LOG.warning("Redefinition of word array attribute formatter ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a double word array {@linkplain AttributeFormatter}.
+	 *
+	 * @param identifier the formatter identifier.
+	 * @param formatter the {@linkplain AttributeFormatter} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addDWordArrayAttributeFormatter(String identifier,
+			AttributeFormatter<int[]> formatter) {
+		if (this.dwordArrayAttributeFormatter.put(identifier, formatter) != null) {
+			LOG.warning("Redefinition of dword array attribute formatter ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a quad word array {@linkplain AttributeFormatter}.
+	 *
+	 * @param identifier the formatter identifier.
+	 * @param formatter the {@linkplain AttributeFormatter} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addQWordArrayAttributeFormatter(String identifier,
+			AttributeFormatter<long[]> formatter) {
+		if (this.qwordArrayAttributeFormatter.put(identifier, formatter) != null) {
+			LOG.warning("Redefinition of qword array attribute formatter ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
 	 * Adds a byte {@linkplain AttributeRenderer}.
 	 *
 	 * @param identifier the renderer identifier.
@@ -282,6 +361,62 @@ public abstract class FormatSpecDefinition {
 	public FormatSpecDefinition addQWordAttributeRenderer(String identifier, AttributeRenderer<Long> renderer) {
 		if (this.qwordAttributeRenderer.put(identifier, renderer) != null) {
 			LOG.warning("Redefinition of qword attribute renderer ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a byte array {@linkplain AttributeRenderer}.
+	 *
+	 * @param identifier the renderer identifier.
+	 * @param renderer the {@linkplain AttributeRenderer} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addByteArrayAttributeRenderer(String identifier, AttributeRenderer<byte[]> renderer) {
+		if (this.byteArrayAttributeRenderer.put(identifier, renderer) != null) {
+			LOG.warning("Redefinition of byte array attribute renderer ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a word array {@linkplain AttributeRenderer}.
+	 *
+	 * @param identifier the renderer identifier.
+	 * @param renderer the {@linkplain AttributeRenderer} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addWordArrayAttributeRenderer(String identifier, AttributeRenderer<short[]> renderer) {
+		if (this.wordArrayAttributeRenderer.put(identifier, renderer) != null) {
+			LOG.warning("Redefinition of byte array attribute renderer ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a double word array {@linkplain AttributeRenderer}.
+	 *
+	 * @param identifier the renderer identifier.
+	 * @param renderer the {@linkplain AttributeRenderer} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addDWordArrayAttributeRenderer(String identifier, AttributeRenderer<int[]> renderer) {
+		if (this.dwordArrayAttributeRenderer.put(identifier, renderer) != null) {
+			LOG.warning("Redefinition of dword array attribute renderer ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a quad word array {@linkplain AttributeRenderer}.
+	 *
+	 * @param identifier the renderer identifier.
+	 * @param renderer the {@linkplain AttributeRenderer} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addQWordArrayAttributeRenderer(String identifier, AttributeRenderer<long[]> renderer) {
+		if (this.qwordArrayAttributeRenderer.put(identifier, renderer) != null) {
+			LOG.warning("Redefinition of qword array attribute renderer ''{0}''", identifier);
 		}
 		return this;
 	}
@@ -734,6 +869,10 @@ public abstract class FormatSpecDefinition {
 		ByteArraySpec spec = new ByteArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
+				ByteHelper::decodeUnsignedArray);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteArrayAttributeFormatter);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteArrayAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -746,6 +885,10 @@ public abstract class FormatSpecDefinition {
 		WordArraySpec spec = new WordArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
+				ShortHelper::decodeUnsignedArray);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordArrayAttributeFormatter);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordArrayAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -758,6 +901,10 @@ public abstract class FormatSpecDefinition {
 		DWordArraySpec spec = new DWordArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
+				IntHelper::decodeUnsignedArray);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordArrayAttributeFormatter);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordArrayAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -770,6 +917,10 @@ public abstract class FormatSpecDefinition {
 		QWordArraySpec spec = new QWordArraySpec(loadTextExpression(specCtx.textExpression()));
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
+				LongHelper::decodeUnsignedArray);
+		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordArrayAttributeFormatter);
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordArrayAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -783,6 +934,7 @@ public abstract class FormatSpecDefinition {
 
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		applyCharsetModifier(spec, specCtx.stringAttributeCharsetModifier());
+		applyValidateStringModifier(spec, specCtx.attributeValidateStringModifier());
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -810,6 +962,45 @@ public abstract class FormatSpecDefinition {
 					throw newLoadException(specReferenceCtx, "Unknown symbols reference @%s", specIdentifier);
 				}
 				spec.validate(symbols);
+			} else {
+				throw newLoadException(validateCtx, "Unexpected validate modifier");
+			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private <T> void applyValidateNumberArrayModifier(AttributeSpec<T> spec,
+			List<AttributeValidateNumberArrayModifierContext> modifierCtx, Function<String[], T> decode) {
+		for (AttributeValidateNumberArrayModifierContext validateCtx : modifierCtx) {
+			NumberArrayValueContext numberArrayValueCtx;
+
+			if ((numberArrayValueCtx = validateCtx.numberArrayValue()) != null) {
+				spec.validate(decodeNumberArrayValue(numberArrayValueCtx.numberValue(), decode));
+			} else {
+				throw newLoadException(validateCtx, "Unexpected validate modifier");
+			}
+		}
+	}
+
+	private <T> T decodeNumberArrayValue(List<NumberValueContext> numberValueCtx, Function<String[], T> decode) {
+		String[] numberArrayValueTexts = new String[numberValueCtx.size()];
+		int numberArrayValueTextIndex = 0;
+
+		for (NumberValueContext numberValue : numberValueCtx) {
+			numberArrayValueTexts[numberArrayValueTextIndex] = numberValue.getText();
+			numberArrayValueTextIndex++;
+		}
+		return decode.apply(numberArrayValueTexts);
+	}
+
+	@SuppressWarnings("null")
+	private void applyValidateStringModifier(AttributeSpec<String> spec,
+			List<AttributeValidateStringModifierContext> modifierCtx) {
+		for (AttributeValidateStringModifierContext validateCtx : modifierCtx) {
+			SimpleTextContext simpleTextCtx;
+
+			if ((simpleTextCtx = validateCtx.simpleText()) != null) {
+				spec.validate(decodeQuotedString(simpleTextCtx.getText()));
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate modifier");
 			}

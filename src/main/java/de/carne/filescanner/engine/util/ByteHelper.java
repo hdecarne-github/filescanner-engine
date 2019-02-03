@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.util;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
  * Utility class providing {@linkplain Byte} related functions.
  */
@@ -31,13 +33,29 @@ public final class ByteHelper {
 	 * @param string the input to decode.
 	 * @return the decoded value.
 	 */
-	public static Byte decodeUnsigned(String string) {
+	public static byte decodeUnsigned(String string) {
 		short value = Short.decode(string).shortValue();
 
 		if (value > 0xff) {
 			throw new NumberFormatException("Value " + value + " out of range from input " + string);
 		}
-		return Byte.valueOf((byte) (value & 0xff));
+		return (byte) (value & 0xff);
+	}
+
+	/**
+	 * Decode unsigned {@code byte[]} value.
+	 *
+	 * @param stringArray the input to decode.
+	 * @return the decoded value.
+	 */
+	public static byte[] decodeUnsignedArray(@NonNull String[] stringArray) {
+		int length = stringArray.length;
+		byte[] valueArray = new byte[length];
+
+		for (int index = 0; index < length; index++) {
+			valueArray[index] = decodeUnsigned(stringArray[index]);
+		}
+		return valueArray;
 	}
 
 }

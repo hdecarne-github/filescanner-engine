@@ -257,7 +257,7 @@ qwordArrayAttributeSpec
 	;
 
 charArrayAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|attributeFormatModifier|attributeRendererModifier|stringAttributeCharsetModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|stringAttributeCharsetModifier))*
 	;
 	
 attributeValidateNumberModifier
@@ -265,11 +265,11 @@ attributeValidateNumberModifier
 	;
 	
 attributeValidateNumberArrayModifier
-	: Validate LBracket (numberArrayValue|specReference) RBracket
+	: Validate LBracket numberArrayValue RBracket
 	;
 
 attributeValidateStringModifier
-	: Validate LBracket (simpleText|specReference) RBracket
+	: Validate LBracket simpleText RBracket
 	;
 	
 attributeRendererModifier

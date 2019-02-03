@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.util;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
  * Utility class providing {@linkplain Integer} related functions.
  */
@@ -31,13 +33,29 @@ public final class IntHelper {
 	 * @param string the input to decode.
 	 * @return the decoded value.
 	 */
-	public static Integer decodeUnsigned(String string) {
+	public static int decodeUnsigned(String string) {
 		long value = Long.decode(string).intValue();
 
 		if (value > 0xffffffffl) {
 			throw new NumberFormatException("Value " + value + " out of range from input " + string);
 		}
-		return Integer.valueOf((int) (value & 0xffffffffffl));
+		return (int) (value & 0xffffffffffl);
+	}
+
+	/**
+	 * Decode unsigned {@code int[]} value.
+	 *
+	 * @param stringArray the input to decode.
+	 * @return the decoded value.
+	 */
+	public static int[] decodeUnsignedArray(@NonNull String[] stringArray) {
+		int length = stringArray.length;
+		int[] valueArray = new int[length];
+
+		for (int index = 0; index < length; index++) {
+			valueArray[index] = decodeUnsigned(stringArray[index]);
+		}
+		return valueArray;
 	}
 
 }

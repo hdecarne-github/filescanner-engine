@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Base class for fixed size number attribute format elements.
@@ -36,7 +37,7 @@ public abstract class NumberAttributeSpec<T extends Number> extends AttributeSpe
 	 * @param name the attribute's name.
 	 */
 	protected NumberAttributeSpec(Class<T> type, Supplier<String> name) {
-		super(type, name);
+		super(type, Number::equals, name);
 	}
 
 	/**
@@ -46,7 +47,7 @@ public abstract class NumberAttributeSpec<T extends Number> extends AttributeSpe
 	 * @param name The attribute's name.
 	 */
 	protected NumberAttributeSpec(Class<T> type, String name) {
-		super(type, name);
+		this(type, FinalSupplier.of(name));
 	}
 
 	@Override

@@ -16,10 +16,9 @@
  */
 package de.carne.filescanner.test.engine.format.spec;
 
-import org.junit.jupiter.api.Test;
+import java.util.Arrays;
 
-import de.carne.filescanner.engine.format.PrettyFormat;
-import de.carne.filescanner.engine.format.spec.SizeRenderer;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test {@FormatSpecDefinition} class.
@@ -33,14 +32,22 @@ class FormatSpecDefinitionTest {
 	void testFormatSpecDefinition() {
 		TestFormatSpecDefinition testFormat = new TestFormatSpecDefinition();
 
-		testFormat.addByteAttributeFormatter(TEST_FORMAT, PrettyFormat.BYTE_FORMATTER);
-		testFormat.addWordAttributeFormatter(TEST_FORMAT, PrettyFormat.SHORT_FORMATTER);
-		testFormat.addDWordAttributeFormatter(TEST_FORMAT, PrettyFormat.INT_FORMATTER);
-		testFormat.addQWordAttributeFormatter(TEST_FORMAT, PrettyFormat.LONG_FORMATTER);
-		testFormat.addByteAttributeRenderer(TEST_RENDERER, SizeRenderer.BYTE_RENDERER);
-		testFormat.addWordAttributeRenderer(TEST_RENDERER, SizeRenderer.SHORT_RENDERER);
-		testFormat.addDWordAttributeRenderer(TEST_RENDERER, SizeRenderer.INT_RENDERER);
-		testFormat.addQWordAttributeRenderer(TEST_RENDERER, SizeRenderer.LONG_RENDERER);
+		testFormat.addByteAttributeFormatter(TEST_FORMAT, value -> value.toString());
+		testFormat.addWordAttributeFormatter(TEST_FORMAT, value -> value.toString());
+		testFormat.addDWordAttributeFormatter(TEST_FORMAT, value -> value.toString());
+		testFormat.addQWordAttributeFormatter(TEST_FORMAT, value -> value.toString());
+		testFormat.addByteArrayAttributeFormatter(TEST_FORMAT, value -> Arrays.toString(value));
+		testFormat.addWordArrayAttributeFormatter(TEST_FORMAT, value -> Arrays.toString(value));
+		testFormat.addDWordArrayAttributeFormatter(TEST_FORMAT, value -> Arrays.toString(value));
+		testFormat.addQWordArrayAttributeFormatter(TEST_FORMAT, value -> Arrays.toString(value));
+		testFormat.addByteAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
+		testFormat.addWordAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
+		testFormat.addDWordAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
+		testFormat.addQWordAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
+		testFormat.addByteArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
+		testFormat.addWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
+		testFormat.addDWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
+		testFormat.addQWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
 		testFormat.load();
 	}
 

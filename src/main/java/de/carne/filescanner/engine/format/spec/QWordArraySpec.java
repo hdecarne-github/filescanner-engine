@@ -18,6 +18,7 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
@@ -40,7 +41,7 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 	 * @param name the attribute's name.
 	 */
 	public QWordArraySpec(Supplier<String> name) {
-		super(long[].class, name);
+		super(long[].class, Arrays::equals, name);
 		format(HexFormat.LONG_ARRAY_FORMATTER);
 	}
 
@@ -50,8 +51,7 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 	 * @param name The attribute's name.
 	 */
 	public QWordArraySpec(String name) {
-		super(long[].class, name);
-		// TODO: format(HexFormat.INTS_FORMATTER);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

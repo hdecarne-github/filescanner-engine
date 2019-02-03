@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.util;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 /**
  * Utility class providing {@linkplain Integer} related functions.
  */
@@ -31,8 +33,24 @@ public final class LongHelper {
 	 * @param string the input to decode.
 	 * @return the decoded value.
 	 */
-	public static Long decodeUnsigned(String string) {
-		return Long.decode(string);
+	public static long decodeUnsigned(String string) {
+		return Long.decode(string).longValue();
+	}
+
+	/**
+	 * Decode unsigned {@code long[]} value.
+	 *
+	 * @param stringArray the input to decode.
+	 * @return the decoded value.
+	 */
+	public static long[] decodeUnsignedArray(@NonNull String[] stringArray) {
+		int length = stringArray.length;
+		long[] valueArray = new long[length];
+
+		for (int index = 0; index < length; index++) {
+			valueArray[index] = decodeUnsigned(stringArray[index]);
+		}
+		return valueArray;
 	}
 
 }

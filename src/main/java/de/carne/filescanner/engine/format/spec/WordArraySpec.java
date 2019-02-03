@@ -18,6 +18,7 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
@@ -40,7 +41,7 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 	 * @param name the attribute's name.
 	 */
 	public WordArraySpec(Supplier<String> name) {
-		super(short[].class, name);
+		super(short[].class, Arrays::equals, name);
 		format(HexFormat.SHORT_ARRAY_FORMATTER);
 	}
 
@@ -50,8 +51,7 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 	 * @param name The attribute's name.
 	 */
 	public WordArraySpec(String name) {
-		super(short[].class, name);
-		// TODO: format(HexFormat.SHORTS_FORMATTER);
+		this(FinalSupplier.of(name));
 	}
 
 	/**

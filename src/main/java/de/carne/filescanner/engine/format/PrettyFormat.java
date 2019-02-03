@@ -28,7 +28,7 @@ public final class PrettyFormat {
 		// Prevent instantiation
 	}
 
-	private static final String NUMBER_FORMAT = "%1$,d";
+	private static final String NUMBER_FORMAT = "%d";
 
 	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Byte} values.
@@ -43,6 +43,28 @@ public final class PrettyFormat {
 	 */
 	public static String formatByteNumber(byte value) {
 		return String.format(NUMBER_FORMAT, value);
+	}
+
+	/**
+	 * {@linkplain AttributeFormatter} for {@code byte[]} values.
+	 */
+	public static final AttributeFormatter<byte[]> BYTE_ARRAY_FORMATTER = PrettyFormat::formatByteNumberArray;
+
+	/**
+	 * Formats a {@code byte[]} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatByteNumberArray(byte[] value) {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append("{ ");
+		for (byte valueElement : value) {
+			buffer.append(formatByteNumber(valueElement));
+		}
+		buffer.append('}');
+		return buffer.toString();
 	}
 
 	/**
@@ -61,6 +83,28 @@ public final class PrettyFormat {
 	}
 
 	/**
+	 * {@linkplain AttributeFormatter} for {@code short[]} values.
+	 */
+	public static final AttributeFormatter<short[]> SHORT_ARRAY_FORMATTER = PrettyFormat::formatShortNumberArray;
+
+	/**
+	 * Formats a {@code short[]} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatShortNumberArray(short[] value) {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append("{ ");
+		for (short valueElement : value) {
+			buffer.append(formatShortNumber(valueElement));
+		}
+		buffer.append('}');
+		return buffer.toString();
+	}
+
+	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Integer} values.
 	 */
 	public static final AttributeFormatter<Integer> INT_FORMATTER = PrettyFormat::formatIntNumber;
@@ -76,6 +120,28 @@ public final class PrettyFormat {
 	}
 
 	/**
+	 * {@linkplain AttributeFormatter} for {@code int[]} values.
+	 */
+	public static final AttributeFormatter<int[]> INT_ARRAY_FORMATTER = PrettyFormat::formatIntNumberArray;
+
+	/**
+	 * Formats a {@code int[]} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatIntNumberArray(int[] value) {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append("{ ");
+		for (int valueElement : value) {
+			buffer.append(formatIntNumber(valueElement));
+		}
+		buffer.append('}');
+		return buffer.toString();
+	}
+
+	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Long} values.
 	 */
 	public static final AttributeFormatter<Long> LONG_FORMATTER = PrettyFormat::formatLongNumber;
@@ -88,6 +154,28 @@ public final class PrettyFormat {
 	 */
 	public static String formatLongNumber(long value) {
 		return String.format(NUMBER_FORMAT, value);
+	}
+
+	/**
+	 * {@linkplain AttributeFormatter} for {@code long[]} values.
+	 */
+	public static final AttributeFormatter<long[]> LONG_ARRAY_FORMATTER = PrettyFormat::formatLongNumberArray;
+
+	/**
+	 * Formats a {@code long[]} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatLongNumberArray(long[] value) {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append("{ ");
+		for (long valueElement : value) {
+			buffer.append(formatLongNumber(valueElement));
+		}
+		buffer.append('}');
+		return buffer.toString();
 	}
 
 	/**
