@@ -32,7 +32,6 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public class DWordArraySpec extends AttributeSpec<int[]> {
 
-	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 
 	/**
@@ -61,7 +60,6 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 	 * @return the updated {@linkplain DWordArraySpec} instance for chaining.
 	 */
 	public DWordArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
 	}
@@ -73,24 +71,23 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 	 * @return the updated {@linkplain DWordArraySpec} instance for chaining.
 	 */
 	public DWordArraySpec size(int sizeValue) {
-		this.fixedSize = true;
-		this.size = Integer.valueOf(sizeValue)::intValue;
+		this.size = FinalSupplier.of(sizeValue);
 		return this;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return this.fixedSize;
+		return (this.size instanceof FinalSupplier);
 	}
 
 	@Override
 	public int matchSize() {
-		return (this.fixedSize ? this.size.get().intValue() : 0);
+		return (isFixedSize() ? this.size.get().intValue() : 0);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !this.fixedSize
+		return !isFixedSize()
 				|| (this.size.get().intValue() <= buffer.remaining() && validateValue(decodeValue(buffer)));
 	}
 

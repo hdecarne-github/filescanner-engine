@@ -60,7 +60,15 @@ public final class PrettyFormat {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("{ ");
+
+		boolean firstElement = true;
+
 		for (byte valueElement : value) {
+			if (firstElement) {
+				firstElement = false;
+			} else {
+				buffer.append(", ");
+			}
 			buffer.append(formatByteNumber(valueElement));
 		}
 		buffer.append('}');
@@ -97,7 +105,15 @@ public final class PrettyFormat {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("{ ");
+
+		boolean firstElement = true;
+
 		for (short valueElement : value) {
+			if (firstElement) {
+				firstElement = false;
+			} else {
+				buffer.append(", ");
+			}
 			buffer.append(formatShortNumber(valueElement));
 		}
 		buffer.append('}');
@@ -134,7 +150,15 @@ public final class PrettyFormat {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("{ ");
+
+		boolean firstElement = true;
+
 		for (int valueElement : value) {
+			if (firstElement) {
+				firstElement = false;
+			} else {
+				buffer.append(", ");
+			}
 			buffer.append(formatIntNumber(valueElement));
 		}
 		buffer.append('}');
@@ -171,7 +195,15 @@ public final class PrettyFormat {
 		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("{ ");
+
+		boolean firstElement = true;
+
 		for (long valueElement : value) {
+			if (firstElement) {
+				firstElement = false;
+			} else {
+				buffer.append(", ");
+			}
 			buffer.append(formatLongNumber(valueElement));
 		}
 		buffer.append('}');

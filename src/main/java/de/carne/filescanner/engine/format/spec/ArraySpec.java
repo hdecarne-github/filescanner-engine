@@ -36,7 +36,6 @@ public class ArraySpec extends CompositeSpec {
 
 	private final Supplier<String> elementName;
 	private final FormatSpec elementSpec;
-	private boolean fixedSize = true;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 
 	/**
@@ -67,7 +66,6 @@ public class ArraySpec extends CompositeSpec {
 	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
 	public ArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.fixedSize = false;
 		this.size = sizeSupplier;
 		return this;
 	}
@@ -79,14 +77,13 @@ public class ArraySpec extends CompositeSpec {
 	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
 	 */
 	public ArraySpec size(int sizeValue) {
-		this.fixedSize = true;
-		this.size = Integer.valueOf(sizeValue)::intValue;
+		this.size = FinalSupplier.of(sizeValue);
 		return this;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return this.fixedSize && this.elementSpec.isFixedSize();
+		return (this.size instanceof FinalSupplier) && this.elementSpec.isFixedSize();
 	}
 
 	@Override
@@ -111,7 +108,7 @@ public class ArraySpec extends CompositeSpec {
 	private int matchElementCount() {
 		int matchElementCount;
 
-		if (!this.fixedSize) {
+		if (!(this.size instanceof FinalSupplier)) {
 			matchElementCount = 0;
 		} else if (!this.elementSpec.isFixedSize()) {
 			matchElementCount = 1;
