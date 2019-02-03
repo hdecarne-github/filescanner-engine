@@ -121,8 +121,8 @@ union "Data Descriptor" {
 ZIP_ENTRY:
 struct text("Zip entry \"%1$s\"", @LFH_FILE_NAME) {
 	@LOCAL_FILE_HEADER
-	encoded #getZipEntryEncodedInputConfig
-	conditional #getDataDescriptorSpec {
+	encoded #zipEntryEncodedInputConfig
+	conditional #dataDescriptorSpec {
 		@DATA_DESCRIPTOR
 	}
 }	

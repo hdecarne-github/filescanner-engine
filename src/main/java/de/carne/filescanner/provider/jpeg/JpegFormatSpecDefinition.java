@@ -38,6 +38,11 @@ import de.carne.util.Lazy;
  */
 final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 
+	@Override
+	protected URL getFormatSpecResource() {
+		return Objects.requireNonNull(getClass().getResource("JPEG.formatspec"));
+	}
+
 	private Lazy<CompositeSpec> jpegFormatSpec = resolveLazy("JPEG_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> jpegHeaderSpec = resolveLazy("JPEG_SOI_APP0_MARKER", CompositeSpec.class);
 
@@ -45,17 +50,12 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<ByteSpec> yThumbnail = resolveLazy("Y_THUMBNAIL", ByteSpec.class);
 	private Lazy<WordSpec> genericLength = resolveLazy("GENERIC_LENGTH", WordSpec.class);
 
-	public CompositeSpec getJpegFormatSpec() {
+	public CompositeSpec jpegFormatSpec() {
 		return this.jpegFormatSpec.get();
 	}
 
-	public CompositeSpec getJpegHeaderSpec() {
+	public CompositeSpec jpegHeaderSpec() {
 		return this.jpegHeaderSpec.get();
-	}
-
-	@Override
-	protected URL getFormatSpecResource() {
-		return Objects.requireNonNull(getClass().getResource("JPEG.formatspec"));
 	}
 
 	protected FileScannerResultRenderer jpegRenderer() {

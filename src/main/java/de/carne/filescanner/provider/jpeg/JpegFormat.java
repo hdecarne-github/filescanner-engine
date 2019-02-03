@@ -38,12 +38,12 @@ public class JpegFormat extends Format {
 		super(FORMAT_NAME);
 		this.jpegFormatSpecDefinition = new JpegFormatSpecDefinition();
 		this.jpegFormatSpecDefinition.load();
-		registerHeaderSpec(this.jpegFormatSpecDefinition.getJpegHeaderSpec());
+		registerHeaderSpec(this.jpegFormatSpecDefinition.jpegHeaderSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.jpegFormatSpecDefinition.getJpegFormatSpec());
+		return context.decodeComposite(this.jpegFormatSpecDefinition.jpegFormatSpec());
 	}
 
 }

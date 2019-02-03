@@ -38,12 +38,12 @@ public class ZipFormat extends Format {
 		super(FORMAT_NAME);
 		this.zipFormatSpecDefinition = new ZipFormatSpecDefinition();
 		this.zipFormatSpecDefinition.load();
-		registerHeaderSpec(this.zipFormatSpecDefinition.getLocalFileHeaderSpec());
+		registerHeaderSpec(this.zipFormatSpecDefinition.zipHeaderSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.zipFormatSpecDefinition.getZipFormatSpec());
+		return context.decodeComposite(this.zipFormatSpecDefinition.zipFormatSpec());
 	}
 
 }

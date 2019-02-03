@@ -35,6 +35,11 @@ import de.carne.util.Lazy;
  */
 final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
+	@Override
+	protected URL getFormatSpecResource() {
+		return Objects.requireNonNull(getClass().getResource("Zip.formatspec"));
+	}
+
 	private Lazy<CompositeSpec> zipFormatSpec = resolveLazy("ZIP_ARCHIVE", CompositeSpec.class);
 	private Lazy<CompositeSpec> lfhSpec = resolveLazy("LOCAL_FILE_HEADER", CompositeSpec.class);
 	private Lazy<CompositeSpec> ddSpec = resolveLazy("DATA_DESCRIPTOR", CompositeSpec.class);
@@ -44,32 +49,27 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<DWordSpec> lfhCompressedSize = resolveLazy("LFH_COMPRESSED_SIZE", DWordSpec.class);
 	private Lazy<CharArraySpec> lfhFileName = resolveLazy("LFH_FILE_NAME", CharArraySpec.class);
 
-	public CompositeSpec getZipFormatSpec() {
+	public CompositeSpec zipFormatSpec() {
 		return this.zipFormatSpec.get();
 	}
 
-	public CompositeSpec getLocalFileHeaderSpec() {
+	public CompositeSpec zipHeaderSpec() {
 		return this.lfhSpec.get();
 	}
 
-	@Override
-	protected URL getFormatSpecResource() {
-		return Objects.requireNonNull(getClass().getResource("Zip.formatspec"));
+	protected EncodedInputSpecConfig zipEntryEncodedInputConfig() {
+		return new EncodedInputSpecConfig("file data").encodedInputSize(this::encodedInputSize)
+				.inputDecoder(this::inputDecoder).decodedInputName(this::decodedInputName);
 	}
 
-	protected EncodedInputSpecConfig getZipEntryEncodedInputConfig() {
-		return new EncodedInputSpecConfig("file data").encodedInputSize(this::getEncodedInputSize)
-				.inputDecoder(this::getInputDecoder).decodedInputName(this::getDecodedInputName);
-	}
-
-	private long getEncodedInputSize() {
+	private long encodedInputSize() {
 		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
 		boolean ddPresent = (bitFlag & 0x0008) != 0;
 
 		return (ddPresent ? -1l : Integer.toUnsignedLong(this.lfhCompressedSize.get().get().intValue()));
 	}
 
-	private InputDecoder getInputDecoder() {
+	private InputDecoder inputDecoder() {
 		short compressionMethod = this.lfhCompressionMethod.get().get().shortValue();
 		InputDecoder inputDecoder;
 
@@ -87,11 +87,11 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 		return inputDecoder;
 	}
 
-	private String getDecodedInputName() {
+	private String decodedInputName() {
 		return this.lfhFileName.get().get();
 	}
 
-	protected CompositeSpec getDataDescriptorSpec() {
+	protected CompositeSpec dataDescriptorSpec() {
 		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
 		boolean ddPresent = (bitFlag & 0x0008) != 0;
 
