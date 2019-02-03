@@ -81,6 +81,7 @@ public final class EncodedInputSpecConfig {
 	 * @param encodedInputSize the size of the encoded input data stream.
 	 * @return the update configuration.
 	 */
+	@SuppressWarnings("squid:S4276")
 	public EncodedInputSpecConfig encodedInputSize(Supplier<Long> encodedInputSize) {
 		this.encodedInputSizeHolder = encodedInputSize;
 		return this;
