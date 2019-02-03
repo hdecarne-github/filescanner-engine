@@ -27,17 +27,23 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class PngFormat extends Format {
 
+	private static final String FORMAT_NAME = "PNG image data";
+
+	private final PngFormatSpecDefinition pngFormatSpecDefinition;
+
 	/**
 	 * Constructs a new {@linkplain PngFormat} instance.
 	 */
 	public PngFormat() {
-		super(PngFormatSpecs.FORMAT_NAME);
-		registerHeaderSpec(PngFormatSpecs.PNG_FILE_SIGNATURE);
+		super(FORMAT_NAME);
+		this.pngFormatSpecDefinition = new PngFormatSpecDefinition();
+		this.pngFormatSpecDefinition.load();
+		registerHeaderSpec(this.pngFormatSpecDefinition.pngHeaderSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(PngFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(this.pngFormatSpecDefinition.pngFormatSpec());
 	}
 
 }

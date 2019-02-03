@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package de.carne.filescanner.provider.png;
+
+import java.net.URL;
+import java.util.Objects;
+
+import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
+import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.util.Lazy;
+
+/**
+ * See PNG.formatspec
+ */
+final class PngFormatSpecDefinition extends FormatSpecDefinition {
+
+	@Override
+	protected URL getFormatSpecResource() {
+		return Objects.requireNonNull(getClass().getResource("PNG.formatspec"));
+	}
+
+	private Lazy<CompositeSpec> pngFormatSpec = resolveLazy("PNG_FORMAT", CompositeSpec.class);
+	private Lazy<CompositeSpec> pngHeaderSpec = resolveLazy("PNG_FILE_SIGNATURE", CompositeSpec.class);
+
+	private Lazy<DWordSpec> pngChunkType = resolveLazy("CHUNK_TYPE", DWordSpec.class);
+
+	public CompositeSpec pngFormatSpec() {
+		return this.pngFormatSpec.get();
+	}
+
+	public CompositeSpec pngHeaderSpec() {
+		return this.pngHeaderSpec.get();
+	}
+
+	protected FileScannerResultRenderer pngRenderer() {
+		return RawFileScannerResultExporter.IMAGE_PNG_EXPORTER;
+	}
+
+	protected FileScannerResultExportHandler pngExporter() {
+		return RawFileScannerResultExporter.IMAGE_PNG_EXPORTER;
+	}
+
+	protected String genericChunkName() {
+		int typeValue = this.pngChunkType.get().get().intValue();
+		StringBuilder typeString = new StringBuilder();
+
+		typeString.append(mapChunkTypeChar((typeValue >>> 24) & 0xff));
+		typeString.append(mapChunkTypeChar((typeValue >>> 16) & 0xff));
+		typeString.append(mapChunkTypeChar((typeValue >>> 8) & 0xff));
+		typeString.append(mapChunkTypeChar(typeValue & 0xff));
+		typeString.append(" chunk");
+		return typeString.toString();
+	}
+
+	private char mapChunkTypeChar(int code) {
+		return ((65 <= code && code <= 90) || (97 <= code && code <= 122) ? (char) code : '?');
+	}
+
+}

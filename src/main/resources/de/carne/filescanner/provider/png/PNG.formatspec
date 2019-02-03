@@ -21,6 +21,94 @@
 
 // Symbols
 
+COLOR_TYPE_SYMBOLS:
+byte_symbols {
+	0: "Grayscale"
+	2: "RGB"
+	3: "Palette"
+	4: "Grayscale + Alpha"
+	6: "RGB + Alpha"
+}
+
+COMPRESSION_METHOD_SYMBOLS:
+byte_symbols {
+	0: "deflate/inflate compression"
+}
+
+FILTER_METHOD_SYMBOLS:
+byte_symbols {
+	0: "adaptive filtering"
+}
+
+INTERLACE_METHOD_SYMBOLS:
+byte_symbols {
+	0: "no interlace"
+	1: "Adam7 interlace"
+}
 
 // Specs
 
+PNG_FILE_SIGNATURE:
+struct "PNG file signature" {
+	byte[8] "signature"
+		->validate({ 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a })
+}	->bigEndian()
+
+PNG_IHDR_CHUNK:
+struct "IHDR chunk" {
+	dword "Length"
+		->validate(13)
+	dword "Chunk Type"
+		->validate(0x49484452)
+	dword "Width"
+		->format(@PrettyFormat)
+	dword "Height"
+		->format(@PrettyFormat)
+	byte "Bit depth"
+		->format(@PrettyFormat)
+	byte "Color type"
+		->renderer(@COLOR_TYPE_SYMBOLS)
+	byte "Compression method"
+		->renderer(@COMPRESSION_METHOD_SYMBOLS)
+	byte "Filter method"
+		->renderer(@FILTER_METHOD_SYMBOLS)
+	byte "Interlace method"
+		->renderer(@INTERLACE_METHOD_SYMBOLS)
+	dword "CRC"
+}	->bigEndian()
+
+PNG_IEND_CHUNK:
+struct "IEND chunk" {
+	dword "Length"
+		->validate(0)
+	dword "Chunk Type"
+		->validate(0x49454e44)
+	dword "CRC"
+}	->bigEndian()
+
+PNG_GENERIC_CHUNK:
+struct #genericChunkName {
+CHUNK_LENGTH:
+	dword "Length"
+CHUNK_TYPE:
+	dword "Chunk Type"
+	range[@CHUNK_LENGTH] "Chunk Data"
+	dword "CRC"
+}	->bigEndian()
+
+PNG_CHUNK:
+union {
+	@PNG_IHDR_CHUNK
+	@PNG_IEND_CHUNK
+	@PNG_GENERIC_CHUNK
+}	->bigEndian()
+
+
+PNG_FORMAT:
+format_spec "PNG image data" {
+	@PNG_FILE_SIGNATURE
+	sequence @PNG_CHUNK
+		->stopAfter(@PNG_IEND_CHUNK)
+}	->bigEndian()
+	->renderer(#pngRenderer)
+	->export(#pngExporter)
