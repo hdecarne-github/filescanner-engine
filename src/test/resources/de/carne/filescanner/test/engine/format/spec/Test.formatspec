@@ -93,6 +93,10 @@ format_spec #specialText {
 	}
 	@TEST_HEADER
 	@TEST_STRUCT
+	@TEST_ARRAY
+	array[@ARRAY_SIZE] "inline array" {
+		byte[1] "matrix"
+	}
 	@TEST_SEQUENCE
 	sequence "inline sequence" @TEST_STRUCT
 	@TEST_UNION
@@ -176,6 +180,11 @@ SCOPED_BIND@TEST_FORMAT:
 }	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)
+
+TEST_ARRAY:
+array[1] "test array" {
+	byte[3] "byte array"
+}
 
 TEST_SEQUENCE:
 sequence @TEST_STRUCT
