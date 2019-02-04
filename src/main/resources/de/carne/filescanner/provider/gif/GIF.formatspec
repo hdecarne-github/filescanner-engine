@@ -137,10 +137,33 @@ struct "Image" {
 	conditional #localColorTableSpec {
 		@GIF_LOCAL_COLOR_TABLE
 	}
-	
+	@GIF_IMAGE_DATA
 }
 
-GIF_GENERIC_BLOCK:
+GIF_GRAPHIC_CONTROL_EXTENSION:
+struct "Graphic Control Extension" {
+	byte "Extension Introducer"
+		->validate(0x21)
+	byte "Graphic Control Label"
+		->validate(0xf9)
+		->renderer(@EXTENSION_TYPE_SYMBOLS)
+	byte "Block Size"
+		->validate(4)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	byte "<Packed Fields>"
+		->renderer(@GCE_PACKED_FIELDS_SYMBOLS)
+	word "Delay Time"
+		->format(@PrettyFormat)
+	byte "Transparent Color Index"
+		->format(@PrettyFormat)
+	byte "Block Terminator"
+		->validate(0)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+}
+
+GIF_GENERIC_EXTENSION:
 struct "Extension Block" {
 	byte "Extension Introducer"
 		->validate(0x21)
@@ -152,8 +175,9 @@ struct "Extension Block" {
 
 GIF_BLOCK:
 union {
-	@GIF_IMAGE_DATA
-	@GIF_GENERIC_BLOCK
+	@GIF_IMAGE
+	@GIF_GRAPHIC_CONTROL_EXTENSION
+	@GIF_GENERIC_EXTENSION
 }
 
 GIF_TRAILER:
@@ -169,5 +193,7 @@ format_spec "GIF image data" {
 	conditional #globalColorTableSpec {
 		@GIF_GLOBAL_COLOR_TABLE
 	}
+	sequence @GIF_BLOCK
+		->stopAfter(@GIF_TRAILER	)
 }	->renderer(#gifRenderer)
 	->export(#gifExporter)
