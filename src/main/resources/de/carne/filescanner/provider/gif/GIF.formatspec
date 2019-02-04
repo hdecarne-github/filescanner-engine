@@ -169,7 +169,5 @@ format_spec "GIF image data" {
 	conditional #globalColorTableSpec {
 		@GIF_GLOBAL_COLOR_TABLE
 	}
-	sequence @GIF_BLOCK
-		->stopAfter(@GIF_TRAILER	)
 }	->renderer(#gifRenderer)
 	->export(#gifExporter)

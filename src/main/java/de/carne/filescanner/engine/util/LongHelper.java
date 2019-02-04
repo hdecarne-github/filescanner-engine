@@ -53,4 +53,25 @@ public final class LongHelper {
 		return valueArray;
 	}
 
+	/**
+	 * Gets the unsigned {@code long} value.
+	 *
+	 * @param intNumber the {@linkplain Number} to convert.
+	 * @return the unsigned {@code long} value.
+	 */
+	public static long toUnsignedLong(Number intNumber) {
+		long unsignedLong;
+
+		if (intNumber instanceof Byte) {
+			unsignedLong = Byte.toUnsignedLong(intNumber.byteValue());
+		} else if (intNumber instanceof Short) {
+			unsignedLong = Short.toUnsignedLong(intNumber.shortValue());
+		} else if (intNumber instanceof Integer) {
+			unsignedLong = Integer.toUnsignedLong(intNumber.intValue());
+		} else {
+			unsignedLong = intNumber.longValue();
+		}
+		return unsignedLong;
+	}
+
 }

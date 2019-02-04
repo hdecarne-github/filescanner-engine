@@ -48,4 +48,12 @@ class LongHelperTest {
 		});
 	}
 
+	@Test
+	void testToUnsignedLong() {
+		Assertions.assertEquals(0xffl, LongHelper.toUnsignedLong(Byte.valueOf((byte) 0xff)));
+		Assertions.assertEquals(0xffffl, LongHelper.toUnsignedLong(Short.valueOf((short) 0xffff)));
+		Assertions.assertEquals(0xffffffffl, LongHelper.toUnsignedLong(Integer.valueOf(0xffffffff)));
+		Assertions.assertEquals(0xffffffffffffffffl, LongHelper.toUnsignedLong(Long.valueOf(0xffffffffffffffffl)));
+	}
+
 }
