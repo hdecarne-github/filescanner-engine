@@ -21,6 +21,155 @@
 
 // Symbols
 
+LSD_PACKED_FIELDS_SYMBOLS:
+byte_flag_symbols {
+	0x80: "Global Color Table Flag"
+	0x70: "Color Resolution"
+	0x08: "Sort Flag"
+	0x07: "Size of Global Color Table"
+}
+
+IMAGE_PACKED_FIELDS_SYMBOLS:
+byte_flag_symbols {
+	0x80: "Local Color Table Flag"
+	0x40: "Interlace Flag"
+	0x20: "Sort Flag"
+	0x18: "Reserved"
+	0x07: "Size of Local Color Table"
+}
+
+EXTENSION_TYPE_SYMBOLS:
+byte_symbols {
+	0xf9: "Graphic Control Extension"
+	0xfe: "Comment Extension"
+	0x01: "Plain Text Extension"
+	0xff: "Application Extension"
+}
+
+GCE_PACKED_FIELDS_SYMBOLS:
+byte_symbols {
+	0xe0: "Reserved"
+	0x1c: "Disposal Method"
+	0x02: "User Input Flag"
+	0x01: "Transparent Color Flag"
+}
 
 // Specs
 
+GIF_HEADER:
+struct "Header" {
+	char[3] "Signature"
+		->validate("GIF")
+	char[3] "Version"
+		->validate("87a" || "89a")
+}
+
+GIF_LOGICAL_SCREEN_DESCRIPTOR:
+struct "Logical Screen Descriptor" {
+	word "Logical Screen Width"
+		->format(@PrettyFormat)
+	word "Logical Screen Height"
+		->format(@PrettyFormat)
+LSD_PACKED_FIELDS@GIF_FORMAT:
+	byte "<Packed Fields>"
+		->renderer(@LSD_PACKED_FIELDS_SYMBOLS)
+	byte "Background Color Index"
+		->format(@PrettyFormat)
+	byte "Pixel Aspect Ratio"
+		->format(@PrettyFormat)
+}
+
+GIF_GLOBAL_COLOR_TABLE:
+array[#globalColorTableSize] "Global Color Table" {
+	byte[3] "Color" 
+}
+
+GIF_IMAGE_DESCRIPTOR:
+struct "Image Descriptor" {
+	byte "Image Separator"
+		->validate(0x2c)
+	word "Image Left Position"
+		->format(@PrettyFormat)
+	word "Image Top Position"
+		->format(@PrettyFormat)
+	word "Image Width"
+		->format(@PrettyFormat)
+	word "Image Height"
+		->format(@PrettyFormat)
+IMAGE_PACKED_FIELDS@GIF_IMAGE:
+	byte "<Packed Fields>"
+		->renderer(@IMAGE_PACKED_FIELDS_SYMBOLS)
+}
+
+GIF_LOCAL_COLOR_TABLE:
+array[#localColorTableSize] "Local Color Table" {
+	byte[3] "Color" 
+}
+
+GIF_DATA_BLOCK:
+struct {
+IMAGE_DATA_BLOCK_SIZE:
+	byte "Block Size"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	range[@IMAGE_DATA_BLOCK_SIZE] "Block Data"
+}
+
+GIF_DATA_TERMINATOR:
+struct {
+	byte "Block Size"
+		->validate(0)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+}
+
+GIF_IMAGE_DATA:
+struct "Image Data" {
+	byte "LZW Minimum Code Size"
+		->format(@PrettyFormat)
+	sequence @GIF_DATA_BLOCK
+		->stopAfter(@GIF_DATA_TERMINATOR)	
+}
+
+GIF_IMAGE:
+struct "Image" {
+	@GIF_IMAGE_DESCRIPTOR
+	conditional #localColorTableSpec {
+		@GIF_LOCAL_COLOR_TABLE
+	}
+	
+}
+
+GIF_GENERIC_BLOCK:
+struct "Extension Block" {
+	byte "Extension Introducer"
+		->validate(0x21)
+	byte "Extension Type"
+		->renderer(@EXTENSION_TYPE_SYMBOLS)
+	sequence @GIF_DATA_BLOCK
+		->stopAfter(@GIF_DATA_TERMINATOR)	
+}
+
+GIF_BLOCK:
+union {
+	@GIF_IMAGE_DATA
+	@GIF_GENERIC_BLOCK
+}
+
+GIF_TRAILER:
+struct "Trailer" {
+	byte "GIF Trailer"
+		->validate(0x3b)
+}
+
+GIF_FORMAT:
+format_spec "GIF image data" {
+	@GIF_HEADER
+	@GIF_LOGICAL_SCREEN_DESCRIPTOR
+	conditional #globalColorTableSpec {
+		@GIF_GLOBAL_COLOR_TABLE
+	}
+	sequence @GIF_BLOCK
+		->stopAfter(@GIF_TRAILER	)
+}	->renderer(#gifRenderer)
+	->export(#gifExporter)

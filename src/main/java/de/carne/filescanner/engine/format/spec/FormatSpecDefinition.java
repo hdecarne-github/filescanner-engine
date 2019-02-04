@@ -24,6 +24,7 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -47,10 +49,12 @@ import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarBaseVisitor;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarLexer;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousArraySpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousSequenceSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousStructSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AnonymousUnionSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ArraySpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeFormatModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.AttributeSpecContext;
@@ -63,8 +67,8 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.B
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ByteSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CharArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecByteOrderModifierContext;
-import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExportModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordArrayAttributeSpecContext;
@@ -75,12 +79,13 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.E
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ExternalReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecContext;
-import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberArrayValueContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberArrayValueSetContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberValueContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberValueSetContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
@@ -91,10 +96,12 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.S
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextSetContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StructSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StructSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolDefinitionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.TextExpressionContext;
@@ -573,8 +580,8 @@ public abstract class FormatSpecDefinition {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		StructSpec spec = new StructSpec();
 
-		for (FormatSpecElementContext elementCtx : specCtx.formatSpecElement()) {
-			spec.add(loadFormatSpecElement(elementCtx, rootCtx));
+		for (StructSpecElementContext elementCtx : specCtx.structSpecElement()) {
+			spec.add(loadStructSpecElement(elementCtx, rootCtx));
 		}
 		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
@@ -601,8 +608,8 @@ public abstract class FormatSpecDefinition {
 	private StructSpec loadAnonymousStructSpec(AnonymousStructSpecContext specCtx, FormatSpecsContext rootCtx) {
 		StructSpec spec = new StructSpec();
 
-		for (FormatSpecElementContext elementCtx : specCtx.formatSpecElement()) {
-			spec.add(loadFormatSpecElement(elementCtx, rootCtx));
+		for (StructSpecElementContext elementCtx : specCtx.structSpecElement()) {
+			spec.add(loadStructSpecElement(elementCtx, rootCtx));
 		}
 		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
@@ -626,8 +633,36 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private ArraySpec loadArraySpec(ArraySpecContext specCtx, FormatSpecsContext rootCtx) {
+		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
+		ArraySpec spec = loadAnonymousArraySpec(specCtx.anonymousArraySpec(), rootCtx);
+
+		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
+
+		this.specs.put(specIdentifier, () -> spec);
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private ArraySpec loadAnonymousArraySpec(AnonymousArraySpecContext specCtx, FormatSpecsContext rootCtx) {
+		ArraySpec spec = new ArraySpec(loadNumberExpression(specCtx.numberExpression()));
+
+		for (AttributeSpecContext attributeSpecCtx : specCtx.attributeSpec()) {
+			spec.add(loadAttributeSpec(attributeSpecCtx, rootCtx));
+		}
+		applyResultModifier(spec, specCtx.textExpression());
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
 	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
-		FormatSpec elementSpec = loadFormatSpecElement(specCtx.formatSpecElement(), rootCtx);
+		FormatSpec elementSpec = loadStructSpecElement(specCtx.structSpecElement(), rootCtx);
 		SequenceSpec spec = new SequenceSpec(elementSpec);
 
 		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
@@ -665,8 +700,8 @@ public abstract class FormatSpecDefinition {
 	private UnionSpec loadAnonymousUnionSpec(AnonymousUnionSpecContext specCtx, FormatSpecsContext rootCtx) {
 		UnionSpec spec = new UnionSpec();
 
-		for (CompositeSpecElementContext elementCtx : specCtx.compositeSpecElement()) {
-			spec.add(loadCompositeSpecElement(elementCtx, rootCtx));
+		for (CompositeSpecExpressionContext expressionCtx : specCtx.compositeSpecExpression()) {
+			spec.add(loadCompositeSpecExpression(expressionCtx, rootCtx));
 		}
 		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
@@ -942,18 +977,15 @@ public abstract class FormatSpecDefinition {
 		return spec;
 	}
 
-	@SuppressWarnings("null")
 	private <T extends Number> void applyValidateNumberModifier(NumberAttributeSpec<T> spec,
-			List<AttributeValidateNumberModifierContext> modifierCtx, Function<String, Number> decode,
+			List<AttributeValidateNumberModifierContext> modifierCtx, Function<String, T> decode,
 			Map<String, Set<T>> symbolsMap) {
 		for (AttributeValidateNumberModifierContext validateCtx : modifierCtx) {
-			NumberValueContext numberValueCtx;
+			NumberValueSetContext numberValueSetCtx;
 			SpecReferenceContext specReferenceCtx;
 
-			if ((numberValueCtx = validateCtx.numberValue()) != null) {
-				Number numberValue = decode.apply(numberValueCtx.getText());
-
-				spec.validate(numberValue::equals);
+			if ((numberValueSetCtx = validateCtx.numberValueSet()) != null) {
+				spec.validate(decodeNumberValueSet(numberValueSetCtx, decode));
 			} else if ((specReferenceCtx = validateCtx.specReference()) != null) {
 				String specIdentifier = specReferenceCtx.referencedSpec().getText();
 				Set<T> symbols = symbolsMap.get(specIdentifier);
@@ -969,17 +1001,40 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private <T extends Number> Set<T> decodeNumberValueSet(NumberValueSetContext numberValueSetCtx,
+			Function<String, T> decode) {
+		Set<T> numberValueSet = new HashSet<>();
+
+		for (NumberValueContext numberValueCtx : numberValueSetCtx.numberValue()) {
+			numberValueSet.add(decode.apply(numberValueCtx.getText()));
+		}
+		return numberValueSet;
+	}
+
 	private <T> void applyValidateNumberArrayModifier(AttributeSpec<T> spec,
 			List<AttributeValidateNumberArrayModifierContext> modifierCtx, Function<String[], T> decode) {
 		for (AttributeValidateNumberArrayModifierContext validateCtx : modifierCtx) {
-			NumberArrayValueContext numberArrayValueCtx;
+			NumberArrayValueSetContext numberArrayValueSetCtx;
 
-			if ((numberArrayValueCtx = validateCtx.numberArrayValue()) != null) {
-				spec.validate(decodeNumberArrayValue(numberArrayValueCtx.numberValue(), decode));
+			if ((numberArrayValueSetCtx = validateCtx.numberArrayValueSet()) != null) {
+				spec.validate(decodeNumberArrayValueSet(numberArrayValueSetCtx, decode));
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate number array modifier");
 			}
 		}
+	}
+
+	@SuppressWarnings("null")
+	private <T> Set<T> decodeNumberArrayValueSet(NumberArrayValueSetContext numberArrayValueSetCtx,
+			Function<String[], T> decode) {
+		Set<T> numberArrayValueSet = new HashSet<>();
+
+		for (NumberArrayValueContext numberArrayValueCtx : numberArrayValueSetCtx.numberArrayValue()) {
+			T numberArrayValue = decodeNumberArrayValue(numberArrayValueCtx.numberValue(), decode);
+
+			numberArrayValueSet.add(numberArrayValue);
+		}
+		return numberArrayValueSet;
 	}
 
 	private <T> T decodeNumberArrayValue(List<NumberValueContext> numberValueCtx, Function<String[], T> decode) {
@@ -997,10 +1052,13 @@ public abstract class FormatSpecDefinition {
 	private void applyValidateStringModifier(AttributeSpec<String> spec,
 			List<AttributeValidateStringModifierContext> modifierCtx) {
 		for (AttributeValidateStringModifierContext validateCtx : modifierCtx) {
-			SimpleTextContext simpleTextCtx;
+			SimpleTextSetContext simpleTextSetCtx;
 
-			if ((simpleTextCtx = validateCtx.simpleText()) != null) {
-				spec.validate(decodeQuotedString(simpleTextCtx.getText()));
+			if ((simpleTextSetCtx = validateCtx.simpleTextSet()) != null) {
+				Set<String> stringSet = simpleTextSetCtx.simpleText().stream().map(SimpleTextContext::getText)
+						.map(this::decodeQuotedString).collect(Collectors.toSet());
+
+				spec.validate(stringSet);
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate string modifier");
 			}
@@ -1085,11 +1143,12 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private FormatSpec loadFormatSpecElement(FormatSpecElementContext elementCtx, FormatSpecsContext rootCtx) {
+	private FormatSpec loadStructSpecElement(StructSpecElementContext elementCtx, FormatSpecsContext rootCtx) {
 		FormatSpec element;
 		SpecReferenceContext specReferenceCtx;
 		AttributeSpecContext attributeSpecCtx;
 		AnonymousStructSpecContext anonymousStructSpecCtx;
+		AnonymousArraySpecContext anonymousArraySpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousScanSpecContext anonymousScanSpecCtx;
@@ -1103,6 +1162,8 @@ public abstract class FormatSpecDefinition {
 			element = loadAttributeSpec(attributeSpecCtx, rootCtx);
 		} else if ((anonymousStructSpecCtx = elementCtx.anonymousStructSpec()) != null) {
 			element = loadAnonymousStructSpec(anonymousStructSpecCtx, rootCtx);
+		} else if ((anonymousArraySpecCtx = elementCtx.anonymousArraySpec()) != null) {
+			element = loadAnonymousArraySpec(anonymousArraySpecCtx, rootCtx);
 		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
 		} else if ((anonymousUnionSpecCtx = elementCtx.anonymousUnionSpec()) != null) {
@@ -1122,23 +1183,23 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private CompositeSpec loadCompositeSpecElement(CompositeSpecElementContext elementCtx, FormatSpecsContext rootCtx) {
+	private CompositeSpec loadCompositeSpecExpression(CompositeSpecExpressionContext ctx, FormatSpecsContext rootCtx) {
 		CompositeSpec spec;
 		SpecReferenceContext specReferenceCtx;
 		AnonymousStructSpecContext anonymousStructSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
 
-		if ((specReferenceCtx = elementCtx.specReference()) != null) {
+		if ((specReferenceCtx = ctx.specReference()) != null) {
 			spec = resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
-		} else if ((anonymousStructSpecCtx = elementCtx.anonymousStructSpec()) != null) {
+		} else if ((anonymousStructSpecCtx = ctx.anonymousStructSpec()) != null) {
 			spec = loadAnonymousStructSpec(anonymousStructSpecCtx, rootCtx);
-		} else if ((anonymousUnionSpecCtx = elementCtx.anonymousUnionSpec()) != null) {
+		} else if ((anonymousUnionSpecCtx = ctx.anonymousUnionSpec()) != null) {
 			spec = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
-		} else if ((anonymousSequenceSpecCtx = elementCtx.anonymousSequenceSpec()) != null) {
+		} else if ((anonymousSequenceSpecCtx = ctx.anonymousSequenceSpec()) != null) {
 			spec = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
 		} else {
-			throw newLoadException(elementCtx, "Unexpected composite spec element");
+			throw newLoadException(ctx, "Unexpected composite spec element");
 		}
 		return spec;
 	}
@@ -1248,6 +1309,11 @@ public abstract class FormatSpecDefinition {
 			for (StructSpecContext structSpecCtx : rootCtx.structSpec()) {
 				if (specIdentifier.equals(structSpecCtx.specIdentifier().getText())) {
 					resolvedSpec = loadStructSpec(structSpecCtx, rootCtx);
+				}
+			}
+			for (ArraySpecContext arraySpecCtx : rootCtx.arraySpec()) {
+				if (specIdentifier.equals(arraySpecCtx.specIdentifier().getText())) {
+					resolvedSpec = loadArraySpec(arraySpecCtx, rootCtx);
 				}
 			}
 			for (UnionSpecContext unionSpecCtx : rootCtx.unionSpec()) {

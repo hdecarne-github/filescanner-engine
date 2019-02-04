@@ -27,17 +27,23 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class GifFormat extends Format {
 
+	private static final String FORMAT_NAME = "GIF image data";
+
+	private final GifFormatSpecDefinition gifFormatSpecDefinition;
+
 	/**
 	 * Constructs a new {@linkplain GifFormat} instance.
 	 */
 	public GifFormat() {
-		super(GifFormatSpecs.FORMAT_NAME);
-		registerHeaderSpec(GifFormatSpecs.HEADER);
+		super(FORMAT_NAME);
+		this.gifFormatSpecDefinition = new GifFormatSpecDefinition();
+		this.gifFormatSpecDefinition.load();
+		registerHeaderSpec(this.gifFormatSpecDefinition.gifHeaderSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(GifFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(this.gifFormatSpecDefinition.gifFormatSpec());
 	}
 
 }

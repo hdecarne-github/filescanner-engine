@@ -22,13 +22,13 @@ import java.util.HashSet;
 import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteFlagRenderer;
-import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.ByteSymbolRenderer;
+import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
-import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.SequenceSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.UnionSpec;
@@ -112,11 +112,10 @@ final class GifFormatSpecs {
 	static final ArraySpec GLOBAL_COLOR_TABLE;
 
 	static {
-		ByteArraySpec gctEntry = new ByteArraySpec("").size(3);
-		ArraySpec gct = new ArraySpec("color[%1$d]", gctEntry);
+		ArraySpec gct = new ArraySpec(GifFormatSpecs::getGlobalColorTableSize);
 
+		gct.add(new ByteArraySpec("Color").size(3));
 		gct.result("Global Color Table");
-		gct.size(GifFormatSpecs::getGlobalColorTableSize);
 		GLOBAL_COLOR_TABLE = gct;
 	}
 
@@ -139,11 +138,10 @@ final class GifFormatSpecs {
 	static final ArraySpec LOCAL_COLOR_TABLE;
 
 	static {
-		ByteArraySpec lctEntry = new ByteArraySpec("").size(3);
-		ArraySpec lct = new ArraySpec("color[%1$d]", lctEntry);
+		ArraySpec lct = new ArraySpec(GifFormatSpecs::getLocalColorTableSize);
 
+		lct.add(new ByteArraySpec("Color").size(3));
 		lct.result("Local Color Table");
-		lct.size(GifFormatSpecs::getLocalColorTableSize);
 		LOCAL_COLOR_TABLE = lct;
 	}
 

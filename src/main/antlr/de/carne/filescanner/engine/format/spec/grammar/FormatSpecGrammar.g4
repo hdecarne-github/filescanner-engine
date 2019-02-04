@@ -34,6 +34,7 @@ QWordFlagSymbols: 'qword_flag_symbols';
 
 FormatSpec: 'format_spec';
 Struct: 'struct';
+Array: 'array';
 Sequence: 'sequence';
 Union: 'union';
 Scan: 'scan';
@@ -65,6 +66,7 @@ LSBracket: '[';
 RSBracket: ']';
 Comma: ',';
 Colon: ':';
+Or: '||';
 At: '@';
 Hash: '#';
 
@@ -85,7 +87,7 @@ Whitespace: [ \t\r\n]+ -> skip;
 // Rules
 
 formatSpecs
-	: (symbols|flagSymbols|formatSpec|structSpec|sequenceSpec|unionSpec|scanSpec)*
+	: (symbols|flagSymbols|formatSpec|structSpec|arraySpec|sequenceSpec|unionSpec|scanSpec)*
 	;
 
 // Symbol rules
@@ -149,7 +151,7 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket formatSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: specIdentifier Colon FormatSpec textExpression LCBracket structSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 
 structSpec
@@ -157,7 +159,19 @@ structSpec
 	;
 	
 anonymousStructSpec
-	: Struct textExpression? LCBracket formatSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Struct textExpression? LCBracket structSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	;
+	
+structSpecElement
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|rangeSpec|conditionalSpec|encodedInputSpec)
+	;
+	
+arraySpec
+	: specIdentifier Colon anonymousArraySpec
+	;
+	
+anonymousArraySpec
+	: Array LSBracket numberExpression RSBracket textExpression? LCBracket attributeSpec+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpec
@@ -165,7 +179,7 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? formatSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpecStopAfterModifier
@@ -177,7 +191,7 @@ unionSpec
 	;
 
 anonymousUnionSpec
-	: Union textExpression? LCBracket compositeSpecElement+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Union textExpression? LCBracket compositeSpecExpression+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 scanSpec
@@ -199,13 +213,9 @@ compositeSpecExportModifier
 compositeSpecRendererModifier
 	: Renderer LBracket externalReference RBracket
 	;
-	
-formatSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|rangeSpec|conditionalSpec|encodedInputSpec)
-	;
 
-compositeSpecElement
-	: (specReference|anonymousStructSpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec)
+compositeSpecExpression
+	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec)
 	;
 
 rangeSpec
@@ -261,15 +271,15 @@ charArrayAttributeSpec
 	;
 	
 attributeValidateNumberModifier
-	: Validate LBracket (numberValue|specReference) RBracket
+	: Validate LBracket (numberValueSet|specReference) RBracket
 	;
 	
 attributeValidateNumberArrayModifier
-	: Validate LBracket numberArrayValue RBracket
+	: Validate LBracket numberArrayValueSet RBracket
 	;
 
 attributeValidateStringModifier
-	: Validate LBracket simpleText RBracket
+	: Validate LBracket simpleTextSet RBracket
 	;
 	
 attributeRendererModifier
@@ -300,16 +310,28 @@ numberValue
 	: Number
 	;
 
+numberValueSet
+	: numberValue (Or numberValue)*
+	;
+
 numberArrayValue
 	: LCBracket (numberValue (Comma numberValue)* )? RCBracket
 	;
-
+	
+numberArrayValueSet
+	: numberArrayValue (Or numberArrayValue)*
+	;
+	
 textExpression
 	: (simpleText|Text LBracket formatText (Comma (specReference))* RBracket|externalReference)
 	;
 	
 simpleText
 	: QuotedString
+	;
+	
+simpleTextSet
+	: simpleText (Or simpleText)*
 	;
 	
 formatText
