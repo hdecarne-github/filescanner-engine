@@ -58,4 +58,26 @@ public final class ByteHelper {
 		return valueArray;
 	}
 
+	/**
+	 * Gets the unsigned {@code byte} value.
+	 *
+	 * @param byteNumber the {@linkplain Number} to convert.
+	 * @return the unsigned {@code byte} value.
+	 */
+	public static int toUnsignedInt(Number byteNumber) {
+		int unsignedInt;
+
+		if (byteNumber instanceof Byte) {
+			unsignedInt = Byte.toUnsignedInt(byteNumber.byteValue());
+		} else if (byteNumber instanceof Short) {
+			unsignedInt = Short.toUnsignedInt(byteNumber.shortValue());
+		} else {
+			unsignedInt = byteNumber.intValue();
+		}
+		if ((unsignedInt & ~0xff) != 0) {
+			throw new IllegalArgumentException("Number exceeds byte value range: " + Integer.toHexString(unsignedInt));
+		}
+		return unsignedInt;
+	}
+
 }

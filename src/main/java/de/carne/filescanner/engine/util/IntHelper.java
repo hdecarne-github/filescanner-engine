@@ -34,7 +34,7 @@ public final class IntHelper {
 	 * @return the decoded value.
 	 */
 	public static int decodeUnsigned(String string) {
-		long value = Long.decode(string).intValue();
+		long value = Long.decode(string).longValue();
 
 		if (value > 0xffffffffl) {
 			throw new NumberFormatException("Value " + value + " out of range from input " + string);
@@ -56,6 +56,30 @@ public final class IntHelper {
 			valueArray[index] = decodeUnsigned(stringArray[index]);
 		}
 		return valueArray;
+	}
+
+	/**
+	 * Gets the unsigned {@code int} value.
+	 *
+	 * @param intNumber the {@linkplain Number} to convert.
+	 * @return the unsigned {@code int} value.
+	 */
+	public static long toUnsignedLong(Number intNumber) {
+		long unsignedLong;
+
+		if (intNumber instanceof Byte) {
+			unsignedLong = Byte.toUnsignedLong(intNumber.byteValue());
+		} else if (intNumber instanceof Short) {
+			unsignedLong = Short.toUnsignedLong(intNumber.shortValue());
+		} else if (intNumber instanceof Integer) {
+			unsignedLong = Integer.toUnsignedLong(intNumber.intValue());
+		} else {
+			unsignedLong = intNumber.longValue();
+		}
+		if ((unsignedLong & ~0xffffffffl) != 0) {
+			throw new IllegalArgumentException("Number exceeds int value range: " + Long.toHexString(unsignedLong));
+		}
+		return unsignedLong;
 	}
 
 }

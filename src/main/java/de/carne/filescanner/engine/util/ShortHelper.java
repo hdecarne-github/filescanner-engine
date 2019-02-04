@@ -58,4 +58,26 @@ public final class ShortHelper {
 		return valueArray;
 	}
 
+	/**
+	 * Gets the unsigned {@code short} value.
+	 *
+	 * @param shortNumber the {@linkplain Number} to convert.
+	 * @return the unsigned {@code short} value.
+	 */
+	public static int toUnsignedInt(Number shortNumber) {
+		int unsignedInt;
+
+		if (shortNumber instanceof Byte) {
+			unsignedInt = Byte.toUnsignedInt(shortNumber.byteValue());
+		} else if (shortNumber instanceof Short) {
+			unsignedInt = Short.toUnsignedInt(shortNumber.shortValue());
+		} else {
+			unsignedInt = shortNumber.intValue();
+		}
+		if ((unsignedInt & ~0xffff) != 0) {
+			throw new IllegalArgumentException("Number exceeds short value range: " + Integer.toHexString(unsignedInt));
+		}
+		return unsignedInt;
+	}
+
 }

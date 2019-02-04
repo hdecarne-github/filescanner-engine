@@ -18,14 +18,16 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.util.Strings;
 
 /**
  * Fixed number of {@linkplain FormatSpec}s.
@@ -34,88 +36,102 @@ import de.carne.util.Strings;
  */
 public class ArraySpec extends CompositeSpec {
 
-	private final Supplier<String> elementName;
-	private final FormatSpec elementSpec;
-	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
+	private final Supplier<? extends Number> size;
+	private final List<AttributeSpec<?>> elements = new ArrayList<>();
+	private int cachedFixedSize = -1;
+	private int cachedMatchSize = -1;
 
 	/**
 	 * Constructs a new {@linkplain ArraySpec} instance.
 	 *
-	 * @param elementName the array element's name.
-	 * @param elementSpec the array element's {@linkplain FormatSpec}.
+	 * @param size the array size.
 	 */
-	public ArraySpec(Supplier<String> elementName, FormatSpec elementSpec) {
-		this.elementName = elementName;
-		this.elementSpec = elementSpec;
+	public ArraySpec(Supplier<? extends Number> size) {
+		this.size = size;
 	}
 
 	/**
 	 * Constructs a new {@linkplain ArraySpec} instance.
 	 *
-	 * @param elementName the array element's name.
-	 * @param elementSpec the array element's {@linkplain FormatSpec}.
+	 * @param size the array size.
 	 */
-	public ArraySpec(String elementName, FormatSpec elementSpec) {
-		this(FinalSupplier.of(elementName), elementSpec);
+	public ArraySpec(int size) {
+		this(FinalSupplier.of(size));
 	}
 
 	/**
-	 * Sets the size (in number of elements) of this array.
+	 * Adds an attribute element.
 	 *
-	 * @param sizeSupplier the size (in number of elements) of this array.
-	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
+	 * @param <T> the actual element element type.
+	 * @param element the {@linkplain AttributeSpec} to add.
+	 * @return the added {@linkplain AttributeSpec}.
 	 */
-	public ArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.size = sizeSupplier;
-		return this;
-	}
-
-	/**
-	 * Sets the size (in number of elements) of this array.
-	 *
-	 * @param sizeValue the size (in number of elements) of this array.
-	 * @return the updated {@linkplain CharArraySpec} instance for chaining.
-	 */
-	public ArraySpec size(int sizeValue) {
-		this.size = FinalSupplier.of(sizeValue);
-		return this;
+	public <T extends AttributeSpec<?>> T add(T element) {
+		this.elements.add(element);
+		this.cachedFixedSize = -1;
+		this.cachedMatchSize = -1;
+		return element;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier) && this.elementSpec.isFixedSize();
+		return (this.cachedFixedSize >= 0 ? this.cachedFixedSize != 0 : isFixedSize0());
+	}
+
+	private synchronized boolean isFixedSize0() {
+		this.cachedFixedSize = 0;
+		if (this.size instanceof FinalSupplier) {
+			this.cachedFixedSize = 1;
+			for (AttributeSpec<?> element : this.elements) {
+				if (!element.isFixedSize()) {
+					this.cachedFixedSize = 0;
+					break;
+				}
+			}
+		}
+		return this.cachedFixedSize != 0;
 	}
 
 	@Override
 	public int matchSize() {
-		return matchElementCount() * this.elementSpec.matchSize();
+		return (this.cachedMatchSize >= 0 ? this.cachedMatchSize : matchSize0());
+	}
+
+	private synchronized int matchSize0() {
+		this.cachedMatchSize = 0;
+		if (this.size instanceof FinalSupplier) {
+			int matchElementCount = this.size.get().intValue();
+
+			for (AttributeSpec<?> element : this.elements) {
+				this.cachedMatchSize += element.matchSize();
+				if (!element.isFixedSize()) {
+					matchElementCount = Math.min(matchElementCount, 1);
+					break;
+				}
+			}
+			this.cachedMatchSize *= matchElementCount;
+		}
+		return this.cachedMatchSize;
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		int matchElementCount = matchElementCount();
 		boolean match = true;
 
-		for (int elementIndex = 0; elementIndex < matchElementCount; elementIndex++) {
-			match = this.elementSpec.matches(buffer);
-			if (!match) {
-				break;
+		if (this.size instanceof FinalSupplier) {
+			int totalMatchSize = 0;
+
+			while (match && totalMatchSize < this.cachedMatchSize) {
+				for (AttributeSpec<?> element : this.elements) {
+					match = element.matches(buffer);
+					if (!match || !element.isFixedSize()) {
+						break;
+					}
+					totalMatchSize += element.matchSize();
+				}
 			}
 		}
 		return match;
-	}
-
-	private int matchElementCount() {
-		int matchElementCount;
-
-		if (!(this.size instanceof FinalSupplier)) {
-			matchElementCount = 0;
-		} else if (!this.elementSpec.isFixedSize()) {
-			matchElementCount = 1;
-		} else {
-			matchElementCount = this.size.get().intValue();
-		}
-		return matchElementCount;
 	}
 
 	@Override
@@ -123,23 +139,33 @@ public class ArraySpec extends CompositeSpec {
 		int elementCount = this.size.get().intValue();
 
 		for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
-			this.elementSpec.decode(context);
+			for (AttributeSpec<?> element : this.elements) {
+				element.decode(context);
+			}
 		}
 	}
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		int elementCount = this.size.get().intValue();
+		super.renderComposite(out, context);
+		if (out.isEmpty()) {
+			int elementCount = this.size.get().intValue();
 
-		for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
-			String actualElementName = this.elementName.get();
-
-			if (Strings.notEmpty(actualElementName)) {
-				out.setStyle(RenderStyle.NORMAL).write(String.format(actualElementName, elementIndex));
-				out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
+				out.setStyle(RenderStyle.LABEL);
+				out.write(formatArrayLabel(elementIndex));
+				for (AttributeSpec<?> element : this.elements) {
+					element.render(out, context);
+				}
 			}
-			this.elementSpec.render(out, context);
 		}
+	}
+
+	private String formatArrayLabel(int elementIndex) {
+		StringBuilder buffer = new StringBuilder();
+
+		buffer.append('[').append(PrettyFormat.formatIntNumber(elementIndex)).append("]: ");
+		return buffer.toString();
 	}
 
 }

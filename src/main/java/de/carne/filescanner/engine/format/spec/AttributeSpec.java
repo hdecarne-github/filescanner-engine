@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -157,7 +156,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> validate(@NonNull T value) {
-		return validate(value2 -> this.typeEquals.test(value2, value));
+		return validate(value2 -> this.typeEquals.test(value, value2));
 	}
 
 	/**
@@ -167,17 +166,12 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> validate(Set<T> values) {
-		return validate(values::contains);
-	}
-
-	/**
-	 * Adds an attribute validator for a set of fixed values.
-	 *
-	 * @param values the valid values.
-	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
-	 */
-	public AttributeSpec<T> validate(Map<T, ?> values) {
-		return validate(values.keySet()::contains);
+		if (this.type.isArray()) {
+			validate(value -> values.stream().anyMatch(value2 -> this.typeEquals.test(value, value2)));
+		} else {
+			validate(values::contains);
+		}
+		return this;
 	}
 
 	/**

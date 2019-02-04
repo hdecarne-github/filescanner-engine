@@ -18,12 +18,12 @@ package de.carne.filescanner.provider.bmp;
 
 import de.carne.filescanner.engine.format.spec.ArraySpec;
 import de.carne.filescanner.engine.format.spec.ByteArraySpec;
-import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.ConditionalSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.DWordSymbolRenderer;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.format.spec.WordSymbolRenderer;
@@ -119,11 +119,10 @@ final class BmpFormatSpecs {
 	static final ArraySpec RGB_QUAD_COLOR_TABLE;
 
 	static {
-		ByteArraySpec rgbQuadSpec = new ByteArraySpec("").size(4);
-		ArraySpec colorTable = new ArraySpec("color[%1$d]", rgbQuadSpec);
+		ArraySpec colorTable = new ArraySpec(BmpFormatSpecs::getColorTableSize);
 
+		colorTable.add(new ByteArraySpec("Color").size(4));
 		colorTable.result("COLORTABLE");
-		colorTable.size(BmpFormatSpecs::getColorTableSize);
 		RGB_QUAD_COLOR_TABLE = colorTable;
 	}
 
