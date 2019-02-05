@@ -72,19 +72,20 @@ public final class HexFormat {
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
 	public static StringBuilder formatByteArray(StringBuilder buffer, byte[] value) {
-		buffer.append("{ ");
+		buffer.append('{');
 
 		boolean firstElement = true;
 
 		for (byte valueElement : value) {
 			if (firstElement) {
 				firstElement = false;
+				buffer.append(' ');
 			} else {
 				buffer.append(", ");
 			}
 			formatByte(buffer, valueElement);
 		}
-		buffer.append('}');
+		buffer.append(" }");
 		return buffer;
 	}
 
@@ -142,19 +143,20 @@ public final class HexFormat {
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
 	public static StringBuilder formatShortArray(StringBuilder buffer, short[] value) {
-		buffer.append("{ ");
+		buffer.append('{');
 
 		boolean firstElement = true;
 
 		for (short valueElement : value) {
 			if (firstElement) {
 				firstElement = false;
+				buffer.append(' ');
 			} else {
 				buffer.append(", ");
 			}
 			formatShort(buffer, valueElement);
 		}
-		buffer.append('}');
+		buffer.append(" }");
 		return buffer;
 	}
 
@@ -216,19 +218,20 @@ public final class HexFormat {
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
 	public static StringBuilder formatIntArray(StringBuilder buffer, int[] value) {
-		buffer.append("{ ");
+		buffer.append('{');
 
 		boolean firstElement = true;
 
 		for (int valueElement : value) {
 			if (firstElement) {
 				firstElement = false;
+				buffer.append(' ');
 			} else {
 				buffer.append(", ");
 			}
 			formatInt(buffer, valueElement);
 		}
-		buffer.append('}');
+		buffer.append(" }");
 		return buffer;
 	}
 
@@ -298,19 +301,20 @@ public final class HexFormat {
 	 * @return the updated {@linkplain StringBuilder} for chaining.
 	 */
 	public static StringBuilder formatLongArray(StringBuilder buffer, long[] value) {
-		buffer.append("{ ");
+		buffer.append('{');
 
 		boolean firstElement = true;
 
 		for (long valueElement : value) {
 			if (firstElement) {
 				firstElement = false;
+				buffer.append(' ');
 			} else {
 				buffer.append(", ");
 			}
 			formatLong(buffer, valueElement);
 		}
-		buffer.append('}');
+		buffer.append(" }");
 		return buffer;
 	}
 
