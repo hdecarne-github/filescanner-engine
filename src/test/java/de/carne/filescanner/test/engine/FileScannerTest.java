@@ -155,6 +155,7 @@ class FileScannerTest {
 
 			FileScannerResult result = fileScanner.result();
 
+			verifyResult(fileScanner, result);
 			renderResult(fileScanner.result());
 
 			FileScannerResult[] formatResult = result.children();
@@ -162,6 +163,15 @@ class FileScannerTest {
 			Assertions.assertEquals(1, formatResult.length);
 		}
 		return status;
+	}
+
+	private void verifyResult(FileScanner fileScanner, FileScannerResult result) {
+		FileScannerResult[] resultPath = fileScanner.getResultPath(result.key());
+
+		Assertions.assertEquals(result, resultPath[resultPath.length - 1]);
+		for (FileScannerResult resultChild : result.children()) {
+			verifyResult(fileScanner, resultChild);
+		}
 	}
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
