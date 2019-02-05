@@ -19,14 +19,14 @@ package de.carne.filescanner.engine;
 import java.io.IOException;
 
 /**
- * Decode interface for streamed input data.
+ * Decode interface for a streamed value.
  *
- * @param <T> the actual decode result type.
+ * @param <T> the actual value type.
  */
-public interface StreamInputDecoder<T> extends InputStreamer {
+public interface StreamValueDecoder<T> extends ValueStreamer {
 
 	/**
-	 * Decode the previously streamed input data.
+	 * Decode the previously streamed value.
 	 *
 	 * @return the decoded value.
 	 * @throws IOException if a decode error occurs.

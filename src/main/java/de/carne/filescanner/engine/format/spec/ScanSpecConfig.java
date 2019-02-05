@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.InputStreamer;
+import de.carne.filescanner.engine.ValueStreamer;
 import de.carne.filescanner.engine.StreamStatus;
 
 /**
@@ -29,15 +29,15 @@ import de.carne.filescanner.engine.StreamStatus;
 public final class ScanSpecConfig {
 
 	private final int matchSize;
-	private final InputStreamer streamer;
+	private final ValueStreamer streamer;
 
 	/**
 	 * Constructs a new {@linkplain ScanSpecConfig} instance.
 	 *
 	 * @param matchSize the chunk size to use for matching.
-	 * @param streamer the {@linkplain InputStreamer} to use for matching.
+	 * @param streamer the {@linkplain ValueStreamer} to use for matching.
 	 */
-	public ScanSpecConfig(int matchSize, InputStreamer streamer) {
+	public ScanSpecConfig(int matchSize, ValueStreamer streamer) {
 		Check.assertTrue(matchSize > 0);
 
 		this.matchSize = matchSize;

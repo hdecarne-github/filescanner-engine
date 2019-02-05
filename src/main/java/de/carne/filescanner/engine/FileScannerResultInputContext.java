@@ -142,7 +142,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * @return the read value.
 	 * @throws IOException if an I/O or decode error occurs.
 	 */
-	public <T> T readValue(int size, InputDecoder<T> decoder) throws IOException {
+	public <T> T readValue(int size, ValueDecoder<T> decoder) throws IOException {
 		ByteBuffer buffer = readComplete(size);
 
 		buffer.order(this.byteOrder);
@@ -163,7 +163,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * @return the decoded value.
 	 * @throws IOException if an I/O or decode error occurs.
 	 */
-	public <T> T readValue(int size, int step, StreamInputDecoder<T> decoder) throws IOException {
+	public <T> T readValue(int size, int step, StreamValueDecoder<T> decoder) throws IOException {
 		Check.assertTrue(step > 0);
 		Check.assertTrue(size >= step);
 

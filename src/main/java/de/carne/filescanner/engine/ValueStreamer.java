@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Functional interface for streamed input data processing.
+ * Functional interface for streamed value processing.
  */
 @FunctionalInterface
-public interface InputStreamer {
+public interface ValueStreamer {
 
 	/**
-	 * Stream input data.
+	 * Stream value data.
 	 * <p>
 	 * The submitted buffer may contain less bytes than the requested chunk size.
 	 * </p>

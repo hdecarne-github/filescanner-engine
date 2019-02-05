@@ -19,7 +19,7 @@ package de.carne.filescanner.engine;
 /**
  * Stream status for stream input decoding.
  *
- * @see StreamInputDecoder
+ * @see StreamValueDecoder
  */
 public enum StreamStatus {
 

@@ -20,18 +20,18 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * Decode function for integral input data.
+ * Decode function for integral value.
  *
- * @param <T> the actual decode result type.
+ * @param <T> the actual value type.
  */
 @FunctionalInterface
-public interface InputDecoder<T> {
+public interface ValueDecoder<T> {
 
 	/**
-	 * Decode input data.
+	 * Decode value.
 	 *
 	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return the decoded input data.
+	 * @return the decoded value.
 	 * @throws IOException if a decode error occurs.
 	 */
 	T decode(ByteBuffer buffer) throws IOException;

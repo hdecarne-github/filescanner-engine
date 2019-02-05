@@ -22,8 +22,8 @@ import java.nio.ByteBuffer;
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.InputStreamer;
-import de.carne.filescanner.engine.StreamInputDecoder;
+import de.carne.filescanner.engine.ValueStreamer;
+import de.carne.filescanner.engine.StreamValueDecoder;
 import de.carne.filescanner.engine.StreamStatus;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
@@ -84,8 +84,8 @@ public class ScanSpec extends CompositeSpec {
 		}
 	}
 
-	private static StreamInputDecoder<Long> decoder(InputStreamer streamer) {
-		return new StreamInputDecoder<Long>() {
+	private static StreamValueDecoder<Long> decoder(ValueStreamer streamer) {
+		return new StreamValueDecoder<Long>() {
 
 			private long length = 0;
 
