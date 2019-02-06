@@ -18,8 +18,11 @@ package de.carne.filescanner.test.engine;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,6 +41,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.engine.transfer.SimpleTextRenderer;
 import de.carne.filescanner.engine.util.CombinedRenderer;
+import de.carne.filescanner.engine.util.HtmlReportGenerator;
 import de.carne.filescanner.test.TestFiles;
 import de.carne.text.MemoryUnitFormat;
 
@@ -155,6 +159,7 @@ class FileScannerTest {
 
 			FileScannerResult result = fileScanner.result();
 
+			writeHtmlReport(file, fileScanner);
 			verifyResult(fileScanner, result);
 			renderResult(fileScanner.result());
 
@@ -163,6 +168,17 @@ class FileScannerTest {
 			Assertions.assertEquals(1, formatResult.length);
 		}
 		return status;
+	}
+
+	private void writeHtmlReport(Path file, FileScanner fileScanner) throws IOException {
+		Path htmlReportFile = Paths.get(file.toString() + ".html");
+
+		try (Writer out = Files.newBufferedWriter(htmlReportFile, StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING)) {
+			HtmlReportGenerator htmlReport = new HtmlReportGenerator();
+
+			htmlReport.write(fileScanner, out);
+		}
 	}
 
 	private void verifyResult(FileScanner fileScanner, FileScannerResult result) {
