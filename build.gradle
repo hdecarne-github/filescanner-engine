@@ -57,8 +57,14 @@ generateGrammarSource {
 }
 
 jar {
+	def buildTimestamp = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
 	manifest {
-		attributes "Automatic-Module-Name": automaticModuleName
+		attributes(
+			"Automatic-Module-Name": automaticModuleName,
+			"X-Application-Name": project.name,
+			"X-Application-Version": project.version,
+			"X-Application-Build": buildTimestamp)
 	}
 }
 
