@@ -20,9 +20,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.carne.filescanner.engine.FileScanner;
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.util.ManifestInfos;
 
 /**
  * Utility class generating a HTML based scan result report.
@@ -30,6 +35,9 @@ import de.carne.filescanner.engine.FileScannerResult;
 public class HtmlReportGenerator {
 
 	private static final String TEMPLATE_INPUT_NAME = "%INPUT_NAME%";
+	private static final String TEMPLATE_ENGINE_VERSION = "%ENGINE_VERSION%";
+	private static final String TEMPLATE_REPORT_TIMESTAMP = "%REPORT_TIMESTAMP%";
+	private static final String TEMPLATE_RESULT_TREE = "%RESULT_TREE%";
 
 	/**
 	 * Write the given scan result tree to a HTML file.
@@ -56,16 +64,44 @@ public class HtmlReportGenerator {
 			String templateLine = null;
 
 			while ((templateLine = templateReader.readLine()) != null) {
-				String outLine;
+				Map<String, String> templateArguments = new HashMap<>();
 
-				if (templateLine.contains(TEMPLATE_INPUT_NAME)) {
-					outLine = templateLine.replace(TEMPLATE_INPUT_NAME, result.input().name());
+				templateArguments.put(TEMPLATE_INPUT_NAME, result.input().name());
+				templateArguments.put(TEMPLATE_ENGINE_VERSION,
+						ManifestInfos.APPLICATION_VERSION + "-" + ManifestInfos.APPLICATION_BUILD);
+				templateArguments.put(TEMPLATE_REPORT_TIMESTAMP,
+						LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+
+				String outLine = templateLine;
+
+				if (outLine.equals(TEMPLATE_RESULT_TREE)) {
+					out.write("<ul>");
+					writeResults(result, out);
+					out.write("</ul>");
 				} else {
-					outLine = templateLine;
+					for (Map.Entry<String, String> templateArgumentsEntry : templateArguments.entrySet()) {
+						outLine = outLine.replace(templateArgumentsEntry.getKey(), templateArgumentsEntry.getValue());
+					}
+					out.write(outLine);
 				}
-				out.write(outLine);
 			}
 		}
+	}
+
+	private void writeResults(FileScannerResult result, Writer out) throws IOException {
+		out.write("<li>");
+		out.write(result.name());
+
+		FileScannerResult[] resultChildren = result.children();
+
+		if (resultChildren.length > 0) {
+			out.write("<ul>");
+			for (FileScannerResult resultChild : resultChildren) {
+				writeResults(resultChild, out);
+			}
+			out.write("</ul>");
+		}
+		out.write("</li>");
 	}
 
 }
