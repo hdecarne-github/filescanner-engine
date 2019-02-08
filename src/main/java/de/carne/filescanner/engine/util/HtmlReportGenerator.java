@@ -25,9 +25,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.carne.filescanner.engine.FileScanner;
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.transfer.Renderer;
+import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.util.ManifestInfos;
+import de.carne.util.Strings;
 
 /**
  * Utility class generating a HTML based scan result report.
@@ -66,11 +73,11 @@ public class HtmlReportGenerator {
 			while ((templateLine = templateReader.readLine()) != null) {
 				Map<String, String> templateArguments = new HashMap<>();
 
-				templateArguments.put(TEMPLATE_INPUT_NAME, result.input().name());
+				templateArguments.put(TEMPLATE_INPUT_NAME, Strings.encodeHtml(result.input().name()));
 				templateArguments.put(TEMPLATE_ENGINE_VERSION,
-						ManifestInfos.APPLICATION_VERSION + "-" + ManifestInfos.APPLICATION_BUILD);
+						Strings.encodeHtml(ManifestInfos.APPLICATION_VERSION + "-" + ManifestInfos.APPLICATION_BUILD));
 				templateArguments.put(TEMPLATE_REPORT_TIMESTAMP,
-						LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+						Strings.encodeHtml(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
 
 				String outLine = templateLine;
 
@@ -90,9 +97,36 @@ public class HtmlReportGenerator {
 
 	private void writeResults(FileScannerResult result, Writer out) throws IOException {
 		out.write("<li>");
-		out.write(result.name());
+		out.write(Strings.encodeHtml(result.name()));
+		out.write("<br>");
+		try (RenderOutput renderOutput = new RenderOutput(new Renderer() {
 
-		FileScannerResult[] resultChildren = result.children();
+			@Override
+			public void close() throws IOException {
+				// Nothing to do here
+			}
+
+			@Override
+			public int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
+				out.write("<span class=\"" + style.name().toLowerCase() + "\">");
+				out.write(Strings.encodeHtml(text));
+				out.write("</span>");
+				if (lineBreak) {
+					out.write("<br>");
+				}
+				return text.length();
+			}
+
+			@Override
+			public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
+				return emitText(style, "[" + source.transferType().mimeType() + ":" + source.name() + "]", lineBreak);
+			}
+
+		})) {
+			result.render(renderOutput);
+		}
+
+		@NonNull FileScannerResult[] resultChildren = result.children();
 
 		if (resultChildren.length > 0) {
 			out.write("<ul>");
