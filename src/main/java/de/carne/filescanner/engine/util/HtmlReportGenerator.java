@@ -83,7 +83,7 @@ public class HtmlReportGenerator {
 
 				if (outLine.equals(TEMPLATE_RESULT_TREE)) {
 					out.write("<ul>");
-					writeResults(result, out);
+					writeResults(result, out, 0);
 					out.write("</ul>");
 				} else {
 					for (Map.Entry<String, String> templateArgumentsEntry : templateArguments.entrySet()) {
@@ -95,10 +95,21 @@ public class HtmlReportGenerator {
 		}
 	}
 
-	private void writeResults(FileScannerResult result, Writer out) throws IOException {
-		out.write("<li>");
+	private void writeResults(FileScannerResult result, Writer out, int depth) throws IOException {
+		@NonNull FileScannerResult[] resultChildren = result.children();
+
+		out.write("<li><div class=\"title");
+		if (resultChildren.length > 0) {
+			out.write(" node");
+			if (depth == 0) {
+				out.write(" node-expanded");
+			}
+		} else {
+			out.write(" leaf");
+		}
+		out.write("\">");
 		out.write(Strings.encodeHtml(result.name()));
-		out.write("<br>");
+		out.write("</div><div class=\"details\">");
 		try (RenderOutput renderOutput = new RenderOutput(new Renderer() {
 
 			@Override
@@ -125,13 +136,18 @@ public class HtmlReportGenerator {
 		})) {
 			result.render(renderOutput);
 		}
-
-		@NonNull FileScannerResult[] resultChildren = result.children();
-
+		out.write("</div>");
 		if (resultChildren.length > 0) {
-			out.write("<ul>");
+			out.write("<ul class=\"toggle");
+			if (depth == 0) {
+				out.write(" expanded");
+			}
+			out.write("\">");
+
+			int childDepth = depth + 1;
+
 			for (FileScannerResult resultChild : resultChildren) {
-				writeResults(resultChild, out);
+				writeResults(resultChild, out, childDepth);
 			}
 			out.write("</ul>");
 		}
