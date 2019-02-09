@@ -72,10 +72,10 @@ public class HtmlReportGenerator {
 
 			while ((templateLine = templateReader.readLine()) != null) {
 				Map<String, String> templateArguments = new HashMap<>();
+				ManifestInfos engineInfos = new ManifestInfos("filescanner-engine");
 
 				templateArguments.put(TEMPLATE_INPUT_NAME, Strings.encodeHtml(result.input().name()));
-				templateArguments.put(TEMPLATE_ENGINE_VERSION,
-						Strings.encodeHtml(ManifestInfos.APPLICATION_VERSION + "-" + ManifestInfos.APPLICATION_BUILD));
+				templateArguments.put(TEMPLATE_ENGINE_VERSION, Strings.encodeHtml(engineInfos.toString()));
 				templateArguments.put(TEMPLATE_REPORT_TIMESTAMP,
 						Strings.encodeHtml(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
 
