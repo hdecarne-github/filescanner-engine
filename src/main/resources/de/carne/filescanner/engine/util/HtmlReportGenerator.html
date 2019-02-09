@@ -6,12 +6,13 @@
 <style>
 body { font-family: sans-serif; font-size: 12pt; }
 address { color: #c0c0c0; }
-ul { list-style-type: none; }
+ul, #root { list-style-type: none; }
+#root { margin: 0; padding: 0; }
 .title {  }
 .details { margin-left: 40px; }
-.node { cursor: pointer; user-select: none; }
+.node { cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 .node::before { content: "\25B8"; color: black; display: inline-block; margin-right: 4px; }
-.node-expanded::before { transform: rotate(90deg); }
+.node-expanded::before { -ms-transform: rotate(90deg); -webkit-transform: rotate(90deg); transform: rotate(90deg); }
 .toggle { display: none; }
 .expanded { display: block; }
 .leaf { }

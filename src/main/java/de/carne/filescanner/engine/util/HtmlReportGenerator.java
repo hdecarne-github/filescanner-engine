@@ -82,7 +82,7 @@ public class HtmlReportGenerator {
 				String outLine = templateLine;
 
 				if (outLine.equals(TEMPLATE_RESULT_TREE)) {
-					out.write("<ul>");
+					out.write("<ul id=\"root\">");
 					writeResults(result, out, 0);
 					out.write("</ul>");
 				} else {
