@@ -62,9 +62,9 @@ jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name": automaticModuleName,
-			"X-Application-Name": project.name,
-			"X-Application-Version": project.version,
-			"X-Application-Build": buildTimestamp)
+			"X-Module-Name": project.name,
+			"X-Module-Version": project.version,
+			"X-Module-Build": buildTimestamp)
 	}
 }
 
