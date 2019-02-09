@@ -68,7 +68,7 @@ public class ConditionalSpec implements FormatSpec {
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		this.spec.get().renderComposite(out, context);
+		context.render(out, this.spec.get());
 	}
 
 	@Override
