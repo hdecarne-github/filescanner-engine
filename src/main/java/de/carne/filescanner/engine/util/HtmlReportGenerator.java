@@ -29,11 +29,11 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.filescanner.engine.FileScanner;
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.ModuleManifestInfos;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.engine.transfer.TransferSource;
-import de.carne.util.ManifestInfos;
 import de.carne.util.Strings;
 
 /**
@@ -72,7 +72,7 @@ public class HtmlReportGenerator {
 
 			while ((templateLine = templateReader.readLine()) != null) {
 				Map<String, String> templateArguments = new HashMap<>();
-				ManifestInfos engineInfos = new ManifestInfos("filescanner-engine");
+				ModuleManifestInfos engineInfos = new ModuleManifestInfos();
 
 				templateArguments.put(TEMPLATE_INPUT_NAME, Strings.encodeHtml(result.input().name()));
 				templateArguments.put(TEMPLATE_ENGINE_VERSION, Strings.encodeHtml(engineInfos.toString()));
