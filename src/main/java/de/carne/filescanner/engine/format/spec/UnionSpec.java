@@ -109,7 +109,8 @@ public class UnionSpec extends CompositeSpec {
 		if (out.isEmpty()) {
 			for (CompositeSpec element : this.elements) {
 				if (context.matchComposite(element)) {
-					element.render(out, context);
+					context.render(out, element);
+					break;
 				}
 			}
 		}
