@@ -81,7 +81,7 @@ LSD_PACKED_FIELDS@GIF_FORMAT:
 
 GIF_GLOBAL_COLOR_TABLE:
 array[#globalColorTableSize] "Global Color Table" {
-	byte[3] "Color" 
+	byte[3] "Color"
 }
 
 GIF_IMAGE_DESCRIPTOR:

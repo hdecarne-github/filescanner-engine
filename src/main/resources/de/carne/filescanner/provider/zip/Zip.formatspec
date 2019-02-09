@@ -143,8 +143,10 @@ struct text("Central directory header \"%1$s\"", @CDH_FILE_NAME) {
 		->renderer(@DosDateRenderer)
 	dword "crc-32"
 	dword "compressed size"
+		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 	dword "uncompressed size"
+		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 CDH_FILE_NAME_LENGTH:
 	word "file name length"

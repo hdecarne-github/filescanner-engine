@@ -21,6 +21,106 @@
 
 // Symbols
 
+BI_BIT_COUNT_SYMBOLS:
+word_symbols {
+	0: "JPEG/PNG image"
+	1: "Monochrome bitmap"
+	4: "16 color bitmap"
+	8: "256 color bitmap"
+	16: "16 bit true color bitmap"
+	24: "24 bit true color Monochrome bitmap"
+	32: "32 bit true color Monochrome bitmap"
+}
+
+BI_COMPRESSION_SYMBOLS:
+dword_symbols {
+	0: "BI_RGB"
+	1: "BI_RLE8"
+	2: "BI_RLE4"
+	3: "BI_BITFIELDS"
+	4: "BI_JPEG"
+	5: "BI_PNG"
+}
 
 // Specs
 
+BMP_FILE_HEADER:
+struct "BITMAPFILEHEADER" {
+	word "bfType"
+		->validate(0x4d42)
+	dword "bfSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	word "bfReserved1"
+		->validate(0x0000)
+	word "bfReserved2"
+		->validate(0x0000)
+BF_OFF_BITS@BMP_FORMAT:
+	dword "bfOffBits"
+}
+
+BMP_INFO_HEADER:
+struct "BITMAPINFOHEADER" {
+	dword "biSize"
+		->validate(40)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+BI_WIDTH@BMP_FORMAT:
+	dword "biWidth"
+		->format(@PrettyFormat)
+BI_HEIGHT@BMP_FORMAT:
+	dword "biHeight"
+		->format(@PrettyFormat)
+	word "biPlanes"
+		->validate(1)
+BI_BIT_COUNT@BMP_FORMAT:
+	word "biBitCount"
+		->validate(@BI_BIT_COUNT_SYMBOLS)
+		->format(@PrettyFormat)
+		->renderer(@BI_BIT_COUNT_SYMBOLS)
+BI_COMPRESSION@BMP_FORMAT:
+	dword "biCompression"
+		->renderer(@BI_COMPRESSION_SYMBOLS)
+BI_SIZE_IMAGE@BMP_FORMAT:
+	dword "biSizeImage"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "biXPelsPerMeter"
+		->format(@PrettyFormat)
+	dword "biYPelsPerMeter"
+		->format(@PrettyFormat)
+BI_CLR_USED@BMP_FORMAT:
+	dword "biClrUsed"
+		->format(@PrettyFormat)
+	dword "biClrImportant"
+		->format(@PrettyFormat)
+}
+
+BIT_FIELDS:
+struct "BITFIELDS" {
+	dword "red"
+	dword "green"
+	dword "blue"
+}
+
+RGB_QUAD_COLOR_TABLE:
+array[#colorTableSize] "COLORTABLE" {
+	byte[4] "Color"
+}
+
+IMAGE_DATA:
+struct "IMAGEDATA" {
+	range[#imageSize] "image bytes"
+}
+
+BMP_FORMAT:
+format_spec "BMP image data" {
+	@BMP_FILE_HEADER
+	@BMP_INFO_HEADER
+	conditional #colorTableSpec {
+		@BIT_FIELDS
+		@RGB_QUAD_COLOR_TABLE
+	}
+	@IMAGE_DATA
+}	->renderer(#bmpRenderer)
+	->export(#bmpExporter)

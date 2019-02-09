@@ -27,17 +27,23 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class BmpFormat extends Format {
 
+	private static final String FORMAT_NAME = "BMP image data";
+
+	private final BmpFormatSpecDefinition formatSpecDefinition;
+
 	/**
 	 * Constructs a new {@linkplain BmpFormat} instance.
 	 */
 	public BmpFormat() {
-		super(BmpFormatSpecs.FORMAT_NAME);
-		registerHeaderSpec(BmpFormatSpecs.BMP_FILE_HEADER);
+		super(FORMAT_NAME);
+		this.formatSpecDefinition = new BmpFormatSpecDefinition();
+		this.formatSpecDefinition.load();
+		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(BmpFormatSpecs.FORMAT_SPEC);
+		return context.decodeComposite(this.formatSpecDefinition.formatSpec());
 	}
 
 }
