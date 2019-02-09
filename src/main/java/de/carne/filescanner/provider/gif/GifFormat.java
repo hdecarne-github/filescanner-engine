@@ -29,21 +29,21 @@ public class GifFormat extends Format {
 
 	private static final String FORMAT_NAME = "GIF image data";
 
-	private final GifFormatSpecDefinition gifFormatSpecDefinition;
+	private final GifFormatSpecDefinition formatSpecDefinition;
 
 	/**
 	 * Constructs a new {@linkplain GifFormat} instance.
 	 */
 	public GifFormat() {
 		super(FORMAT_NAME);
-		this.gifFormatSpecDefinition = new GifFormatSpecDefinition();
-		this.gifFormatSpecDefinition.load();
-		registerHeaderSpec(this.gifFormatSpecDefinition.gifHeaderSpec());
+		this.formatSpecDefinition = new GifFormatSpecDefinition();
+		this.formatSpecDefinition.load();
+		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.gifFormatSpecDefinition.gifFormatSpec());
+		return context.decodeComposite(this.formatSpecDefinition.formatSpec());
 	}
 
 }

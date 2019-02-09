@@ -29,21 +29,21 @@ public class PngFormat extends Format {
 
 	private static final String FORMAT_NAME = "PNG image data";
 
-	private final PngFormatSpecDefinition pngFormatSpecDefinition;
+	private final PngFormatSpecDefinition formatSpecDefinition;
 
 	/**
 	 * Constructs a new {@linkplain PngFormat} instance.
 	 */
 	public PngFormat() {
 		super(FORMAT_NAME);
-		this.pngFormatSpecDefinition = new PngFormatSpecDefinition();
-		this.pngFormatSpecDefinition.load();
-		registerHeaderSpec(this.pngFormatSpecDefinition.pngHeaderSpec());
+		this.formatSpecDefinition = new PngFormatSpecDefinition();
+		this.formatSpecDefinition.load();
+		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.pngFormatSpecDefinition.pngFormatSpec());
+		return context.decodeComposite(this.formatSpecDefinition.formatSpec());
 	}
 
 }

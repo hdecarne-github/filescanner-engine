@@ -50,11 +50,11 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<ByteSpec> yThumbnail = resolveLazy("Y_THUMBNAIL", ByteSpec.class);
 	private Lazy<WordSpec> genericLength = resolveLazy("GENERIC_LENGTH", WordSpec.class);
 
-	public CompositeSpec jpegFormatSpec() {
+	public CompositeSpec formatSpec() {
 		return this.jpegFormatSpec.get();
 	}
 
-	public CompositeSpec jpegHeaderSpec() {
+	public CompositeSpec headerSpec() {
 		return this.jpegHeaderSpec.get();
 	}
 

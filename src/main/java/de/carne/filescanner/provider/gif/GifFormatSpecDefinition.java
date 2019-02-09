@@ -47,11 +47,11 @@ final class GifFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<ByteSpec> lsdPackedFields = resolveLazy("LSD_PACKED_FIELDS", ByteSpec.class);
 	private Lazy<ByteSpec> imagePackedFields = resolveLazy("IMAGE_PACKED_FIELDS", ByteSpec.class);
 
-	public CompositeSpec gifFormatSpec() {
+	public CompositeSpec formatSpec() {
 		return this.gifFormatSpec.get();
 	}
 
-	public CompositeSpec gifHeaderSpec() {
+	public CompositeSpec headerSpec() {
 		return this.gifHeaderSpec.get();
 	}
 

@@ -29,21 +29,21 @@ public class JpegFormat extends Format {
 
 	private static final String FORMAT_NAME = "JPEG image data";
 
-	private final JpegFormatSpecDefinition jpegFormatSpecDefinition;
+	private final JpegFormatSpecDefinition formatSpecDefinition;
 
 	/**
 	 * Constructs a new {@linkplain JpegFormat} instance.
 	 */
 	public JpegFormat() {
 		super(FORMAT_NAME);
-		this.jpegFormatSpecDefinition = new JpegFormatSpecDefinition();
-		this.jpegFormatSpecDefinition.load();
-		registerHeaderSpec(this.jpegFormatSpecDefinition.jpegHeaderSpec());
+		this.formatSpecDefinition = new JpegFormatSpecDefinition();
+		this.formatSpecDefinition.load();
+		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.jpegFormatSpecDefinition.jpegFormatSpec());
+		return context.decodeComposite(this.formatSpecDefinition.formatSpec());
 	}
 
 }

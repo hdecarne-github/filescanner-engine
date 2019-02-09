@@ -49,11 +49,11 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<DWordSpec> lfhCompressedSize = resolveLazy("LFH_COMPRESSED_SIZE", DWordSpec.class);
 	private Lazy<CharArraySpec> lfhFileName = resolveLazy("LFH_FILE_NAME", CharArraySpec.class);
 
-	public CompositeSpec zipFormatSpec() {
+	public CompositeSpec formatSpec() {
 		return this.zipFormatSpec.get();
 	}
 
-	public CompositeSpec zipHeaderSpec() {
+	public CompositeSpec headerSpec() {
 		return this.lfhSpec.get();
 	}
 

@@ -42,11 +42,11 @@ final class PngFormatSpecDefinition extends FormatSpecDefinition {
 
 	private Lazy<DWordSpec> pngChunkType = resolveLazy("CHUNK_TYPE", DWordSpec.class);
 
-	public CompositeSpec pngFormatSpec() {
+	public CompositeSpec formatSpec() {
 		return this.pngFormatSpec.get();
 	}
 
-	public CompositeSpec pngHeaderSpec() {
+	public CompositeSpec headerSpec() {
 		return this.pngHeaderSpec.get();
 	}
 

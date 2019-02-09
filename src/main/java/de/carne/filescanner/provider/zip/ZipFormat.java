@@ -29,21 +29,21 @@ public class ZipFormat extends Format {
 
 	private static final String FORMAT_NAME = "ZIP archive";
 
-	private final ZipFormatSpecDefinition zipFormatSpecDefinition;
+	private final ZipFormatSpecDefinition formatSpecDefinition;
 
 	/**
 	 * Constructs a new {@linkplain ZipFormat} instance.
 	 */
 	public ZipFormat() {
 		super(FORMAT_NAME);
-		this.zipFormatSpecDefinition = new ZipFormatSpecDefinition();
-		this.zipFormatSpecDefinition.load();
-		registerHeaderSpec(this.zipFormatSpecDefinition.zipHeaderSpec());
+		this.formatSpecDefinition = new ZipFormatSpecDefinition();
+		this.formatSpecDefinition.load();
+		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 	}
 
 	@Override
 	public FileScannerResult decode(FileScannerResultDecodeContext context) throws IOException {
-		return context.decodeComposite(this.zipFormatSpecDefinition.zipFormatSpec());
+		return context.decodeComposite(this.formatSpecDefinition.formatSpec());
 	}
 
 }
