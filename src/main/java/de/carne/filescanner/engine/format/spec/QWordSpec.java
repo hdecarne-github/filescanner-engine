@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -47,82 +46,9 @@ public final class QWordSpec extends NumberAttributeSpec<Long> {
 		this(FinalSupplier.of(name));
 	}
 
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec dec(Supplier<String> name) {
-		return dec(new QWordSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec dec(String name) {
-		return dec(new QWordSpec(name));
-	}
-
-	private static QWordSpec dec(QWordSpec spec) {
-		spec.format(PrettyFormat.LONG_FORMATTER);
-		return spec;
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec hex(Supplier<String> name) {
-		return new QWordSpec(name);
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec hex(String name) {
-		return new QWordSpec(name);
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec size(Supplier<String> name) {
-		return size(new QWordSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain QWordSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static QWordSpec size(String name) {
-		return size(new QWordSpec(name));
-	}
-
-	private static QWordSpec size(QWordSpec spec) {
-		spec.format(PrettyFormat.LONG_FORMATTER);
-		spec.renderer(SizeRenderer.LONG_RENDERER);
-		return spec;
-	}
-
 	@Override
 	protected int size() {
-		return 4;
+		return Long.BYTES;
 	}
 
 	@Override

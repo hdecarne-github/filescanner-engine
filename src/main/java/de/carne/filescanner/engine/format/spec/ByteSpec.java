@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -47,87 +46,9 @@ public final class ByteSpec extends NumberAttributeSpec<Byte> {
 		this(FinalSupplier.of(name));
 	}
 
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec dec(Supplier<String> name) {
-		return dec(new ByteSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec dec(String name) {
-		return dec(new ByteSpec(name));
-	}
-
-	private static ByteSpec dec(ByteSpec spec) {
-		spec.format(PrettyFormat.BYTE_FORMATTER);
-		return spec;
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec hex(Supplier<String> name) {
-		return hex(new ByteSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec hex(String name) {
-		return hex(new ByteSpec(name));
-	}
-
-	private static ByteSpec hex(ByteSpec spec) {
-		spec.format(HexFormat.BYTE_FORMATTER);
-		return spec;
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec size(Supplier<String> name) {
-		return size(new ByteSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain ByteSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static ByteSpec size(String name) {
-		return size(new ByteSpec(name));
-	}
-
-	private static ByteSpec size(ByteSpec spec) {
-		spec.format(PrettyFormat.BYTE_FORMATTER);
-		spec.renderer(SizeRenderer.BYTE_RENDERER);
-		return spec;
-	}
-
 	@Override
 	protected int size() {
-		return 1;
+		return Byte.BYTES;
 	}
 
 	@Override

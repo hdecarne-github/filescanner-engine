@@ -20,7 +20,6 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -47,82 +46,9 @@ public final class DWordSpec extends NumberAttributeSpec<Integer> {
 		this(FinalSupplier.of(name));
 	}
 
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec dec(Supplier<String> name) {
-		return dec(new DWordSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec dec(String name) {
-		return dec(new DWordSpec(name));
-	}
-
-	private static DWordSpec dec(DWordSpec spec) {
-		spec.format(PrettyFormat.INT_FORMATTER);
-		return spec;
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec hex(Supplier<String> name) {
-		return new DWordSpec(name);
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured hexadecimal format.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec hex(String name) {
-		return new DWordSpec(name);
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec size(Supplier<String> name) {
-		return size(new DWordSpec(name));
-	}
-
-	/**
-	 * Convenience function for constructing a {@linkplain DWordSpec} instance with pre-configured decimal format and
-	 * size renderer.
-	 *
-	 * @param name the attribute's name.
-	 * @return the created spec instance.
-	 */
-	public static DWordSpec size(String name) {
-		return size(new DWordSpec(name));
-	}
-
-	private static DWordSpec size(DWordSpec spec) {
-		spec.format(PrettyFormat.INT_FORMATTER);
-		spec.renderer(SizeRenderer.INT_RENDERER);
-		return spec;
-	}
-
 	@Override
 	protected int size() {
-		return 4;
+		return Integer.BYTES;
 	}
 
 	@Override
