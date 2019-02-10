@@ -167,7 +167,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param value the attribute value to bind.
 	 */
 	public <T> void bindContextValue(AttributeSpec<T> attribute, @NonNull T value) {
-		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.decode(Objects.toString(value)));
+		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.encode(Objects.toString(value)));
 
 		this.decodeStack.peek().contextValues().put(attribute, value);
 	}
