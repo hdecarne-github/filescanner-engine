@@ -97,7 +97,7 @@ public class UnionSpec extends CompositeSpec {
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 		for (CompositeSpec element : this.elements) {
 			if (context.matchComposite(element)) {
-				context.decodeComposite(element);
+				element.decode(context);
 				break;
 			}
 		}
@@ -109,7 +109,7 @@ public class UnionSpec extends CompositeSpec {
 		if (out.isEmpty()) {
 			for (CompositeSpec element : this.elements) {
 				if (context.matchComposite(element)) {
-					context.render(out, element);
+					element.render(out, context);
 					break;
 				}
 			}

@@ -63,12 +63,12 @@ public class ConditionalSpec implements FormatSpec {
 		if (!context.matchComposite(resolvedSpec)) {
 			throw new UnexpectedDataException();
 		}
-		context.decodeComposite(resolvedSpec);
+		resolvedSpec.decode(context);
 	}
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		context.render(out, this.spec.get());
+		this.spec.get().render(out, context);
 	}
 
 	@Override

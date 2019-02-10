@@ -88,8 +88,19 @@ public class SequenceSpec extends CompositeSpec {
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		while (context.matchFormat(this.elementSpec)) {
-			this.elementSpec.render(out, context);
+		boolean done = false;
+
+		while (!done) {
+			FormatSpec checkedStopSpec = this.stopSpec;
+
+			if (checkedStopSpec != null && context.matchFormat(checkedStopSpec)) {
+				checkedStopSpec.render(out, context);
+				done = true;
+			} else if (context.matchFormat(this.elementSpec)) {
+				this.elementSpec.render(out, context);
+			} else {
+				done = true;
+			}
 		}
 	}
 
