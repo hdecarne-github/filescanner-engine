@@ -82,26 +82,26 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return (isFixedSize() ? (this.size.get().intValue() << 4) : 0);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
 		return !isFixedSize()
-				|| (this.size.get().intValue() <= buffer.remaining() && validateValue(decodeValue(buffer)));
+				|| ((this.size.get().intValue() << 4) <= buffer.remaining() && validateValue(decodeValue(buffer)));
 	}
 
 	@Override
 	protected long[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue(), this::decodeValue);
+		return context.readValue(this.size.get().intValue() << 4, this::decodeValue);
 	}
 
 	private long[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue());
+		slice.limit(this.size.get().intValue() << 4);
 
-		long[] value = new long[slice.remaining() >> 3];
+		long[] value = new long[slice.remaining() >> 4];
 		int valueIndex = 0;
 
 		while (slice.hasRemaining()) {

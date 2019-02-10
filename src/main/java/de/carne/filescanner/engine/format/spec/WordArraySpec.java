@@ -82,24 +82,24 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return (isFixedSize() ? (this.size.get().intValue() << 1) : 0);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
 		return !isFixedSize()
-				|| (this.size.get().intValue() <= buffer.remaining() && validateValue(decodeValue(buffer)));
+				|| ((this.size.get().intValue() << 1) <= buffer.remaining() && validateValue(decodeValue(buffer)));
 	}
 
 	@Override
 	protected short[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue(), this::decodeValue);
+		return context.readValue(this.size.get().intValue() << 1, this::decodeValue);
 	}
 
 	private short[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue());
+		slice.limit(this.size.get().intValue() << 1);
 
 		short[] value = new short[slice.remaining() >> 1];
 		int valueIndex = 0;

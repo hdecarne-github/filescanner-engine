@@ -82,24 +82,24 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return (isFixedSize() ? (this.size.get().intValue() << 2) : 0);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
 		return !isFixedSize()
-				|| (this.size.get().intValue() <= buffer.remaining() && validateValue(decodeValue(buffer)));
+				|| ((this.size.get().intValue() << 2) <= buffer.remaining() && validateValue(decodeValue(buffer)));
 	}
 
 	@Override
 	protected int[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue(), this::decodeValue);
+		return context.readValue(this.size.get().intValue() << 2, this::decodeValue);
 	}
 
 	private int[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue());
+		slice.limit(this.size.get().intValue() << 2);
 
 		int[] value = new int[slice.remaining() >> 2];
 		int valueIndex = 0;
