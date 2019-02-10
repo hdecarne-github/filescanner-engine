@@ -1,0 +1,326 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// EXE style executable file format: https://en.wikipedia.org/wiki/.exe
+//
+
+// Symbols
+
+NT_MACHINE:
+word_symbols {
+	0: "IMAGE_FILE_MACHINE_UNKNOWN"
+	0x014d: "IMAGE_FILE_MACHINE_I860"
+	0x014c: "IMAGE_FILE_MACHINE_I386"
+	0x0162: "IMAGE_FILE_MACHINE_R3000"
+	0x0166: "IMAGE_FILE_MACHINE_R4000"
+	0x0168: "IMAGE_FILE_MACHINE_R10000"
+	0x0169: "IMAGE_FILE_MACHINE_WCEMIPSV2"
+	0x0184: "IMAGE_FILE_MACHINE_ALPHA"
+	0x01a2: "IMAGE_FILE_MACHINE_SH3"
+	0x01a3: "IMAGE_FILE_MACHINE_SH3DSP"
+	0x01a4: "IMAGE_FILE_MACHINE_SH3E"
+	0x01a6: "IMAGE_FILE_MACHINE_SH4"
+	0x01a8: "IMAGE_FILE_MACHINE_SH5"
+	0x01c0: "IMAGE_FILE_MACHINE_ARM"
+	0x01c2: "IMAGE_FILE_MACHINE_THUMB"
+	0x01c4: "IMAGE_FILE_MACHINE_ARMNT"
+	0xaa64: "IMAGE_FILE_MACHINE_ARM64"
+	0x01d3: "IMAGE_FILE_MACHINE_AM33"
+	0x01f0: "IMAGE_FILE_MACHINE_POWERPC"
+	0x01f1: "IMAGE_FILE_MACHINE_POWERPCFP"
+	0x0200: "IMAGE_FILE_MACHINE_IA64"
+	0x0266: "IMAGE_FILE_MACHINE_MIPS16"
+	0x0284: "IMAGE_FILE_MACHINE_ALPHA64"
+	0x0366: "IMAGE_FILE_MACHINE_MIPSFPU"
+	0x0466: "IMAGE_FILE_MACHINE_MIPSFPU16"
+	0x0520: "IMAGE_FILE_MACHINE_TRICORE"
+	0x0cef: "IMAGE_FILE_MACHINE_CEF"
+	0x0ebc: "IMAGE_FILE_MACHINE_EBC"
+	0x8664: "IMAGE_FILE_MACHINE_AMD64"
+	0x9041: "IMAGE_FILE_MACHINE_M32R"
+	0xc0ee: "IMAGE_FILE_MACHINE_CEE"
+}
+
+NT_CHARACTERISTICS:
+word_flag_symbols {
+	0x8000: "IMAGE_FILE_BYTES_REVERSED_HI"
+	0x4000: "IMAGE_FILE_UP_SYSTEM_ONLY"
+	0x2000: "IMAGE_FILE_DLL"
+	0x1000: "IMAGE_FILE_SYSTEM"
+	0x0800: "IMAGE_FILE_NET_RUN_FROM_SWAP"
+	0x0080: "IMAGE_FILE_BYTES_REVERSED_LO"
+	0x0040: "IMAGE_FILE_16BIT_MACHINE"
+	0x0020: "IMAGE_FILE_LARGE_ADDRESS_AWARE"
+	0x0010: "IMAGE_FILE_AGGRESIVE_WS_TRIM"
+	0x0008: "IMAGE_FILE_LOCAL_SYMS_STRIPPED"
+	0x0004: "IMAGE_FILE_LINE_NUMS_STRIPPED"
+	0x0002: "IMAGE_FILE_EXECUTABLE_IMAGE"
+	0x0001: "IMAGE_FILE_RELOCS_STRIPPED"
+	0x0400: "IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP"
+	0x0200: "IMAGE_FILE_DEBUG_STRIPPED"
+	0x0100: "IMAGE_FILE_32BIT_MACHINE"
+}
+
+NT_SUBSYSTEM:
+word_symbols {
+	0: "IMAGE_SUBSYSTEM_UNKNOWN"
+	1: "IMAGE_SUBSYSTEM_NATIVE"
+	2: "IMAGE_SUBSYSTEM_WINDOWS_GUI"
+	3: "IMAGE_SUBSYSTEM_WINDOWS_CUI"
+	5: "IMAGE_SUBSYSTEM_OS2_CUI"
+	7: "IMAGE_SUBSYSTEM_POSIX_CUI"
+	8: "IMAGE_SUBSYSTEM_NATIVE_WINDOWS"
+	9: "IMAGE_SUBSYSTEM_WINDOWS_CE_GUI"
+	10: "IMAGE_SUBSYSTEM_EFI_APPLICATION"
+	11: "IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER"
+	12: "IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER"
+	13: "IMAGE_SUBSYSTEM_EFI_ROM"
+	14: "IMAGE_SUBSYSTEM_XBOX"
+	16: "IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION"
+}
+
+NT_DLL_CHARACTERISTICS:
+word_flag_symbols {
+	0x8000: "IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE"
+	0x2000: "IMAGE_DLLCHARACTERISTICS_WDM_DRIVER"
+	0x0800: "IMAGE_DLLCHARACTERISTICS_NO_BIND"
+	0x0400: "IMAGE_DLLCHARACTERISTICS_NO_SEH"
+	0x0200: "IMAGE_DLLCHARACTERISTICS_NO_ISOLATION"
+	0x0100: "IMAGE_DLLCHARACTERISTICS_NX_COMPAT"
+	0x0080: "IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY"
+	0x0040: "IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE"
+}
+
+NT_SECTION_CHARACTERISTICS:
+dword_flag_symbols {
+	0x80000000: "IMAGE_SCN_MEM_WRITE"
+	0x40000000: "IMAGE_SCN_MEM_READ"
+	0x20000000: "IMAGE_SCN_MEM_EXECUTE"
+	0x10000000: "IMAGE_SCN_MEM_SHARED"
+	0x08000000: "IMAGE_SCN_MEM_NOT_PAGED"
+	0x04000000: "IMAGE_SCN_MEM_NOT_CACHED"
+	0x02000000: "IMAGE_SCN_MEM_DISCARDABLE"
+	0x01000000: "IMAGE_SCN_LNK_NRELOC_OVFL"
+	0x00E00000: "IMAGE_SCN_ALIGN_8192BYTES"
+	0x00D00000: "IMAGE_SCN_ALIGN_4096BYTES"
+	0x00C00000: "IMAGE_SCN_ALIGN_2048BYTES"
+	0x00B00000: "IMAGE_SCN_ALIGN_1024BYTES"
+	0x00A00000: "IMAGE_SCN_ALIGN_512BYTES"
+	0x00900000: "IMAGE_SCN_ALIGN_256BYTES"
+	0x00800000: "IMAGE_SCN_ALIGN_128BYTES"
+	0x00700000: "IMAGE_SCN_ALIGN_64BYTES"
+	0x00600000: "IMAGE_SCN_ALIGN_32BYTES"
+	0x00500000: "IMAGE_SCN_ALIGN_16BYTES (Default)"
+	0x00400000: "IMAGE_SCN_ALIGN_8BYTES"
+	0x00300000: "IMAGE_SCN_ALIGN_4BYTES"
+	0x00200000: "IMAGE_SCN_ALIGN_2BYTES"
+	0x00100000: "IMAGE_SCN_ALIGN_1BYTES"
+	0x00080000: "IMAGE_SCN_MEM_PRELOAD"
+	0x00040000: "IMAGE_SCN_MEM_LOCKED"
+	0x00020000: "IMAGE_SCN_MEM_PURGEABLE"
+	0x00010000: "IMAGE_SCN_MEM_SYSHEAP (Obsolete)"
+	0x00008000: "IMAGE_SCN_MEM_FARDATA"
+	0x00004000: "IMAGE_SCN_MEM_PROTECTED (Obsolete)"
+	0x00001000: "IMAGE_SCN_LNK_COMDAT"
+	0x00000800: "IMAGE_SCN_LNK_REMOVE"
+	0x00000400: "IMAGE_SCN_TYPE_OVER (Reserved)"
+	0x00000200: "IMAGE_SCN_LNK_INFO"
+	0x00000100: "IMAGE_SCN_LNK_OTHER"
+	0x00000080: "IMAGE_SCN_CNT_UNINITIALIZED_DATA"
+	0x00000040: "IMAGE_SCN_CNT_INITIALIZED_DATA"
+	0x00000020: "IMAGE_SCN_CNT_CODE"
+	0x00000010: "IMAGE_SCN_TYPE_COPY (Reserved)"
+	0x00000008: "IMAGE_SCN_TYPE_NO_PAD (Reserved)"
+	0x00000004: "IMAGE_SCN_TYPE_GROUP (Reserved)"
+	0x00000002: "IMAGE_SCN_TYPE_NOLOAD (Reserved)"
+	0x00000001: "IMAGE_SCN_TYPE_DSECT (Reserved)"
+	0x00000000: "IMAGE_SCN_TYPE_REG (Reserved)" 
+}
+
+// Specs
+
+IMAGE_DOS_HEADER:
+struct "IMAGE_DOS_HEADER" {
+	word "e_magic"
+		->validate(0x5a4d)
+	word "e_cblp"
+	word "e_cp"
+STUB_RELOCATION_COUNT@STUB_IMAGE:
+	word "e_crlc"
+	word "e_cparhdr"
+		->validate(0x04)
+	word "e_minalloc"
+	word "e_maxalloc"
+	word "e_ss"
+	word "e_sp"
+	word "e_csum"
+	word "e_ip"
+	word "e_cs"
+	word "e_lfarlc"
+		->validate(0x40)
+	word "e_ovno"
+		->validate(0)
+	word[4] "e_res"
+	word "e_oemid"
+	word "e_oeminfo"
+	word[10] "e_res2"
+NEXT_HEADER_OFFSET@STUB_IMAGE:
+	dword "e_lfanew"
+}
+
+STUB_IMAGE:
+struct "DOS stub image" {
+	@IMAGE_DOS_HEADER
+	array[@STUB_RELOCATION_COUNT] "RELOCATIONS" {
+		word[2] "rlc"
+	}
+	struct ".TEXT" {
+		range[#stubTextSize] "db"
+	}
+}
+
+IMAGE_FILE_HEADER:
+struct "IMAGE_FILE_HEADER" {
+	word "Machine"
+		->renderer(@NT_MACHINE)
+NT_NUMBER_OF_SECTIONS@NT_IMAGE:
+	word "NumberOfSections"
+		->format(@PrettyFormat)
+	dword "TimeDateStamp"
+	dword "PointerToSymbolTable"
+	dword "NumberOfSymbols"
+		->format(@PrettyFormat)
+	word "SizeOfOptionalHeader"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	word "Characteristics"
+		->renderer(@NT_CHARACTERISTICS)
+}
+
+IMAGE_NT_HEADERS64:
+struct "IMAGE_NT_HEADERS64" {
+	dword "Signature"
+		->validate(0x00004550)
+	@IMAGE_FILE_HEADER
+	struct "IMAGE_OPTIONAL_HEADER64" {
+		word "Magic"
+			->validate(0x20b)
+		byte "MajorLinkerVersion"
+			->format(@PrettyFormat)
+		byte "MinorLinkerVersion"
+			->format(@PrettyFormat)
+		dword "SizeOfCode"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfInitializedData"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfUninitializedData"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "AddressOfEntryPoint"
+		dword "BaseOfCode"
+		qword "ImageBase"
+		dword "SectionAlignment"
+			->renderer(@SizeRenderer)
+		dword "FileAlignment"
+			->renderer(@SizeRenderer)
+		word "MajorOperatingSystemVersion"
+		word "MinorOperatingSystemVersion"
+		word "MajorImageVersion"
+		word "MinorImageVersion"
+		word "MajorSubsystemVersion"
+		word "MinorSubsystemVersion"
+		dword "Win32VersionValue"
+		dword "SizeOfImage"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfHeaders"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "CheckSum"
+		word "Subsystem"
+			->renderer(@NT_SUBSYSTEM)
+		word "DllCharacteristics"
+			->renderer(@NT_DLL_CHARACTERISTICS)
+		qword "SizeOfStackReserve"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		qword "SizeOfStackCommit"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		qword "SizeOfHeapReserve"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		qword "SizeOfHeapCommit"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "LoaderFlags"
+		dword "NumberOfRvaAndSizes"
+			->validate(16)
+			->format(@PrettyFormat)
+		dword[2] "DataDirectory00"
+		dword[2] "DataDirectory01"
+		dword[2] "DataDirectory02"
+		dword[2] "DataDirectory03"
+		dword[2] "DataDirectory04"
+		dword[2] "DataDirectory05"
+		dword[2] "DataDirectory06"
+		dword[2] "DataDirectory07"
+		dword[2] "DataDirectory08"
+		dword[2] "DataDirectory09"
+		dword[2] "DataDirectory10"
+		dword[2] "DataDirectory11"
+		dword[2] "DataDirectory12"
+		dword[2] "DataDirectory13"
+		dword[2] "DataDirectory14"
+		dword[2] "DataDirectory15"
+  	}	
+}
+
+IMAGE_SECTION_HEADER:
+struct "IMAGE_SECTION_HEADER" {
+	char[8] "Name"
+	dword "PhysicalAddressOrVirtualSize"
+	dword "VirtualAddress"
+	dword "SizeOfRawData"
+	dword "PointerToRawData"
+	dword "PointerToRelocations"
+	dword "PointerToLinenumbers"
+	word "NumberOfRelocations"
+	word "NumberOfLinenumbers"
+	dword "Characteristics"
+		->renderer(@NT_SECTION_CHARACTERISTICS)
+}
+
+NT_IMAGE:
+union "NT image" {
+	struct {
+		@IMAGE_NT_HEADERS64
+		sequence @IMAGE_SECTION_HEADER
+			->size(@NT_NUMBER_OF_SECTIONS)
+	}
+}
+
+EXE_FORMAT:
+format_spec "EXE image" {
+	@STUB_IMAGE
+	union {
+		@NT_IMAGE
+	}
+}

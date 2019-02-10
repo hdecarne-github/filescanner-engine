@@ -99,6 +99,7 @@ format_spec #specialText {
 	}
 	@TEST_SEQUENCE
 	sequence "inline sequence" @TEST_STRUCT
+		->size(1)
 	@TEST_UNION
 	union "inline union" {
 		struct "nested struct 1" {

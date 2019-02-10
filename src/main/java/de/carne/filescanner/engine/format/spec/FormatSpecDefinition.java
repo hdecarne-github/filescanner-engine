@@ -94,6 +94,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.R
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecSizeModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextSetContext;
@@ -633,6 +634,39 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
+		FormatSpec elementSpec = loadStructSpecElement(specCtx.structSpecElement(), rootCtx);
+		SequenceSpec spec = new SequenceSpec(elementSpec);
+
+		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
+		applySizeModifier(spec, specCtx.sequenceSpecSizeModifier());
+		applyResultModifier(spec, specCtx.textExpression());
+		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
+		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
+		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private void applyStopAfterModifier(SequenceSpec spec, List<SequenceSpecStopAfterModifierContext> modifierCtx,
+			FormatSpecsContext rootCtx) {
+		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
+			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
+					FormatSpec.class));
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applySizeModifier(SequenceSpec spec, List<SequenceSpecSizeModifierContext> modifierCtx) {
+		for (SequenceSpecSizeModifierContext sizeCtx : modifierCtx) {
+			spec.size(loadNumberExpression(sizeCtx.numberExpression()));
+		}
+	}
+
+	@SuppressWarnings("null")
 	private ArraySpec loadArraySpec(ArraySpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		ArraySpec spec = loadAnonymousArraySpec(specCtx.anonymousArraySpec(), rootCtx);
@@ -658,31 +692,6 @@ public abstract class FormatSpecDefinition {
 		LOG.debug(LOG_LOADED_SPEC, spec);
 
 		return spec;
-	}
-
-	@SuppressWarnings("null")
-	private SequenceSpec loadAnonymousSequenceSpec(AnonymousSequenceSpecContext specCtx, FormatSpecsContext rootCtx) {
-		FormatSpec elementSpec = loadStructSpecElement(specCtx.structSpecElement(), rootCtx);
-		SequenceSpec spec = new SequenceSpec(elementSpec);
-
-		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
-		applyResultModifier(spec, specCtx.textExpression());
-		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
-		applyRendererModifier(spec, specCtx.compositeSpecRendererModifier());
-		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
-
-		LOG.debug(LOG_LOADED_SPEC, spec);
-
-		return spec;
-	}
-
-	@SuppressWarnings("null")
-	private void applyStopAfterModifier(SequenceSpec spec, List<SequenceSpecStopAfterModifierContext> modifierCtx,
-			FormatSpecsContext rootCtx) {
-		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
-			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
-					FormatSpec.class));
-		}
 	}
 
 	@SuppressWarnings("null")

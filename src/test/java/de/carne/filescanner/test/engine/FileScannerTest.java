@@ -110,30 +110,36 @@ class FileScannerTest {
 
 	@Test
 	void testBmpImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.BMP_IMAGE.path(), Formats.all().enabledFormats());
+		runFileScanner(TestFiles.BMP_IMAGE.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testGifImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.GIF_IMAGE.path(), Formats.all().enabledFormats());
+		runFileScanner(TestFiles.GIF_IMAGE.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testJpegImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.JPEG_IMAGE.path(), Formats.all().enabledFormats());
+		runFileScanner(TestFiles.JPEG_IMAGE.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testPngImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.PNG_IMAGE.path(), Formats.all().enabledFormats());
+		runFileScanner(TestFiles.PNG_IMAGE.path(), Formats.all().enabledFormats(), 1);
+	}
+
+	@Test
+	void testWin64ExeFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), Formats.all().enabledFormats(), 3);
 	}
 
 	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats());
+		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
 	}
 
-	private Status runFileScanner(Path file, Collection<Format> formats) throws IOException, InterruptedException {
+	private Status runFileScanner(Path file, Collection<Format> formats, int resultCount)
+			throws IOException, InterruptedException {
 		Status status = new Status();
 
 		try (FileScanner fileScanner = FileScanner.scan(file, formats, status)) {
@@ -165,7 +171,7 @@ class FileScannerTest {
 
 			FileScannerResult[] formatResult = result.children();
 
-			Assertions.assertEquals(1, formatResult.length);
+			Assertions.assertEquals(resultCount, formatResult.length);
 		}
 		return status;
 	}

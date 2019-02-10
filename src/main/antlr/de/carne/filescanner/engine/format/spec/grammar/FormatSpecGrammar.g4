@@ -48,7 +48,8 @@ Renderer: 'renderer';
 Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
-StopAfer: 'stopAfter';
+StopAfter: 'stopAfter';
+Size: 'size';
 Charset: 'charset';
 
 Byte: 'byte';
@@ -179,11 +180,15 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|sequenceSpecSizeModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpecStopAfterModifier
-	: StopAfer LBracket specReference RBracket
+	: StopAfter LBracket specReference RBracket
+	;
+	
+sequenceSpecSizeModifier
+	: Size LBracket numberExpression RBracket
 	;
 
 unionSpec

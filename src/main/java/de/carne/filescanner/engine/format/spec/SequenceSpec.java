@@ -18,10 +18,13 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.UnexpectedDataException;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
  * Variable number of {@linkplain FormatSpec}s.
@@ -30,6 +33,7 @@ public class SequenceSpec extends CompositeSpec {
 
 	private final FormatSpec elementSpec;
 	private @Nullable FormatSpec stopSpec = null;
+	private @Nullable Supplier<? extends Number> stopSize = null;
 
 	/**
 	 * Constructs a new {@linkplain SequenceSpec} instance.
@@ -51,6 +55,27 @@ public class SequenceSpec extends CompositeSpec {
 		return this;
 	}
 
+	/**
+	 * Sets the exact number of sequence elements to expect.
+	 *
+	 * @param size the exact number of sequence elements to expect.
+	 * @return the updated {@linkplain SequenceSpec}.
+	 */
+	public SequenceSpec size(Supplier<? extends Number> size) {
+		this.stopSize = size;
+		return this;
+	}
+
+	/**
+	 * Sets the exact number of sequence elements to expect.
+	 *
+	 * @param size the exact number of sequence elements to expect.
+	 * @return the updated {@linkplain SequenceSpec}.
+	 */
+	public SequenceSpec size(int size) {
+		return size(FinalSupplier.of(size));
+	}
+
 	@Override
 	public boolean isFixedSize() {
 		return false;
@@ -68,6 +93,8 @@ public class SequenceSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
+		int matchCount = 0;
+		int matchLimit = (this.stopSize != null ? this.stopSize.get().intValue() : Integer.MAX_VALUE);
 		boolean done = false;
 
 		while (!done) {
@@ -78,9 +105,14 @@ public class SequenceSpec extends CompositeSpec {
 				done = true;
 			} else if (context.matchFormat(this.elementSpec)) {
 				this.elementSpec.decode(context);
+				matchCount++;
+				done = (matchCount >= matchLimit);
 			} else {
 				done = true;
 			}
+		}
+		if (this.stopSize != null && matchCount < matchLimit) {
+			throw new UnexpectedDataException();
 		}
 	}
 
