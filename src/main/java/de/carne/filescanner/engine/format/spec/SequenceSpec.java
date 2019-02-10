@@ -22,8 +22,6 @@ import java.nio.ByteBuffer;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Variable number of {@linkplain FormatSpec}s.
@@ -80,24 +78,6 @@ public class SequenceSpec extends CompositeSpec {
 				done = true;
 			} else if (context.matchFormat(this.elementSpec)) {
 				this.elementSpec.decode(context);
-			} else {
-				done = true;
-			}
-		}
-	}
-
-	@Override
-	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		boolean done = false;
-
-		while (!done) {
-			FormatSpec checkedStopSpec = this.stopSpec;
-
-			if (checkedStopSpec != null && context.matchFormat(checkedStopSpec)) {
-				checkedStopSpec.render(out, context);
-				done = true;
-			} else if (context.matchFormat(this.elementSpec)) {
-				this.elementSpec.render(out, context);
 			} else {
 				done = true;
 			}

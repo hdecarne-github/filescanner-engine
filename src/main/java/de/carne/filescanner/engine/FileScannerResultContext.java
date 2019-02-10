@@ -30,9 +30,9 @@ public abstract class FileScannerResultContext {
 	private static final ThreadLocal<@Nullable FileScannerResultContext> CONTEXT = new ThreadLocal<>();
 
 	/**
-	 * Gets the {@linkplain FileScannerResultContext} instance attached to the current decoder or render call.
+	 * Gets the {@linkplain FileScannerResultContext} instance attached to the current decode or render call.
 	 *
-	 * @return the {@linkplain FileScannerResultContext} instance attached to the current decoder or render call.
+	 * @return the {@linkplain FileScannerResultContext} instance attached to the current decode or render call.
 	 */
 	public static FileScannerResultContext get() {
 		FileScannerResultContext context = CONTEXT.get();
@@ -44,6 +44,20 @@ public abstract class FileScannerResultContext {
 	}
 
 	/**
+	 * Checks whether a specific {@linkplain FileScannerResultContext} type is already attached to the current decode or
+	 * render call.
+	 *
+	 * @param contextType the {@linkplain FileScannerResultContext} type to check for.
+	 * @return {@code true} if a {@linkplain FileScannerResultContext} instance of the submitted type is already
+	 * attached to the current decode or render call.
+	 */
+	protected boolean inContext(Class<? extends FileScannerResultContext> contextType) {
+		FileScannerResultContext context = CONTEXT.get();
+
+		return context != null && contextType.isAssignableFrom(context.getClass());
+	}
+
+	/**
 	 * Runs the submitted {@linkplain FileScannerRunnable} within this {@linkplain FileScannerResultContext} instance.
 	 *
 	 * @param runnable the {@linkplain FileScannerRunnable} to run.
@@ -52,7 +66,9 @@ public abstract class FileScannerResultContext {
 	protected void run(FileScannerRunnable runnable) throws IOException {
 		FileScannerResultContext previousContext = CONTEXT.get();
 
-		if (previousContext == null || previousContext instanceof FileScannerResultDecodeContext) {
+		if (equals(previousContext)) {
+			runnable.run();
+		} else {
 			CONTEXT.set(this);
 			try {
 				runnable.run();

@@ -17,6 +17,7 @@
 package de.carne.filescanner.engine;
 
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,10 +65,19 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public void render(RenderOutput out, CompositeSpec formatSpec) throws IOException {
-		LOG.debug("Rendering format spec ''{0}''...", formatSpec);
+		if (!inContext(getClass()) || !formatSpec.isResult()) {
+			LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
-		byteOrder(formatSpec.byteOrder());
-		run(() -> formatSpec.renderComposite(out, this));
+			run(() -> {
+				ByteOrder previousByteOrder = byteOrder(formatSpec.byteOrder());
+
+				try {
+					formatSpec.renderComposite(out, this);
+				} finally {
+					byteOrder(previousByteOrder);
+				}
+			});
+		}
 	}
 
 	/**
