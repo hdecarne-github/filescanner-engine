@@ -45,6 +45,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.text.MemoryUnitFormat;
+import de.carne.util.Strings;
 
 /**
  * {@linkplain FileScannerResultBuilder} implementation with commit and render support.
@@ -109,7 +110,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	public synchronized String name() {
-		return this.committedState.name().get();
+		return Strings.encode(this.committedState.name().get());
 	}
 
 	@Override
