@@ -36,24 +36,48 @@ public class UnexpectedDataException extends FormatDecodeException {
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
 	 */
 	public UnexpectedDataException() {
-		super("Unexpected data: { ... }");
+		this(-1l);
 	}
 
 	/**
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
 	 *
+	 * @param position the invalid data position.
+	 */
+	public UnexpectedDataException(long position) {
+		super(formatData(position, null));
+	}
+
+	/**
+	 * Constructs a new {@linkplain UnexpectedDataException} instance.
+	 *
+	 * @param position the invalid data position.
 	 * @param data the invalid data.
 	 */
-	public UnexpectedDataException(Object data) {
-		super(formatData(new StringBuilder(), data).toString());
+	public UnexpectedDataException(long position, Object data) {
+		super(formatData(position, data));
+	}
+
+	private static String formatData(long position, @Nullable Object data) {
+		StringBuilder buffer = new StringBuilder();
+		buffer.append("Unexpected data");
+		if (position >= 0) {
+			buffer.append(" [");
+			HexFormat.formatLong(buffer, position);
+			buffer.append("]: ");
+		} else {
+			buffer.append(": ");
+		}
+		if (data != null) {
+			formatData(buffer, data);
+		} else {
+			buffer.append("{ ... }");
+		}
+		return buffer.toString();
 	}
 
 	@SuppressWarnings("squid:AssignmentInSubExpressionCheck")
 	private static StringBuilder formatData(StringBuilder buffer, @Nullable Object data) {
-		if (buffer.length() == 0) {
-			buffer.append("Unexpected data: ");
-		}
-
 		Class<?> dataType;
 
 		if (data == null) {

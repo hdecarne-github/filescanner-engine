@@ -37,7 +37,7 @@ public class InsufficientDataException extends FormatDecodeException {
 	 * @param requested the number of requested bytes.
 	 * @param available the number of available bytes.
 	 */
-	public InsufficientDataException(FileScannerInput input, long position, int requested, int available) {
+	public InsufficientDataException(FileScannerInput input, long position, long requested, long available) {
 		super(MessageFormat.format(
 				"Insufficient data while reading from input ''{0}'' position {1} (requested: {2} available: {3})",
 				input.name(), HexFormat.formatLong(position), requested, available));

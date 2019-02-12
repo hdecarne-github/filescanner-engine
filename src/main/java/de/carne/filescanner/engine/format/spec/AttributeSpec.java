@@ -235,7 +235,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 		T value = decodeValue(context);
 
 		if (!validateValue(value)) {
-			throw new UnexpectedDataException(value);
+			throw new UnexpectedDataException(context.position(), value);
 		}
 		switch (this.bindMode) {
 		case NONE:

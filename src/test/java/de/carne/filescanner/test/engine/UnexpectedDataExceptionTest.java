@@ -27,34 +27,59 @@ import de.carne.filescanner.engine.UnexpectedDataException;
 class UnexpectedDataExceptionTest {
 
 	@Test
-	void testExceptionMessage() {
-		String message1 = new UnexpectedDataException(Long.MAX_VALUE).getMessage();
+	void testExceptionMessage1() {
+		String message = new UnexpectedDataException(-1l, Long.MAX_VALUE).getMessage();
 
-		Assertions.assertEquals("Unexpected data: 7fffffffffffffffh", message1);
+		Assertions.assertEquals("Unexpected data: 7fffffffffffffffh", message);
+	}
 
-		String message2 = new UnexpectedDataException(Integer.MAX_VALUE).getMessage();
+	@Test
+	void testExceptionMessage2() {
+		String message = new UnexpectedDataException(-1l, Integer.MAX_VALUE).getMessage();
 
-		Assertions.assertEquals("Unexpected data: 7fffffffh", message2);
+		Assertions.assertEquals("Unexpected data: 7fffffffh", message);
+	}
 
-		String message3 = new UnexpectedDataException(Short.MAX_VALUE).getMessage();
+	@Test
+	void testExceptionMessage3() {
+		String message = new UnexpectedDataException(-1l, Short.MAX_VALUE).getMessage();
 
-		Assertions.assertEquals("Unexpected data: 7fffh", message3);
+		Assertions.assertEquals("Unexpected data: 7fffh", message);
+	}
 
-		String message4 = new UnexpectedDataException(Byte.MAX_VALUE).getMessage();
+	@Test
+	void testExceptionMessage4() {
+		String message = new UnexpectedDataException(-1l, Byte.MAX_VALUE).getMessage();
 
-		Assertions.assertEquals("Unexpected data: 7fh", message4);
+		Assertions.assertEquals("Unexpected data: 7fh", message);
+	}
 
-		String message5 = new UnexpectedDataException().getMessage();
+	@Test
+	void testExceptionMessage5() {
+		String message = new UnexpectedDataException().getMessage();
 
-		Assertions.assertEquals("Unexpected data: { ... }", message5);
+		Assertions.assertEquals("Unexpected data: { ... }", message);
+	}
 
-		String message6 = new UnexpectedDataException(new byte[] { 1, 2, 3, 4 }).getMessage();
+	@Test
+	void testExceptionMessage6() {
+		String message = new UnexpectedDataException(0xffl).getMessage();
 
-		Assertions.assertEquals("Unexpected data: { 01h, 02h, 03h, 04h }", message6);
+		Assertions.assertEquals("Unexpected data [00000000000000ffh]: { ... }", message);
+	}
 
-		String message7 = new UnexpectedDataException("Test message").getMessage();
+	@Test
+	void testExceptionMessage7() {
+		String message = new UnexpectedDataException(-1l, new byte[] { 1, 2, 3, 4 }).getMessage();
 
-		Assertions.assertEquals("Unexpected data: Test message", message7);
+		Assertions.assertEquals("Unexpected data: { 01h, 02h, 03h, 04h }", message);
+	}
+
+	@Test
+	void testExceptionMessage8() {
+		String message = new UnexpectedDataException(-1l, "Test message").getMessage();
+
+		Assertions.assertEquals("Unexpected data: Test message", message);
 	}
 
 }

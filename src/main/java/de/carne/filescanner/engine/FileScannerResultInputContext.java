@@ -60,7 +60,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 *
 	 * @return this context's current read position.
 	 */
-	protected long position() {
+	public long position() {
 		return this.position;
 	}
 
@@ -132,7 +132,8 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 */
 	public void skip(long size) throws IOException {
 		if (size < 0) {
-			throw new UnexpectedDataException(size);
+			throw new InsufficientDataException(this.inputRange, this.position, size,
+					this.inputRange.end() - this.position);
 		}
 		setPosition(this.position + size);
 	}
@@ -198,6 +199,18 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 			}
 		}
 		return decoder.decode();
+	}
+
+	/**
+	 * Streams a value (represented by a byte range).
+	 *
+	 * @param size the size of the byte range representing the value.
+	 * @return the {@linkplain StreamValue} instance providing access to the value bytes.
+	 * @throws IOException if an I/O error occurs while accessing the value.
+	 */
+	public StreamValue streamValue(long size) throws IOException {
+		skip(size);
+		return new StreamValue(this.inputRange.inputStream(this.position - size, this.position), size);
 	}
 
 	private ByteBuffer readComplete(int size) throws IOException {

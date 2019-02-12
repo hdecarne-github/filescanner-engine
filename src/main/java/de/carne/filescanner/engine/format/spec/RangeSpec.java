@@ -18,24 +18,24 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.function.Supplier;
 
-import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import org.eclipse.jdt.annotation.NonNull;
+
+import de.carne.filescanner.engine.FileScannerResultInputContext;
+import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.LongHelper;
-import de.carne.util.Strings;
 
 /**
  * {@linkplain FormatSpec} defining a generic named byte range.
  * <p>
  * The range size has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class RangeSpec implements FormatSpec {
+public class RangeSpec extends AttributeSpec<StreamValue> {
 
-	private final Supplier<String> name;
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
 
 	/**
@@ -44,7 +44,8 @@ public class RangeSpec implements FormatSpec {
 	 * @param name the byte range's name.
 	 */
 	public RangeSpec(Supplier<String> name) {
-		this.name = name;
+		super(StreamValue.class, Objects::equals, name);
+		renderer(this::sizeRenderer);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class RangeSpec implements FormatSpec {
 	 * @param name the byte range's name.
 	 */
 	public RangeSpec(String name) {
-		this.name = FinalSupplier.of(name);
+		this(FinalSupplier.of(name));
 	}
 
 	/**
@@ -94,37 +95,14 @@ public class RangeSpec implements FormatSpec {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.skip(LongHelper.toUnsignedLong(this.size.get()));
-	}
-
-	@Override
-	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+	protected StreamValue decodeValue(@NonNull FileScannerResultInputContext context) throws IOException {
 		long sizeValue = LongHelper.toUnsignedLong(this.size.get());
 
-		context.skip(sizeValue);
-
-		String nameValue = this.name.get();
-
-		if (Strings.notEmpty(nameValue)) {
-			out.setStyle(RenderStyle.NORMAL).write(nameValue);
-			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		}
-		out.setStyle(RenderStyle.VALUE).write(sizeValue > 0 ? "{ ... }" : "{ }");
-		SizeRenderer.renderLongSize(out, sizeValue);
-		out.writeln();
+		return context.streamValue(sizeValue);
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-
-		buffer.append("(byte[");
-		buffer.append(this.size);
-		buffer.append("])'");
-		buffer.append(this.name);
-		buffer.append("'");
-		return buffer.toString();
+	private void sizeRenderer(RenderOutput out, StreamValue value) throws IOException {
+		SizeRenderer.LONG_RENDERER.render(out, value.size());
 	}
 
 }
