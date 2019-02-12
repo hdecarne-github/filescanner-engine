@@ -31,6 +31,8 @@ struct "UDIFResourceFile" {
 	dword "Version"
 	dword "HeaderSize"
 		->validate(512)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 	dword "Flags"
 	qword "RunningDataForkOffset"
 	qword "DataForkOffset"
@@ -42,19 +44,29 @@ struct "UDIFResourceFile" {
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 	dword "SegmentNumber"
+		->format(@PrettyFormat)
 	dword "SegmentCount"
+		->format(@PrettyFormat)
 	byte[16] "SegmentID"
 	dword "DataChecksumType"
 	dword "DataChecksumSize"
+		->validate(32)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 	dword[32] "DataChecksum"
+XML_OFFSET@UDIF_FORMAT:
 	qword "XMLOffset"
+XML_LENGTH@UDIF_FORMAT:
 	qword "XMLLength"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 	byte[120] "Reserved1"
 	dword "ChecksumType"
 	dword "ChecksumSize"
 	dword[32] "Checksum"
 	dword "ImageVariant"
 	qword "SectorCount"
+		->format(@PrettyFormat)
 	dword "reserved2"
 		->validate(0)
 	dword "reserved3"
@@ -63,8 +75,15 @@ struct "UDIFResourceFile" {
 		->validate(0)
 }	->bigEndian()
 
+RESOURCE_FORK:
+struct "Resource fork" {
+XML_PLIST@UDIF_FORMAT:
+	range[@XML_LENGTH] ""
+}	->bigEndian()
+
 UDIF_FORMAT:
 format_spec "Universal Disk Image" {
-	range[#imageDataSize] ""
+	range[#imageDataSize] "image data"
 	@UDIF_TRAILER
+	decodeAt @XML_OFFSET @RESOURCE_FORK
 }	->bigEndian()

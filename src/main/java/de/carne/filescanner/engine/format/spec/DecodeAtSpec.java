@@ -22,61 +22,75 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.UnexpectedDataException;
 import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- * Conditional {@linkplain FormatSpec}.
+ * Relocated {@linkplain FormatSpec}.
  */
-public class ConditionalSpec implements FormatSpec {
+public class DecodeAtSpec implements FormatSpec {
 
-	private final Supplier<CompositeSpec> spec;
+	private Supplier<? extends Number> position = FinalSupplier.of(Integer.valueOf(0));
+	private final FormatSpec spec;
 
 	/**
-	 * Constructs a new {@linkplain ConditionalSpec} instance.
+	 * Constructs a new {@linkplain DecodeAtSpec} instance.
 	 *
-	 * @param spec the {@linkplain Supplier} instance used to resolve the actual {@linkplain FormatSpec}.
+	 * @param spec the relocated {@linkplain FormatSpec}.
 	 */
-	public ConditionalSpec(Supplier<CompositeSpec> spec) {
+	public DecodeAtSpec(FormatSpec spec) {
 		this.spec = spec;
+	}
+
+	/**
+	 * Sets the position of this spec.
+	 *
+	 * @param positionSupplier the position of this spec.
+	 * @return the updated {@linkplain DecodeAtSpec} instance for chaining.
+	 */
+	public DecodeAtSpec position(Supplier<? extends Number> positionSupplier) {
+		this.position = positionSupplier;
+		return this;
+	}
+
+	/**
+	 * Sets the position of this spec.
+	 *
+	 * @param positionValue the position of this spec.
+	 * @return the updated {@linkplain DecodeAtSpec} instance for chaining.
+	 */
+	public DecodeAtSpec position(long positionValue) {
+		return position(FinalSupplier.of(positionValue));
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return false;
+		return this.spec.isFixedSize();
 	}
 
 	@Override
 	public int matchSize() {
-		return 0;
+		return this.spec.matchSize();
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return true;
+		return this.spec.matches(buffer);
 	}
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		CompositeSpec resolvedSpec = this.spec.get();
-
-		if (!context.matchComposite(resolvedSpec)) {
-			throw new UnexpectedDataException(context.position());
-		}
-		resolvedSpec.decode(context);
+		context.decodeAt(this.position.get().longValue(), this.spec);
 	}
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		this.spec.get().render(out, context);
+		this.spec.render(out, context);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-
-		buffer.append('(').append(getClass().getTypeName()).append(')');
-		return buffer.toString();
+		return this.position + ": " + this.spec;
 	}
 
 }

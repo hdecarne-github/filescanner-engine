@@ -141,7 +141,8 @@ struct text("Test struct [%d]", @LOCAL_BIND) {
 	byte "byte attribute"
 	word "word attribute" 
 ARRAY_SIZE:
-	dword "dword attribute" 
+	dword "dword attribute"
+POSITION:
 	qword "qword attribute"
 	byte "test formatted & rendered byte attribute"
 		->format(@TestFormat)
@@ -178,6 +179,7 @@ SCOPED_BIND@TEST_FORMAT:
 		@TEST_UNION
 	}
 	encoded #encodedInputSpecConfig
+	decodeAt @POSITION @TEST_HEADER
 }	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)

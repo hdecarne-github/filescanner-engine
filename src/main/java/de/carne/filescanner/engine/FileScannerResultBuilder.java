@@ -30,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
 import de.carne.boot.check.Check;
+import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.spec.AttributeSpec;
@@ -55,16 +56,14 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static final CommitState UNCOMMITTED = new CommitState("<uncomitted>", -1);
 
-	@Nullable
-	private final FileScannerResultBuilder parent;
+	private final @Nullable FileScannerResultBuilder parent;
 	private final Type type;
 	private final FileScannerInput input;
 	private final long start;
 	private final List<FileScannerResultExportHandler> exportHandlers = new ArrayList<>();
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
-	@Nullable
-	private Object data = null;
+	private @Nullable Object data = null;
 
 	protected FileScannerResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerResult.Type type,
 			FileScannerInputRange inputRange, Supplier<String> name) {
@@ -325,6 +324,8 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static final class CommitState {
 
+		private static final Log LOG = new Log();
+
 		private Supplier<String> name;
 		private long end;
 		private final List<FileScannerResultBuilder> children = new ArrayList<>();
@@ -365,7 +366,21 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		public CommitState addChild(FileScannerResultBuilder commitChild) {
-			this.children.add(commitChild);
+			long commitChildStart = commitChild.start();
+			int addIndex = 0;
+
+			for (FileScannerResult child : this.children) {
+				long childStart = child.start();
+
+				if (childStart >= commitChildStart) {
+					if (commitChild.end() > childStart) {
+						LOG.warning("Overlapping results ''{0}'' - ''{1}''", commitChild, child);
+					}
+					break;
+				}
+				addIndex++;
+			}
+			this.children.add(addIndex, commitChild);
 			return (commitChild.type() != FileScannerResult.Type.INPUT ? updateEnd(commitChild.end()) : this);
 		}
 

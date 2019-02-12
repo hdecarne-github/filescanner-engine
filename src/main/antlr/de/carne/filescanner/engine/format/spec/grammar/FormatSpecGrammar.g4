@@ -41,6 +41,7 @@ Scan: 'scan';
 Range: 'range';
 Conditional: 'conditional';
 Encoded: 'encoded';
+DecodeAt: 'decodeAt';
 Validate: 'validate';
 Text: 'text';
 Format: 'format';
@@ -164,7 +165,7 @@ anonymousStructSpec
 	;
 	
 structSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|encodedInputSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|encodedInputSpec|decodeAtSpec)
 	;
 	
 arraySpec
@@ -229,6 +230,10 @@ conditionalSpec
 	
 encodedInputSpec
 	: Encoded externalReference
+	;
+
+decodeAtSpec
+	: DecodeAt numberExpression specReference
 	;
 	
 attributeSpec

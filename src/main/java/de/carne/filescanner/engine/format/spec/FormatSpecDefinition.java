@@ -71,6 +71,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.C
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecRendererModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DecodeAtSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordFlagSymbolsContext;
@@ -802,6 +803,18 @@ public abstract class FormatSpecDefinition {
 		return spec;
 	}
 
+	@SuppressWarnings("null")
+	private DecodeAtSpec loadDecodeAtSpec(DecodeAtSpecContext specCtx, FormatSpecsContext rootCtx) {
+		DecodeAtSpec spec = new DecodeAtSpec(
+				resolveSpec(rootCtx, specCtx.specReference().referencedSpec().specIdentifier(), FormatSpec.class));
+
+		spec.position(loadNumberExpression(specCtx.numberExpression()));
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
 	private AttributeSpec<?> loadAttributeSpec(AttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		AttributeSpec<?> spec;
 		ByteAttributeSpecContext byteAttributeSpecCtx;
@@ -1168,6 +1181,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousScanSpecContext anonymousScanSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
+		DecodeAtSpecContext decodeAtSpecCtx;
 
 		if ((specReferenceCtx = elementCtx.specReference()) != null) {
 			element = resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), FormatSpec.class);
@@ -1187,6 +1201,8 @@ public abstract class FormatSpecDefinition {
 			element = loadConditionalSpec(conditionalSpecCtx, rootCtx);
 		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
 			element = loadEncodedInputSpec(encodedInputSpecCtx);
+		} else if ((decodeAtSpecCtx = elementCtx.decodeAtSpec()) != null) {
+			element = loadDecodeAtSpec(decodeAtSpecCtx, rootCtx);
 		} else {
 			throw newLoadException(elementCtx, "Unexpected format spec element");
 		}

@@ -32,6 +32,7 @@ public class StreamValue extends InputStream {
 	StreamValue(InputStream inputStream, long size) {
 		this.inputStream = inputStream;
 		this.size = size;
+		this.inputStream.mark(0);
 	}
 
 	/**
