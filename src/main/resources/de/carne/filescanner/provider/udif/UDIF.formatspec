@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// Universal Disk Image (UDIF) file format: https://en.wikipedia.org/wiki/Apple_Disk_Image#UDIF_data_format
+//
+
+// Symbols
+
+
+// Specs
+
+UDIF_TRAILER:
+struct "UDIFResourceFile" {
+	char[4] "Signature"
+		->validate("koly")
+	dword "Version"
+	dword "HeaderSize"
+		->validate(512)
+	dword "Flags"
+	qword "RunningDataForkOffset"
+	qword "DataForkOffset"
+	qword "DataForkLength"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	qword "RsrcForkOffset"
+	qword "RsrcForkLength"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "SegmentNumber"
+	dword "SegmentCount"
+	byte[16] "SegmentID"
+	dword "DataChecksumType"
+	dword "DataChecksumSize"
+	dword[32] "DataChecksum"
+	qword "XMLOffset"
+	qword "XMLLength"
+	byte[120] "Reserved1"
+	dword "ChecksumType"
+	dword "ChecksumSize"
+	dword[32] "Checksum"
+	dword "ImageVariant"
+	qword "SectorCount"
+	dword "reserved2"
+		->validate(0)
+	dword "reserved3"
+		->validate(0)
+	dword "reserved4"
+		->validate(0)
+}	->bigEndian()
+
+UDIF_FORMAT:
+format_spec "Universal Disk Image" {
+	range[#imageDataSize] ""
+	@UDIF_TRAILER
+}	->bigEndian()

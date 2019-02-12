@@ -33,6 +33,7 @@ import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.spec.AttributeSpec;
+import de.carne.filescanner.engine.format.spec.AttributeSpecs;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
@@ -380,8 +381,10 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static class InputResultBuilder extends FileScannerResultBuilder {
 
-		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange) {
+		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange)
+				throws IOException {
 			super(parent, FileScannerResult.Type.INPUT, inputRange, FinalSupplier.of(inputRange.name()));
+			bindValue(AttributeSpecs.INPUT_SIZE, inputRange.size());
 		}
 
 		@Override
@@ -403,7 +406,12 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
+			@Nullable T value = getResultValue(attribute, committed);
+
+			if (value == null) {
+				throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
+			}
+			return value;
 		}
 
 	}
@@ -473,7 +481,9 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 		@Override
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			return parent().getValue(attribute, committed);
+			@Nullable T value = getResultValue(attribute, committed);
+
+			return (value != null ? value : parent().getValue(attribute, committed));
 		}
 
 	}

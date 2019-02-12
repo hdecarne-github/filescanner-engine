@@ -177,7 +177,7 @@ struct "DOS stub image" {
 		word[2] "rlc"
 	}
 	struct ".TEXT" {
-		range[#stubTextSize] "db"
+		range[#stubTextSize] ""
 	}
 }
 

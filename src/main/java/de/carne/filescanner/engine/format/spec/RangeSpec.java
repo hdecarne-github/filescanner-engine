@@ -26,6 +26,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.LongHelper;
+import de.carne.util.Strings;
 
 /**
  * {@linkplain FormatSpec} defining a generic named byte range.
@@ -102,8 +103,13 @@ public class RangeSpec implements FormatSpec {
 		long sizeValue = LongHelper.toUnsignedLong(this.size.get());
 
 		context.skip(sizeValue);
-		out.setStyle(RenderStyle.NORMAL).write(this.name.get());
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+
+		String nameValue = this.name.get();
+
+		if (Strings.notEmpty(nameValue)) {
+			out.setStyle(RenderStyle.NORMAL).write(nameValue);
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		}
 		out.setStyle(RenderStyle.VALUE).write(sizeValue > 0 ? "{ ... }" : "{ }");
 		SizeRenderer.renderLongSize(out, sizeValue);
 		out.writeln();

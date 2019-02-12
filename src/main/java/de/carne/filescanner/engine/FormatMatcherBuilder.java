@@ -33,18 +33,30 @@ import de.carne.filescanner.engine.spi.Format;
 final class FormatMatcherBuilder {
 
 	private final Format[] formats;
+	private final int matchHeaderBufferSize;
+	private final int matchTrailerBufferSize;
 
 	FormatMatcherBuilder(Collection<Format> formats) {
 		this.formats = formats.toArray(new Format[formats.size()]);
+		this.matchHeaderBufferSize = matchHeaderBufferSize();
+		this.matchTrailerBufferSize = matchTrailerBufferSize();
 	}
 
-	public int matchBufferSize() {
+	private int matchHeaderBufferSize() {
 		int matchBufferSize = 0;
 
 		for (Format format : this.formats) {
 			for (CompositeSpec headerSpec : format.headerSpecs()) {
 				matchBufferSize = Math.max(matchBufferSize, headerSpec.matchSize());
 			}
+		}
+		return matchBufferSize;
+	}
+
+	private int matchTrailerBufferSize() {
+		int matchBufferSize = 0;
+
+		for (Format format : this.formats) {
 			for (CompositeSpec trailerSpec : format.trailerSpecs()) {
 				matchBufferSize = Math.max(matchBufferSize, trailerSpec.matchSize());
 			}
@@ -53,94 +65,100 @@ final class FormatMatcherBuilder {
 	}
 
 	public Matcher matcher() {
-		return new Matcher(matchBufferSize());
-	}
-
-	public List<Format> matchFormats(ByteBuffer matchBuffer, FileScannerInputRange inputRange, long position) {
-		List<Format> matchingFormats = new ArrayList<>(this.formats.length);
-		int trailerMatches = 0;
-		int headerMatches = 0;
-		int inputNameMatches = 0;
-
-		for (Format format : this.formats) {
-			if (position == 0 && format.hasTrailerSpecs()) {
-				if (matchTrailerSpecs(format, matchBuffer)) {
-					matchingFormats.add(trailerMatches, format);
-					trailerMatches++;
-				}
-			} else if (format.hasHeaderSpecs()) {
-				if (matchHeaderSpecs(format, matchBuffer)) {
-					matchingFormats.add(trailerMatches + headerMatches, format);
-					headerMatches++;
-				}
-			} else if (position == 0 && matchInputNamePatterns(format, inputRange.name())) {
-				matchingFormats.add(trailerMatches + headerMatches + inputNameMatches, format);
-				inputNameMatches++;
-			} else {
-				matchingFormats.add(format);
-			}
-		}
-		return matchingFormats;
-	}
-
-	private boolean matchTrailerSpecs(Format format, ByteBuffer matchBuffer) {
-		boolean match = false;
-
-		for (CompositeSpec trailerSpec : format.trailerSpecs()) {
-			matchBuffer.rewind();
-			matchBuffer.order(trailerSpec.byteOrder());
-
-			int matchPosition = matchBuffer.remaining() - trailerSpec.matchSize();
-
-			if (matchPosition >= 0) {
-				matchBuffer.position(matchPosition);
-				if (trailerSpec.matches(matchBuffer)) {
-					match = true;
-					break;
-				}
-			}
-		}
-		return match;
-	}
-
-	private boolean matchHeaderSpecs(Format format, ByteBuffer matchBuffer) {
-		boolean match = false;
-
-		for (CompositeSpec headerSpec : format.headerSpecs()) {
-			matchBuffer.rewind();
-			matchBuffer.order(headerSpec.byteOrder());
-			if (headerSpec.matches(matchBuffer)) {
-				match = true;
-				break;
-			}
-		}
-		return match;
-	}
-
-	private boolean matchInputNamePatterns(Format format, String inputName) {
-		boolean match = false;
-
-		for (Pattern inputNamePattern : format.inputNamePatterns()) {
-			if (inputNamePattern.matcher(inputName).matches()) {
-				match = true;
-				break;
-			}
-		}
-		return match;
+		return new Matcher(this.formats, this.matchHeaderBufferSize, this.matchTrailerBufferSize);
 	}
 
 	public final class Matcher {
 
-		private final int matchBufferSize;
+		private final Format[] matcherFormats;
+		private final ByteBuffer matchHeaderBuffer;
+		private final ByteBuffer matchTrailerBuffer;
 
-		public Matcher(int matchBufferSize) {
-			this.matchBufferSize = matchBufferSize;
+		public Matcher(Format[] matcherFormats, int matchHeaderBufferSize, int matchTrailerBufferSize) {
+			this.matcherFormats = matcherFormats;
+			this.matchHeaderBuffer = ByteBuffer.allocate(matchHeaderBufferSize);
+			this.matchTrailerBuffer = ByteBuffer.allocate(matchTrailerBufferSize);
 		}
 
-		public List<Format> match(FileScannerInputRange inputRange, long position) throws IOException {
-			ByteBuffer matchBuffer = inputRange.read(position, this.matchBufferSize);
+		public List<Format> match(FileScannerInputRange inputRange, long scanPosition) throws IOException {
+			this.matchHeaderBuffer.rewind();
+			inputRange.read(this.matchHeaderBuffer, scanPosition);
+			this.matchHeaderBuffer.flip();
+			this.matchTrailerBuffer.rewind();
+			inputRange.read(this.matchTrailerBuffer,
+					Math.max(scanPosition, inputRange.end() - this.matchTrailerBuffer.capacity()));
+			this.matchTrailerBuffer.flip();
 
-			return matchFormats(matchBuffer, inputRange, inputRange.start());
+			List<Format> matchingFormats = new ArrayList<>(this.matcherFormats.length);
+			int trailerMatches = 0;
+			int headerMatches = 0;
+			int inputNameMatches = 0;
+
+			for (Format format : this.matcherFormats) {
+				if (format.hasHeaderSpecs()) {
+					if (matchHeaderSpecs(format, this.matchHeaderBuffer)) {
+						matchingFormats.add(trailerMatches + headerMatches, format);
+						headerMatches++;
+					}
+				} else if (format.hasTrailerSpecs()) {
+					if (scanPosition == 0 && matchTrailerSpecs(format, this.matchTrailerBuffer)) {
+						matchingFormats.add(trailerMatches, format);
+						trailerMatches++;
+					}
+				} else if (scanPosition == 0 && matchInputNamePatterns(format, inputRange.name())) {
+					matchingFormats.add(trailerMatches + headerMatches + inputNameMatches, format);
+					inputNameMatches++;
+				} else {
+					matchingFormats.add(format);
+				}
+			}
+			return matchingFormats;
+		}
+
+		private boolean matchHeaderSpecs(Format format, ByteBuffer matchBuffer) {
+			boolean match = false;
+
+			for (CompositeSpec headerSpec : format.headerSpecs()) {
+				matchBuffer.rewind();
+				matchBuffer.order(headerSpec.byteOrder());
+				if (headerSpec.matches(matchBuffer)) {
+					match = true;
+					break;
+				}
+			}
+			return match;
+		}
+
+		private boolean matchTrailerSpecs(Format format, ByteBuffer matchBuffer) {
+			boolean match = false;
+
+			for (CompositeSpec trailerSpec : format.trailerSpecs()) {
+				matchBuffer.rewind();
+				matchBuffer.order(trailerSpec.byteOrder());
+
+				int matchPosition = matchBuffer.remaining() - trailerSpec.matchSize();
+
+				if (matchPosition >= 0) {
+					matchBuffer.position(matchPosition);
+					if (trailerSpec.matches(matchBuffer)) {
+						match = true;
+						break;
+					}
+				}
+			}
+			return match;
+		}
+
+		private boolean matchInputNamePatterns(Format format, String inputName) {
+			boolean match = false;
+
+			for (Pattern inputNamePattern : format.inputNamePatterns()) {
+				if (inputNamePattern.matcher(inputName).matches()) {
+					match = true;
+					break;
+				}
+			}
+			return match;
 		}
 
 	}
