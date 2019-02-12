@@ -779,16 +779,6 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private RangeSpec loadRangeSpec(RangeSpecContext specCtx) {
-		RangeSpec spec = new RangeSpec(loadTextExpression(specCtx.textExpression()))
-				.size(loadNumberExpression(specCtx.numberExpression()));
-
-		LOG.debug(LOG_LOADED_SPEC, spec);
-
-		return spec;
-	}
-
-	@SuppressWarnings("null")
 	private ConditionalSpec loadConditionalSpec(ConditionalSpecContext specCtx, FormatSpecsContext rootCtx) {
 		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
 			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
@@ -823,6 +813,7 @@ public abstract class FormatSpecDefinition {
 		DwordArrayAttributeSpecContext dwordArrayAttributeSpecCtx;
 		QwordArrayAttributeSpecContext qwordArrayAttributeSpecCtx;
 		CharArrayAttributeSpecContext charArrayAttributeSpecCtx;
+		RangeSpecContext rangeSpecCtx;
 
 		if ((byteAttributeSpecCtx = specCtx.byteAttributeSpec()) != null) {
 			spec = loadByteSpec(byteAttributeSpecCtx, rootCtx);
@@ -842,6 +833,8 @@ public abstract class FormatSpecDefinition {
 			spec = loadQWordArraySpec(qwordArrayAttributeSpecCtx, rootCtx);
 		} else if ((charArrayAttributeSpecCtx = specCtx.charArrayAttributeSpec()) != null) {
 			spec = loadCharArraySpec(charArrayAttributeSpecCtx, rootCtx);
+		} else if ((rangeSpecCtx = specCtx.rangeSpec()) != null) {
+			spec = loadRangeSpec(rangeSpecCtx, rootCtx);
 		} else {
 			throw newLoadException(specCtx, "Unexpected attribute spec");
 		}
@@ -979,6 +972,18 @@ public abstract class FormatSpecDefinition {
 		spec.size(loadNumberExpression(specCtx.numberExpression()));
 		applyCharsetModifier(spec, specCtx.stringAttributeCharsetModifier());
 		applyValidateStringModifier(spec, specCtx.attributeValidateStringModifier());
+		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private RangeSpec loadRangeSpec(RangeSpecContext specCtx, FormatSpecsContext rootCtx) {
+		RangeSpec spec = new RangeSpec(loadTextExpression(specCtx.textExpression()))
+				.size(loadNumberExpression(specCtx.numberExpression()));
+
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -1161,7 +1166,6 @@ public abstract class FormatSpecDefinition {
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousScanSpecContext anonymousScanSpecCtx;
-		RangeSpecContext rangeSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
 
@@ -1179,8 +1183,6 @@ public abstract class FormatSpecDefinition {
 			element = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
 		} else if ((anonymousScanSpecCtx = elementCtx.anonymousScanSpec()) != null) {
 			element = loadAnonymousScanSpec(anonymousScanSpecCtx);
-		} else if ((rangeSpecCtx = elementCtx.rangeSpec()) != null) {
-			element = loadRangeSpec(rangeSpecCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
 			element = loadConditionalSpec(conditionalSpecCtx, rootCtx);
 		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
@@ -1265,6 +1267,7 @@ public abstract class FormatSpecDefinition {
 	private static final String UNKNOWN_EXTERNAL_REFERENCE = "Unknown reference #%s";
 	private static final String INVALID_EXTERNAL_REFERENCE = "Invalid reference #%s (expected type: %s actual type: %s)";
 
+	@SuppressWarnings("squid:S3011")
 	private <T> Supplier<T> resolveExternalReference(ExternalReferenceContext externalReferenceCtx, Class<T> type) {
 		String methodIdentifier = externalReferenceCtx.referencedExternal().getText();
 		Method method;

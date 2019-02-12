@@ -164,7 +164,7 @@ anonymousStructSpec
 	;
 	
 structSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|rangeSpec|conditionalSpec|encodedInputSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|encodedInputSpec)
 	;
 	
 arraySpec
@@ -222,10 +222,6 @@ compositeSpecRendererModifier
 compositeSpecExpression
 	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec)
 	;
-
-rangeSpec
-	: Range LSBracket numberExpression RSBracket textExpression
-	;
 	
 conditionalSpec
 	: Conditional externalReference LCBracket specReference* RCBracket
@@ -236,7 +232,7 @@ encodedInputSpec
 	;
 	
 attributeSpec
-	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec)
+	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|rangeSpec)
 	;
 
 byteAttributeSpec
@@ -273,6 +269,10 @@ qwordArrayAttributeSpec
 
 charArrayAttributeSpec
 	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|stringAttributeCharsetModifier))*
+	;
+
+rangeSpec
+	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket numberExpression RSBracket textExpression
 	;
 	
 attributeValidateNumberModifier
