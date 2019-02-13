@@ -261,28 +261,28 @@ struct "IMAGE_NT_HEADERS64" {
 		dword "NumberOfRvaAndSizes"
 			->validate(16)
 			->format(@PrettyFormat)
-		dword[2] "DataDirectory00"
-		dword[2] "DataDirectory01"
-		dword[2] "DataDirectory02"
-		dword[2] "DataDirectory03"
-		dword[2] "DataDirectory04"
-		dword[2] "DataDirectory05"
-		dword[2] "DataDirectory06"
-		dword[2] "DataDirectory07"
-		dword[2] "DataDirectory08"
-		dword[2] "DataDirectory09"
-		dword[2] "DataDirectory10"
-		dword[2] "DataDirectory11"
-		dword[2] "DataDirectory12"
-		dword[2] "DataDirectory13"
-		dword[2] "DataDirectory14"
-		dword[2] "DataDirectory15"
+		dword[2] "DataDirectory[Export table______________]"
+		dword[2] "DataDirectory[Import table______________]"
+		dword[2] "DataDirectory[Resource table____________]"
+		dword[2] "DataDirectory[Exception table___________]"
+		dword[2] "DataDirectory[Certificate table_________]"
+		dword[2] "DataDirectory[Base relocation table_____]"
+		dword[2] "DataDirectory[Debugging information_____]"
+		dword[2] "DataDirectory[Architecture-specific data]"
+		dword[2] "DataDirectory[Global pointer register___]"
+		dword[2] "DataDirectory[Thread local storage______]"
+		dword[2] "DataDirectory[Load configuration table__]"
+		dword[2] "DataDirectory[Bound import table________]"
+		dword[2] "DataDirectory[Import address table______]"
+		dword[2] "DataDirectory[Delay import descriptor___]"
+		dword[2] "DataDirectory[CLR header________________]"
+		dword[2] "DataDirectory[Reserved__________________]"
   	}	
 }
 
 IMAGE_NT_SECTION_HEADER:
 struct text("IMAGE_SECTION_HEADER[%s]", @NT_SECTION_NAME) {
-NT_SECTION_NAME:
+NT_SECTION_NAME@IMAGE_NT_SECTIONS:
 	char[8] "Name"
 	dword "PhysicalAddressOrVirtualSize"
 	dword "VirtualAddress"
@@ -303,7 +303,7 @@ NT_SECTION_DATA_POSITION@IMAGE_NT_SECTIONS:
 }
 
 IMAGE_NT_GENERIC_SECTION:
-struct "IMAGE_SECTION" {
+struct text("IMAGE_SECTION[%s]", @NT_SECTION_NAME) {
 	range[@NT_SECTION_DATA_SIZE] ""
 }
 
