@@ -39,6 +39,9 @@ public class DecodeAtSpec implements FormatSpec {
 	 * @param spec the relocated {@linkplain FormatSpec}.
 	 */
 	public DecodeAtSpec(CompositeSpec spec) {
+		if (!spec.isResult()) {
+			throw new IllegalArgumentException("Relocated spec must be a result spec");
+		}
 		this.spec = spec;
 	}
 

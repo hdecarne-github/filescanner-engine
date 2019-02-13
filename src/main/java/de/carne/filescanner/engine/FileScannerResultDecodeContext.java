@@ -103,7 +103,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	}
 
 	/**
-	 * Decodes a {@linkplain CompositeSpec}.
+	 * Decodes a relocated {@linkplain CompositeSpec}.
 	 *
 	 * @param formatSpec the {@linkplain CompositeSpec} to decode.
 	 * @param position the position to start decoding at.
