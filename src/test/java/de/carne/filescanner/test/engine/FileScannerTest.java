@@ -130,7 +130,7 @@ class FileScannerTest {
 
 	@Test
 	void testWin64ExeFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), Formats.all().enabledFormats(), 3);
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), Formats.all().enabledFormats(), 2);
 	}
 
 	@Test
