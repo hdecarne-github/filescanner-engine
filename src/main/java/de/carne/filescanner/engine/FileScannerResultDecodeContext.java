@@ -33,7 +33,6 @@ import de.carne.filescanner.engine.format.spec.AttributeBindMode;
 import de.carne.filescanner.engine.format.spec.AttributeSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
@@ -110,12 +109,20 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @param position the position to start decoding at.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
-	 * @throws InterruptedException if the decode thread has been interrupted.
 	 */
-	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position)
-			throws IOException, InterruptedException {
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position) throws IOException {
+		LOG.debug("Decode relocated at {1}...", HexFormat.formatLong(position));
+
+		FileScannerResult decodeResult;
+		long currentPosition = position();
+
 		setPosition(position);
-		return decodeComposite(formatSpec);
+		try {
+			decodeResult = decodeComposite(formatSpec);
+		} finally {
+			setPosition(currentPosition);
+		}
+		return decodeResult;
 	}
 
 	/**
@@ -159,26 +166,6 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		}
 		decodeResult.updateAndCommit(commitPosition, false);
 		return decodeResult;
-	}
-
-	/**
-	 * Decodes a {@linkplain FormatSpec} at a given position.
-	 * 
-	 * @param position the position to start decoding at.
-	 * @param spec the {@linkplain FormatSpec} to decode.
-	 * @throws IOException if an I/O error occurs.
-	 */
-	public void decodeAt(long position, FormatSpec spec) throws IOException {
-		LOG.debug("Decoding relocated spec ''{0}'' at {1}...", spec, HexFormat.formatLong(position));
-
-		long currentPosition = position();
-
-		setPosition(position);
-		try {
-			spec.decode(this);
-		} finally {
-			setPosition(currentPosition);
-		}
 	}
 
 	/**

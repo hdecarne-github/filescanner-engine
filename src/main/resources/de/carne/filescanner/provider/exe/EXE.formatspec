@@ -280,15 +280,17 @@ struct "IMAGE_NT_HEADERS64" {
   	}	
 }
 
-IMAGE_SECTION_HEADER:
+IMAGE_NT_SECTION_HEADER:
 struct text("IMAGE_SECTION_HEADER[%s]", @NT_SECTION_NAME) {
 NT_SECTION_NAME:
 	char[8] "Name"
 	dword "PhysicalAddressOrVirtualSize"
 	dword "VirtualAddress"
+NT_SECTION_DATA_SIZE@IMAGE_NT_SECTIONS:
 	dword "SizeOfRawData"
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
+NT_SECTION_DATA_POSITION@IMAGE_NT_SECTIONS:
 	dword "PointerToRawData"
 	dword "PointerToRelocations"
 	dword "PointerToLinenumbers"
@@ -300,14 +302,28 @@ NT_SECTION_NAME:
 		->renderer(@NT_SECTION_CHARACTERISTICS)
 }
 
+IMAGE_NT_GENERIC_SECTION:
+struct "IMAGE_SECTION" {
+	range[@NT_SECTION_DATA_SIZE] ""
+}
+
+IMAGE_NT_SECTION:
+struct {
+	@IMAGE_NT_SECTION_HEADER
+	decodeAt @NT_SECTION_DATA_POSITION @IMAGE_NT_GENERIC_SECTION
+}
+
+IMAGE_NT_SECTIONS:
+struct "IMAGE_SECTIONS" {
+	sequence @IMAGE_NT_SECTION
+		->size(@NT_NUMBER_OF_SECTIONS)
+}
+
 NT_IMAGE:
 union "NT image" {
 	struct {
 		@IMAGE_NT_HEADERS64
-		struct "IMAGE_SECTIONS" {
-			sequence @IMAGE_SECTION_HEADER
-				->size(@NT_NUMBER_OF_SECTIONS)
-		}
+		@IMAGE_NT_SECTIONS
 	}
 }
 

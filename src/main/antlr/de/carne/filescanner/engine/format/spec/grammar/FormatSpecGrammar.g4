@@ -221,10 +221,14 @@ compositeSpecRendererModifier
 	;
 
 compositeSpecExpression
-	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec)
+	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalCompositeSpec)
 	;
 	
 conditionalSpec
+	: Conditional externalReference LCBracket specReference* RCBracket
+	;
+	
+conditionalCompositeSpec
 	: Conditional externalReference LCBracket specReference* RCBracket
 	;
 	
@@ -233,7 +237,7 @@ encodedInputSpec
 	;
 
 decodeAtSpec
-	: DecodeAt numberExpression specReference
+	: DecodeAt numberExpression compositeSpecExpression
 	;
 	
 attributeSpec

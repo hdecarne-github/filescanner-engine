@@ -70,6 +70,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.C
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExportModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.CompositeSpecRendererModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalCompositeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ConditionalSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DecodeAtSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.DwordArrayAttributeSpecContext;
@@ -786,6 +787,21 @@ public abstract class FormatSpecDefinition {
 		}
 
 		ConditionalSpec spec = new ConditionalSpec(
+				resolveExternalReference(specCtx.externalReference(), FormatSpec.class));
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private ConditionalCompositeSpec loadConditionalCompositeSpec(ConditionalCompositeSpecContext specCtx,
+			FormatSpecsContext rootCtx) {
+		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
+			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
+		}
+
+		ConditionalCompositeSpec spec = new ConditionalCompositeSpec(
 				resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -805,8 +821,7 @@ public abstract class FormatSpecDefinition {
 
 	@SuppressWarnings("null")
 	private DecodeAtSpec loadDecodeAtSpec(DecodeAtSpecContext specCtx, FormatSpecsContext rootCtx) {
-		DecodeAtSpec spec = new DecodeAtSpec(
-				resolveSpec(rootCtx, specCtx.specReference().referencedSpec().specIdentifier(), FormatSpec.class));
+		DecodeAtSpec spec = new DecodeAtSpec(loadCompositeSpecExpression(specCtx.compositeSpecExpression(), rootCtx));
 
 		spec.position(loadNumberExpression(specCtx.numberExpression()));
 
@@ -1216,6 +1231,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousStructSpecContext anonymousStructSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
+		ConditionalCompositeSpecContext conditionalCompositeSpecCtx;
 
 		if ((specReferenceCtx = ctx.specReference()) != null) {
 			spec = resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
@@ -1225,6 +1241,8 @@ public abstract class FormatSpecDefinition {
 			spec = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
 		} else if ((anonymousSequenceSpecCtx = ctx.anonymousSequenceSpec()) != null) {
 			spec = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
+		} else if ((conditionalCompositeSpecCtx = ctx.conditionalCompositeSpec()) != null) {
+			spec = loadConditionalCompositeSpec(conditionalCompositeSpecCtx, rootCtx);
 		} else {
 			throw newLoadException(ctx, "Unexpected composite spec element");
 		}

@@ -23,22 +23,20 @@ import java.util.function.Supplier;
 import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
- * Conditional {@linkplain FormatSpec}.
+ * Conditional {@linkplain CompositeSpec}.
  */
-public class ConditionalSpec implements FormatSpec {
+public class ConditionalCompositeSpec extends CompositeSpec {
 
-	private final Supplier<FormatSpec> spec;
+	private final Supplier<CompositeSpec> spec;
 
 	/**
-	 * Constructs a new {@linkplain ConditionalSpec} instance.
+	 * Constructs a new {@linkplain ConditionalCompositeSpec} instance.
 	 *
 	 * @param spec the {@linkplain Supplier} instance used to resolve the actual {@linkplain FormatSpec}.
 	 */
-	public ConditionalSpec(Supplier<FormatSpec> spec) {
+	public ConditionalCompositeSpec(Supplier<CompositeSpec> spec) {
 		this.spec = spec;
 	}
 
@@ -58,13 +56,8 @@ public class ConditionalSpec implements FormatSpec {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException {
+	public void decodeComposite(@NonNull FileScannerResultDecodeContext context) throws IOException {
 		this.spec.get().decode(context);
-	}
-
-	@Override
-	public void render(@NonNull RenderOutput out, @NonNull FileScannerResultRenderContext context) throws IOException {
-		this.spec.get().render(out, context);
 	}
 
 	@Override

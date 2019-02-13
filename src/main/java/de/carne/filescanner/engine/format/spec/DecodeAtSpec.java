@@ -31,14 +31,14 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 public class DecodeAtSpec implements FormatSpec {
 
 	private Supplier<? extends Number> position = FinalSupplier.of(Integer.valueOf(0));
-	private final FormatSpec spec;
+	private final CompositeSpec spec;
 
 	/**
 	 * Constructs a new {@linkplain DecodeAtSpec} instance.
 	 *
 	 * @param spec the relocated {@linkplain FormatSpec}.
 	 */
-	public DecodeAtSpec(FormatSpec spec) {
+	public DecodeAtSpec(CompositeSpec spec) {
 		this.spec = spec;
 	}
 
@@ -80,7 +80,7 @@ public class DecodeAtSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decodeAt(this.position.get().longValue(), this.spec);
+		context.decodeComposite(this.spec, this.position.get().longValue());
 	}
 
 	@Override
