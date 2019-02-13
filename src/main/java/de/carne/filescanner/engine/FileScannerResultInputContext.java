@@ -210,7 +210,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 */
 	public StreamValue streamValue(long size) throws IOException {
 		skip(size);
-		return new StreamValue(this.inputRange.inputStream(this.position - size, this.position), size);
+		return new StreamValue(this.inputRange, this.position - size, this.position);
 	}
 
 	private ByteBuffer readComplete(int size) throws IOException {

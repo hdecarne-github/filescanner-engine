@@ -19,69 +19,40 @@ package de.carne.filescanner.engine;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.jdt.annotation.Nullable;
+import de.carne.filescanner.engine.input.FileScannerInputRange;
 
 /**
  * {@linkplain InputStream} based class providing access to all kind if byte range based values.
  */
-public class StreamValue extends InputStream {
+public class StreamValue {
 
-	private final InputStream inputStream;
-	private final long size;
+	private final FileScannerInputRange inputRange;
+	private final long start;
+	private final long end;
 
-	StreamValue(InputStream inputStream, long size) {
-		this.inputStream = inputStream;
-		this.size = size;
-		this.inputStream.mark(0);
+	StreamValue(FileScannerInputRange inputRange, long start, long end) {
+		this.inputRange = inputRange;
+		this.start = start;
+		this.end = end;
 	}
 
 	/**
-	 * Gets the size of the byte range representing the value.
+	 * Gets the size of the byte range representing this value.
 	 *
-	 * @return the size of the byte range representing the value.
+	 * @return the size of the byte range representing this value.
 	 */
 	public long size() {
-		return this.size;
+		return this.end - this.start;
 	}
 
-	@Override
-	public int read() throws IOException {
-		return this.inputStream.read();
-	}
-
-	@Override
-	public int read(byte @Nullable [] b) throws IOException {
-		return this.inputStream.read(b);
-	}
-
-	@Override
-	public int read(byte @Nullable [] b, int off, int len) throws IOException {
-		return this.inputStream.read(b, off, len);
-	}
-
-	@Override
-	public long skip(long n) throws IOException {
-		return this.inputStream.skip(n);
-	}
-
-	@Override
-	public int available() throws IOException {
-		return this.inputStream.available();
-	}
-
-	@Override
-	public synchronized void mark(int readlimit) {
-		this.inputStream.mark(readlimit);
-	}
-
-	@Override
-	public synchronized void reset() throws IOException {
-		this.inputStream.reset();
-	}
-
-	@Override
-	public boolean markSupported() {
-		return this.inputStream.markSupported();
+	/**
+	 * Gets an {@linkplain InputStream} instance to access this value.
+	 * 
+	 * @return an {@linkplain InputStream} instance to access this value.
+	 * @throws IOException if an I/O error occurs while accessing this value.
+	 */
+	public InputStream stream() throws IOException {
+		return this.inputRange.inputStream(this.start, this.end);
 	}
 
 	@Override
