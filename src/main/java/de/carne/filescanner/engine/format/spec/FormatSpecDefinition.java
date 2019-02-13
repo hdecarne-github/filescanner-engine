@@ -1285,7 +1285,8 @@ public abstract class FormatSpecDefinition {
 			for (SpecReferenceContext specReferenceCtx : ctx.specReference()) {
 				argumentSpecs.add(resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(), AttributeSpec.class));
 			}
-			textExpression = () -> String.format(formatText, argumentSpecs.stream().map(Supplier::get).toArray());
+			textExpression = () -> String.format(formatText,
+					argumentSpecs.stream().map(Supplier::get).map(Objects::toString).map(Strings::encode).toArray());
 		} else if ((externalReferenceCtx = ctx.externalReference()) != null) {
 			textExpression = resolveExternalReference(externalReferenceCtx, String.class);
 		} else {

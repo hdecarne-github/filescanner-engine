@@ -110,7 +110,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	public synchronized String name() {
-		return Strings.encode(this.committedState.name().get());
+		return this.committedState.name().get();
 	}
 
 	@Override
