@@ -89,8 +89,8 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	public static FileScannerResultBuilder formatResult(FileScannerResultBuilder parent, CompositeSpec formatSpec,
-			FileScannerInputRange inputRange, long start) {
-		return new FormatResultBuilder(parent, formatSpec, inputRange, start);
+			boolean relocated, FileScannerInputRange inputRange, long start) {
+		return new FormatResultBuilder(parent, formatSpec, relocated, inputRange, start);
 	}
 
 	public static FileScannerResultBuilder encodedInputResult(FileScannerResultBuilder parent,
@@ -433,12 +433,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static class FormatResultBuilder extends FileScannerResultBuilder {
 
-		private final CompositeSpec formatSpec;
+		private static final Log LOG = new Log();
 
-		public FormatResultBuilder(FileScannerResultBuilder parent, CompositeSpec formatSpec,
+		private final CompositeSpec formatSpec;
+		private final boolean relocated;
+
+		public FormatResultBuilder(FileScannerResultBuilder parent, CompositeSpec formatSpec, boolean relocated,
 				FileScannerInputRange inputRange, long start) {
 			super(parent, FileScannerResult.Type.FORMAT, inputRange, formatSpec.resultName(), start, start);
 			this.formatSpec = formatSpec;
+			this.relocated = relocated;
 		}
 
 		@Override
@@ -464,7 +468,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
 			@Nullable T value = getResultValue(attribute, committed);
 
-			return (value != null ? value : parent().getValue(attribute, committed));
+			if (value == null) {
+				value = Objects.requireNonNull(parent().getValue(attribute, committed));
+				if (this.relocated) {
+					LOG.debug("Re-binding relocated context attribute '':{0}'' = ''{1}''", attribute,
+							Strings.encode(Objects.toString(value)));
+
+					bindValue(attribute, value);
+				}
+			}
+			return value;
 		}
 
 	}

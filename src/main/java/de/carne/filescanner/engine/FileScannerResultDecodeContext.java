@@ -64,6 +64,37 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public FileScannerResult decodeComposite(CompositeSpec formatSpec) throws IOException {
+		return decodeComposite(formatSpec, false);
+	}
+
+	/**
+	 * Decodes a relocated {@linkplain CompositeSpec}.
+	 *
+	 * @param formatSpec the {@linkplain CompositeSpec} to decode.
+	 * @param decodePosition the position to start decoding at.
+	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long decodePosition) throws IOException {
+		long currentPosition = position();
+		FileScannerResult decodeResult;
+
+		if (decodePosition != currentPosition) {
+			LOG.debug("Decode relocated at {0}...", HexFormat.formatLong(decodePosition));
+
+			setPosition(decodePosition);
+			try {
+				decodeResult = decodeComposite(formatSpec, true);
+			} finally {
+				setPosition(currentPosition);
+			}
+		} else {
+			decodeResult = decodeComposite(formatSpec, false);
+		}
+		return decodeResult;
+	}
+
+	private FileScannerResult decodeComposite(CompositeSpec formatSpec, boolean relocated) throws IOException {
 		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
 
 		boolean isRootSpec = this.decodeStack.size() == 1;
@@ -79,7 +110,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		if (isResultSpec) {
 			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec,
-					inputRange(), position());
+					relocated, inputRange(), position());
 
 			this.decodeStack.push(new Scope(formatSpecResult));
 			try {
@@ -98,29 +129,6 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			}
 		} else {
 			formatSpec.decodeComposite(this);
-		}
-		return decodeResult;
-	}
-
-	/**
-	 * Decodes a relocated {@linkplain CompositeSpec}.
-	 *
-	 * @param formatSpec the {@linkplain CompositeSpec} to decode.
-	 * @param position the position to start decoding at.
-	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
-	 * @throws IOException if an I/O error occurs.
-	 */
-	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long position) throws IOException {
-		LOG.debug("Decode relocated at {1}...", HexFormat.formatLong(position));
-
-		FileScannerResult decodeResult;
-		long currentPosition = position();
-
-		setPosition(position);
-		try {
-			decodeResult = decodeComposite(formatSpec);
-		} finally {
-			setPosition(currentPosition);
 		}
 		return decodeResult;
 	}

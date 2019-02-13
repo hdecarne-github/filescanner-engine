@@ -115,7 +115,7 @@ format_spec #specialText {
 }
 
 TEST_HEADER:
-struct {
+struct "Test header" {
 	byte "byte_magic"
 		->validate(0x12)
 	word "word_magic"
