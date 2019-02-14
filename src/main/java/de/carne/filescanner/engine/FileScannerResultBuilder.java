@@ -399,6 +399,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange)
 				throws IOException {
 			super(parent, FileScannerResult.Type.INPUT, inputRange, FinalSupplier.of(inputRange.name()));
+			bindValue(AttributeSpecs.INPUT_NAME, inputRange.name());
 			bindValue(AttributeSpecs.INPUT_SIZE, inputRange.size());
 		}
 

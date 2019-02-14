@@ -90,6 +90,13 @@ public final class TestFiles {
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.gif", "w3c_home.gif");
 
 	/**
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.tar.gz
+	 */
+	public static final TestFile GZIP_TAR_ARCHIVE = new TestFile(
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.tar.gz",
+			"certmgr-1.1.1.tar.gz");
+
+	/**
 	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.jpg
 	 */
 	public static final TestFile JPEG_IMAGE = new TestFile(
@@ -102,24 +109,24 @@ public final class TestFiles {
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png", "w3c_home.png");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip
 	 */
 	public static final TestFile ZIP_ARCHIVE = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr-1.1.0.zip", "certmgr-1.1.0.zip");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip", "certmgr-1.1.1.zip");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows_1_1_1.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows_1_1_0.exe",
-			"certmgr_windows_1_1_0.exe");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows_1_1_1.exe",
+			"certmgr_windows_1_1_1.exe");
 
 	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows-x64_1_1_0.exe
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows-x64_1_1_1.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS64 = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_windows-x64_1_1_0.exe",
-			"certmgr_windows-x64_1_1_0.exe");
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows-x64_1_1_1.exe",
+			"certmgr_windows-x64_1_1_1.exe");
 
 	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg

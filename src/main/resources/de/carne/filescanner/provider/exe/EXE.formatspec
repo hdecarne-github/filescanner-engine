@@ -63,6 +63,9 @@ word_flag_symbols {
 	0x2000: "IMAGE_FILE_DLL"
 	0x1000: "IMAGE_FILE_SYSTEM"
 	0x0800: "IMAGE_FILE_NET_RUN_FROM_SWAP"
+	0x0400: "IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP"
+	0x0200: "IMAGE_FILE_DEBUG_STRIPPED"
+	0x0100: "IMAGE_FILE_32BIT_MACHINE"
 	0x0080: "IMAGE_FILE_BYTES_REVERSED_LO"
 	0x0040: "IMAGE_FILE_16BIT_MACHINE"
 	0x0020: "IMAGE_FILE_LARGE_ADDRESS_AWARE"
@@ -71,9 +74,6 @@ word_flag_symbols {
 	0x0004: "IMAGE_FILE_LINE_NUMS_STRIPPED"
 	0x0002: "IMAGE_FILE_EXECUTABLE_IMAGE"
 	0x0001: "IMAGE_FILE_RELOCS_STRIPPED"
-	0x0400: "IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP"
-	0x0200: "IMAGE_FILE_DEBUG_STRIPPED"
-	0x0100: "IMAGE_FILE_32BIT_MACHINE"
 }
 
 NT_SUBSYSTEM:
@@ -199,6 +199,87 @@ NT_NUMBER_OF_SECTIONS@NT_IMAGE:
 		->renderer(@NT_CHARACTERISTICS)
 }
 
+IMAGE_NT_HEADERS:
+struct "IMAGE_NT_HEADERS" {
+	dword "Signature"
+		->validate(0x00004550)
+	@IMAGE_FILE_HEADER
+	struct "IMAGE_OPTIONAL_HEADER" {
+		word "Magic"
+			->validate(0x10b)
+		byte "MajorLinkerVersion"
+			->format(@PrettyFormat)
+		byte "MinorLinkerVersion"
+			->format(@PrettyFormat)
+		dword "SizeOfCode"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfInitializedData"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfUninitializedData"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "AddressOfEntryPoint"
+		dword "BaseOfCode"
+		qword "ImageBase"
+		dword "SectionAlignment"
+			->renderer(@SizeRenderer)
+		dword "FileAlignment"
+			->renderer(@SizeRenderer)
+		word "MajorOperatingSystemVersion"
+		word "MinorOperatingSystemVersion"
+		word "MajorImageVersion"
+		word "MinorImageVersion"
+		word "MajorSubsystemVersion"
+		word "MinorSubsystemVersion"
+		dword "Win32VersionValue"
+		dword "SizeOfImage"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfHeaders"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "CheckSum"
+		word "Subsystem"
+			->renderer(@NT_SUBSYSTEM)
+		word "DllCharacteristics"
+			->renderer(@NT_DLL_CHARACTERISTICS)
+		dword "SizeOfStackReserve"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfStackCommit"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfHeapReserve"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "SizeOfHeapCommit"
+			->format(@PrettyFormat)
+			->renderer(@SizeRenderer)
+		dword "LoaderFlags"
+		dword "NumberOfRvaAndSizes"
+			->validate(16)
+			->format(@PrettyFormat)
+		dword[2] "DataDirectory[Export table______________]"
+		dword[2] "DataDirectory[Import table______________]"
+		dword[2] "DataDirectory[Resource table____________]"
+		dword[2] "DataDirectory[Exception table___________]"
+		dword[2] "DataDirectory[Certificate table_________]"
+		dword[2] "DataDirectory[Base relocation table_____]"
+		dword[2] "DataDirectory[Debugging information_____]"
+		dword[2] "DataDirectory[Architecture-specific data]"
+		dword[2] "DataDirectory[Global pointer register___]"
+		dword[2] "DataDirectory[Thread local storage______]"
+		dword[2] "DataDirectory[Load configuration table__]"
+		dword[2] "DataDirectory[Bound import table________]"
+		dword[2] "DataDirectory[Import address table______]"
+		dword[2] "DataDirectory[Delay import descriptor___]"
+		dword[2] "DataDirectory[CLR header________________]"
+		dword[2] "DataDirectory[Reserved__________________]"
+  	}	
+}
+
 IMAGE_NT_HEADERS64:
 struct "IMAGE_NT_HEADERS64" {
 	dword "Signature"
@@ -322,6 +403,10 @@ struct "IMAGE_SECTIONS" {
 NT_IMAGE:
 union "NT image" {
 	struct {
+		@IMAGE_NT_HEADERS
+		@IMAGE_NT_SECTIONS
+	}
+	struct {
 		@IMAGE_NT_HEADERS64
 		@IMAGE_NT_SECTIONS
 	}
@@ -330,7 +415,5 @@ union "NT image" {
 EXE_FORMAT:
 format_spec "EXE image" {
 	@STUB_IMAGE
-	union {
-		@NT_IMAGE
-	}
+	@NT_IMAGE
 }

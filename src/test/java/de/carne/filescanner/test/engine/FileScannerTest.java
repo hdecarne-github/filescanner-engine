@@ -119,6 +119,11 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testGzipArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+	}
+
+	@Test
 	void testJpegImageFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.JPEG_IMAGE.path(), Formats.all().enabledFormats(), 1);
 	}
@@ -129,7 +134,12 @@ class FileScannerTest {
 	}
 
 	@Test
-	void testWin64ExeFormat() throws IOException, InterruptedException {
+	void testWindowsExeFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(), Formats.all().enabledFormats(), 2);
+	}
+
+	@Test
+	void testWindows64ExeFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), Formats.all().enabledFormats(), 2);
 	}
 

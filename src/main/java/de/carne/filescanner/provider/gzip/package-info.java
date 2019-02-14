@@ -14,25 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.format.spec;
+@NonNullByDefault
+package de.carne.filescanner.provider.gzip;
 
-/**
- * Utility class providing {@linkplain AttributeSpec} related functions.
- */
-public final class AttributeSpecs {
-
-	private AttributeSpecs() {
-		// Prevent instantiation
-	}
-
-	/**
-	 * Predefined attribute to access the current input's name.
-	 */
-	public static final CharArraySpec INPUT_NAME = new CharArraySpec("<input name>");
-
-	/**
-	 * Predefined attribute to access the current input's size.
-	 */
-	public static final QWordSpec INPUT_SIZE = new QWordSpec("<input size>");
-
-}
+import org.eclipse.jdt.annotation.NonNullByDefault;
