@@ -84,10 +84,12 @@ final class FormatMatcherBuilder {
 			this.matchHeaderBuffer.rewind();
 			inputRange.read(this.matchHeaderBuffer, scanPosition);
 			this.matchHeaderBuffer.flip();
-			this.matchTrailerBuffer.rewind();
-			inputRange.read(this.matchTrailerBuffer,
-					Math.max(scanPosition, inputRange.end() - this.matchTrailerBuffer.capacity()));
-			this.matchTrailerBuffer.flip();
+			if (scanPosition == 0) {
+				this.matchTrailerBuffer.rewind();
+				inputRange.read(this.matchTrailerBuffer,
+						Math.max(scanPosition, inputRange.end() - this.matchTrailerBuffer.capacity()));
+				this.matchTrailerBuffer.flip();
+			}
 
 			List<Format> matchingFormats = new ArrayList<>(this.matcherFormats.length);
 			int trailerMatches = 0;
