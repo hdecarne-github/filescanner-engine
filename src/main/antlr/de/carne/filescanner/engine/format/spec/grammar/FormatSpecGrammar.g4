@@ -80,8 +80,8 @@ fragment HexaDecimalNumber: '0x'[0-9a-fA-F]+;
 
 Identifier: [a-zA-Z][a-zA-Z0-9_]*;
 QuotedString: '"' (~["\\\r\n]|'\\'[btnfr"\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])* '"';
-QuotedChar: '\'' (~['\\\r\n]|'\\'[btnfr'\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]) '\'';
-QutoedCharArray: LCBracket (QuotedChar (Comma QuotedChar)* )? RCBracket;
+QuotedChar: '\'' (~['\\\r\n]|'\\'[0btnfr'\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]) '\'';
+QuotedCharArray: LCBracket (QuotedChar (Comma QuotedChar)* )? RCBracket;
 
 SingleLineComment: '//' ~[\r\n]* -> skip;
 MultiLineComment: '/*' .*? '*/' -> skip;

@@ -17,6 +17,7 @@
 package de.carne.filescanner.engine.format;
 
 import de.carne.filescanner.engine.format.spec.AttributeFormatter;
+import de.carne.filescanner.engine.util.StringHelper;
 import de.carne.util.Strings;
 
 /**
@@ -29,6 +30,21 @@ public final class PrettyFormat {
 	}
 
 	private static final String NUMBER_FORMAT = "%d";
+
+	/**
+	 * {@linkplain AttributeFormatter} for {@linkplain Byte} based character values.
+	 */
+	public static final AttributeFormatter<Byte> BYTE_CHAR_FORMATTER = PrettyFormat::formatByteChar;
+
+	/**
+	 * Formats a {@code byte} based {@code char} value.
+	 *
+	 * @param value the value to format.
+	 * @return the formatted value.
+	 */
+	public static String formatByteChar(byte value) {
+		return "'" + Strings.encode(String.valueOf((char) value)) + "'";
+	}
 
 	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Byte} values.
@@ -228,7 +244,7 @@ public final class PrettyFormat {
 	 */
 	public static StringBuilder formatString(StringBuilder buffer, String value) {
 		buffer.append("\"");
-		Strings.encode(buffer, value);
+		Strings.encode(buffer, StringHelper.strip(value));
 		buffer.append('"');
 		return buffer;
 	}

@@ -28,6 +28,8 @@ class PrettyFormatTest {
 
 	@Test
 	void testByteFormat() {
+		Assertions.assertEquals("'a'", PrettyFormat.BYTE_CHAR_FORMATTER.format(Byte.valueOf((byte) 'a')));
+		Assertions.assertEquals("'\\0'", PrettyFormat.BYTE_CHAR_FORMATTER.format(Byte.valueOf((byte) 0)));
 		Assertions.assertEquals("-1", PrettyFormat.BYTE_FORMATTER.format(Byte.valueOf((byte) 0xff)));
 		Assertions.assertEquals("{ }", PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[0]));
 		Assertions.assertEquals("{ -1 }", PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[] { (byte) 0xff }));

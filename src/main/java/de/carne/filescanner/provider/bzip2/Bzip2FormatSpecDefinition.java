@@ -65,6 +65,8 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 	private static final Map<String, String> MANGLED_EXTENSION_MAP = new HashMap<>();
 
 	static {
+		MANGLED_EXTENSION_MAP.put("tb2", ".tar");
+		MANGLED_EXTENSION_MAP.put("tbz", ".tar");
 		MANGLED_EXTENSION_MAP.put("tbz2", ".tar");
 	}
 

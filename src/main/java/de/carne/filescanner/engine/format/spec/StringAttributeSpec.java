@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.util.FinalSupplier;
+import de.carne.filescanner.engine.util.StringHelper;
 
 /**
  * Base class for {@linkplain String} based format attribute specifications.
@@ -78,6 +79,16 @@ public abstract class StringAttributeSpec extends AttributeSpec<String> {
 	 */
 	public Charset charset() {
 		return this.charset.get();
+	}
+
+	/**
+	 * Gets the stripped {@linkplain String} attribute value.
+	 *
+	 * @return the stripped {@linkplain String} attribute value.
+	 * @see StringHelper#strip(String)
+	 */
+	public String getStripped() {
+		return StringHelper.strip(get());
 	}
 
 }

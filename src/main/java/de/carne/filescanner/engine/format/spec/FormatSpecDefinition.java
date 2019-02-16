@@ -122,6 +122,7 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
+import de.carne.filescanner.engine.util.StringHelper;
 import de.carne.filescanner.provider.util.DosDateRenderer;
 import de.carne.filescanner.provider.util.DosTimeRenderer;
 import de.carne.util.Lazy;
@@ -171,6 +172,7 @@ public abstract class FormatSpecDefinition {
 	 */
 	protected FormatSpecDefinition() {
 		// @PrettyFormat
+		this.byteAttributeFormatter.put("CharFormat", PrettyFormat.BYTE_CHAR_FORMATTER);
 		this.byteAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.BYTE_FORMATTER);
 		this.wordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.SHORT_FORMATTER);
 		this.dwordAttributeFormatter.put(PrettyFormat.class.getSimpleName(), PrettyFormat.INT_FORMATTER);
@@ -1322,7 +1324,7 @@ public abstract class FormatSpecDefinition {
 				argumentSpecs.add(resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(), AttributeSpec.class));
 			}
 			textExpression = () -> String.format(formatText, argumentSpecs.stream().map(Supplier::get)
-					.map(o -> (o instanceof String ? Strings.encode((String) o) : o)).toArray());
+					.map(o -> (o instanceof String ? Strings.encode(StringHelper.strip((String) o)) : o)).toArray());
 		} else if ((externalReferenceCtx = ctx.externalReference()) != null) {
 			textExpression = resolveExternalReference(externalReferenceCtx, String.class);
 		} else {

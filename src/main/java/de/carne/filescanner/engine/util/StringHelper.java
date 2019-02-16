@@ -14,49 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.carne.filescanner.engine.util;
 
-//
-// Bzip2 file format: https://en.wikipedia.org/wiki/Bzip2
-//
+/**
+ * Utility class providing {@linkplain String} related functions.
+ */
+public final class StringHelper {
 
-// Symbols
+	private StringHelper() {
+		// Prevent instantiation
+	}
 
-VERSION_SYMBOLS:
-byte_symbols {
-	0x68: "'h': Bzip2 (Huffman coding)"
-}
+	/**
+	 * Makes sure any subsequent {@code '\0'} are stripped from the submitted {@linkplain String}.
+	 *
+	 * @param string the {@linkplain String} to strip.
+	 * @return the stripped {@linkplain String}.
+	 */
+	public static String strip(String string) {
+		int length = string.length();
+		int stripIndex = length - 1;
 
-BLOCK_SIZE_SYMBOLS:
-byte_symbols {
-	0x31: "100 kB"
-	0x32: "200 kB"
-	0x33: "300 kB"
-	0x34: "400 kB"
-	0x35: "500 kB"
-	0x36: "600 kB"
-	0x37: "700 kB"
-	0x38: "800 kB"
-	0x39: "900 kB"
-}
+		while (stripIndex >= 0) {
+			if (string.charAt(stripIndex) != '\0') {
+				break;
+			}
+			stripIndex--;
+		}
+		return ((stripIndex + 1) == length ? string : string.substring(0, stripIndex + 1));
+	}
 
-// Specs
-
-BZIP2_HEADER:
-struct "Header" {
-	word "MAGIC"
-		->validate(0x5a42)
-	byte "VERSION"
-		->validate(@VERSION_SYMBOLS)
-		->renderer(@VERSION_SYMBOLS)
-BLOCK_SIZE@BZIP2_ARCHIVE:
-	byte "BLOCK_SIZE"
-		->validate(@BLOCK_SIZE_SYMBOLS)
-		->format(@CharFormat)
-		->renderer(@BLOCK_SIZE_SYMBOLS)
-}
-
-BZIP2_ARCHIVE:
-format_spec "BZip2 archive" {
-	@BZIP2_HEADER
-	encoded #bzip2EncodedInputConfig
 }
