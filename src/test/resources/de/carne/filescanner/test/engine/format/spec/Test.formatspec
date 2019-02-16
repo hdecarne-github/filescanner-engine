@@ -118,6 +118,7 @@ TEST_HEADER:
 struct "Test header" {
 	byte "byte_magic"
 		->validate(0x12)
+		->format(@CharFormat)
 	word "word_magic"
 		->validate(0x1234)
 	dword "dword_magic"
@@ -174,6 +175,9 @@ POSITION:
 	string "string attribute"
 		->charset("UTF-8")
 		->validate("ABCDabcd")
+		->validate("A" || "B")
+		->validate(R".*")
+		->validate(R".*" || "A")
 	range[10] "byte range attribute"
 		->renderer(@TestRenderer)
 LOCAL_BIND:
@@ -197,6 +201,9 @@ array[1] "test array" {
 TEST_SEQUENCE:
 sequence @TEST_STRUCT
 	->stopAfter(@TEST_STRUCT)
+	->size(1)
+	->min(1)
+	->max(1)
 	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)

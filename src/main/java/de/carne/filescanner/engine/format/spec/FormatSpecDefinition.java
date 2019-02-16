@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -94,13 +94,15 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.Q
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RangeSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RegexTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecMaxModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecMinModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecSizeModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
-import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextSetContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
@@ -111,6 +113,8 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.S
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.TextExpressionContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.UnionSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ValidationTextContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ValidationTextSetContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordArrayAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordFlagSymbolsContext;
@@ -662,6 +666,8 @@ public abstract class FormatSpecDefinition {
 		SequenceSpec spec = new SequenceSpec(elementSpec);
 
 		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
+		applyMinModifier(spec, specCtx.sequenceSpecMinModifier());
+		applyMaxModifier(spec, specCtx.sequenceSpecMaxModifier());
 		applySizeModifier(spec, specCtx.sequenceSpecSizeModifier());
 		applyResultModifier(spec, specCtx.textExpression());
 		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
@@ -679,6 +685,20 @@ public abstract class FormatSpecDefinition {
 		for (SequenceSpecStopAfterModifierContext stopAfterCtx : modifierCtx) {
 			spec.stopAfter(resolveSpec(rootCtx, stopAfterCtx.specReference().referencedSpec().specIdentifier(),
 					FormatSpec.class));
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applyMinModifier(SequenceSpec spec, List<SequenceSpecMinModifierContext> modifierCtx) {
+		for (SequenceSpecMinModifierContext minCtx : modifierCtx) {
+			spec.min(loadNumberExpression(minCtx.numberExpression()));
+		}
+	}
+
+	@SuppressWarnings("null")
+	private void applyMaxModifier(SequenceSpec spec, List<SequenceSpecMaxModifierContext> modifierCtx) {
+		for (SequenceSpecMaxModifierContext maxCtx : modifierCtx) {
+			spec.max(loadNumberExpression(maxCtx.numberExpression()));
 		}
 	}
 
@@ -1128,17 +1148,45 @@ public abstract class FormatSpecDefinition {
 		return decode.apply(numberArrayValueTexts);
 	}
 
-	@SuppressWarnings("null")
+	@SuppressWarnings({ "null", "squid:S3776" })
 	private void applyValidateStringModifier(AttributeSpec<String> spec,
 			List<AttributeValidateStringModifierContext> modifierCtx) {
 		for (AttributeValidateStringModifierContext validateCtx : modifierCtx) {
-			SimpleTextSetContext simpleTextSetCtx;
+			ValidationTextSetContext validationTextSetCtx;
 
-			if ((simpleTextSetCtx = validateCtx.simpleTextSet()) != null) {
-				Set<String> stringSet = simpleTextSetCtx.simpleText().stream().map(SimpleTextContext::getText)
-						.map(this::decodeQuotedString).collect(Collectors.toSet());
+			if ((validationTextSetCtx = validateCtx.validationTextSet()) != null) {
+				Set<String> simpleTextSet = new HashSet<>();
+				Set<Pattern> patternSet = new HashSet<>();
 
-				spec.validate(stringSet);
+				for (ValidationTextContext validationTextCtx : validationTextSetCtx.validationText()) {
+					RegexTextContext regexTextCtx;
+					SimpleTextContext simpleTextCtx;
+
+					if ((regexTextCtx = validationTextCtx.regexText()) != null) {
+						patternSet.add(Pattern.compile(decodeReqexString(regexTextCtx.getText())));
+					} else if ((simpleTextCtx = validationTextCtx.simpleText()) != null) {
+						simpleTextSet.add(decodeQuotedString(simpleTextCtx.getText()));
+					} else {
+						throw newLoadException(validationTextCtx, "Unexpected validate string argument");
+					}
+				}
+				if (patternSet.isEmpty()) {
+					spec.validate(simpleTextSet);
+				} else {
+					spec.validate(s -> {
+						boolean valid = simpleTextSet.contains(s);
+
+						if (!valid) {
+							for (Pattern pattern : patternSet) {
+								if (pattern.matcher(s).matches()) {
+									valid = true;
+									break;
+								}
+							}
+						}
+						return valid;
+					});
+				}
 			} else {
 				throw newLoadException(validateCtx, "Unexpected validate string modifier");
 			}
@@ -1331,6 +1379,10 @@ public abstract class FormatSpecDefinition {
 			throw newLoadException(ctx, "Unexpected text expression");
 		}
 		return textExpression;
+	}
+
+	private String decodeReqexString(String regexString) {
+		return Strings.decode(regexString.substring(2, regexString.length() - 1));
 	}
 
 	private String decodeQuotedString(String quotedString) {

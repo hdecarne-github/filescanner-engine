@@ -50,6 +50,8 @@ Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
 StopAfter: 'stopAfter';
+Min: 'min';
+Max: 'max';
 Size: 'size';
 Charset: 'charset';
 
@@ -80,8 +82,7 @@ fragment HexaDecimalNumber: '0x'[0-9a-fA-F]+;
 
 Identifier: [a-zA-Z][a-zA-Z0-9_]*;
 QuotedString: '"' (~["\\\r\n]|'\\'[btnfr"\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])* '"';
-QuotedChar: '\'' (~['\\\r\n]|'\\'[0btnfr'\\]|'\\u'[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]) '\'';
-QuotedCharArray: LCBracket (QuotedChar (Comma QuotedChar)* )? RCBracket;
+RegexString: 'R' QuotedString; 
 
 SingleLineComment: '//' ~[\r\n]* -> skip;
 MultiLineComment: '/*' .*? '*/' -> skip;
@@ -182,11 +183,19 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|sequenceSpecSizeModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|sequenceSpecMinModifier|sequenceSpecMaxModifier|sequenceSpecSizeModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 sequenceSpecStopAfterModifier
 	: StopAfter LBracket specReference RBracket
+	;
+	
+sequenceSpecMinModifier
+	: Min LBracket numberExpression RBracket
+	;
+	
+sequenceSpecMaxModifier
+	: Max LBracket numberExpression RBracket
 	;
 	
 sequenceSpecSizeModifier
@@ -298,7 +307,7 @@ attributeValidateNumberArrayModifier
 	;
 
 attributeValidateStringModifier
-	: Validate LBracket simpleTextSet RBracket
+	: Validate LBracket validationTextSet RBracket
 	;
 	
 attributeRendererModifier
@@ -349,8 +358,16 @@ simpleText
 	: QuotedString
 	;
 	
-simpleTextSet
-	: simpleText (Or simpleText)*
+regexText
+	: RegexString
+	;
+
+validationText
+	: (simpleText|regexText)
+	;
+
+validationTextSet
+	: validationText (Or validationText)*
 	;
 	
 formatText

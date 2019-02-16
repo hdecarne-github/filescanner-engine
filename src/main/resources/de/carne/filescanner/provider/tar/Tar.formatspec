@@ -41,12 +41,18 @@ struct {
 HEADER_NAME@TAR_ENTRY:
 	char[100] "name"
 	char[8] "mode"
+		->validate(R"^\\d+.*")
 	char[8] "uid"
+		->validate(R"^\\d+.*")
 	char[8] "gid"
+		->validate(R"^\\d+.*")
 HEADER_SIZE@TAR_ENTRY:
 	char[12] "size"
+		->validate(R"^\\d+.*")
 	char[12] "mtime"
+		->validate(R"^\\d+.*")
 	char[8] "chksum"
+		->validate(R"^\\d+.*")
 	byte "typeflag"
 		->validate(@TYPEFLAG_SYMBOLS)
 		->format(@CharFormat)
@@ -71,12 +77,11 @@ union "header block" {
 TAR_DATA:
 struct {
 	encoded #tarDataEncodedInputConfig
-	range[#tarDataUnusedSize] "<unused>"
 }
 
 TAR_TRAILER:
 struct "trailer block" {
-	byte[512] "eof-marker"
+	byte[512] ""
 		->validate({
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -119,6 +124,7 @@ struct text("tar entry \"%s\"", @HEADER_NAME) {
 	conditional #tarEntryDataSpec {
 		@TAR_DATA
 	}
+	range[#tarDataUnusedSize] "<unused>"
 }
 
 TAR_ARCHIVE:
@@ -126,5 +132,5 @@ format_spec "tar archive" {
 	@TAR_ENTRY
 	sequence @TAR_ENTRY
 	sequence @TAR_TRAILER
-		->size(2)
+		->max(2)
 }
