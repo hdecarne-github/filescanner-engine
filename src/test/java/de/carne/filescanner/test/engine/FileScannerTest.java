@@ -114,6 +114,11 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testBzip2ArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.BZIP2_ARCHIVE.path(), Formats.all().enabledFormats(), 2);
+	}
+
+	@Test
 	void testGifImageFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.GIF_IMAGE.path(), Formats.all().enabledFormats(), 1);
 	}

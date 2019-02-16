@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// Bzip2 file format: https://en.wikipedia.org/wiki/Bzip2
+//
+
+// Symbols
+
+VERSION_SYMBOLS:
+byte_symbols {
+	0x68: "'h': Bzip2 (Huffman coding)"
+}
+
+BLOCK_SIZE_SYMBOLS:
+byte_symbols {
+	0x31: "'1': 100 kB"
+	0x32: "'2': 200 kB"
+	0x33: "'3': 300 kB"
+	0x34: "'4': 400 kB"
+	0x35: "'5': 500 kB"
+	0x36: "'6': 600 kB"
+	0x37: "'7': 700 kB"
+	0x38: "'8': 800 kB"
+	0x39: "'9': 900 kB"
+}
+
+// Specs
+
+BZIP2_HEADER:
+struct "Header" {
+	word "MAGIC"
+		->validate(0x5a42)
+	byte "VERSION"
+		->validate(@VERSION_SYMBOLS)
+		->renderer(@VERSION_SYMBOLS)
+	byte "BLOCK_SIZE"
+		->validate(@BLOCK_SIZE_SYMBOLS)
+		->renderer(@BLOCK_SIZE_SYMBOLS)
+}
+
+BZIP2_ARCHIVE:
+format_spec "BZip2 archive" {
+	@BZIP2_HEADER
+	encoded #bzip2EncodedInputConfig
+}

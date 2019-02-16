@@ -84,6 +84,12 @@ public final class TestFiles {
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.bmp", "w3c_home.bmp");
 
 	/**
+	 * http://distfiles.gentoo.org/distfiles/bzip2-1.0.3-r6.tbz2
+	 */
+	public static final TestFile BZIP2_ARCHIVE = new TestFile(
+			"http://distfiles.gentoo.org/distfiles/bzip2-1.0.3-r6.tbz2", "bzip2-1.0.3-r6.tbz2");
+
+	/**
 	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.gif
 	 */
 	public static final TestFile GIF_IMAGE = new TestFile(
