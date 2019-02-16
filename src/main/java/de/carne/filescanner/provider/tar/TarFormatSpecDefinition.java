@@ -21,7 +21,10 @@ import java.util.Objects;
 
 import de.carne.filescanner.engine.format.spec.CharArraySpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.util.Lazy;
 
 /**
@@ -37,7 +40,10 @@ final class TarFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> tarFormatSpec = resolveLazy("TAR_ARCHIVE", CompositeSpec.class);
 	private Lazy<CompositeSpec> tarHeaderSpec = resolveLazy("TAR_HEADER", CompositeSpec.class);
 
+	private Lazy<CompositeSpec> tarDataSpec = resolveLazy("TAR_DATA", CompositeSpec.class);
+
 	private Lazy<CharArraySpec> headerName = resolveLazy("HEADER_NAME", CharArraySpec.class);
+	private Lazy<CharArraySpec> headerSize = resolveLazy("HEADER_SIZE", CharArraySpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.tarFormatSpec.get();
@@ -47,8 +53,37 @@ final class TarFormatSpecDefinition extends FormatSpecDefinition {
 		return this.tarHeaderSpec.get();
 	}
 
-	protected String tarEntryName() {
-		return "tar entry \"" + this.headerName.get().getStripped() + "\"";
+	protected CompositeSpec tarEntryDataSpec() {
+		long size = getEntryDataSize();
+
+		return (size > 0 ? this.tarDataSpec.get() : FormatSpecs.EMPTY);
+	}
+
+	protected EncodedInputSpecConfig tarDataEncodedInputConfig() {
+		return new EncodedInputSpecConfig("data blocks").decodedInputName(this.headerName.get()::getStripped)
+				.encodedInputSize(this::getEntryDataSize).inputDecoder(InputDecoders.NONE);
+
+	}
+
+	protected Integer tarDataUnusedSize() {
+		return (512 - (int) (getEntryDataSize() % 512l)) % 512;
+	}
+
+	private long getEntryDataSize() {
+		return parseValue(this.headerSize.get().get());
+	}
+
+	private long parseValue(String string) {
+		long value = 0;
+
+		for (char c : string.toCharArray()) {
+			if (c < '0' || '7' < c) {
+				break;
+			}
+			value <<= 3;
+			value += c - '0';
+		}
+		return value;
 	}
 
 }
