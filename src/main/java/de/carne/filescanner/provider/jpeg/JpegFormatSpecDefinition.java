@@ -21,7 +21,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.StreamStatus;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
@@ -79,18 +78,17 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 		return new ScanSpecConfig(2, this::matchMarker);
 	}
 
-	private StreamStatus matchMarker(ByteBuffer buffer) throws IOException {
+	private boolean matchMarker(ByteBuffer buffer) throws IOException {
 		if (buffer.remaining() < Short.BYTES) {
 			throw new InsufficientDataException(Short.BYTES, buffer.remaining());
 		}
 
-		StreamStatus matchStatus = StreamStatus.CONTINUE;
+		int bufferPosition = buffer.position();
 		int markerValue = (buffer.getShort() & 0xffff);
+		boolean matchStatus = ((markerValue & 0xff00) == 0xff00 && markerValue != 0xff00 && markerValue != 0xffff
+				&& (markerValue < 0xffd0 || 0xffd7 < markerValue));
 
-		if ((markerValue & 0xff00) == 0xff00 && markerValue != 0xff00 && markerValue != 0xffff
-				&& (markerValue < 0xffd0 || 0xffd7 < markerValue)) {
-			matchStatus = StreamStatus.STOP;
-		}
+		buffer.position(matchStatus ? bufferPosition : bufferPosition + 1);
 		return matchStatus;
 	}
 

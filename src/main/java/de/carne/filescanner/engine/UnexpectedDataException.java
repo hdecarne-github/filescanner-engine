@@ -34,33 +34,37 @@ public class UnexpectedDataException extends FormatDecodeException {
 
 	/**
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
+	 * 
+	 * @param hint the hint what is unexpected.
 	 */
-	public UnexpectedDataException() {
-		this(-1l);
+	public UnexpectedDataException(String hint) {
+		this(hint, -1l);
 	}
 
 	/**
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
 	 *
+	 * @param hint the hint what is unexpected.
 	 * @param position the invalid data position.
 	 */
-	public UnexpectedDataException(long position) {
-		super(formatData(position, null));
+	public UnexpectedDataException(String hint, long position) {
+		super(formatData(hint, position, null));
 	}
 
 	/**
 	 * Constructs a new {@linkplain UnexpectedDataException} instance.
 	 *
+	 * @param hint the hint what is unexpected.
 	 * @param position the invalid data position.
 	 * @param data the invalid data.
 	 */
-	public UnexpectedDataException(long position, Object data) {
-		super(formatData(position, data));
+	public UnexpectedDataException(String hint, long position, Object data) {
+		super(formatData(hint, position, data));
 	}
 
-	private static String formatData(long position, @Nullable Object data) {
+	private static String formatData(String hint, long position, @Nullable Object data) {
 		StringBuilder buffer = new StringBuilder();
-		buffer.append("Unexpected data");
+		buffer.append(hint);
 		if (position >= 0) {
 			buffer.append(" [");
 			HexFormat.formatLong(buffer, position);

@@ -44,6 +44,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarBaseVisitor;
@@ -103,6 +104,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.S
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StringAttributeSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StructSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.StructSpecElementContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SymbolDefinitionContext;
@@ -157,6 +159,8 @@ public abstract class FormatSpecDefinition {
 	private final Map<String, AttributeRenderer<short[]>> wordArrayAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<int[]>> dwordArrayAttributeRenderer = new HashMap<>();
 	private final Map<String, AttributeRenderer<long[]>> qwordArrayAttributeRenderer = new HashMap<>();
+
+	private final Map<String, AttributeRenderer<StreamValue>> streamValueAttributeRenderer = new HashMap<>();
 
 	private final Map<String, Supplier<FormatSpec>> specs = new HashMap<>();
 
@@ -427,6 +431,21 @@ public abstract class FormatSpecDefinition {
 	public FormatSpecDefinition addQWordArrayAttributeRenderer(String identifier, AttributeRenderer<long[]> renderer) {
 		if (this.qwordArrayAttributeRenderer.put(identifier, renderer) != null) {
 			LOG.warning("Redefinition of qword array attribute renderer ''{0}''", identifier);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds a stream value {@linkplain AttributeRenderer}.
+	 *
+	 * @param identifier the renderer identifier.
+	 * @param renderer the {@linkplain AttributeRenderer} to add.
+	 * @return the update {@linkplain FormatSpecDefinition}.
+	 */
+	public FormatSpecDefinition addStreamValueAttributeRenderer(String identifier,
+			AttributeRenderer<StreamValue> renderer) {
+		if (this.streamValueAttributeRenderer.put(identifier, renderer) != null) {
+			LOG.warning("Redefinition of stream value attribute renderer ''{0}''", identifier);
 		}
 		return this;
 	}
@@ -841,6 +860,7 @@ public abstract class FormatSpecDefinition {
 		DwordArrayAttributeSpecContext dwordArrayAttributeSpecCtx;
 		QwordArrayAttributeSpecContext qwordArrayAttributeSpecCtx;
 		CharArrayAttributeSpecContext charArrayAttributeSpecCtx;
+		StringAttributeSpecContext stringAttributeSpecCtx;
 		RangeSpecContext rangeSpecCtx;
 
 		if ((byteAttributeSpecCtx = specCtx.byteAttributeSpec()) != null) {
@@ -861,6 +881,8 @@ public abstract class FormatSpecDefinition {
 			spec = loadQWordArraySpec(qwordArrayAttributeSpecCtx, rootCtx);
 		} else if ((charArrayAttributeSpecCtx = specCtx.charArrayAttributeSpec()) != null) {
 			spec = loadCharArraySpec(charArrayAttributeSpecCtx, rootCtx);
+		} else if ((stringAttributeSpecCtx = specCtx.stringAttributeSpec()) != null) {
+			spec = loadStringSpec(stringAttributeSpecCtx, rootCtx);
 		} else if ((rangeSpecCtx = specCtx.rangeSpec()) != null) {
 			spec = loadRangeSpec(rangeSpecCtx, rootCtx);
 		} else {
@@ -1008,10 +1030,24 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private StringSpec loadStringSpec(StringAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
+		StringSpec spec = new StringSpec(loadTextExpression(specCtx.textExpression()));
+
+		applyCharsetModifier(spec, specCtx.stringAttributeCharsetModifier());
+		applyValidateStringModifier(spec, specCtx.attributeValidateStringModifier());
+		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
 	private RangeSpec loadRangeSpec(RangeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		RangeSpec spec = new RangeSpec(loadTextExpression(specCtx.textExpression()))
 				.size(loadNumberExpression(specCtx.numberExpression()));
 
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.streamValueAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);

@@ -19,7 +19,6 @@ package de.carne.filescanner.test.engine.format.spec;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.StreamStatus;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
@@ -53,7 +52,7 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected ScanSpecConfig scanConfig() {
-		return new ScanSpecConfig(1, buffer -> StreamStatus.STOP);
+		return new ScanSpecConfig(1, buffer -> false);
 	}
 
 	protected EncodedInputSpecConfig encodedInputSpecConfig() {

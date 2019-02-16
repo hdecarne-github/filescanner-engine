@@ -162,40 +162,40 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * Reads and decodes a streamed value.
 	 *
 	 * @param <T> the actual attribute type.
-	 * @param size the chunk size to read and to decode.
-	 * @param step the step size to use for decoding.
+	 * @param chunkSize the minimum chunk size to read and to decode.
 	 * @param decoder the stream decoder to use.
 	 * @return the decoded value.
 	 * @throws IOException if an I/O or decode error occurs.
 	 */
-	public <T> T readValue(int size, int step, StreamValueDecoder<T> decoder) throws IOException {
-		Check.assertTrue(step > 0);
-		Check.assertTrue(size >= step);
+	public <T> T readValue(int chunkSize, StreamValueDecoder<T> decoder) throws IOException {
+		Check.assertTrue(chunkSize > 0);
 
-		ByteBuffer buffer = ByteBuffer.allocate(size);
+		ByteBuffer buffer = ByteBuffer.allocate(2 * chunkSize);
 
 		buffer.order(this.byteOrder);
+		buffer.limit(0);
 
 		boolean done = false;
 
 		while (!done) {
-			buffer.rewind();
+			if (buffer.remaining() < chunkSize) {
+				buffer.clear();
+				this.inputRange.read(buffer, this.position);
+				buffer.flip();
+			}
 
-			int read = this.inputRange.read(buffer, this.position);
+			int decodeStart = buffer.position();
 
-			buffer.flip();
-			switch (decoder.stream(buffer)) {
-			case CONTINUE:
-				this.position += Math.min(step, read);
-				done = read < 0;
-				break;
-			case STOP_AND_SKIP:
-				this.position += Math.min(step, read);
-				done = true;
-				break;
-			case STOP:
-				done = true;
-				break;
+			done = !decoder.stream(buffer);
+
+			int decodeEnd = buffer.position();
+
+			if (decodeStart < decodeEnd) {
+				this.position += decodeEnd - decodeStart;
+			} else if (decodeStart == decodeEnd) {
+				Check.assertTrue(done);
+			} else {
+				throw Check.fail("Invalid buffer access: %x > %x", decodeStart, decodeEnd);
 			}
 		}
 		return decoder.decode();

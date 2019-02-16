@@ -93,6 +93,7 @@ public class SequenceSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
+		long decodeStart = context.position();
 		int matchCount = 0;
 		int matchLimit = (this.stopSize != null ? this.stopSize.get().intValue() : Integer.MAX_VALUE);
 		boolean done = false;
@@ -112,7 +113,7 @@ public class SequenceSpec extends CompositeSpec {
 			}
 		}
 		if (this.stopSize != null && matchCount < matchLimit) {
-			throw new UnexpectedDataException();
+			throw new UnexpectedDataException("Insufficent sequence length", decodeStart);
 		}
 	}
 

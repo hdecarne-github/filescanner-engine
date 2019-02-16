@@ -24,9 +24,10 @@ import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- * {@linkplain String} based format attribute specification.
+ * {@code char[]} based format attribute specification.
  * <p>
  * The string length has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
+ * </p>
  */
 public class CharArraySpec extends StringAttributeSpec {
 

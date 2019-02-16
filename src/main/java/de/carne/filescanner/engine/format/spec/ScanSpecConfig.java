@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.ValueStreamer;
-import de.carne.filescanner.engine.StreamStatus;
 
 /**
  * Configuration parameters for a {@linkplain ScanSpec}.
@@ -46,7 +45,7 @@ public final class ScanSpecConfig {
 
 	/**
 	 * Gets the chunk size to use for matching.
-	 * 
+	 *
 	 * @return the chunk size to use for matching.
 	 */
 	public int matchSize() {
@@ -55,13 +54,13 @@ public final class ScanSpecConfig {
 
 	/**
 	 * Matches the submitted data.
-	 * 
+	 *
 	 * @param buffer the data to match.
-	 * @return the match status.
+	 * @return {@code true} if the submitted data matches. {@code false} otherwise.
 	 * @throws IOException if a decode error occurs.
 	 */
-	public StreamStatus match(ByteBuffer buffer) throws IOException {
-		return this.streamer.stream(buffer);
+	public boolean match(ByteBuffer buffer) throws IOException {
+		return !this.streamer.stream(buffer);
 	}
 
 }

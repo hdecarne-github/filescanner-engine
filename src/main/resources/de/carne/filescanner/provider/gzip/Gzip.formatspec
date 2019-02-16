@@ -56,21 +56,36 @@ byte_symbols {
 
 // Specs
 
-GZIP_MEMBER_FEXTRA:
+GZIP_HEADER_FEXTRA:
 struct {
 FEXTRA_XLEN:
 	word "XLEN"
 	byte[@FEXTRA_XLEN] "extra field"
 }
 
-GZIP_MEMBER:
-struct "Member" {
+GZIP_HEADER_FNAME:
+struct {
+	string "FNAME"
+}
+
+GZIP_HEADER_FCOMMENT:
+struct {
+	string "FCOMMENT"
+}
+
+GZIP_HEADER_FHCRC:
+struct {
+	word "CRC16"
+}
+
+GZIP_HEADER:
+struct "Header" {
 	byte[2] "ID"
 		->validate({ 0x1f, 0x8b })
 	byte "CM"
 		->validate(@CM_SYMBOLS)
 		->renderer(@CM_SYMBOLS)
-MEMBER_FLG@GZIP_ARCHIVE:
+HEADER_FLG@GZIP_ARCHIVE:
 	byte "FLG"
 		->renderer(@FLG_SYMBOLS)
 	dword "MTIME"
@@ -78,6 +93,18 @@ MEMBER_FLG@GZIP_ARCHIVE:
 	byte "OS"
 		->validate(@OS_SYMBOLS)
 		->renderer(@OS_SYMBOLS)
+	conditional #fextraSpec {
+		@GZIP_HEADER_FEXTRA
+	}
+	conditional #fnameSpec {
+		@GZIP_HEADER_FNAME
+	}
+	conditional #fcommentSpec {
+		@GZIP_HEADER_FCOMMENT
+	}
+	conditional #fhcrcSpec {
+		@GZIP_HEADER_FHCRC
+	}
 }
 
 GZIP_TRAILER:
@@ -90,7 +117,7 @@ struct "Trailer" {
 
 GZIP_ARCHIVE:
 format_spec "Gzip archive" {
-	@GZIP_MEMBER
+	@GZIP_HEADER
 	encoded #gzipEncodedInputConfig
 	@GZIP_TRAILER
 }

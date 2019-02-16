@@ -58,6 +58,7 @@ Word: 'word';
 DWord: 'dword';
 QWord: 'qword';
 Char: 'char';
+String: 'string';
 
 Apply: '->';
 LBracket: '(';
@@ -241,7 +242,7 @@ decodeAtSpec
 	;
 	
 attributeSpec
-	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|rangeSpec)
+	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|stringAttributeSpec|rangeSpec)
 	;
 
 byteAttributeSpec
@@ -279,9 +280,13 @@ qwordArrayAttributeSpec
 charArrayAttributeSpec
 	: (specIdentifier (At scopeIdentifier)? Colon)? Char LSBracket numberExpression RSBracket textExpression (Apply (attributeValidateStringModifier|stringAttributeCharsetModifier))*
 	;
+	
+stringAttributeSpec
+	: (specIdentifier (At scopeIdentifier)? Colon)? String textExpression (Apply (attributeValidateStringModifier|stringAttributeCharsetModifier))*
+	;
 
 rangeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket numberExpression RSBracket textExpression
+	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket numberExpression RSBracket textExpression(Apply (attributeRendererModifier))*
 	;
 	
 attributeValidateNumberModifier

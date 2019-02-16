@@ -28,13 +28,14 @@ public interface ValueStreamer {
 	/**
 	 * Stream value data.
 	 * <p>
-	 * The submitted buffer may contain less bytes than the requested chunk size.
+	 * The submitted buffer may contain less bytes than the requested chunk size. The number of decoded bytes is derived
+	 * from the buffer's position movement.
 	 * </p>
 	 *
 	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return the {@linkplain StreamStatus}.
+	 * @return {@code true} if streaming should continue or {@false} if not.
 	 * @throws IOException if a decode error occurs.
 	 */
-	StreamStatus stream(ByteBuffer buffer) throws IOException;
+	boolean stream(ByteBuffer buffer) throws IOException;
 
 }

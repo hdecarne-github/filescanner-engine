@@ -48,6 +48,7 @@ class FormatSpecDefinitionTest {
 		testFormat.addWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
 		testFormat.addDWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
 		testFormat.addQWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
+		testFormat.addStreamValueAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
 		testFormat.load();
 	}
 

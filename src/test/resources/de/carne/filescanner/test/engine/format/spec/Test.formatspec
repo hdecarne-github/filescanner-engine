@@ -171,6 +171,11 @@ POSITION:
 	char[@ARRAY_SIZE] "char array attribute"
 		->charset("UTF-8")
 		->validate("abcdABCD")
+	string "string attribute"
+		->charset("UTF-8")
+		->validate("ABCDabcd")
+	range[10] "byte range attribute"
+		->renderer(@TestRenderer)
 LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:

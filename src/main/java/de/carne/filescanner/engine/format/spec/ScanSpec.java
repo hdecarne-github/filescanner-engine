@@ -22,9 +22,8 @@ import java.nio.ByteBuffer;
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.ValueStreamer;
 import de.carne.filescanner.engine.StreamValueDecoder;
-import de.carne.filescanner.engine.StreamStatus;
+import de.carne.filescanner.engine.ValueStreamer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 
@@ -61,7 +60,7 @@ public class ScanSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		context.readValue(this.config.matchSize(), 1, decoder(this.config::match));
+		context.readValue(this.config.matchSize(), decoder(this.config::match));
 	}
 
 	@Override
@@ -75,7 +74,7 @@ public class ScanSpec extends CompositeSpec {
 
 				length = result.end() - result.start();
 			} else {
-				length = context.readValue(this.config.matchSize(), 1, decoder(this.config::match)).longValue();
+				length = context.readValue(this.config.matchSize(), decoder(this.config::match)).longValue();
 			}
 			context.skip(length);
 			out.setStyle(RenderStyle.VALUE).write(length > 0 ? "{ ... }" : "{ }");
@@ -90,12 +89,11 @@ public class ScanSpec extends CompositeSpec {
 			private long length = 0;
 
 			@Override
-			public StreamStatus stream(ByteBuffer buffer) throws IOException {
-				StreamStatus status = streamer.stream(buffer);
+			public boolean stream(ByteBuffer buffer) throws IOException {
+				int decodeStart = buffer.position();
+				boolean status = streamer.stream(buffer);
 
-				if (status != StreamStatus.STOP) {
-					this.length++;
-				}
+				this.length += buffer.position() - decodeStart;
 				return status;
 			}
 
