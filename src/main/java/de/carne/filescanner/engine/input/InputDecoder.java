@@ -93,7 +93,7 @@ public abstract class InputDecoder {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public void render(RenderOutput out) throws IOException {
-		out.setStyle(RenderStyle.NORMAL).write("decoder");
+		out.setStyle(RenderStyle.NORMAL).write("encoding");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln("'" + this.name + "'");
 	}

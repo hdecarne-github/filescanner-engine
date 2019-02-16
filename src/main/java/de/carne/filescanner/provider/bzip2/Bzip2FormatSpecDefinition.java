@@ -21,10 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.format.spec.AttributeSpecs;
+import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.provider.util.Bzip2InputDecoder;
+import de.carne.nio.compression.bzip2.Bzip2BlockSize;
+import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
 import de.carne.nio.file.FileUtil;
 import de.carne.util.Lazy;
 
@@ -41,6 +47,8 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> bzip2FormatSpec = resolveLazy("BZIP2_ARCHIVE", CompositeSpec.class);
 	private Lazy<CompositeSpec> bzip2HeaderSpec = resolveLazy("BZIP2_HEADER", CompositeSpec.class);
 
+	private Lazy<ByteSpec> bzip2BlockSize = resolveLazy("BLOCK_SIZE", ByteSpec.class);
+
 	public CompositeSpec formatSpec() {
 		return this.bzip2FormatSpec.get();
 	}
@@ -51,7 +59,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 
 	protected EncodedInputSpecConfig bzip2EncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
-				.inputDecoder(Bzip2InputDecoder.DECODER);
+				.inputDecoder(this::inputDecoder);
 	}
 
 	private static final Map<String, String> MANGLED_EXTENSION_MAP = new HashMap<>();
@@ -64,6 +72,44 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 		String[] splitInputName = FileUtil.splitPath(AttributeSpecs.INPUT_NAME.get());
 
 		return splitInputName[1] + MANGLED_EXTENSION_MAP.getOrDefault(splitInputName[2], "");
+	}
+
+	private InputDecoder inputDecoder() {
+		Bzip2DecoderProperties properties = Bzip2InputDecoder.defaultProperties();
+		byte blockSize = this.bzip2BlockSize.get().get();
+
+		switch (blockSize) {
+		case '1':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE1);
+			break;
+		case '2':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE2);
+			break;
+		case '3':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE3);
+			break;
+		case '4':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE4);
+			break;
+		case '5':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE5);
+			break;
+		case '6':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE6);
+			break;
+		case '7':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE7);
+			break;
+		case '8':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE8);
+			break;
+		case '9':
+			properties.setBlockSizeProperty(Bzip2BlockSize.SIZE9);
+			break;
+		default:
+			throw Check.fail("Unexpected block size: %x", blockSize);
+		}
+		return new Bzip2InputDecoder(properties);
 	}
 
 }

@@ -28,6 +28,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.provider.util.DeflateInputDecoder;
 import de.carne.util.Lazy;
 
 /**
@@ -78,7 +79,7 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 			inputDecoder = InputDecoder.NONE;
 			break;
 		case 0x08:
-			inputDecoder = DeflatedInputDecoder.DECODER;
+			inputDecoder = new DeflateInputDecoder();
 			break;
 		default:
 			inputDecoder = InputDecoder
