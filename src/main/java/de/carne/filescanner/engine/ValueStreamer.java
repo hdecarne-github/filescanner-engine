@@ -33,7 +33,7 @@ public interface ValueStreamer {
 	 * </p>
 	 *
 	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return {@code true} if streaming should continue or {@false} if not.
+	 * @return {@code true} if streaming should continue or {@code false} if not.
 	 * @throws IOException if a decode error occurs.
 	 */
 	boolean stream(ByteBuffer buffer) throws IOException;
