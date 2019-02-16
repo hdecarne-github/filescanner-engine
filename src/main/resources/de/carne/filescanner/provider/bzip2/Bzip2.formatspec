@@ -48,6 +48,7 @@ struct "Header" {
 	byte "VERSION"
 		->validate(@VERSION_SYMBOLS)
 		->renderer(@VERSION_SYMBOLS)
+BLOCK_SIZE@BZIP2_ARCHIVE:
 	byte "BLOCK_SIZE"
 		->validate(@BLOCK_SIZE_SYMBOLS)
 		->renderer(@BLOCK_SIZE_SYMBOLS)
