@@ -148,7 +148,7 @@ public class ArraySpec extends CompositeSpec {
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
-		if (out.isEmpty()) {
+		if (!isResult() || out.isEmpty()) {
 			int elementCount = this.size.get().intValue();
 
 			for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {

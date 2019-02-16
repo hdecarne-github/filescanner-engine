@@ -28,6 +28,7 @@ import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.StringSpec;
 import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.nio.file.FileUtil;
 import de.carne.util.Lazy;
@@ -51,6 +52,7 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<FormatSpec> gzipFhcrcSpec = resolveLazy("GZIP_HEADER_FHCRC", FormatSpec.class);
 
 	private Lazy<ByteSpec> gzipHeaderFlg = resolveLazy("HEADER_FLG", ByteSpec.class);
+	private Lazy<StringSpec> gzipHeaderFname = resolveLazy("HEADER_FNAME", StringSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.gzipFormatSpec.get();
@@ -100,7 +102,7 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 		StringBuilder decodedInputName = new StringBuilder();
 
 		if ((flg & 0x08) == 0x08) {
-			decodedInputName.append("???");
+			decodedInputName.append(this.gzipHeaderFname.get().get());
 		} else {
 			String[] splitInputName = FileUtil.splitPath(AttributeSpecs.INPUT_NAME.get());
 

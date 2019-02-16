@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
@@ -72,7 +73,8 @@ public class StringSpec extends StringAttributeSpec {
 	@Override
 	protected String decodeValue(FileScannerResultInputContext context) throws IOException {
 		long decodeStart = context.position();
-		CharsetDecoder decoder = charset().newDecoder();
+		CharsetDecoder decoder = charset().newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
+				.onUnmappableCharacter(CodingErrorAction.REPLACE).replaceWith("?");
 		int chunkSize = (int) Math.ceil(decoder.maxCharsPerByte());
 		int maxLength = MAX_LENGTH;
 
@@ -82,16 +84,24 @@ public class StringSpec extends StringAttributeSpec {
 
 			@Override
 			public boolean stream(ByteBuffer buffer) throws IOException {
-				CoderResult coderResult = decoder.decode(buffer, this.stringBuffer, false);
-				boolean streamStatus = true;
-
-				if (coderResult.isUnderflow()) {
-					this.stringBuffer.flip();
-					streamStatus = false;
-				} else if (coderResult.isOverflow()) {
+				if (this.stringBuffer.limit() < this.stringBuffer.capacity() || this.stringBuffer.hasRemaining()) {
+					this.stringBuffer.limit(this.stringBuffer.position() + 1);
+				} else {
 					throw new UnexpectedDataException("Excessive string length", decodeStart);
-				} else if (coderResult.isError()) {
+				}
+
+				CoderResult coderResult = decoder.decode(buffer, this.stringBuffer, false);
+
+				if (coderResult.isError()) {
 					throw new UnexpectedDataException("String decode failure", decodeStart);
+				}
+
+				int lastCharPosition = this.stringBuffer.position() - 1;
+				boolean streamStatus = this.stringBuffer.get(lastCharPosition) != '\0';
+
+				if (!streamStatus) {
+					this.stringBuffer.position(lastCharPosition);
+					this.stringBuffer.flip();
 				}
 				return streamStatus;
 			}
@@ -100,6 +110,7 @@ public class StringSpec extends StringAttributeSpec {
 			public String decode() throws IOException {
 				return this.stringBuffer.toString();
 			}
+
 		});
 	}
 

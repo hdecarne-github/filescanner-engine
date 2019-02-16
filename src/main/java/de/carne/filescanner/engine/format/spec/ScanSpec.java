@@ -66,7 +66,7 @@ public class ScanSpec extends CompositeSpec {
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
-		if (out.isEmpty()) {
+		if (!isResult() || out.isEmpty()) {
 			long length;
 
 			if (isResult()) {

@@ -106,7 +106,7 @@ public class UnionSpec extends CompositeSpec {
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
-		if (out.isEmpty()) {
+		if (!isResult() || out.isEmpty()) {
 			for (CompositeSpec element : this.elements) {
 				if (context.matchComposite(element)) {
 					element.render(out, context);
