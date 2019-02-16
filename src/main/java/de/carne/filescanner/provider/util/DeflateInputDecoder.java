@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.nio.compression.CompressionInfos;
 import de.carne.nio.compression.deflate.DeflateDecoder;
 import de.carne.nio.compression.deflate.DeflateDecoderProperties;
 import de.carne.nio.compression.deflate.DeflateFactory;
@@ -63,6 +64,11 @@ public class DeflateInputDecoder extends InputDecoder {
 	@Override
 	public Decoder newDecoder() throws IOException {
 		return FACTORY.newDecoder(this.properties);
+	}
+
+	@Override
+	public CompressionInfos decoderProperties() {
+		return this.properties;
 	}
 
 }

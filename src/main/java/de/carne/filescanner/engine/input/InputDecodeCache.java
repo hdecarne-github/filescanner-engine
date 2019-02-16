@@ -105,7 +105,7 @@ public final class InputDecodeCache implements Closeable {
 		long encodedSize = 0;
 		FileScannerInput decodedInput;
 
-		if (InputDecoder.NONE.equals(inputDecoder)) {
+		if (InputDecoders.NONE.equals(inputDecoder)) {
 			encodedSize = end - start;
 			decodedInput = new FileScannerInputRange(name, input, start, start, end);
 		} else {

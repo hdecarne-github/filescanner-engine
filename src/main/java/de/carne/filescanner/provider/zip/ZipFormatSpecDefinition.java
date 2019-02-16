@@ -28,6 +28,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.provider.util.DeflateInputDecoder;
 import de.carne.util.Lazy;
 
@@ -76,13 +77,13 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
 		switch (compressionMethod) {
 		case 0x00:
-			inputDecoder = InputDecoder.NONE;
+			inputDecoder = InputDecoders.NONE;
 			break;
 		case 0x08:
 			inputDecoder = new DeflateInputDecoder();
 			break;
 		default:
-			inputDecoder = InputDecoder
+			inputDecoder = InputDecoders
 					.unsupportedInputDecoder("ZIP compression method " + HexFormat.formatShort(compressionMethod));
 		}
 		return inputDecoder;

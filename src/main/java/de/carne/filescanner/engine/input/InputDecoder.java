@@ -17,28 +17,20 @@
 package de.carne.filescanner.engine.input;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.nio.compression.CompressionInfos;
+import de.carne.nio.compression.CompressionProperty;
 import de.carne.nio.compression.spi.Decoder;
 
 /**
  * {@code InputDecoder} instances are used to decode nested input streams.
  */
 public abstract class InputDecoder {
-
-	/**
-	 * The identity decoder instance used to indicate that no decoding is required.
-	 */
-	public static final InputDecoder NONE = new InputDecoder("<none>") {
-
-		@Override
-		public Decoder newDecoder() {
-			throw Check.fail();
-		}
-
-	};
 
 	private final String name;
 
@@ -49,24 +41,6 @@ public abstract class InputDecoder {
 	 */
 	protected InputDecoder(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Creates an {@linkplain InputDecoder} instance for an unsupported encoding format that fails with a corresponding
-	 * error message.
-	 *
-	 * @param name the name of the unsupported encoding format.
-	 * @return the created {@linkplain InputDecoder} instance.
-	 */
-	public static InputDecoder unsupportedInputDecoder(String name) {
-		return new InputDecoder(name) {
-
-			@Override
-			public Decoder newDecoder() throws IOException {
-				throw new IOException("Unsupported encoding format: " + name());
-			}
-
-		};
 	}
 
 	/**
@@ -87,6 +61,13 @@ public abstract class InputDecoder {
 	public abstract Decoder newDecoder() throws IOException;
 
 	/**
+	 * Gets the decoder properties for this encoded input.
+	 *
+	 * @return the decoder properties for this encoded input.
+	 */
+	public abstract CompressionInfos decoderProperties();
+
+	/**
 	 * Renders detailed decoder informations (if available).
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
@@ -96,6 +77,18 @@ public abstract class InputDecoder {
 		out.setStyle(RenderStyle.NORMAL).write("encoding");
 		out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		out.setStyle(RenderStyle.VALUE).writeln("'" + this.name + "'");
+
+		CompressionInfos decoderProperties = decoderProperties();
+		List<CompressionProperty> sortedDecoderProperties = new ArrayList<>();
+
+		decoderProperties().forEach(sortedDecoderProperties::add);
+		Collections.sort(sortedDecoderProperties);
+
+		for (CompressionProperty decoderProperty : decoderProperties) {
+			out.setStyle(RenderStyle.NORMAL).write("decoderProperty[" + decoderProperty.key() + "]");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).writeln(decoderProperties.getProperty(decoderProperty).toString());
+		}
 	}
 
 }

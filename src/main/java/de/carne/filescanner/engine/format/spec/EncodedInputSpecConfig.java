@@ -19,6 +19,7 @@ package de.carne.filescanner.engine.format.spec;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -29,7 +30,7 @@ public final class EncodedInputSpecConfig {
 	private Supplier<String> encodedInputNameHolder;
 	private Supplier<Long> encodedInputSizeHolder = FinalSupplier.of(Long.valueOf(-1l));
 	private Supplier<InputDecoder> inputDecoderHolder = FinalSupplier
-			.of(InputDecoder.unsupportedInputDecoder("<undefined>"));
+			.of(InputDecoders.unsupportedInputDecoder("<undefined>"));
 	private Supplier<String> decodedInputNameHolder = FinalSupplier.of("<undefined>");
 
 	/**
