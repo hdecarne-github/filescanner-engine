@@ -32,27 +32,28 @@ byte_symbols {
 	0x35: "DIRTYPE: directory"
 	0x36: "FIFOTYPE: FIFO special"
 	0x37: "CONTTYPE: reserved"
+	0x4c: "GNUTYPE_LONGNAME"
 }
 
 // Specs
 
-TAR_POSIX_HEADER:
+TAR_USTAR_HEADER:
 struct {
 HEADER_NAME@TAR_ENTRY:
 	char[100] "name"
 	char[8] "mode"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 	char[8] "uid"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 	char[8] "gid"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 HEADER_SIZE@TAR_ENTRY:
 	char[12] "size"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 	char[12] "mtime"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 	char[8] "chksum"
-		->validate(R"^\\d+.*")
+		->validate(R"^[0-7]+.*")
 	byte "typeflag"
 		->validate(@TYPEFLAG_SYMBOLS)
 		->format(@CharFormat)
@@ -71,7 +72,7 @@ HEADER_SIZE@TAR_ENTRY:
 
 TAR_HEADER:
 union "header block" {
-	@TAR_POSIX_HEADER
+	@TAR_USTAR_HEADER
 }
 
 TAR_DATA:
