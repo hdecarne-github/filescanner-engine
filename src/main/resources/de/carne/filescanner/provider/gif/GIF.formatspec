@@ -47,7 +47,7 @@ byte_symbols {
 }
 
 GCE_PACKED_FIELDS_SYMBOLS:
-byte_symbols {
+byte_flag_symbols {
 	0xe0: "Reserved"
 	0x1c: "Disposal Method"
 	0x02: "User Input Flag"
