@@ -16,7 +16,10 @@
  */
 package de.carne.filescanner.test.engine.format;
 
+import java.util.Locale;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import de.carne.filescanner.engine.format.PrettyFormat;
@@ -26,32 +29,38 @@ import de.carne.filescanner.engine.format.PrettyFormat;
  */
 class PrettyFormatTest {
 
+	@BeforeAll
+	static void setTestLocale() {
+		Locale.setDefault(Locale.GERMANY);
+	}
+
 	@Test
 	void testByteFormat() {
 		Assertions.assertEquals("'a'", PrettyFormat.BYTE_CHAR_FORMATTER.format(Byte.valueOf((byte) 'a')));
 		Assertions.assertEquals("'\\0'", PrettyFormat.BYTE_CHAR_FORMATTER.format(Byte.valueOf((byte) 0)));
-		Assertions.assertEquals("-1", PrettyFormat.BYTE_FORMATTER.format(Byte.valueOf((byte) 0xff)));
+		Assertions.assertEquals("255", PrettyFormat.BYTE_FORMATTER.format(Byte.valueOf((byte) 0xff)));
 		Assertions.assertEquals("{ }", PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[0]));
-		Assertions.assertEquals("{ -1 }", PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[] { (byte) 0xff }));
-		Assertions.assertEquals("{ -1, 127 }",
+		Assertions.assertEquals("{ 255 }", PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[] { (byte) 0xff }));
+		Assertions.assertEquals("{ 255, 127 }",
 				PrettyFormat.BYTE_ARRAY_FORMATTER.format(new byte[] { (byte) 0xff, 127 }));
 	}
 
 	@Test
 	void testShortFormat() {
-		Assertions.assertEquals("-1", PrettyFormat.SHORT_FORMATTER.format(Short.valueOf((short) 0xffff)));
+		Assertions.assertEquals("65.535", PrettyFormat.SHORT_FORMATTER.format(Short.valueOf((short) 0xffff)));
 		Assertions.assertEquals("{ }", PrettyFormat.SHORT_ARRAY_FORMATTER.format(new short[0]));
-		Assertions.assertEquals("{ -1 }", PrettyFormat.SHORT_ARRAY_FORMATTER.format(new short[] { (short) 0xffff }));
-		Assertions.assertEquals("{ -1, 32767 }",
+		Assertions.assertEquals("{ 65.535 }",
+				PrettyFormat.SHORT_ARRAY_FORMATTER.format(new short[] { (short) 0xffff }));
+		Assertions.assertEquals("{ 65.535, 32.767 }",
 				PrettyFormat.SHORT_ARRAY_FORMATTER.format(new short[] { (short) 0xffff, 32767 }));
 	}
 
 	@Test
 	void testIntFormat() {
-		Assertions.assertEquals("-1", PrettyFormat.INT_FORMATTER.format(Integer.valueOf(0xffffffff)));
+		Assertions.assertEquals("4.294.967.295", PrettyFormat.INT_FORMATTER.format(Integer.valueOf(0xffffffff)));
 		Assertions.assertEquals("{ }", PrettyFormat.INT_ARRAY_FORMATTER.format(new int[0]));
-		Assertions.assertEquals("{ -1 }", PrettyFormat.INT_ARRAY_FORMATTER.format(new int[] { 0xffffffff }));
-		Assertions.assertEquals("{ -1, 2147483647 }",
+		Assertions.assertEquals("{ 4.294.967.295 }", PrettyFormat.INT_ARRAY_FORMATTER.format(new int[] { 0xffffffff }));
+		Assertions.assertEquals("{ 4.294.967.295, 2.147.483.647 }",
 				PrettyFormat.INT_ARRAY_FORMATTER.format(new int[] { 0xffffffff, 2147483647 }));
 	}
 
@@ -60,7 +69,7 @@ class PrettyFormatTest {
 		Assertions.assertEquals("-1", PrettyFormat.LONG_FORMATTER.format(Long.valueOf(0xffffffffffffffffl)));
 		Assertions.assertEquals("{ }", PrettyFormat.LONG_ARRAY_FORMATTER.format(new long[0]));
 		Assertions.assertEquals("{ -1 }", PrettyFormat.LONG_ARRAY_FORMATTER.format(new long[] { 0xffffffffffffffffl }));
-		Assertions.assertEquals("{ -1, 9223372036854775807 }",
+		Assertions.assertEquals("{ -1, 9.223.372.036.854.775.807 }",
 				PrettyFormat.LONG_ARRAY_FORMATTER.format(new long[] { 0xffffffffffffffffl, 9223372036854775807l }));
 	}
 

@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.format;
 
+import java.text.NumberFormat;
+
 import de.carne.filescanner.engine.format.spec.AttributeFormatter;
 import de.carne.filescanner.engine.util.StringHelper;
 import de.carne.util.Strings;
@@ -29,7 +31,7 @@ public final class PrettyFormat {
 		// Prevent instantiation
 	}
 
-	private static final String NUMBER_FORMAT = "%d";
+	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance();
 
 	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Byte} based character values.
@@ -58,7 +60,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatByteNumber(byte value) {
-		return String.format(NUMBER_FORMAT, value);
+		return NUMBER_FORMAT.format(value & 0xffl);
 	}
 
 	/**
@@ -104,7 +106,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatShortNumber(short value) {
-		return String.format(NUMBER_FORMAT, value);
+		return NUMBER_FORMAT.format(value & 0xffffl);
 	}
 
 	/**
@@ -150,7 +152,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatIntNumber(int value) {
-		return String.format(NUMBER_FORMAT, value);
+		return NUMBER_FORMAT.format(value & 0xffffffffl);
 	}
 
 	/**
@@ -196,7 +198,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatLongNumber(long value) {
-		return String.format(NUMBER_FORMAT, value);
+		return NUMBER_FORMAT.format(value);
 	}
 
 	/**
