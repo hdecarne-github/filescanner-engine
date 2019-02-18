@@ -58,6 +58,8 @@ PNG_IHDR_CHUNK:
 struct "IHDR chunk" {
 	dword "Length"
 		->validate(13)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 	dword "Chunk Type"
 		->validate(0x49484452)
 	dword "Width"
@@ -81,6 +83,8 @@ PNG_IEND_CHUNK:
 struct "IEND chunk" {
 	dword "Length"
 		->validate(0)
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 	dword "Chunk Type"
 		->validate(0x49454e44)
 	dword "CRC"
@@ -90,6 +94,8 @@ PNG_GENERIC_CHUNK:
 struct #genericChunkName {
 CHUNK_LENGTH:
 	dword "Length"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
 CHUNK_TYPE:
 	dword "Chunk Type"
 	range[@CHUNK_LENGTH] "Chunk Data"
