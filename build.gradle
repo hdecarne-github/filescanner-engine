@@ -45,7 +45,7 @@ configurations {
 dependencies {
 	compileOnly(group: "org.eclipse.jdt", name: "org.eclipse.jdt.annotation", version: project.annotationVersion)
 	testCompileOnly(group: "org.eclipse.jdt", name: "org.eclipse.jdt.annotation", version: project.annotationVersion)
-	api(group: "de.carne.common", name: "java-default", version: project.javaDefaultVersion)
+	implementation(group: "de.carne.common", name: "java-default", version: project.javaDefaultVersion)
 	implementation(group: "de.carne.common", name: "java-compression", version: project.javaCompressionVersion)
 	implementation(group: "org.antlr", name: "antlr4-runtime", version: project.antlrVersion)
 	antlr(group: "org.antlr", name: "antlr4", version: project.antlrVersion)
