@@ -140,6 +140,7 @@ public interface FileScannerResult {
 	 *
 	 * @return the available {@linkplain FileScannerResultExportHandler}.
 	 */
+	@NonNull
 	FileScannerResultExportHandler[] exportHandlers();
 
 	/**
