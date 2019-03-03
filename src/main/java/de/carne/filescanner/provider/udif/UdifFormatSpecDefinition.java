@@ -16,18 +16,30 @@
  */
 package de.carne.filescanner.provider.udif;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 
+import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.spec.AttributeSpecs;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.util.Lazy;
 
 /**
  * See UDIF.formatspec
  */
 final class UdifFormatSpecDefinition extends FormatSpecDefinition {
+
+	private static final Log LOG = new Log();
+
+	private Map<StreamValue, CompositeSpec> dataForkSpecCache = new WeakHashMap<>();
 
 	@Override
 	protected URL getFormatSpecResource() {
@@ -36,6 +48,8 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 	private Lazy<CompositeSpec> udifFormatSpec = resolveLazy("UDIF_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> udifTrailerSpec = resolveLazy("UDIF_TRAILER", CompositeSpec.class);
+
+	private Lazy<RangeSpec> resourceForkSpec = resolveLazy("XML_PLIST", RangeSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.udifFormatSpec.get();
@@ -47,6 +61,23 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 	protected Long imageDataSize() {
 		return AttributeSpecs.INPUT_SIZE.get().longValue() - this.udifTrailerSpec.get().matchSize();
+	}
+
+	protected CompositeSpec dataForkSpec() {
+		StreamValue resourceFork = this.resourceForkSpec.get().get();
+
+		return this.dataForkSpecCache.computeIfAbsent(resourceFork, this::dataForkSpecHelper);
+	}
+
+	private CompositeSpec dataForkSpecHelper(StreamValue resourceFork) {
+		CompositeSpec dataForkSpec = FormatSpecs.EMPTY;
+
+		try (InputStream resourceForkInput = resourceFork.stream()) {
+			dataForkSpec = ResourceForkHandler.parse(resourceForkInput);
+		} catch (IOException e) {
+			LOG.warning(e, "Failed to decode UDIF resource fork XML");
+		}
+		return dataForkSpec;
 	}
 
 }

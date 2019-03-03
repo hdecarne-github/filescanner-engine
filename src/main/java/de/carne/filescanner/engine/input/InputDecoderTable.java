@@ -34,10 +34,6 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 
 	private final LinkedList<Entry> entries = new LinkedList<>();
 
-	private InputDecoderTable() {
-		// nothing to do here
-	}
-
 	/**
 	 * Builds a new {@linkplain InputDecoderTable} instance.
 	 *

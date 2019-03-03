@@ -37,12 +37,12 @@ public class InputDecoders {
 	/**
 	 * The identity decoder instance used to indicate that no decoding is required.
 	 */
-	public static final InputDecoder IDENTITY = new NoInputDecoder("<none>");
+	public static final InputDecoder IDENTITY = new NoInputDecoder("stored");
 
 	/**
 	 * The zero decoder instance used to indicate a range of zeros (for sparse file handling).
 	 */
-	public static final InputDecoder ZERO = new NoInputDecoder("<sparse>");
+	public static final InputDecoder ZERO = new NoInputDecoder("sparse");
 
 	/**
 	 * Creates an {@linkplain InputDecoder} instance for an unsupported encoding format that fails with a corresponding

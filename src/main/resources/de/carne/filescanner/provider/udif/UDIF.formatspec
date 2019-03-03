@@ -86,4 +86,5 @@ format_spec "Universal Disk Image" {
 	range[#imageDataSize] "image data"
 	@UDIF_TRAILER
 	decodeAt @XML_OFFSET @RESOURCE_FORK
+	conditional #dataForkSpec {}
 }	->bigEndian()
