@@ -55,7 +55,7 @@ class FileScannerInputInputStream extends InputStream {
 		int read;
 
 		if (readLen > 0) {
-			ByteBuffer buffer = ByteBuffer.wrap(b, off, len);
+			ByteBuffer buffer = ByteBuffer.wrap(b, off, readLen);
 
 			read = this.input.read(buffer, this.position);
 		} else {

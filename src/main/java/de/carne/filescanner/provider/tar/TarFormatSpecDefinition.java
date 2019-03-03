@@ -24,6 +24,7 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.util.Lazy;
 
@@ -61,12 +62,16 @@ final class TarFormatSpecDefinition extends FormatSpecDefinition {
 
 	protected EncodedInputSpecConfig tarDataEncodedInputConfig() {
 		return new EncodedInputSpecConfig("data blocks").decodedInputName(this.headerName.get()::getStripped)
-				.encodedInputSize(this::getEntryDataSize).inputDecoder(InputDecoders.NONE);
+				.inputDecoderTable(this::getEntryDataInputDecoderTable);
 
 	}
 
 	protected Integer tarDataUnusedSize() {
 		return (512 - (int) (getEntryDataSize() % 512l)) % 512;
+	}
+
+	private InputDecoderTable getEntryDataInputDecoderTable() {
+		return InputDecoderTable.build(InputDecoders.IDENTITY, getEntryDataSize());
 	}
 
 	private long getEntryDataSize() {

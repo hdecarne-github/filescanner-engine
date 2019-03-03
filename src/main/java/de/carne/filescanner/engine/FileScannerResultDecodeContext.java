@@ -144,23 +144,11 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		LOG.debug("Decoding encoded input spec ''{0}''...", encodedInputSpec);
 
 		long decodeStart = position();
-		long encodedInputSize = encodedInputSpec.encodedInputSize().get();
-		long decodeEnd;
-		FileScannerResultBuilder decodeResult;
-
-		if (encodedInputSize >= 0) {
-			decodeEnd = decodeStart + encodedInputSize;
-			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peek().builder(),
-					encodedInputSpec, inputRange(), decodeStart, decodeEnd);
-		} else {
-			decodeEnd = inputRange().end();
-			decodeResult = FileScannerResultBuilder.encodedInputResult(this.decodeStack.peek().builder(),
-					encodedInputSpec, inputRange(), decodeStart, decodeStart);
-		}
-
+		FileScannerResultBuilder decodeResult = FileScannerResultBuilder.encodedInputResult(
+				this.decodeStack.peek().builder(), encodedInputSpec, inputRange(), decodeStart, decodeStart);
 		InputDecodeCache.Decoded decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
-				encodedInputSpec.inputDecoder().get(), inputRange(), decodeStart, decodeEnd);
-		long commitPosition = Math.max(encodedInputSize, decodeStart + decoded.encodedSize());
+				encodedInputSpec.inputDecoderTable().get(), inputRange(), decodeStart);
+		long commitPosition = decodeStart + decoded.encodedSize();
 
 		setPosition(commitPosition);
 

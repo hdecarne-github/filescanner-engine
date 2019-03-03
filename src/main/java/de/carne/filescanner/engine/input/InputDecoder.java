@@ -68,7 +68,7 @@ public abstract class InputDecoder {
 	public abstract CompressionInfos decoderProperties();
 
 	/**
-	 * Renders detailed decoder informations (if available).
+	 * Renders decoder informations.
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
 	 * @throws IOException if an I/O error occurs.

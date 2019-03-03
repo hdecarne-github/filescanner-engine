@@ -37,7 +37,7 @@ import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
-import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.util.SystemProperties;
 
@@ -140,9 +140,9 @@ public final class FileScanner implements Closeable {
 		}
 	}
 
-	InputDecodeCache.Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
-			long end) throws IOException {
-		return this.inputDecodeCache.decodeInput(name, inputDecoder, input, start, end);
+	InputDecodeCache.Decoded decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
+			long start) throws IOException {
+		return this.inputDecodeCache.decodeInput(name, inputDecoderTable, input, start);
 	}
 
 	void queueInputResults(Collection<FileScannerResultBuilder> inputResults) {

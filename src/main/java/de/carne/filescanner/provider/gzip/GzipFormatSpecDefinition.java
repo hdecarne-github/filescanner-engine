@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.StringSpec;
-import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.filescanner.provider.util.DeflateInputDecoder;
 import de.carne.nio.file.FileUtil;
@@ -90,7 +90,7 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 
 	protected EncodedInputSpecConfig gzipEncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
-				.inputDecoder(this::inputDecoder);
+				.inputDecoderTable(this::inputDecoderTable);
 	}
 
 	private static final Map<String, String> MANGLED_EXTENSION_MAP = new HashMap<>();
@@ -114,8 +114,8 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 		return decodedInputName.toString();
 	}
 
-	private InputDecoder inputDecoder() {
-		return new DeflateInputDecoder();
+	private InputDecoderTable inputDecoderTable() {
+		return InputDecoderTable.build(new DeflateInputDecoder());
 	}
 
 }

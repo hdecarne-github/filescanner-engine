@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
-import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.provider.util.Bzip2InputDecoder;
 import de.carne.nio.compression.bzip2.Bzip2BlockSize;
 import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
@@ -59,7 +59,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 
 	protected EncodedInputSpecConfig bzip2EncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
-				.inputDecoder(this::inputDecoder);
+				.inputDecoderTable(this::inputDecoderTable);
 	}
 
 	private static final Map<String, String> MANGLED_EXTENSION_MAP = new HashMap<>();
@@ -76,7 +76,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 		return splitInputName[1] + MANGLED_EXTENSION_MAP.getOrDefault(splitInputName[2], "");
 	}
 
-	private InputDecoder inputDecoder() {
+	private InputDecoderTable inputDecoderTable() {
 		Bzip2DecoderProperties properties = Bzip2InputDecoder.defaultProperties();
 		byte blockSize = this.bzip2BlockSize.get().get();
 
@@ -111,7 +111,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 		default:
 			throw Check.fail("Unexpected block size: %x", blockSize);
 		}
-		return new Bzip2InputDecoder(properties);
+		return InputDecoderTable.build(new Bzip2InputDecoder(properties));
 	}
 
 }

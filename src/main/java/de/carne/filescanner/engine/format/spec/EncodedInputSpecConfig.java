@@ -19,6 +19,7 @@ package de.carne.filescanner.engine.format.spec;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
@@ -27,10 +28,12 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public final class EncodedInputSpecConfig {
 
+	private static final InputDecoder UNDEFINED_INPUT_DECODER_TABLE = InputDecoders
+			.unsupportedInputDecoder("<undefined>");
+
 	private Supplier<String> encodedInputNameHolder;
-	private Supplier<Long> encodedInputSizeHolder = FinalSupplier.of(Long.valueOf(-1l));
-	private Supplier<InputDecoder> inputDecoderHolder = FinalSupplier
-			.of(InputDecoders.unsupportedInputDecoder("<undefined>"));
+	private Supplier<InputDecoderTable> inputDecoderTableHolder = FinalSupplier
+			.of(InputDecoderTable.build(UNDEFINED_INPUT_DECODER_TABLE));
 	private Supplier<String> decodedInputNameHolder = FinalSupplier.of("<undefined>");
 
 	/**
@@ -61,74 +64,33 @@ public final class EncodedInputSpecConfig {
 	}
 
 	/**
-	 * Sets the size of the encoded input data stream.
-	 * <p>
-	 * If not set the input decoder is responsible for detecting the end of the input data stream.
-	 * </p>
+	 * Sets the {@linkplain InputDecoderTable} to use for decoding the encoded input data stream.
 	 *
-	 * @param encodedInputSize the size of the encoded input data stream.
+	 * @param inputDecoderTable the {@linkplain InputDecoderTable} to use.
 	 * @return the update configuration.
 	 */
-	public EncodedInputSpecConfig encodedInputSize(long encodedInputSize) {
-		return encodedInputSize(FinalSupplier.of(Long.valueOf(encodedInputSize)));
+	public EncodedInputSpecConfig inputDecoderTable(InputDecoderTable inputDecoderTable) {
+		return inputDecoderTable(FinalSupplier.of(inputDecoderTable));
 	}
 
 	/**
-	 * Sets the size of the encoded input data stream.
-	 * <p>
-	 * If not set the input decoder is responsible for detecting the end of the input data stream.
-	 * </p>
+	 * Sets the {@linkplain InputDecoderTable} to use for decoding the encoded input data stream.
 	 *
-	 * @param encodedInputSize the size of the encoded input data stream.
+	 * @param inputDecoderTable the {@linkplain InputDecoderTable} to use.
 	 * @return the update configuration.
 	 */
-	@SuppressWarnings("squid:S4276")
-	public EncodedInputSpecConfig encodedInputSize(Supplier<Long> encodedInputSize) {
-		this.encodedInputSizeHolder = encodedInputSize;
+	public EncodedInputSpecConfig inputDecoderTable(Supplier<InputDecoderTable> inputDecoderTable) {
+		this.inputDecoderTableHolder = inputDecoderTable;
 		return this;
 	}
 
 	/**
-	 * Gets the size of the encoded input data stream.
-	 * <p>
-	 * May be {@code -1} indicating that the input decoder is responsible for detecting the end of the input data
-	 * stream.
-	 * </p>
+	 * Gets the {@linkplain InputDecoderTable} to use for decoding the encoded input data stream.
 	 *
-	 * @return the size of the encoded input data stream.
+	 * @return the {@linkplain InputDecoderTable} to use for decoding the encoded input data stream.
 	 */
-	public Supplier<Long> encodedInputSize() {
-		return this.encodedInputSizeHolder;
-	}
-
-	/**
-	 * Sets the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
-	 *
-	 * @param inputDecoder the {@linkplain InputDecoder} to use.
-	 * @return the update configuration.
-	 */
-	public EncodedInputSpecConfig inputDecoder(InputDecoder inputDecoder) {
-		return inputDecoder(FinalSupplier.of(inputDecoder));
-	}
-
-	/**
-	 * Sets the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
-	 *
-	 * @param inputDecoder the {@linkplain InputDecoder} to use.
-	 * @return the update configuration.
-	 */
-	public EncodedInputSpecConfig inputDecoder(Supplier<InputDecoder> inputDecoder) {
-		this.inputDecoderHolder = inputDecoder;
-		return this;
-	}
-
-	/**
-	 * Gets the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
-	 *
-	 * @return the {@linkplain InputDecoder} to use for decoding the encoded input data stream.
-	 */
-	public Supplier<InputDecoder> inputDecoder() {
-		return this.inputDecoderHolder;
+	public Supplier<InputDecoderTable> inputDecoderTable() {
+		return this.inputDecoderTableHolder;
 	}
 
 	/**

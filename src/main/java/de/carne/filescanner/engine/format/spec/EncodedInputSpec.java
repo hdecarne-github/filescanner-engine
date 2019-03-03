@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
@@ -54,23 +54,12 @@ public final class EncodedInputSpec implements FormatSpec {
 	}
 
 	/**
-	 * Gets the encoded input's size.
-	 * <p>
-	 * If the supplied value is {@code -1} the actual size is not known and has to be determined by the decoder.
+	 * Gets the input decoder table.
 	 *
-	 * @return the encoded input's size.
+	 * @return the input decoder table.
 	 */
-	public Supplier<Long> encodedInputSize() {
-		return this.config.encodedInputSize();
-	}
-
-	/**
-	 * Gets the input decoder.
-	 *
-	 * @return the input decoder.
-	 */
-	public Supplier<InputDecoder> inputDecoder() {
-		return this.config.inputDecoder();
+	public Supplier<InputDecoderTable> inputDecoderTable() {
+		return this.config.inputDecoderTable();
 	}
 
 	/**

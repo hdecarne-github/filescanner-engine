@@ -25,7 +25,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.InsufficientDataException;
 import de.carne.filescanner.engine.InvalidPositionException;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.nio.compression.spi.Decoder;
@@ -40,6 +43,8 @@ import de.carne.util.SystemProperties;
 public final class InputDecodeCache implements Closeable {
 
 	private static final Log LOG = new Log();
+
+	private static final byte[] SPARSE_MARKER = new byte[] { (byte) 0xde, (byte) 0xad, (byte) 0xbe, (byte) 0xef };
 
 	/**
 	 * The decode buffer size (in bytes).
@@ -77,7 +82,8 @@ public final class InputDecodeCache implements Closeable {
 				FileAttributes.userFileDefault(tmpDir));
 
 		@SuppressWarnings("resource") FileChannelInput fileChannelInput = new FileChannelInput(this.cacheFilePath,
-				StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ);
+				StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.READ,
+				StandardOpenOption.SPARSE);
 
 		this.cacheFileChannel = fileChannelInput.channel();
 		this.cacheFileInput = new BufferedFileScannerInput(fileChannelInput);
@@ -89,49 +95,103 @@ public final class InputDecodeCache implements Closeable {
 	 * Decode an input stream to the cache file.
 	 *
 	 * @param name the name of the encoded input stream.
-	 * @param inputDecoder the {@linkplain InputDecoder} to use for input decoding.
+	 * @param inputDecoderTable the {@linkplain InputDecoderTable} to use for decoding.
 	 * @param input the {@linkplain FileScannerInput} to read the encoded data from.
 	 * @param start the position to start decoding at.
-	 * @param end the maximum position to read to during decoding.
 	 * @return a {@linkplain Decoded} instance containing the decode result.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public synchronized Decoded decodeInput(String name, InputDecoder inputDecoder, FileScannerInput input, long start,
-			long end) throws IOException {
-		if (end > input.size()) {
-			throw new InvalidPositionException(input, end);
-		}
+	@SuppressWarnings({ "resource", "squid:S3776" })
+	public synchronized Decoded decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
+			long start) throws IOException {
+		// Discard any trailing data (caused by previously failed decode runs)
+		this.cacheFileChannel.truncate(this.cacheExtent);
 
-		long encodedSize = 0;
-		FileScannerInput decodedInput;
+		long decodeOffset = 0;
+		long decodedStart = this.cacheExtent;
+		long decodedEnd = decodedStart;
+		@Nullable FileScannerInput decodedInput = null;
+		long inputSize = input.size();
 
-		if (InputDecoders.NONE.equals(inputDecoder)) {
-			encodedSize = end - start;
-			decodedInput = new FileScannerInputRange(name, input, start, start, end);
-		} else {
-			this.cacheFileChannel.position(this.cacheExtent);
+		for (InputDecoderTable.Entry entry : inputDecoderTable) {
+			long entryOffset = entry.offset();
 
-			long decodedInputStart = this.cacheExtent;
-			long decodedInputEnd = decodedInputStart;
-
-			try (ReadableByteChannel inputByteChannel = input.byteChannel(start, end)) {
-				Decoder decoder = inputDecoder.newDecoder();
-				ByteBuffer buffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
-
-				while (decoder.decode(buffer, inputByteChannel) >= 0) {
-					encodedSize = decoder.totalIn();
-					buffer.flip();
-					decodedInputEnd += this.cacheFileChannel.write(buffer);
-					buffer.clear();
+			if (entryOffset >= 0) {
+				if (decodeOffset > entryOffset) {
+					throw new InvalidPositionException(input, start + entryOffset);
 				}
-			} catch (IOException e) {
-				throw new InputDecoderException(inputDecoder, e);
+				decodeOffset = entryOffset;
 			}
-			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedInputStart, decodedInputStart,
-					decodedInputEnd);
-			this.cacheExtent = decodedInputEnd;
+
+			InputDecoder inputDecoder = entry.inputDecoder();
+			long entryLength = entry.length();
+			long inputAvailable = inputSize - (start + decodeOffset);
+			long decodeLimit = inputSize;
+
+			if (entryLength >= 0) {
+				if (entryLength > inputAvailable) {
+					throw new InsufficientDataException(input, start + decodeOffset, entryLength, inputAvailable);
+				}
+				decodeLimit = start + decodeOffset + entryLength;
+			}
+
+			if (InputDecoders.IDENTITY.equals(inputDecoder)) {
+				if (inputDecoderTable.size() == 1) {
+					// Use direct access
+					decodedInput = new FileScannerInputRange(name, input, start, start, start + entryLength);
+					decodeOffset = entryLength;
+				} else {
+					decodedEnd += copyInput(decodedEnd, input, start + decodeOffset,
+							start + decodeOffset + entryLength);
+					decodeOffset += entryLength;
+				}
+			} else if (InputDecoders.ZERO.equals(inputDecoder)) {
+				decodedEnd += entryLength;
+				decodeOffset += entryLength;
+				this.cacheFileChannel.position(decodedEnd);
+				// Enforce new cache file size
+				this.cacheFileChannel.write(ByteBuffer.wrap(SPARSE_MARKER));
+			} else {
+				Decoder decoder = inputDecoder.newDecoder();
+
+				decodedEnd += decodeInput(decodedEnd, input, start + decodeOffset, decodeLimit, inputDecoder, decoder);
+				decodeOffset += decoder.totalIn();
+			}
 		}
-		return new Decoded(decodedInput, encodedSize);
+		if (decodedInput == null) {
+			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedStart, decodedStart, decodedEnd);
+		}
+		this.cacheExtent = decodedEnd;
+		return new Decoded(decodedInput, decodeOffset);
+	}
+
+	private long copyInput(long position, FileScannerInput input, long copyStart, long copyEnd) throws IOException {
+		long copied;
+
+		try (ReadableByteChannel inputByteChannel = input.byteChannel(copyStart, copyEnd)) {
+			copied = this.cacheFileChannel.transferFrom(inputByteChannel, position, copyEnd - copyStart);
+		}
+		return copied;
+	}
+
+	private long decodeInput(long position, FileScannerInput input, long decodeStart, long decodeLimit,
+			InputDecoder inputDecoder, Decoder decoder) throws IOException {
+		this.cacheFileChannel.position(position);
+
+		long decoded = 0;
+
+		try (ReadableByteChannel encodedByteChannel = input.byteChannel(decodeStart, decodeLimit)) {
+			ByteBuffer buffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
+
+			while (decoder.decode(buffer, encodedByteChannel) >= 0) {
+				buffer.flip();
+				decoded += this.cacheFileChannel.write(buffer);
+				buffer.clear();
+			}
+		} catch (IOException e) {
+			throw new InputDecoderException(inputDecoder, e);
+		}
+		return decoded;
 	}
 
 	@Override
@@ -144,7 +204,7 @@ public final class InputDecodeCache implements Closeable {
 
 	/**
 	 * This class comprises the results of an
-	 * {@linkplain InputDecodeCache#decodeInput(String, InputDecoder, FileScannerInput, long, long)} call.
+	 * {@linkplain InputDecodeCache#decodeInput(String, InputDecoderTable, FileScannerInput, long)} call.
 	 */
 	public static class Decoded {
 

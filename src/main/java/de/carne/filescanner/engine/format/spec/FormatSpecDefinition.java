@@ -18,6 +18,7 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteOrder;
@@ -1413,6 +1414,10 @@ public abstract class FormatSpecDefinition {
 		return () -> {
 			try {
 				return type.cast(method.invoke(this));
+			} catch (InvocationTargetException e) {
+				Throwable cause = e.getCause();
+
+				throw Exceptions.toRuntime(cause != null ? cause : e);
 			} catch (ReflectiveOperationException e) {
 				throw Exceptions.toRuntime(e);
 			}

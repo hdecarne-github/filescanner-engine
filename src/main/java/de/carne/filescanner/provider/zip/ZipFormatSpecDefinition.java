@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
-import de.carne.filescanner.engine.input.InputDecoder;
+import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.provider.util.DeflateInputDecoder;
 import de.carne.util.Lazy;
@@ -60,8 +60,8 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected EncodedInputSpecConfig zipEntryEncodedInputConfig() {
-		return new EncodedInputSpecConfig("file data").encodedInputSize(this::encodedInputSize)
-				.inputDecoder(this::inputDecoder).decodedInputName(this::decodedInputName);
+		return new EncodedInputSpecConfig("file data").inputDecoderTable(this::inputDecoderTable)
+				.decodedInputName(this::decodedInputName);
 	}
 
 	private long encodedInputSize() {
@@ -71,22 +71,22 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 		return (ddPresent ? -1l : Integer.toUnsignedLong(this.lfhCompressedSize.get().get().intValue()));
 	}
 
-	private InputDecoder inputDecoder() {
+	private InputDecoderTable inputDecoderTable() {
 		short compressionMethod = this.lfhCompressionMethod.get().get().shortValue();
-		InputDecoder inputDecoder;
+		InputDecoderTable inputDecoderTable;
 
 		switch (compressionMethod) {
 		case 0x00:
-			inputDecoder = InputDecoders.NONE;
+			inputDecoderTable = InputDecoderTable.build(InputDecoders.IDENTITY, encodedInputSize());
 			break;
 		case 0x08:
-			inputDecoder = new DeflateInputDecoder();
+			inputDecoderTable = InputDecoderTable.build(new DeflateInputDecoder(), encodedInputSize());
 			break;
 		default:
-			inputDecoder = InputDecoders
-					.unsupportedInputDecoder("ZIP compression method " + HexFormat.formatShort(compressionMethod));
+			inputDecoderTable = InputDecoderTable.build(InputDecoders.unsupportedInputDecoder(
+					"ZIP compression method " + HexFormat.formatShort(compressionMethod)), encodedInputSize());
 		}
-		return inputDecoder;
+		return inputDecoderTable;
 	}
 
 	private String decodedInputName() {

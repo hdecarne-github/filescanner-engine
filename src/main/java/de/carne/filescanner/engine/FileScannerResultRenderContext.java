@@ -90,7 +90,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	public void render(RenderOutput out, EncodedInputSpec encodedInputSpec) throws IOException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
-		run(() -> encodedInputSpec.inputDecoder().get().render(out));
+		run(() -> encodedInputSpec.inputDecoderTable().get().render(out));
 	}
 
 	/**
