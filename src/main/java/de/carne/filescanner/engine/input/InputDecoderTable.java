@@ -123,11 +123,32 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
 	public InputDecoderTable add(long offset, InputDecoder inputDecoder, long length) {
-		Check.assertTrue(!(InputDecoders.IDENTITY.equals(inputDecoder) || InputDecoders.ZERO.equals(inputDecoder))
-				|| length >= 0);
+		Check.assertTrue(!isStatelessInputDecoder(inputDecoder) || length >= 0);
 
-		this.entries.add(new Entry(offset, inputDecoder, length));
+		Entry entry;
+
+		if (!this.entries.isEmpty()) {
+			Entry lastEntry = this.entries.getLast();
+			long lastOffset = lastEntry.offset();
+			InputDecoder lastInputDecoder = lastEntry.inputDecoder();
+			long lastLength = lastEntry.length();
+
+			if (lastOffset >= 0 && lastLength >= 0 && offset >= 0 && lastOffset + lastLength == offset
+					&& isStatelessInputDecoder(lastInputDecoder) && lastInputDecoder.equals(inputDecoder)) {
+				this.entries.removeLast();
+				entry = new Entry(lastOffset, lastInputDecoder, lastLength + length);
+			} else {
+				entry = new Entry(offset, inputDecoder, length);
+			}
+		} else {
+			entry = new Entry(offset, inputDecoder, length);
+		}
+		this.entries.add(entry);
 		return this;
+	}
+
+	private boolean isStatelessInputDecoder(InputDecoder inputDecoder) {
+		return InputDecoders.IDENTITY.equals(inputDecoder) || InputDecoders.ZERO.equals(inputDecoder);
 	}
 
 	/**
