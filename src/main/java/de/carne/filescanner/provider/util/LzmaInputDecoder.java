@@ -21,33 +21,33 @@ import java.io.IOException;
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.nio.compression.CompressionInfos;
-import de.carne.nio.compression.bzip2.Bzip2Decoder;
-import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
-import de.carne.nio.compression.bzip2.Bzip2Factory;
+import de.carne.nio.compression.lzma.LzmaDecoder;
+import de.carne.nio.compression.lzma.LzmaDecoderProperties;
+import de.carne.nio.compression.lzma.LzmaFactory;
 import de.carne.nio.compression.spi.Decoder;
 
 /**
- * {@linkplain Bzip2Decoder} based {@linkplain InputDecoder}.
+ * {@linkplain LzmaDecoder} based {@linkplain InputDecoder}.
  */
-public class Bzip2InputDecoder extends InputDecoder {
+public class LzmaInputDecoder extends InputDecoder {
 
-	private static final Bzip2Factory FACTORY = new Bzip2Factory();
+	private static final LzmaFactory FACTORY = new LzmaFactory();
 
-	private final Bzip2DecoderProperties properties;
+	private final LzmaDecoderProperties properties;
 
 	/**
-	 * Constructs a new {@linkplain Bzip2InputDecoder} instance.
+	 * Constructs a new {@linkplain LzmaInputDecoder} instance.
 	 */
-	public Bzip2InputDecoder() {
-		this((Bzip2DecoderProperties) FACTORY.defaultDecoderProperties());
+	public LzmaInputDecoder() {
+		this((LzmaDecoderProperties) FACTORY.defaultDecoderProperties());
 	}
 
 	/**
-	 * Constructs a new {@linkplain Bzip2InputDecoder} instance.
+	 * Constructs a new {@linkplain LzmaInputDecoder} instance.
 	 *
 	 * @param properties the decoder properties to use.
 	 */
-	public Bzip2InputDecoder(Bzip2DecoderProperties properties) {
+	public LzmaInputDecoder(LzmaDecoderProperties properties) {
 		super(FACTORY.compressionName());
 		this.properties = properties;
 	}
@@ -57,8 +57,8 @@ public class Bzip2InputDecoder extends InputDecoder {
 	 *
 	 * @return the default decoder properties.
 	 */
-	public static Bzip2DecoderProperties defaultProperties() {
-		return Check.isInstanceOf(FACTORY.defaultDecoderProperties(), Bzip2DecoderProperties.class);
+	public static LzmaDecoderProperties defaultProperties() {
+		return Check.isInstanceOf(FACTORY.defaultDecoderProperties(), LzmaDecoderProperties.class);
 	}
 
 	@Override

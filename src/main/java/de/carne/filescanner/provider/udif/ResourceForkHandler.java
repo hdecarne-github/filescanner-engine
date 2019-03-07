@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Base64;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
@@ -45,10 +44,18 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DecodeAtSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
+import de.carne.filescanner.provider.util.Bzip2InputDecoder;
+import de.carne.filescanner.provider.util.DeflateInputDecoder;
+import de.carne.filescanner.provider.util.LzmaInputDecoder;
+import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
+import de.carne.nio.compression.bzip2.Bzip2Format;
+import de.carne.nio.compression.deflate.DeflateDecoderProperties;
+import de.carne.nio.compression.deflate.DeflateFormat;
+import de.carne.nio.compression.lzma.LzmaDecoderProperties;
+import de.carne.nio.compression.lzma.LzmaFormat;
 
 class ResourceForkHandler extends DefaultHandler {
 
@@ -56,9 +63,37 @@ class ResourceForkHandler extends DefaultHandler {
 
 	private static final SAXParserFactory PARSER_FACTORY = SAXParserFactory.newInstance();
 
+	private static final DeflateInputDecoder ZLIB_INPUT_DECODER;
+
+	static {
+		DeflateDecoderProperties properties = DeflateInputDecoder.defaultProperties();
+
+		properties.setFormatProperty(DeflateFormat.ZLIB);
+		ZLIB_INPUT_DECODER = new DeflateInputDecoder(properties);
+	}
+
+	private static final Bzip2InputDecoder BZ2LIB_INPUT_DECODER;
+
+	static {
+		Bzip2DecoderProperties properties = Bzip2InputDecoder.defaultProperties();
+
+		properties.setFormat(Bzip2Format.BZ2LIB);
+		BZ2LIB_INPUT_DECODER = new Bzip2InputDecoder(properties);
+	}
+
+	private static final LzmaInputDecoder LZMALIB_INPUT_DECODER;
+
+	static {
+		LzmaDecoderProperties properties = LzmaInputDecoder.defaultProperties();
+
+		properties.setFormat(LzmaFormat.LZMALIB);
+		LZMALIB_INPUT_DECODER = new LzmaInputDecoder(properties);
+	}
+
 	private static final String ELEMENT_KEY0 = "plist/dict/key";
 	private static final String ELEMENT_KEY1 = "plist/dict/dict/key";
 	private static final String ELEMENT_KEY2 = "plist/dict/dict/array/dict/key";
+	private static final String ELEMENT_DATA = "plist/dict/dict/array/dict/data";
 
 	private static final String KEY_RESOURCEFORK = "resource-fork";
 	private static final String KEY_BLKX = "blkx";
@@ -68,9 +103,9 @@ class ResourceForkHandler extends DefaultHandler {
 	private final Deque<String> elementStack = new LinkedList<>();
 
 	private @NonNull String[] keyPath = new @NonNull String[] { "", "", "" };
-	private byte @Nullable [] blkxDataBuffer = null;
+	private BlkxDataDecoder blkxDataDecoder = new BlkxDataDecoder();
 	private @Nullable String blkxName = null;
-	private SortedMap<Long, EncodedInputSpec> blkxSpecs = new TreeMap<>();
+	private SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
 
 	public static CompositeSpec parse(InputStream input) throws IOException {
 		ResourceForkHandler handler = new ResourceForkHandler();
@@ -83,35 +118,43 @@ class ResourceForkHandler extends DefaultHandler {
 			throw new IOException("XML parse failure", e);
 		}
 
-		CompositeSpec spec = FormatSpecs.EMPTY;
+		StructSpec parsedSpec = new StructSpec();
 
 		if (!handler.blkxSpecs.isEmpty()) {
-			StructSpec parsedSpec = new StructSpec();
+			DecodeAtSpec dataForkAtSpec = null;
+			StructSpec dataForkSpec = new StructSpec();
 
-			for (Map.Entry<Long, EncodedInputSpec> entry : handler.blkxSpecs.entrySet()) {
-				long blkxPosition = entry.getKey();
-				EncodedInputSpec blkxSpec = entry.getValue();
-				StructSpec dataForkSpec = new StructSpec();
+			dataForkSpec.result("Data fork");
+			for (Map.Entry<BlkxDescriptor, EncodedInputSpec> entry : handler.blkxSpecs.entrySet()) {
+				BlkxDescriptor blkxDescriptor = entry.getKey();
+				long blkxPosition = blkxDescriptor.blkxPosition();
 
-				dataForkSpec.result(formatDataForkName(blkxPosition));
+				if (dataForkAtSpec == null) {
+					dataForkAtSpec = new DecodeAtSpec(dataForkSpec).position(blkxPosition);
+					parsedSpec.add(dataForkAtSpec);
+				}
 
-				dataForkSpec.add(blkxSpec);
+				StructSpec sectorRangeSpec = new StructSpec();
 
-				DecodeAtSpec decodeAtSpec = new DecodeAtSpec(dataForkSpec);
+				sectorRangeSpec.result(formatSectorRangeName(blkxDescriptor));
+				sectorRangeSpec.add(entry.getValue());
 
-				decodeAtSpec.position(blkxPosition);
-				parsedSpec.add(decodeAtSpec);
+				DecodeAtSpec sectorRangeAtAtSpec = new DecodeAtSpec(sectorRangeSpec);
+
+				sectorRangeAtAtSpec.position(blkxPosition);
+				dataForkSpec.add(sectorRangeAtAtSpec);
 			}
-			spec = parsedSpec;
 		}
-		return spec;
+		return parsedSpec;
 	}
 
-	private static String formatDataForkName(long blkxPosition) {
+	private static String formatSectorRangeName(BlkxDescriptor blkxDescriptor) {
 		StringBuilder name = new StringBuilder();
 
-		name.append("Data fork [");
-		HexFormat.formatLong(name, blkxPosition);
+		name.append("Sector[");
+		HexFormat.formatLong(name, blkxDescriptor.sectorStart());
+		name.append('-');
+		HexFormat.formatLong(name, blkxDescriptor.sectorEnd());
 		name.append(']');
 		return name.toString();
 	}
@@ -135,13 +178,17 @@ class ResourceForkHandler extends DefaultHandler {
 			this.keyPath[1] = "";
 			this.keyPath[2] = "";
 		} else if (ELEMENT_KEY1.equals(element)) {
-			this.keyPath[1] = characters;
-			this.keyPath[2] = "";
+			if (KEY_RESOURCEFORK.equals(this.keyPath[0])) {
+				this.keyPath[1] = characters;
+				this.keyPath[2] = "";
+			}
 		} else if (ELEMENT_KEY2.equals(element)) {
-			this.keyPath[2] = characters;
+			if (KEY_BLKX.equals(this.keyPath[1])) {
+				this.keyPath[2] = characters;
+			}
 		} else if (KEY_RESOURCEFORK.equals(this.keyPath[0]) && KEY_BLKX.equals(this.keyPath[1])) {
 			if (KEY_DATA.equals(this.keyPath[2])) {
-				feedBlkxDataBuffer(characters);
+				this.blkxDataDecoder.feed(characters);
 			} else if (KEY_NAME.equals(this.keyPath[2])) {
 				this.blkxName = characters.trim();
 			}
@@ -152,67 +199,58 @@ class ResourceForkHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		String element = this.elementStack.pop();
 
-		if (ELEMENT_KEY1.equals(element) && this.blkxDataBuffer != null && this.blkxName != null) {
+		if (ELEMENT_DATA.equals(element) && !this.blkxDataDecoder.isEmpty() && this.blkxName != null) {
 			try {
-				ByteBuffer blkxData = ByteBuffer.wrap(this.blkxDataBuffer).order(ByteOrder.BIG_ENDIAN);
-				long blkxPosition = decodeBlkxHeader(blkxData);
-				InputDecoderTable blkxDecoderTable = decodeBlkxChunks(blkxData);
-				EncodedInputSpec blkxSpec = new EncodedInputSpec(
-						new EncodedInputSpecConfig(Objects.toString(this.blkxName)).inputDecoderTable(blkxDecoderTable)
-								.decodedInputName("image.bin"));
+				ByteBuffer blkxData = this.blkxDataDecoder.getResult().order(ByteOrder.BIG_ENDIAN);
+				InputDecoderTable blkxDecoderTable = new InputDecoderTable();
+				BlkxDescriptor blkxDescriptor = decodeBlkxChunks(blkxDecoderTable, blkxData,
+						decodeBlkxHeader(blkxData));
 
-				this.blkxSpecs.put(blkxPosition, blkxSpec);
+				if (blkxDecoderTable.size() > 0) {
+					EncodedInputSpec blkxSpec = new EncodedInputSpec(
+							new EncodedInputSpecConfig(Objects.toString(this.blkxName))
+									.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin"));
+
+					this.blkxSpecs.put(blkxDescriptor, blkxSpec);
+				}
 			} catch (IOException e) {
 				LOG.warning(e, "Failed to decode block list ''{0}''", this.blkxName);
 			}
-			this.blkxDataBuffer = null;
+			this.blkxDataDecoder.reset();
 			this.blkxName = null;
 		}
 	}
 
-	private void feedBlkxDataBuffer(String characters) {
-		byte[] data = Base64.getMimeDecoder().decode(characters);
-		byte[] oldDataBuffer = this.blkxDataBuffer;
-
-		if (oldDataBuffer != null) {
-			byte[] newDataBuffer = new byte[oldDataBuffer.length + data.length];
-
-			System.arraycopy(oldDataBuffer, 0, newDataBuffer, 0, oldDataBuffer.length);
-			System.arraycopy(data, 0, newDataBuffer, oldDataBuffer.length, data.length);
-			this.blkxDataBuffer = newDataBuffer;
-		} else {
-			this.blkxDataBuffer = data;
-		}
-	}
-
-	private long decodeBlkxHeader(ByteBuffer blkxData) throws IOException {
-		// Also check for the chunk count needed for chunk decoding
-		if (blkxData.remaining() < 204) {
+	private BlkxDescriptor decodeBlkxHeader(ByteBuffer blkxData) throws IOException {
+		// Check for header as well as the the chunk count needed for chunk decoding
+		if (blkxData.remaining() < (200 + 4)) {
 			throw unexpectedData("Insufficient block list size", blkxData.remaining());
 		}
 
 		int signature = blkxData.getInt();
 		int version = blkxData.getInt();
-		/* long sectorNumber = */ blkxData.getLong();
-		/* long sectorCount = */ blkxData.getLong();
+		long sectorNumber = blkxData.getLong();
+		long sectorCount = blkxData.getLong();
 		long dataOffset = blkxData.getLong();
 
 		if (signature != 0x6d697368 || version != 1 || dataOffset < 0) {
-			throw unexpectedData("Unexpeced block list header data", signature, version, dataOffset);
+			throw unexpectedData("Unexpected block list header data", signature, version, dataOffset);
 		}
 		blkxData.position(blkxData.position() + 42 * 4);
-		return dataOffset;
+		return new BlkxDescriptor(dataOffset, sectorNumber, sectorNumber + sectorCount);
 	}
 
-	private InputDecoderTable decodeBlkxChunks(ByteBuffer blkxData) throws IOException {
-		InputDecoderTable inputDecoderTable = new InputDecoderTable();
-		int numberOfBlockChunks = blkxData.getInt();
+	private BlkxDescriptor decodeBlkxChunks(InputDecoderTable inputDecoderTable, ByteBuffer blkxData,
+			BlkxDescriptor blkxDescriptor) throws IOException {
+		int chunkCount = blkxData.getInt();
 
-		if (blkxData.remaining() != numberOfBlockChunks * 40) {
-			throw unexpectedData("Mismatching block list size", numberOfBlockChunks, blkxData.remaining());
+		if (blkxData.remaining() < chunkCount * 40) {
+			throw unexpectedData("Insufficient block list entry size", blkxData.remaining());
 		}
 
-		for (int chunkIndex = 0; chunkIndex < numberOfBlockChunks; chunkIndex++) {
+		long blkxPosition = blkxDescriptor.blkxPosition();
+
+		for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
 			int entryType = blkxData.getInt();
 			/* int comment = */ blkxData.getInt();
 			/* long chunkSectorNumber = */ blkxData.getLong();
@@ -220,6 +258,10 @@ class ResourceForkHandler extends DefaultHandler {
 			long compressedOffset = blkxData.getLong();
 			long compressedSize = blkxData.getLong();
 
+			if (chunkIndex == 0) {
+				blkxPosition += compressedOffset;
+			}
+			compressedOffset -= blkxPosition;
 			switch (entryType) {
 			case 0x00000000:
 				inputDecoderTable.add(compressedOffset, InputDecoders.ZERO, compressedSize);
@@ -227,17 +269,21 @@ class ResourceForkHandler extends DefaultHandler {
 			case 0x00000001:
 				inputDecoderTable.add(compressedOffset, InputDecoders.IDENTITY, compressedSize);
 				break;
+			case 0x00000002:
+				// Ignore
+				break;
 			case 0x80000004:
 				inputDecoderTable.add(compressedOffset,
 						InputDecoders.unsupportedInputDecoder("Apple Data Compression (ADC)"), compressedSize);
 				break;
 			case 0x80000005:
-				inputDecoderTable.add(compressedOffset, InputDecoders.unsupportedInputDecoder("zLib data compression"),
-						compressedSize);
+				inputDecoderTable.add(compressedOffset, ZLIB_INPUT_DECODER, compressedSize);
 				break;
 			case 0x80000006:
-				inputDecoderTable.add(compressedOffset,
-						InputDecoders.unsupportedInputDecoder("bz2lib data compression"), compressedSize);
+				inputDecoderTable.add(compressedOffset, BZ2LIB_INPUT_DECODER, compressedSize);
+				break;
+			case 0x80000007:
+				inputDecoderTable.add(compressedOffset, LZMALIB_INPUT_DECODER, compressedSize);
 				break;
 			case 0x7ffffffe:
 				// Comment block
@@ -249,7 +295,7 @@ class ResourceForkHandler extends DefaultHandler {
 				throw unexpectedData("Unexpected entry type", entryType);
 			}
 		}
-		return inputDecoderTable;
+		return new BlkxDescriptor(blkxPosition, blkxDescriptor.sectorStart(), blkxDescriptor.sectorEnd());
 	}
 
 	private UnexpectedDataException unexpectedData(String hint, Object... data) {
