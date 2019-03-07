@@ -70,7 +70,6 @@ jar {
 
 test {
 	useJUnitPlatform()
-	maxHeapSize = "2g"
 	testLogging {
 		events "started", "failed", "passed", "skipped"
 		exceptionFormat "full"
