@@ -124,30 +124,30 @@ public final class InputDecodeCache implements Closeable {
 			}
 
 			InputDecoder inputDecoder = entry.inputDecoder();
-			long entryLength = entry.length();
+			long entryEncodedLength = entry.encodedLength();
 			long inputAvailable = inputSize - (start + decodeOffset);
 			long decodeLimit = inputSize;
 
-			if (entryLength >= 0) {
-				if (entryLength > inputAvailable) {
-					throw new InsufficientDataException(input, start + decodeOffset, entryLength, inputAvailable);
+			if (entryEncodedLength >= 0) {
+				if (entryEncodedLength > inputAvailable) {
+					throw new InsufficientDataException(input, start + decodeOffset, entryEncodedLength,
+							inputAvailable);
 				}
-				decodeLimit = start + decodeOffset + entryLength;
+				decodeLimit = start + decodeOffset + entryEncodedLength;
 			}
 
 			if (InputDecoders.IDENTITY.equals(inputDecoder)) {
 				if (inputDecoderTable.size() == 1) {
 					// Use direct access
-					decodedInput = new FileScannerInputRange(name, input, start, start, start + entryLength);
-					decodeOffset = entryLength;
+					decodedInput = new FileScannerInputRange(name, input, start, start, start + entryEncodedLength);
+					decodeOffset = entryEncodedLength;
 				} else {
 					decodedEnd += copyInput(decodedEnd, input, start + decodeOffset,
-							start + decodeOffset + entryLength);
-					decodeOffset += entryLength;
+							start + decodeOffset + entryEncodedLength);
+					decodeOffset += entryEncodedLength;
 				}
 			} else if (InputDecoders.ZERO.equals(inputDecoder)) {
-				decodedEnd += entryLength;
-				decodeOffset += entryLength;
+				decodedEnd += entry.decodedLength();
 				this.cacheFileChannel.position(decodedEnd);
 				// Enforce new cache file size
 				this.cacheFileChannel.write(ByteBuffer.wrap(SPARSE_MARKER));

@@ -71,7 +71,7 @@ final class TarFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private InputDecoderTable getEntryDataInputDecoderTable() {
-		return InputDecoderTable.build(InputDecoders.IDENTITY, getEntryDataSize());
+		return InputDecoderTable.build(InputDecoders.IDENTITY, -1l, getEntryDataSize(), -1l);
 	}
 
 	private long getEntryDataSize() {

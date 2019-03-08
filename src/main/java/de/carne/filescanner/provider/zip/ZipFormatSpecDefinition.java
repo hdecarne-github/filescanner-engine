@@ -77,14 +77,16 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
 		switch (compressionMethod) {
 		case 0x00:
-			inputDecoderTable = InputDecoderTable.build(InputDecoders.IDENTITY, encodedInputSize());
+			inputDecoderTable = InputDecoderTable.build(InputDecoders.IDENTITY, -1l, encodedInputSize(), -1l);
 			break;
 		case 0x08:
-			inputDecoderTable = InputDecoderTable.build(new DeflateInputDecoder(), encodedInputSize());
+			inputDecoderTable = InputDecoderTable.build(new DeflateInputDecoder(), -1l, encodedInputSize(), -1l);
 			break;
 		default:
-			inputDecoderTable = InputDecoderTable.build(InputDecoders.unsupportedInputDecoder(
-					"ZIP compression method " + HexFormat.formatShort(compressionMethod)), encodedInputSize());
+			inputDecoderTable = InputDecoderTable.build(
+					InputDecoders.unsupportedInputDecoder(
+							"ZIP compression method " + HexFormat.formatShort(compressionMethod)),
+					-1l, encodedInputSize(), -1l);
 		}
 		return inputDecoderTable;
 	}

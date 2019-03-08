@@ -51,99 +51,58 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
 	public InputDecoderTable add(InputDecoder inputDecoder) {
-		return add(-1l, inputDecoder, -1l);
-	}
-
-	/**
-	 * Builds a new {@linkplain InputDecoderTable} instance.
-	 *
-	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @return the updated {@linkplain InputDecoderTable} instance.
-	 */
-	public static InputDecoderTable build(long offset, InputDecoder inputDecoder) {
-		return new InputDecoderTable().add(offset, inputDecoder, -1l);
-	}
-
-	/**
-	 * Adds a {@linkplain InputDecoder} to the table.
-	 *
-	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @return the updated {@linkplain InputDecoderTable} instance.
-	 */
-	public InputDecoderTable add(long offset, InputDecoder inputDecoder) {
-		return add(offset, inputDecoder, -1l);
+		return add(inputDecoder, -1l, -1l, -1l);
 	}
 
 	/**
 	 * Builds a new {@linkplain InputDecoderTable} instance.
 	 *
 	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @param length the length of the encoded data stream (use {@code -1l} to determine the length automatically during
-	 * decoding).
+	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
+	 * @param encodedLength the length of the encoded data stream (use {@code -1l} to determine the length automatically
+	 * during decoding).
+	 * @param decodedLength the length of the decoded data stream (use {@code -1l} to determine the length automatically
+	 * during decoding).
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
-	public static InputDecoderTable build(InputDecoder inputDecoder, long length) {
-		return new InputDecoderTable().add(-1l, inputDecoder, length);
+	public static InputDecoderTable build(InputDecoder inputDecoder, long offset, long encodedLength,
+			long decodedLength) {
+		return new InputDecoderTable().add(inputDecoder, offset, encodedLength, decodedLength);
 	}
 
 	/**
 	 * Adds a {@linkplain InputDecoder} to the table.
 	 *
 	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @param length the length of the encoded data stream (use {@code -1l} to determine the length automatically during
-	 * decoding).
-	 * @return the updated {@linkplain InputDecoderTable} instance.
-	 */
-	public InputDecoderTable add(InputDecoder inputDecoder, long length) {
-		return add(-1l, inputDecoder, length);
-	}
-
-	/**
-	 * Builds a new {@linkplain InputDecoderTable} instance.
-	 *
 	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @param length the length of the encoded data stream (use {@code -1l} to determine the length automatically during
-	 * decoding).
+	 * @param encodedLength the length of the encoded data stream (use {@code -1l} to determine the length automatically
+	 * during decoding).
+	 * @param decodedLength the length of the decoded data stream (use {@code -1l} to determine the length automatically
+	 * during decoding).
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
-	public static InputDecoderTable build(long offset, InputDecoder inputDecoder, long length) {
-		return new InputDecoderTable().add(offset, inputDecoder, length);
-	}
+	public InputDecoderTable add(InputDecoder inputDecoder, long offset, long encodedLength, long decodedLength) {
+		Check.assertTrue(!InputDecoders.IDENTITY.equals(inputDecoder) || encodedLength >= 0);
+		Check.assertTrue(!InputDecoders.ZERO.equals(inputDecoder) || decodedLength >= 0);
 
-	/**
-	 * Adds a {@linkplain InputDecoder} to the table.
-	 *
-	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
-	 * @param length the length of the encoded data stream (use {@code -1l} to determine the length automatically during
-	 * decoding).
-	 * @return the updated {@linkplain InputDecoderTable} instance.
-	 */
-	public InputDecoderTable add(long offset, InputDecoder inputDecoder, long length) {
-		Check.assertTrue(!isStatelessInputDecoder(inputDecoder) || length >= 0);
-
-		Entry entry;
+		Entry entry = null;
 
 		if (!this.entries.isEmpty()) {
 			Entry lastEntry = this.entries.getLast();
-			long lastOffset = lastEntry.offset();
 			InputDecoder lastInputDecoder = lastEntry.inputDecoder();
-			long lastLength = lastEntry.length();
+			long lastOffset = lastEntry.offset();
+			long lastEncodedLength = lastEntry.encodedLength();
+			long lastDecodedLength = lastEntry.decodedLength();
 
-			if (lastOffset >= 0 && lastLength >= 0 && offset >= 0 && lastOffset + lastLength == offset
+			if ((offset < 0 || (lastOffset >= 0 && lastEncodedLength >= 0 && lastOffset + lastEncodedLength == offset))
 					&& isStatelessInputDecoder(lastInputDecoder) && lastInputDecoder.equals(inputDecoder)) {
 				this.entries.removeLast();
-				entry = new Entry(lastOffset, lastInputDecoder, lastLength + length);
-			} else {
-				entry = new Entry(offset, inputDecoder, length);
+				entry = new Entry(lastInputDecoder, lastOffset,
+						(encodedLength >= 0 ? lastEncodedLength + encodedLength : encodedLength),
+						(lastDecodedLength >= 0 && decodedLength >= 0 ? lastDecodedLength + decodedLength : -1l));
 			}
-		} else {
-			entry = new Entry(offset, inputDecoder, length);
 		}
-		this.entries.add(entry);
+		this.entries.add(entry != null ? entry : new Entry(inputDecoder, offset, encodedLength, decodedLength));
 		return this;
 	}
 
@@ -175,7 +134,7 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 			for (Entry entry : this.entries) {
 				StringBuilder entryComment = new StringBuilder();
 
-				entryComment.append("// encoder mapping[").append(entryIndex).append("] ");
+				entryComment.append("// encoder mapping[").append(entryIndex).append("] offset:");
 
 				long entryOffset = entry.offset();
 
@@ -185,13 +144,22 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 					entryComment.append('*');
 				}
 
-				long entryLength = entry.length();
+				long entryEncodedLength = entry.encodedLength();
 
-				if (entryLength >= 0) {
-					entryComment.append(":+");
-					HexFormat.formatLong(entryComment, entryLength);
+				entryComment.append(" encoded:");
+				if (entryEncodedLength >= 0) {
+					HexFormat.formatLong(entryComment, entryEncodedLength);
 				} else {
-					entryComment.append(":*");
+					entryComment.append('*');
+				}
+
+				long entryDecodedLength = entry.decodedLength();
+
+				entryComment.append(" decoded:");
+				if (entryDecodedLength >= 0) {
+					HexFormat.formatLong(entryComment, entryDecodedLength);
+				} else {
+					entryComment.append('*');
 				}
 				out.setStyle(RenderStyle.COMMENT).writeln(entryComment.toString());
 				entry.inputDecoder().render(out);
@@ -205,14 +173,25 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 	 */
 	public class Entry {
 
-		private final long offset;
 		private final InputDecoder inputDecoder;
-		private final long length;
+		private final long offset;
+		private final long encodedLength;
+		private final long decodedLength;
 
-		Entry(long offset, InputDecoder inputDecoder, long length) {
-			this.offset = offset;
+		Entry(InputDecoder inputDecoder, long offset, long encodedLength, long decodedLength) {
 			this.inputDecoder = inputDecoder;
-			this.length = length;
+			this.offset = offset;
+			this.encodedLength = encodedLength;
+			this.decodedLength = decodedLength;
+		}
+
+		/**
+		 * Gets the {@linkplain InputDecoder} to use for decoding.
+		 *
+		 * @return the {@linkplain InputDecoder} to use for decoding.
+		 */
+		public InputDecoder inputDecoder() {
+			return this.inputDecoder;
 		}
 
 		/**
@@ -228,15 +207,6 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 		}
 
 		/**
-		 * Gets the {@linkplain InputDecoder} to use for decoding.
-		 *
-		 * @return the {@linkplain InputDecoder} to use for decoding.
-		 */
-		public InputDecoder inputDecoder() {
-			return this.inputDecoder;
-		}
-
-		/**
 		 * Gets the length of the encoded data.
 		 * <p>
 		 * A negative length indicates that the actual length has to be determined during decoding.
@@ -244,30 +214,20 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 		 *
 		 * @return the length of the encoded data.
 		 */
-		public long length() {
-			return this.length;
+		public long encodedLength() {
+			return this.encodedLength;
 		}
 
-		@Override
-		public String toString() {
-			StringBuilder buffer = new StringBuilder();
-
-			buffer.append(super.toString());
-			buffer.append('[');
-			if (this.offset >= 0) {
-				HexFormat.formatLong(buffer, this.offset);
-			} else {
-				buffer.append('*');
-			}
-			buffer.append(':');
-			if (this.length >= 0) {
-				HexFormat.formatLong(buffer, this.length);
-			} else {
-				buffer.append('*');
-			}
-			buffer.append("]:");
-			buffer.append(this.inputDecoder.name());
-			return buffer.toString();
+		/**
+		 * Gets the length of the decoded data.
+		 * <p>
+		 * A negative length indicates that the actual length has to be determined during decoding.
+		 * </p>
+		 *
+		 * @return the length of the encoded data.
+		 */
+		public long decodedLength() {
+			return this.decodedLength;
 		}
 
 	}

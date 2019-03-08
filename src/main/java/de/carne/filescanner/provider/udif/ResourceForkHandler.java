@@ -254,7 +254,7 @@ class ResourceForkHandler extends DefaultHandler {
 			int entryType = blkxData.getInt();
 			/* int comment = */ blkxData.getInt();
 			/* long chunkSectorNumber = */ blkxData.getLong();
-			/* long chunkSectorCount = */ blkxData.getLong();
+			long chunkSectorCount = blkxData.getLong();
 			long compressedOffset = blkxData.getLong();
 			long compressedSize = blkxData.getLong();
 
@@ -264,26 +264,24 @@ class ResourceForkHandler extends DefaultHandler {
 			compressedOffset -= blkxPosition;
 			switch (entryType) {
 			case 0x00000000:
-				inputDecoderTable.add(compressedOffset, InputDecoders.ZERO, compressedSize);
+			case 0x00000002:
+				inputDecoderTable.add(InputDecoders.ZERO, -1l, -1l, chunkSectorCount * 512);
 				break;
 			case 0x00000001:
-				inputDecoderTable.add(compressedOffset, InputDecoders.IDENTITY, compressedSize);
-				break;
-			case 0x00000002:
-				// Ignore
+				inputDecoderTable.add(InputDecoders.IDENTITY, compressedOffset, compressedSize, -1l);
 				break;
 			case 0x80000004:
-				inputDecoderTable.add(compressedOffset,
-						InputDecoders.unsupportedInputDecoder("Apple Data Compression (ADC)"), compressedSize);
+				inputDecoderTable.add(InputDecoders.unsupportedInputDecoder("Apple Data Compression (ADC)"),
+						compressedOffset, compressedSize, -1l);
 				break;
 			case 0x80000005:
-				inputDecoderTable.add(compressedOffset, ZLIB_INPUT_DECODER, compressedSize);
+				inputDecoderTable.add(ZLIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
 				break;
 			case 0x80000006:
-				inputDecoderTable.add(compressedOffset, BZ2LIB_INPUT_DECODER, compressedSize);
+				inputDecoderTable.add(BZ2LIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
 				break;
 			case 0x80000007:
-				inputDecoderTable.add(compressedOffset, LZMALIB_INPUT_DECODER, compressedSize);
+				inputDecoderTable.add(LZMALIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
 				break;
 			case 0x7ffffffe:
 				// Comment block
