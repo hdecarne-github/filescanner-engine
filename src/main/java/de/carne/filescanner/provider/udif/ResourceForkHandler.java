@@ -92,8 +92,8 @@ class ResourceForkHandler extends DefaultHandler {
 
 	private static final String ELEMENT_KEY0 = "plist/dict/key";
 	private static final String ELEMENT_KEY1 = "plist/dict/dict/key";
+	private static final String ELEMENT_DICT2 = "plist/dict/dict/array/dict";
 	private static final String ELEMENT_KEY2 = "plist/dict/dict/array/dict/key";
-	private static final String ELEMENT_DATA = "plist/dict/dict/array/dict/data";
 
 	private static final String KEY_RESOURCEFORK = "resource-fork";
 	private static final String KEY_BLKX = "blkx";
@@ -199,22 +199,25 @@ class ResourceForkHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		String element = this.elementStack.pop();
 
-		if (ELEMENT_DATA.equals(element) && !this.blkxDataDecoder.isEmpty() && this.blkxName != null) {
-			try {
-				ByteBuffer blkxData = this.blkxDataDecoder.getResult().order(ByteOrder.BIG_ENDIAN);
-				InputDecoderTable blkxDecoderTable = new InputDecoderTable();
-				BlkxDescriptor blkxDescriptor = decodeBlkxChunks(blkxDecoderTable, blkxData,
-						decodeBlkxHeader(blkxData));
+		if (ELEMENT_DICT2.equals(element) && KEY_RESOURCEFORK.equals(this.keyPath[0])
+				&& KEY_BLKX.equals(this.keyPath[1])) {
+			if (!this.blkxDataDecoder.isEmpty() && this.blkxName != null) {
+				try {
+					ByteBuffer blkxData = this.blkxDataDecoder.getResult().order(ByteOrder.BIG_ENDIAN);
+					InputDecoderTable blkxDecoderTable = new InputDecoderTable();
+					BlkxDescriptor blkxDescriptor = decodeBlkxChunks(blkxDecoderTable, blkxData,
+							decodeBlkxHeader(blkxData));
 
-				if (blkxDecoderTable.size() > 0) {
-					EncodedInputSpec blkxSpec = new EncodedInputSpec(
-							new EncodedInputSpecConfig(Objects.toString(this.blkxName))
-									.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin"));
+					if (blkxDecoderTable.size() > 0) {
+						EncodedInputSpec blkxSpec = new EncodedInputSpec(
+								new EncodedInputSpecConfig(Objects.toString(this.blkxName))
+										.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin"));
 
-					this.blkxSpecs.put(blkxDescriptor, blkxSpec);
+						this.blkxSpecs.put(blkxDescriptor, blkxSpec);
+					}
+				} catch (IOException e) {
+					LOG.warning(e, "Failed to decode block list ''{0}''", this.blkxName);
 				}
-			} catch (IOException e) {
-				LOG.warning(e, "Failed to decode block list ''{0}''", this.blkxName);
 			}
 			this.blkxDataDecoder.reset();
 			this.blkxName = null;
