@@ -128,6 +128,7 @@ import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.filescanner.engine.util.StringHelper;
+import de.carne.filescanner.provider.util.AppleDateRenderer;
 import de.carne.filescanner.provider.util.DosDateRenderer;
 import de.carne.filescanner.provider.util.DosTimeRenderer;
 import de.carne.util.Lazy;
@@ -204,6 +205,8 @@ public abstract class FormatSpecDefinition {
 		this.wordAttributeRenderer.put(DosTimeRenderer.class.getSimpleName(), DosTimeRenderer.RENDERER);
 		// @DosDateRenderer
 		this.wordAttributeRenderer.put(DosDateRenderer.class.getSimpleName(), DosDateRenderer.RENDERER);
+		// @AppleDateRenderer
+		this.dwordAttributeRenderer.put(AppleDateRenderer.class.getSimpleName(), AppleDateRenderer.RENDERER);
 	}
 
 	/**

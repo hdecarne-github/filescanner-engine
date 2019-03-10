@@ -3,6 +3,7 @@ de.carne.filescanner.provider.bzip2.Bzip2Format
 de.carne.filescanner.provider.exe.ExeFormat
 de.carne.filescanner.provider.gif.GifFormat
 de.carne.filescanner.provider.gzip.GzipFormat
+de.carne.filescanner.provider.hfsplus.HfsPlusFormat
 de.carne.filescanner.provider.jpeg.JpegFormat
 de.carne.filescanner.provider.png.PngFormat
 de.carne.filescanner.provider.tar.TarFormat

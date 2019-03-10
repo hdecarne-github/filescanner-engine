@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// HFS+ file format: https://en.wikipedia.org/wiki/HFS_Plus
+//
+
+// Symbols
+
+SIGNATURE_SYMBOLS:
+word_symbols {
+	0x482b: "HFS Plus volume"
+	0x4858: "HFSX volume"
+}
+
+VERSION_SYMBOLS:
+word_symbols {
+	4: "kHFSPlusVersion"
+	5: "kHFSXVersion"
+}
+
+VOLUME_ATTRIBUTE_SYMBOLS:
+dword_flag_symbols {
+	0x00008000: "kHFSVolumeSoftwareLockBit"	
+	0x00002000: "kHFSVolumeJournaledBit"
+	0x00001000: "kHFSCatalogNodeIDsReusedBit"
+	0x00000800: "kHFSBootVolumeInconsistentBit"
+	0x00000400: "kHFSVolumeNoCacheRequiredBit"
+	0x00000200: "kHFSVolumeSparedBlocksBit"
+	0x00000100: "kHFSVolumeUnmountedBit"
+	0x00000080: "kHFSVolumeHardwareLockBit"
+}
+
+// Specs
+
+VOLUME_HEADER:
+struct "HFSPlusVolumeHeader" {
+	word "signature"
+		->validate(@SIGNATURE_SYMBOLS)
+		->renderer(@SIGNATURE_SYMBOLS)
+	word "version"
+		->validate(@VERSION_SYMBOLS)
+		->renderer(@VERSION_SYMBOLS)
+	dword "attributes"
+		->renderer(@VOLUME_ATTRIBUTE_SYMBOLS)
+	dword "lastMountedVersion"
+	dword "journalInfoBlock"
+	dword "createDate"
+		->renderer(@AppleDateRenderer)
+	dword "modifyDate"
+		->renderer(@AppleDateRenderer)
+	dword "backupDate"
+		->renderer(@AppleDateRenderer)
+	dword "checkedDate"
+		->renderer(@AppleDateRenderer)
+	dword "fileCount"
+		->format(@PrettyFormat)
+	dword "folderCount"
+		->format(@PrettyFormat)
+	dword "blockSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "totalBlocks"
+		->format(@PrettyFormat)
+	dword "freeBlocks"
+		->format(@PrettyFormat)
+	dword "nextAllocation"
+	dword "rsrcClumpSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "dataClumpSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "nextCatalogID"
+	dword "writeCount"
+		->format(@PrettyFormat)
+	qword "encodingsBitmap"
+	dword[8] "finderInfo"
+}	->bigEndian()
+
+HFSPLUS_DISK_IMAGE:
+format_spec "HFS+ disk image" {
+	@VOLUME_HEADER
+}	->bigEndian()
