@@ -134,34 +134,31 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 
 				long entryOffset = entry.offset();
 
-				if (entryOffset >= 0) {
-					HexFormat.formatLong(entryComment, entryOffset);
-				} else {
-					entryComment.append('*');
-				}
+				formatMappingValue(entryComment, entryOffset);
 
 				long entryEncodedLength = entry.encodedLength();
 
 				entryComment.append(" encoded:");
-				if (entryEncodedLength >= 0) {
-					HexFormat.formatLong(entryComment, entryEncodedLength);
-				} else {
-					entryComment.append('*');
-				}
+				formatMappingValue(entryComment, entryEncodedLength);
 
 				long entryDecodedLength = entry.decodedLength();
 
 				entryComment.append(" decoded:");
-				if (entryDecodedLength >= 0) {
-					HexFormat.formatLong(entryComment, entryDecodedLength);
-				} else {
-					entryComment.append('*');
-				}
+				formatMappingValue(entryComment, entryDecodedLength);
 				out.setStyle(RenderStyle.COMMENT).writeln(entryComment.toString());
 				entry.inputDecoder().render(out);
 				entryIndex++;
 			}
 		}
+	}
+
+	private StringBuilder formatMappingValue(StringBuilder buffer, long value) {
+		if (value >= 0) {
+			HexFormat.formatLong(buffer, value);
+		} else {
+			buffer.append('*');
+		}
+		return buffer;
 	}
 
 	/**
