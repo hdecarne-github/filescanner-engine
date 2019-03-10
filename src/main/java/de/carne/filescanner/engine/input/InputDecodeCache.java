@@ -106,7 +106,7 @@ public final class InputDecodeCache implements Closeable {
 			throws IOException {
 		int inputDecoderTableSize = inputDecoderTable.size();
 		@SuppressWarnings("resource") MappedFileScannerInput mappedInput = new MappedFileScannerInput(name);
-		long mappingExtent = 0;
+		long mappingOffset = 0;
 		Decoded decoded = null;
 
 		for (InputDecoderTable.Entry entry : inputDecoderTable) {
@@ -122,16 +122,16 @@ public final class InputDecodeCache implements Closeable {
 				long entryOffset = entry.offset();
 
 				if (entryOffset >= 0) {
-					if (mappingExtent > entryOffset) {
+					if (mappingOffset > entryOffset) {
 						throw new InvalidPositionException(input, start + entryOffset);
 					}
-					mappingExtent = entryOffset;
+					mappingOffset = entryOffset;
 				}
 
 				long encodedLength = entry.encodedLength();
 
-				mappedInput.add(input, mappingExtent, encodedLength);
-				mappingExtent += encodedLength;
+				mappedInput.add(input, start + mappingOffset, start + mappingOffset + encodedLength);
+				mappingOffset += encodedLength;
 			} else if (InputDecoders.isZero(inputDecoder)) {
 				mappedInput.add(new ZeroFileScannerInput(entry.decodedLength()), 0, entry.decodedLength());
 			} else {
@@ -139,7 +139,7 @@ public final class InputDecodeCache implements Closeable {
 				decoded = decodeInputToCacheFile(name, inputDecoderTable, input, start);
 			}
 		}
-		return (decoded != null ? decoded : new Decoded(mappedInput, mappingExtent));
+		return (decoded != null ? decoded : new Decoded(mappedInput, mappingOffset));
 	}
 
 	@SuppressWarnings("resource")

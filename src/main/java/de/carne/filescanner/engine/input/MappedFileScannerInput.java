@@ -54,6 +54,7 @@ public class MappedFileScannerInput extends FileScannerInput {
 		Check.assertTrue(start <= end);
 
 		if (start < end) {
+
 			this.mappings.put(size(), new Mapping(input, start, end));
 		}
 		return this;
@@ -68,16 +69,17 @@ public class MappedFileScannerInput extends FileScannerInput {
 	public long size() {
 		Map.Entry<Long, Mapping> lastEntry = this.mappings.lastEntry();
 
-		return (lastEntry != null ? lastEntry.getKey().longValue() + lastEntry.getValue().length() : 0);
+		return (lastEntry != null ? lastEntry.getKey().longValue() + lastEntry.getValue().length() : 0l);
 	}
 
 	@Override
 	public int read(ByteBuffer buffer, long position) throws IOException {
-		Map.Entry<Long, Mapping> entry = this.mappings.ceilingEntry(position);
+		long readPosition = position;
 		int totalRead = -1;
+		Map.Entry<Long, Mapping> entry = this.mappings.floorEntry(position);
 
 		while (entry != null && buffer.hasRemaining()) {
-			long mappingOffset = position - entry.getKey();
+			long mappingOffset = readPosition - entry.getKey();
 			Mapping mapping = entry.getValue();
 			long mappingRemaining = mapping.length() - mappingOffset;
 
@@ -85,8 +87,9 @@ public class MappedFileScannerInput extends FileScannerInput {
 				int read = mapping.read(buffer, mappingOffset);
 
 				if (read > 0) {
+					readPosition += read;
 					totalRead = Math.max(0, totalRead) + read;
-					entry = nextMapping(entry, read);
+					entry = nextMapping(readPosition);
 				} else {
 					entry = null;
 				}
@@ -97,10 +100,11 @@ public class MappedFileScannerInput extends FileScannerInput {
 		return totalRead;
 	}
 
-	private Map.@Nullable Entry<Long, Mapping> nextMapping(Map.Entry<Long, Mapping> current, int step) {
-		Map.@Nullable Entry<Long, Mapping> next = this.mappings.ceilingEntry(current.getKey() + step);
+	private Map.@Nullable Entry<Long, Mapping> nextMapping(long nextOffset) {
+		Long nextKey = Long.valueOf(nextOffset);
+		Map.@Nullable Entry<Long, Mapping> next = this.mappings.floorEntry(nextKey);
 
-		return (next != current ? next : null);
+		return (next != null && next.getKey().equals(nextKey) ? next : null);
 	}
 
 	private class Mapping {

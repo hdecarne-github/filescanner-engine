@@ -49,8 +49,8 @@ public class ZeroFileScannerInput extends FileScannerInput {
 
 	@Override
 	public int read(ByteBuffer buffer, long position) {
-		int remaining = (int) Math.min(buffer.remaining(), this.size - position);
-		int read = -1;
+		int read = (int) Math.min(buffer.remaining(), this.size - position);
+		int remaining = read;
 
 		while (remaining > 0) {
 			int putLength = Math.min(buffer.remaining(), ZEROS.length);
