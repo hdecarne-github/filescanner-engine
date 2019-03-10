@@ -101,9 +101,56 @@ public final class InputDecodeCache implements Closeable {
 	 * @return a {@linkplain Decoded} instance containing the decode result.
 	 * @throws IOException if an I/O error occurs.
 	 */
+	@SuppressWarnings({ "squid:S2095", "squid:S3776" })
+	public Decoded decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input, long start)
+			throws IOException {
+		int inputDecoderTableSize = inputDecoderTable.size();
+		@SuppressWarnings("resource") MappedFileScannerInput mappedInput = new MappedFileScannerInput(name);
+		long mappingExtent = 0;
+		Decoded decoded = null;
+
+		for (InputDecoderTable.Entry entry : inputDecoderTable) {
+			if (decoded != null) {
+				break;
+			}
+
+			InputDecoder inputDecoder = entry.inputDecoder();
+
+			if (inputDecoderTableSize == 1 && InputDecoders.isIdentity(inputDecoder)) {
+				decoded = decodeInputDirect(name, input, start, Math.max(0l, entry.offset()), entry.encodedLength());
+			} else if (InputDecoders.isIdentity(inputDecoder)) {
+				long entryOffset = entry.offset();
+
+				if (entryOffset >= 0) {
+					if (mappingExtent > entryOffset) {
+						throw new InvalidPositionException(input, start + entryOffset);
+					}
+					mappingExtent = entryOffset;
+				}
+
+				long encodedLength = entry.encodedLength();
+
+				mappedInput.add(input, mappingExtent, encodedLength);
+				mappingExtent += encodedLength;
+			} else if (InputDecoders.isZero(inputDecoder)) {
+				mappedInput.add(new ZeroFileScannerInput(entry.decodedLength()), 0, entry.decodedLength());
+			} else {
+				// At least one non-identity-zero decoder is present; use the cache file
+				decoded = decodeInputToCacheFile(name, inputDecoderTable, input, start);
+			}
+		}
+		return (decoded != null ? decoded : new Decoded(mappedInput, mappingExtent));
+	}
+
+	@SuppressWarnings("resource")
+	private Decoded decodeInputDirect(String name, FileScannerInput input, long start, long offset, long length) {
+		return new Decoded(new FileScannerInputRange(name, input, start, start + offset, start + offset + length),
+				length);
+	}
+
 	@SuppressWarnings({ "resource", "squid:S3776" })
-	public synchronized Decoded decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
-			long start) throws IOException {
+	private synchronized Decoded decodeInputToCacheFile(String name, InputDecoderTable inputDecoderTable,
+			FileScannerInput input, long start) throws IOException {
 		// Discard any trailing data (caused by previously failed decode runs)
 		this.cacheFileChannel.truncate(this.cacheExtent);
 
@@ -137,15 +184,9 @@ public final class InputDecodeCache implements Closeable {
 			}
 
 			if (InputDecoders.IDENTITY.equals(inputDecoder)) {
-				if (inputDecoderTable.size() == 1) {
-					// Use direct access
-					decodedInput = new FileScannerInputRange(name, input, start, start, start + entryEncodedLength);
-					decodeOffset = entryEncodedLength;
-				} else {
-					decodedEnd += copyInput(decodedEnd, input, start + decodeOffset,
-							start + decodeOffset + entryEncodedLength);
-					decodeOffset += entryEncodedLength;
-				}
+				decodedEnd += copyInput(decodedEnd, input, start + decodeOffset,
+						start + decodeOffset + entryEncodedLength);
+				decodeOffset += entryEncodedLength;
 			} else if (InputDecoders.ZERO.equals(inputDecoder)) {
 				decodedEnd += entry.decodedLength();
 				this.cacheFileChannel.position(decodedEnd);
@@ -158,9 +199,7 @@ public final class InputDecodeCache implements Closeable {
 				decodeOffset += decoder.totalIn();
 			}
 		}
-		if (decodedInput == null) {
-			decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedStart, decodedStart, decodedEnd);
-		}
+		decodedInput = new FileScannerInputRange(name, this.cacheFileInput, decodedStart, decodedStart, decodedEnd);
 		this.cacheExtent = decodedEnd;
 		return new Decoded(decodedInput, decodeOffset);
 	}

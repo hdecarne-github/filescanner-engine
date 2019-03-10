@@ -45,6 +45,37 @@ public class InputDecoders {
 	public static final InputDecoder ZERO = new NoInputDecoder("sparse");
 
 	/**
+	 * Checks whether an {@linkplain InputDecoder} is the {@linkplain #IDENTITY} decoder.
+	 *
+	 * @param inputDecoder the {@linkplain InputDecoder} to check.
+	 * @return {@code true} if the submitted {@linkplain InputDecoder} instance is the {@linkplain #IDENTITY} decoder.
+	 */
+	public static boolean isIdentity(InputDecoder inputDecoder) {
+		return IDENTITY.equals(inputDecoder);
+	}
+
+	/**
+	 * Checks whether an {@linkplain InputDecoder} is the {@linkplain #ZERO} decoder.
+	 *
+	 * @param inputDecoder the {@linkplain InputDecoder} to check.
+	 * @return {@code true} if the submitted {@linkplain InputDecoder} instance is the {@linkplain #ZERO} decoder.
+	 */
+	public static boolean isZero(InputDecoder inputDecoder) {
+		return ZERO.equals(inputDecoder);
+	}
+
+	/**
+	 * Checks whether an {@linkplain InputDecoder} is the {@linkplain #IDENTITY} or the {@linkplain #ZERO} decoder.
+	 *
+	 * @param inputDecoder the {@linkplain InputDecoder} to check.
+	 * @return {@code true} if the submitted {@linkplain InputDecoder} instance is the {@linkplain #IDENTITY} or
+	 * {@linkplain #ZERO} decoder.
+	 */
+	public static boolean isIdentityOrZero(InputDecoder inputDecoder) {
+		return IDENTITY.equals(inputDecoder) || ZERO.equals(inputDecoder);
+	}
+
+	/**
 	 * Creates an {@linkplain InputDecoder} instance for an unsupported encoding format that fails with a corresponding
 	 * error message.
 	 *

@@ -95,7 +95,7 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 			long lastDecodedLength = lastEntry.decodedLength();
 
 			if ((offset < 0 || (lastOffset >= 0 && lastEncodedLength >= 0 && lastOffset + lastEncodedLength == offset))
-					&& isStatelessInputDecoder(lastInputDecoder) && lastInputDecoder.equals(inputDecoder)) {
+					&& InputDecoders.isIdentityOrZero(lastInputDecoder) && lastInputDecoder.equals(inputDecoder)) {
 				this.entries.removeLast();
 				entry = new Entry(lastInputDecoder, lastOffset,
 						(encodedLength >= 0 ? lastEncodedLength + encodedLength : encodedLength),
@@ -104,10 +104,6 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 		}
 		this.entries.add(entry != null ? entry : new Entry(inputDecoder, offset, encodedLength, decodedLength));
 		return this;
-	}
-
-	private boolean isStatelessInputDecoder(InputDecoder inputDecoder) {
-		return InputDecoders.IDENTITY.equals(inputDecoder) || InputDecoders.ZERO.equals(inputDecoder);
 	}
 
 	/**
