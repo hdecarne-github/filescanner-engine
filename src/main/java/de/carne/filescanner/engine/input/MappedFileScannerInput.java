@@ -43,6 +43,17 @@ public class MappedFileScannerInput extends FileScannerInput {
 	}
 
 	/**
+	 * Adds a mapping for the given input data to this input.
+	 *
+	 * @param input the input to map.
+	 * @return the updated {@linkplain MappedFileScannerInput} instance.
+	 * @throws IOException if an I/O error occurs while determining the input's size.
+	 */
+	public MappedFileScannerInput add(FileScannerInput input) throws IOException {
+		return add(input, 0, input.size());
+	}
+
+	/**
 	 * Adds a mapping for the given input data section to this input.
 	 *
 	 * @param input the input to map.
@@ -54,7 +65,6 @@ public class MappedFileScannerInput extends FileScannerInput {
 		Check.assertTrue(start <= end);
 
 		if (start < end) {
-
 			this.mappings.put(size(), new Mapping(input, start, end));
 		}
 		return this;

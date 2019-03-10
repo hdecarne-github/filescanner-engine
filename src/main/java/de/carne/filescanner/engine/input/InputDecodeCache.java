@@ -133,7 +133,7 @@ public final class InputDecodeCache implements Closeable {
 				mappedInput.add(input, start + mappingOffset, start + mappingOffset + encodedLength);
 				mappingOffset += encodedLength;
 			} else if (InputDecoders.isZero(inputDecoder)) {
-				mappedInput.add(new ZeroFileScannerInput(entry.decodedLength()), 0, entry.decodedLength());
+				mappedInput.add(new ZeroFileScannerInput(entry.decodedLength()));
 			} else {
 				// At least one non-identity-zero decoder is present; use the cache file
 				decoded = decodeInputToCacheFile(name, inputDecoderTable, input, start);
