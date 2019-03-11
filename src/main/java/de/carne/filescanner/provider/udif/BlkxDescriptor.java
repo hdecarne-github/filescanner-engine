@@ -21,17 +21,23 @@ import org.eclipse.jdt.annotation.Nullable;
 final class BlkxDescriptor implements Comparable<BlkxDescriptor> {
 
 	private final long blkxPosition;
+	private final int dataChunkCount;
 	private final long sectorStart;
 	private final long sectorEnd;
 
-	public BlkxDescriptor(long blkxPosition, long sectorStart, long sectorEnd) {
+	public BlkxDescriptor(long blkxPosition, int dataChunkCount, long sectorStart, long sectorEnd) {
 		this.blkxPosition = blkxPosition;
+		this.dataChunkCount = dataChunkCount;
 		this.sectorStart = sectorStart;
 		this.sectorEnd = sectorEnd;
 	}
 
 	public long blkxPosition() {
 		return this.blkxPosition;
+	}
+
+	public int dataChunkCount() {
+		return this.dataChunkCount;
 	}
 
 	public long sectorStart() {

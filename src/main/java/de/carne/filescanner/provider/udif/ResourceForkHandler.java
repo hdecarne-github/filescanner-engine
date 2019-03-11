@@ -208,7 +208,7 @@ class ResourceForkHandler extends DefaultHandler {
 					BlkxDescriptor blkxDescriptor = decodeBlkxChunks(blkxDecoderTable, blkxData,
 							decodeBlkxHeader(blkxData));
 
-					if (blkxDecoderTable.size() > 0) {
+					if (blkxDescriptor.dataChunkCount() > 0) {
 						EncodedInputSpec blkxSpec = new EncodedInputSpec(
 								new EncodedInputSpecConfig(Objects.toString(this.blkxName))
 										.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin"));
@@ -240,7 +240,7 @@ class ResourceForkHandler extends DefaultHandler {
 			throw unexpectedData("Unexpected block list header data", signature, version, dataOffset);
 		}
 		blkxData.position(blkxData.position() + 42 * 4);
-		return new BlkxDescriptor(dataOffset, sectorNumber, sectorNumber + sectorCount);
+		return new BlkxDescriptor(dataOffset, 0, sectorNumber, sectorNumber + sectorCount);
 	}
 
 	private BlkxDescriptor decodeBlkxChunks(InputDecoderTable inputDecoderTable, ByteBuffer blkxData,
@@ -252,6 +252,7 @@ class ResourceForkHandler extends DefaultHandler {
 		}
 
 		long blkxPosition = blkxDescriptor.blkxPosition();
+		int dataChunkCount = 0;
 
 		for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
 			int entryType = blkxData.getInt();
@@ -272,19 +273,24 @@ class ResourceForkHandler extends DefaultHandler {
 				break;
 			case 0x00000001:
 				inputDecoderTable.add(InputDecoders.IDENTITY, compressedOffset, compressedSize, -1l);
+				dataChunkCount++;
 				break;
 			case 0x80000004:
 				inputDecoderTable.add(InputDecoders.unsupportedInputDecoder("Apple Data Compression (ADC)"),
 						compressedOffset, compressedSize, -1l);
+				dataChunkCount++;
 				break;
 			case 0x80000005:
 				inputDecoderTable.add(ZLIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
+				dataChunkCount++;
 				break;
 			case 0x80000006:
 				inputDecoderTable.add(BZ2LIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
+				dataChunkCount++;
 				break;
 			case 0x80000007:
 				inputDecoderTable.add(LZMALIB_INPUT_DECODER, compressedOffset, compressedSize, -1l);
+				dataChunkCount++;
 				break;
 			case 0x7ffffffe:
 				// Comment block
@@ -296,7 +302,8 @@ class ResourceForkHandler extends DefaultHandler {
 				throw unexpectedData("Unexpected entry type", entryType);
 			}
 		}
-		return new BlkxDescriptor(blkxPosition, blkxDescriptor.sectorStart(), blkxDescriptor.sectorEnd());
+		return new BlkxDescriptor(blkxPosition, dataChunkCount, blkxDescriptor.sectorStart(),
+				blkxDescriptor.sectorEnd());
 	}
 
 	private UnexpectedDataException unexpectedData(String hint, Object... data) {
