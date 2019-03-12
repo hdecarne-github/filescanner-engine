@@ -60,7 +60,7 @@ public abstract class FlagRenderer<T> extends LinkedHashMap<T, String> implement
 					}
 					currentSymbolFlag = nextSymbolFlag;
 					nextSymbolFlag = (symbolEntries.hasNext() ? symbolEntries.next().getKey() : null);
-				} else {
+				} else if (testFlag(value, flag)) {
 					unknownFlags = (unknownFlags != null ? combineFlags(unknownFlags, flag) : flag);
 				}
 			}
