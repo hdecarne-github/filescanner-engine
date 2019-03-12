@@ -54,10 +54,15 @@ final class BlkxDataDecoder {
 		return ByteBuffer.wrap(this.buffer, 0, this.decoded);
 	}
 
-	public void feed(String characters) {
-		characters.chars().forEach(this::feed0);
+	public void feed(char[] ch, int start, int length) {
+		int end = start + length;
+
+		for (int chIndex = start; chIndex < end; chIndex++) {
+			feed0(ch[chIndex]);
+		}
 	}
 
+	@SuppressWarnings("squid:S3776")
 	private void feed0(int c) {
 		if (this.exception == null) {
 			int value = -1;

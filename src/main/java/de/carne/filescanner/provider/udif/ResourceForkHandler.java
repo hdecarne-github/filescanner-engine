@@ -23,12 +23,10 @@ import java.nio.ByteOrder;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -100,10 +98,10 @@ class ResourceForkHandler extends DefaultHandler {
 
 	private final Deque<String> elementStack = new LinkedList<>();
 
-	private @NonNull String[] keyPath = new @NonNull String[] { "", "", "" };
-	private BlkxDataDecoder blkxDataDecoder = new BlkxDataDecoder();
-	private @Nullable String blkxName = null;
-	private SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
+	private final @NonNull String[] keyPath = new @NonNull String[] { "", "", "" };
+	private final BlkxDataDecoder blkxDataDecoder = new BlkxDataDecoder();
+	private final StringBuilder blkxName = new StringBuilder();
+	private final SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
 
 	@SuppressWarnings("squid:S2755")
 	public static CompositeSpec parse(InputStream input) throws IOException {
@@ -172,26 +170,25 @@ class ResourceForkHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		String element = this.elementStack.peek();
-		String characters = new String(ch, start, length);
 
 		if (ELEMENT_KEY0.equals(element)) {
-			this.keyPath[0] = characters;
+			this.keyPath[0] = new String(ch, start, length);
 			this.keyPath[1] = "";
 			this.keyPath[2] = "";
 		} else if (ELEMENT_KEY1.equals(element)) {
 			if (KEY_RESOURCEFORK.equals(this.keyPath[0])) {
-				this.keyPath[1] = characters;
+				this.keyPath[1] = new String(ch, start, length);
 				this.keyPath[2] = "";
 			}
 		} else if (ELEMENT_KEY2.equals(element)) {
 			if (KEY_BLKX.equals(this.keyPath[1])) {
-				this.keyPath[2] = characters;
+				this.keyPath[2] = new String(ch, start, length);
 			}
 		} else if (KEY_RESOURCEFORK.equals(this.keyPath[0]) && KEY_BLKX.equals(this.keyPath[1])) {
 			if (KEY_DATA.equals(this.keyPath[2])) {
-				this.blkxDataDecoder.feed(characters);
+				this.blkxDataDecoder.feed(ch, start, length);
 			} else if (KEY_NAME.equals(this.keyPath[2])) {
-				this.blkxName = characters.trim();
+				this.blkxName.append(ch, start, length);
 			}
 		}
 	}
@@ -202,7 +199,7 @@ class ResourceForkHandler extends DefaultHandler {
 
 		if (ELEMENT_DICT2.equals(element) && KEY_RESOURCEFORK.equals(this.keyPath[0])
 				&& KEY_BLKX.equals(this.keyPath[1])) {
-			if (!this.blkxDataDecoder.isEmpty() && this.blkxName != null) {
+			if (!this.blkxDataDecoder.isEmpty() && this.blkxName.length() > 0) {
 				try {
 					ByteBuffer blkxData = this.blkxDataDecoder.getResult().order(ByteOrder.BIG_ENDIAN);
 					InputDecoderTable blkxDecoderTable = new InputDecoderTable();
@@ -210,9 +207,10 @@ class ResourceForkHandler extends DefaultHandler {
 							decodeBlkxHeader(blkxData));
 
 					if (blkxDescriptor.dataChunkCount() > 0) {
-						EncodedInputSpec blkxSpec = new EncodedInputSpec(
-								new EncodedInputSpecConfig(Objects.toString(this.blkxName))
-										.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin"));
+						EncodedInputSpecConfig blkxSpecConfig = new EncodedInputSpecConfig(
+								this.blkxName.toString().trim()).inputDecoderTable(blkxDecoderTable)
+										.decodedInputName("image.bin");
+						EncodedInputSpec blkxSpec = new EncodedInputSpec(blkxSpecConfig);
 
 						this.blkxSpecs.put(blkxDescriptor, blkxSpec);
 					}
@@ -221,7 +219,7 @@ class ResourceForkHandler extends DefaultHandler {
 				}
 			}
 			this.blkxDataDecoder.reset();
-			this.blkxName = null;
+			this.blkxName.setLength(0);
 		}
 	}
 
