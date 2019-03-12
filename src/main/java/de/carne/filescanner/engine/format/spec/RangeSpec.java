@@ -91,7 +91,19 @@ public class RangeSpec extends AttributeSpec<StreamValue> {
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !isFixedSize() || this.size.get().intValue() <= buffer.remaining();
+		boolean match = false;
+
+		if (isFixedSize()) {
+			int sizeValue = this.size.get().intValue();
+
+			if (sizeValue <= buffer.remaining()) {
+				buffer.position(buffer.position() + sizeValue);
+				match = true;
+			}
+		} else {
+			match = true;
+		}
+		return match;
 	}
 
 	@Override
