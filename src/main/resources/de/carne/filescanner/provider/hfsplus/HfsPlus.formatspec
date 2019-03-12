@@ -124,7 +124,7 @@ TOTAL_BLOCKS@HFSPLUS_DISK_IMAGE:
 
 IMAGE_HEADER:
 struct {
-	struct "Reserved" {
+	struct "Reserved (Boot Blocks)" {
 		range[0x400] ""
 	}	->bigEndian()
 	struct "Volume Header" {
@@ -137,7 +137,7 @@ struct {
 	struct "Alternate Volume Header" {
 		@VOLUME_HEADER
 	}	->bigEndian()
-	struct "Reserved" {
+	struct "Reserved (Manufacturing Block)" {
 		range[0x200] ""
 	}	->bigEndian()
 }	->bigEndian()
