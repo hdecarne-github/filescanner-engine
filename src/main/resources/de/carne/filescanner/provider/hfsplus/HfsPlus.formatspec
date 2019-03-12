@@ -35,6 +35,8 @@ word_symbols {
 
 VOLUME_ATTRIBUTE_SYMBOLS:
 dword_flag_symbols {
+	0x80000000: "kHFSUnusedNodeFixBit"
+	0x40000000: "kHFSContentProtectionBit"
 	0x00008000: "kHFSVolumeSoftwareLockBit"	
 	0x00002000: "kHFSVolumeJournaledBit"
 	0x00001000: "kHFSCatalogNodeIDsReusedBit"
