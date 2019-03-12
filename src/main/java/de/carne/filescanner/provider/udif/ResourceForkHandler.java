@@ -27,15 +27,16 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.XMLConstants;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.UnexpectedDataException;
@@ -60,8 +61,6 @@ import de.carne.nio.compression.lzma.LzmaFormat;
 class ResourceForkHandler extends DefaultHandler {
 
 	private static final Log LOG = new Log();
-
-	private static final SAXParserFactory PARSER_FACTORY = SAXParserFactory.newInstance();
 
 	private static final DeflateInputDecoder ZLIB_INPUT_DECODER;
 
@@ -107,14 +106,17 @@ class ResourceForkHandler extends DefaultHandler {
 	private @Nullable String blkxName = null;
 	private SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
 
+	@SuppressWarnings("squid:S2755")
 	public static CompositeSpec parse(InputStream input) throws IOException {
 		ResourceForkHandler handler = new ResourceForkHandler();
 
 		try {
-			SAXParser parser = PARSER_FACTORY.newSAXParser();
+			XMLReader reader = XMLReaderFactory.createXMLReader();
 
-			parser.parse(input, handler);
-		} catch (SAXException | ParserConfigurationException e) {
+			reader.setProperty(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			reader.setContentHandler(handler);
+			reader.parse(new InputSource(input));
+		} catch (SAXException e) {
 			throw new IOException("XML parse failure", e);
 		}
 
