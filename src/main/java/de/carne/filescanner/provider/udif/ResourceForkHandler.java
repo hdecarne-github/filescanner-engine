@@ -27,8 +27,6 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.xml.XMLConstants;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.xml.sax.Attributes;
@@ -50,6 +48,7 @@ import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.provider.util.Bzip2InputDecoder;
 import de.carne.filescanner.provider.util.DeflateInputDecoder;
+import de.carne.filescanner.provider.util.LocalEntityResolver;
 import de.carne.filescanner.provider.util.LzmaInputDecoder;
 import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
 import de.carne.nio.compression.bzip2.Bzip2Format;
@@ -113,7 +112,7 @@ class ResourceForkHandler extends DefaultHandler {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 
-			reader.setProperty(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+			reader.setEntityResolver(LocalEntityResolver.getInstance());
 			reader.setContentHandler(handler);
 			reader.parse(new InputSource(input));
 		} catch (SAXException e) {
