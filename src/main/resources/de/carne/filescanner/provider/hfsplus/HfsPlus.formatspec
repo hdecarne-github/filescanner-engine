@@ -47,8 +47,21 @@ dword_flag_symbols {
 
 // Specs
 
+FORK_DATA:
+struct {
+	qword "logicalSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "clumpSize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "totalBlocks"
+		->format(@PrettyFormat)
+	dword[16] "extents"
+}	->bigEndian();
+
 VOLUME_HEADER:
-struct "HFSPlusVolumeHeader" {
+struct {
 	word "signature"
 		->validate(@SIGNATURE_SYMBOLS)
 		->renderer(@SIGNATURE_SYMBOLS)
@@ -71,9 +84,11 @@ struct "HFSPlusVolumeHeader" {
 		->format(@PrettyFormat)
 	dword "folderCount"
 		->format(@PrettyFormat)
+BLOCK_SIZE@HFSPLUS_DISK_IMAGE:
 	dword "blockSize"
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
+TOTAL_BLOCKS@HFSPLUS_DISK_IMAGE:
 	dword "totalBlocks"
 		->format(@PrettyFormat)
 	dword "freeBlocks"
@@ -90,9 +105,47 @@ struct "HFSPlusVolumeHeader" {
 		->format(@PrettyFormat)
 	qword "encodingsBitmap"
 	dword[8] "finderInfo"
+	struct "allocationFile" {
+		@FORK_DATA
+	}	->bigEndian()
+	struct "extentsFile" {
+		@FORK_DATA
+	}	->bigEndian()
+	struct "catalogFile" {
+		@FORK_DATA
+	}	->bigEndian()
+	struct "attributesFile" {
+		@FORK_DATA
+	}	->bigEndian()
+	struct "startupFile" {
+		@FORK_DATA
+	}	->bigEndian()
 }	->bigEndian()
+
+IMAGE_HEADER:
+struct {
+	struct "Reserved" {
+		range[0x400] ""
+	}	->bigEndian()
+	struct "Volume Header" {
+		@VOLUME_HEADER
+	}	->bigEndian()
+}	->bigEndian()
+
+IMAGE_TRAILER:
+struct {
+	struct "Alternate Volume Header" {
+		@VOLUME_HEADER
+	}	->bigEndian()
+	struct "Reserved" {
+		range[0x200] ""
+	}	->bigEndian()
+}	->bigEndian()
+
 
 HFSPLUS_DISK_IMAGE:
 format_spec "HFS+ disk image" {
-	@VOLUME_HEADER
+	@IMAGE_HEADER
+	range[#totalBlocksSize] "disk image blocks"
+	@IMAGE_TRAILER
 }	->bigEndian()

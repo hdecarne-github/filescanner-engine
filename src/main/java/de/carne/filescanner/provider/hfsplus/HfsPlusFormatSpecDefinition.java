@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.util.Lazy;
 
@@ -34,7 +35,10 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private Lazy<CompositeSpec> hfsPlusFormatSpec = resolveLazy("HFSPLUS_DISK_IMAGE", CompositeSpec.class);
-	private Lazy<CompositeSpec> hfsPlusHeaderSpec = resolveLazy("VOLUME_HEADER", CompositeSpec.class);
+	private Lazy<CompositeSpec> hfsPlusHeaderSpec = resolveLazy("IMAGE_HEADER", CompositeSpec.class);
+
+	private Lazy<DWordSpec> blockSize = resolveLazy("BLOCK_SIZE", DWordSpec.class);
+	private Lazy<DWordSpec> totalBlocks = resolveLazy("TOTAL_BLOCKS", DWordSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.hfsPlusFormatSpec.get();
@@ -42,6 +46,10 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 
 	public CompositeSpec headerSpec() {
 		return this.hfsPlusHeaderSpec.get();
+	}
+
+	protected Long totalBlocksSize() {
+		return (this.totalBlocks.get().get().longValue() * this.blockSize.get().get()) - 0xa00;
 	}
 
 }
