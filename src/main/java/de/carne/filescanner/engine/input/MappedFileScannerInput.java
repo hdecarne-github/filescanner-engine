@@ -74,7 +74,7 @@ public class MappedFileScannerInput extends FileScannerInput {
 	public long size() {
 		Map.Entry<Long, Mapping> lastEntry = this.mappings.lastEntry();
 
-		return (lastEntry != null ? lastEntry.getKey().longValue() + lastEntry.getValue().length() : 0l);
+		return (lastEntry != null ? lastEntry.getKey().longValue() + lastEntry.getValue().size() : 0l);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class MappedFileScannerInput extends FileScannerInput {
 		while (entry != null && buffer.hasRemaining()) {
 			long mappingOffset = readPosition - entry.getKey();
 			Mapping mapping = entry.getValue();
-			long mappingRemaining = mapping.length() - mappingOffset;
+			long mappingRemaining = mapping.size() - mappingOffset;
 
 			if (mappingRemaining > 0) {
 				int read = mapping.read(buffer, mappingOffset);
@@ -116,20 +116,20 @@ public class MappedFileScannerInput extends FileScannerInput {
 
 		private final FileScannerInput input;
 		private final long start;
-		private final long length;
+		private final long size;
 
 		protected Mapping(FileScannerInput input, long start, long end) {
 			this.input = input;
 			this.start = start;
-			this.length = end - start;
+			this.size = end - start;
 		}
 
-		public long length() {
-			return this.length;
+		public long size() {
+			return this.size;
 		}
 
 		public final int read(ByteBuffer buffer, long offset) throws IOException {
-			int limit = (int) Math.min(buffer.remaining(), this.length - offset);
+			int limit = (int) Math.min(buffer.remaining(), this.size - offset);
 			ByteBuffer limitedBuffer = buffer.duplicate();
 
 			limitedBuffer.limit(limitedBuffer.position() + limit);
