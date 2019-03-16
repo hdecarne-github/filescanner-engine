@@ -27,7 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import de.carne.boot.check.Check;
 
 /**
- * {@linkplain FileScannerInput} implementation that provides a combined and mapped view to other input's data sections.
+ * {@linkplain FileScannerInput} implementation that provides a combined and mapped view to other input's data.
  */
 public class MappedFileScannerInput extends FileScannerInput {
 
@@ -71,11 +71,6 @@ public class MappedFileScannerInput extends FileScannerInput {
 	}
 
 	@Override
-	public void close() {
-		// Nothing to do here
-	}
-
-	@Override
 	public long size() {
 		Map.Entry<Long, Mapping> lastEntry = this.mappings.lastEntry();
 
@@ -112,7 +107,7 @@ public class MappedFileScannerInput extends FileScannerInput {
 
 	private Map.@Nullable Entry<Long, Mapping> nextMapping(long nextOffset) {
 		Long nextKey = Long.valueOf(nextOffset);
-		Map.@Nullable Entry<Long, Mapping> next = this.mappings.floorEntry(nextKey);
+		Map.Entry<Long, Mapping> next = this.mappings.floorEntry(nextKey);
 
 		return (next != null && next.getKey().equals(nextKey) ? next : null);
 	}

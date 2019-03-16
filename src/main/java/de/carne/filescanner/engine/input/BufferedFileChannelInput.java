@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.engine.input;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
@@ -30,41 +31,19 @@ import de.carne.util.SystemProperties;
  * {@linkplain FileScannerInput} class that implements a per thread cache strategy to speed up access to an underlying
  * {@linkplain FileScannerInput} instance.
  */
-public class BufferedFileScannerInput extends FileScannerInput {
-
-	private static final Log LOG = new Log();
-
-	/**
-	 * The used buffer page size (in bytes).
-	 */
-	public static final int BUFFER_SIZE;
-
-	static {
-		int defaultBufferSize = 0x10000;
-		int bufferSize = SystemProperties.intValue(BufferedFileScannerInput.class, ".bufferSize", defaultBufferSize);
-		int alignedBufferSize = ((bufferSize >>> 13) << 13);
-
-		if (bufferSize != alignedBufferSize) {
-			LOG.warning("Unaligned buffer size {0}; using default", HexFormat.formatInt(bufferSize));
-
-			bufferSize = defaultBufferSize;
-		}
-		BUFFER_SIZE = bufferSize;
-	}
+public class BufferedFileChannelInput extends FileScannerInput implements Closeable {
 
 	private final ThreadLocal<Buffer> threadBuffer = ThreadLocal.withInitial(Buffer::new);
-	private final FileScannerInput input;
+	private final FileChannelInput input;
 
 	/**
-	 * Constructs a new {@linkplain BufferedFileScannerInput} instance.
+	 * Constructs a new {@linkplain BufferedFileChannelInput} instance.
 	 *
 	 * @param input the {@linkplain FileScannerInput} instance to buffer.
 	 */
-	public BufferedFileScannerInput(FileScannerInput input) {
+	public BufferedFileChannelInput(FileChannelInput input) {
 		super(input.name());
 		this.input = input;
-
-		LOG.info("Using input buffer size {0}", HexFormat.formatInt(BUFFER_SIZE));
 	}
 
 	@Override
@@ -88,6 +67,26 @@ public class BufferedFileScannerInput extends FileScannerInput {
 	}
 
 	private static class Buffer {
+
+		private static final Log LOG = new Log();
+
+		private static final int DEFAULT_BUFFER_SIZE = 0x10000;
+		private static final int BUFFER_SIZE;
+
+		static {
+			int bufferSize = SystemProperties.intValue(BufferedFileChannelInput.class, ".bufferSize",
+					DEFAULT_BUFFER_SIZE);
+			int alignedBufferSize = ((bufferSize >>> 13) << 13);
+
+			if (bufferSize != alignedBufferSize) {
+				LOG.warning("Unaligned buffer size {0}; using default", HexFormat.formatInt(bufferSize));
+
+				bufferSize = DEFAULT_BUFFER_SIZE;
+			}
+			LOG.info("Using input buffer size {0}", HexFormat.formatInt(bufferSize));
+			BUFFER_SIZE = bufferSize;
+
+		}
 
 		private SoftReference<@Nullable ByteBuffer> bufferReference = new SoftReference<>(null);
 		private long bufferPosition = -1;

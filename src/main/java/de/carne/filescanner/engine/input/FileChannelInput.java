@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.engine.input;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -27,7 +28,7 @@ import de.carne.boot.logging.Log;
 /**
  * {@linkplain FileChannel} based {@linkplain FileScannerInput}.
  */
-class FileChannelInput extends FileScannerInput {
+class FileChannelInput extends FileScannerInput implements Closeable {
 
 	private static final Log LOG = new Log();
 

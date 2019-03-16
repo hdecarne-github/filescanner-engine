@@ -146,7 +146,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		long decodeStart = position();
 		FileScannerResultBuilder decodeResult = FileScannerResultBuilder.encodedInputResult(
 				this.decodeStack.peek().builder(), encodedInputSpec, inputRange(), decodeStart, decodeStart);
-		InputDecodeCache.Decoded decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
+		InputDecodeCache.DecodeResult decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
 				encodedInputSpec.inputDecoderTable().get(), inputRange(), decodeStart);
 		long commitPosition = decodeStart + decoded.encodedSize();
 

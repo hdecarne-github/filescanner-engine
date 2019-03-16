@@ -33,13 +33,18 @@ public class ZeroFileScannerInput extends FileScannerInput {
 	 * @param size of the zero input stream.
 	 */
 	public ZeroFileScannerInput(long size) {
-		super("<zeros>");
-		this.size = size;
+		this("<zeros>", size);
 	}
 
-	@Override
-	public void close() {
-		// Nothing to do here
+	/**
+	 * Constructs a new {@linkplain ZeroFileScannerInput} instance.
+	 * 
+	 * @param name the input name.
+	 * @param size of the zero input stream.
+	 */
+	public ZeroFileScannerInput(String name, long size) {
+		super(name);
+		this.size = size;
 	}
 
 	@Override

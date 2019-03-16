@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import de.carne.filescanner.engine.InsufficientDataException;
+import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.test.TestFiles;
 
@@ -32,7 +33,7 @@ class InsufficientDataExceptionTest {
 
 	@Test
 	void testExceptionMessage() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
 			Assertions.assertEquals(
 					"Insufficient data while reading from input '" + input
 							+ "' position 0000000000000042h (requested: 42 available: 12)",

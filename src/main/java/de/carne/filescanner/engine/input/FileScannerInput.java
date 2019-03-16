@@ -16,7 +16,6 @@
  */
 package de.carne.filescanner.engine.input;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -29,14 +28,14 @@ import de.carne.boot.check.Check;
 /**
  * Base class for all kinds of scan input data streams.
  */
-public abstract class FileScannerInput implements Closeable {
+public abstract class FileScannerInput {
 
 	private final String name;
 
 	/**
 	 * Constructs a new {@linkplain FileScannerInput} instance.
 	 *
-	 * @param name The input name.
+	 * @param name the input name.
 	 */
 	protected FileScannerInput(String name) {
 		this.name = name;
@@ -49,9 +48,8 @@ public abstract class FileScannerInput implements Closeable {
 	 * @return the opened {@linkplain FileScannerInput}.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	@SuppressWarnings("resource")
-	public static FileScannerInput open(Path file) throws IOException {
-		return new BufferedFileScannerInput(new FileChannelInput(file, StandardOpenOption.READ));
+	public static BufferedFileChannelInput open(Path file) throws IOException {
+		return new BufferedFileChannelInput(new FileChannelInput(file, StandardOpenOption.READ));
 	}
 
 	/**

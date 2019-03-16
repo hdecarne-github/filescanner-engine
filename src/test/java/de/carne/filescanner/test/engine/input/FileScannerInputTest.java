@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.test.TestFiles;
 
@@ -36,7 +37,7 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInput() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
 			Assertions.assertEquals(TestFiles.ZIP_ARCHIVE.path().toString(), input.name());
 			Assertions.assertEquals(Files.size(TestFiles.ZIP_ARCHIVE.path()), input.size());
 
@@ -51,7 +52,7 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInputByteChannel() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
 			try (ReadableByteChannel channel = input.byteChannel(0x2e, 0x2e + 4)) {
 				Assertions.assertTrue(channel.isOpen());
 
@@ -76,7 +77,7 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInputStream() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
 			try (InputStream stream = input.inputStream(0x2e, 0x2e + 4)) {
 				Assertions.assertTrue(stream.markSupported());
 				Assertions.assertEquals(4, stream.available());

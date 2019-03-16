@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import de.carne.filescanner.engine.InvalidPositionException;
+import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.test.TestFiles;
@@ -33,7 +34,7 @@ class InvalidPositionExceptionTest {
 
 	@Test
 	void testExceptionMessage() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
 
 			Assertions.assertEquals("Invalid read position 0000000000000042h (input: '" + input + "')",
 					new InvalidPositionException(input, 0x42).getMessage());

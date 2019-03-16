@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.MappedFileScannerInput;
 import de.carne.filescanner.engine.input.ZeroFileScannerInput;
@@ -34,8 +35,9 @@ class MappedFileScannerInputTest {
 
 	@Test
 	void testMapping() throws IOException {
-		try (FileScannerInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path());
-				MappedFileScannerInput mapping = new MappedFileScannerInput("mapping")) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+			MappedFileScannerInput mapping = new MappedFileScannerInput("<mapped inputs>");
+
 			mapping.add(new ZeroFileScannerInput(100), 0, 100);
 			mapping.add(input, 0, 10);
 			mapping.add(input, 200, 210);

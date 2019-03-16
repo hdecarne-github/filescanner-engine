@@ -68,11 +68,6 @@ public class FileScannerInputRange extends FileScannerInput {
 	}
 
 	@Override
-	public void close() {
-		// Nothing to do here
-	}
-
-	@Override
 	public long size() throws IOException {
 		return this.end - this.base;
 	}

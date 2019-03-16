@@ -34,6 +34,7 @@ import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FormatMatcherBuilder.Matcher;
 import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
@@ -55,8 +56,9 @@ public final class FileScanner implements Closeable {
 	private final ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
 	private final FormatMatcherBuilder formatMatcherBuilder;
 	private final InputDecodeCache inputDecodeCache;
+	private final BufferedFileChannelInput rootInput;
+	private final FileScannerResultBuilder rootResult;
 	private final FileScannerStatus status;
-	private final FileScannerResultBuilder result;
 	private int runningScanTasks = 0;
 	private long scanStartedNanos = 0;
 	private long scanTimeNanos = 0;
@@ -64,14 +66,15 @@ public final class FileScanner implements Closeable {
 	private long totalInputBytes = 0;
 	private long scannedBytes = 0;
 
-	private FileScanner(FileScannerInput input, Collection<Format> formats, FileScannerStatus status)
+	private FileScanner(BufferedFileChannelInput input, Collection<Format> formats, FileScannerStatus status)
 			throws IOException {
 		this.formatMatcherBuilder = new FormatMatcherBuilder(formats);
 		this.inputDecodeCache = new InputDecodeCache();
+		this.rootInput = input;
+		this.rootResult = FileScannerResultBuilder.inputResult(this.rootInput);
 		this.status = status;
-		this.result = FileScannerResultBuilder.inputResult(input);
-		this.result.updateAndCommit(-1, true);
-		queueScanTask(() -> scanRootInput(this.result));
+		this.rootResult.updateAndCommit(-1, true);
+		queueScanTask(() -> scanRootInput(this.rootResult));
 	}
 
 	private void scanRootInput(FileScannerResultBuilder inputResult) {
@@ -140,7 +143,7 @@ public final class FileScanner implements Closeable {
 		}
 	}
 
-	InputDecodeCache.Decoded decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
+	InputDecodeCache.DecodeResult decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
 			long start) throws IOException {
 		return this.inputDecodeCache.decodeInput(name, inputDecoderTable, input, start);
 	}
@@ -223,7 +226,7 @@ public final class FileScanner implements Closeable {
 	 * @return the root {@linkplain FileScannerResult}.
 	 */
 	public FileScannerResult result() {
-		return this.result;
+		return this.rootResult;
 	}
 
 	/**
@@ -238,7 +241,7 @@ public final class FileScanner implements Closeable {
 
 		StringBuilder resultKeyString = new StringBuilder();
 		List<FileScannerResult> results = new ArrayList<>();
-		FileScannerResult lastResult = this.result;
+		FileScannerResult lastResult = this.rootResult;
 
 		resultKeyString.append(HexFormat.formatLong(0));
 		results.add(lastResult);
@@ -288,7 +291,7 @@ public final class FileScanner implements Closeable {
 	@Override
 	public void close() throws IOException {
 		stop(true);
-		this.result.input().close();
+		this.rootInput.close();
 		this.inputDecodeCache.close();
 	}
 
@@ -364,7 +367,7 @@ public final class FileScanner implements Closeable {
 			scanTime = this.scanTimeNanos = System.nanoTime() - this.scanStartedNanos;
 		}
 
-		LOG.notice("Finished scanning ''{0}'' (scan took: {1} ms)", this.result.name(), scanTime / 1000000l);
+		LOG.notice("Finished scanning ''{0}'' (scan took: {1} ms)", this.rootResult.name(), scanTime / 1000000l);
 
 		callStatus(() -> this.status.scanFinished(this));
 		synchronized (this) {

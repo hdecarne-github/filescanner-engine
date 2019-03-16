@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -30,7 +32,7 @@ import de.carne.filescanner.engine.transfer.RenderStyle;
  *
  * @see InputDecodeCache#decodeInput(String, InputDecoderTable, FileScannerInput, long)
  */
-public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
+public class InputDecoderTable implements Iterable<InputDecoderTable.@NonNull Entry> {
 
 	private final LinkedList<Entry> entries = new LinkedList<>();
 
@@ -59,15 +61,14 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 	 *
 	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
 	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param encodedLength the length of the encoded data stream (use {@code -1l} to determine the length automatically
+	 * @param encodedSize the size of the encoded data stream (use {@code -1l} to determine the size automatically
 	 * during decoding).
-	 * @param decodedLength the length of the decoded data stream (use {@code -1l} to determine the length automatically
+	 * @param decodedSize the size of the decoded data stream (use {@code -1l} to determine the size automatically
 	 * during decoding).
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
-	public static InputDecoderTable build(InputDecoder inputDecoder, long offset, long encodedLength,
-			long decodedLength) {
-		return new InputDecoderTable().add(inputDecoder, offset, encodedLength, decodedLength);
+	public static InputDecoderTable build(InputDecoder inputDecoder, long offset, long encodedSize, long decodedSize) {
+		return new InputDecoderTable().add(inputDecoder, offset, encodedSize, decodedSize);
 	}
 
 	/**
@@ -75,15 +76,15 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 	 *
 	 * @param inputDecoder the {@linkplain InputDecoder} to use for decoding.
 	 * @param offset the offset to start decoding at (use {@code -1l} to start at current position).
-	 * @param encodedLength the length of the encoded data stream (use {@code -1l} to determine the length automatically
+	 * @param encodedSize the size of the encoded data stream (use {@code -1l} to determine the size automatically
 	 * during decoding).
-	 * @param decodedLength the length of the decoded data stream (use {@code -1l} to determine the length automatically
+	 * @param decodedSize the size of the decoded data stream (use {@code -1l} to determine the size automatically
 	 * during decoding).
 	 * @return the updated {@linkplain InputDecoderTable} instance.
 	 */
-	public InputDecoderTable add(InputDecoder inputDecoder, long offset, long encodedLength, long decodedLength) {
-		Check.assertTrue(!InputDecoders.IDENTITY.equals(inputDecoder) || encodedLength >= 0);
-		Check.assertTrue(!InputDecoders.ZERO.equals(inputDecoder) || decodedLength >= 0);
+	public InputDecoderTable add(InputDecoder inputDecoder, long offset, long encodedSize, long decodedSize) {
+		Check.assertTrue(!InputDecoders.IDENTITY.equals(inputDecoder) || encodedSize >= 0);
+		Check.assertTrue(!InputDecoders.ZERO.equals(inputDecoder) || decodedSize >= 0);
 
 		Entry entry = null;
 
@@ -91,18 +92,18 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 			Entry lastEntry = this.entries.getLast();
 			InputDecoder lastInputDecoder = lastEntry.inputDecoder();
 			long lastOffset = lastEntry.offset();
-			long lastEncodedLength = lastEntry.encodedLength();
-			long lastDecodedLength = lastEntry.decodedLength();
+			long lastEncodedSize = lastEntry.encodedSize();
+			long lastDecodedSize = lastEntry.decodedSize();
 
-			if ((offset < 0 || (lastOffset >= 0 && lastEncodedLength >= 0 && lastOffset + lastEncodedLength == offset))
+			if ((offset < 0 || (lastOffset >= 0 && lastEncodedSize >= 0 && lastOffset + lastEncodedSize == offset))
 					&& InputDecoders.isIdentityOrZero(lastInputDecoder) && lastInputDecoder.equals(inputDecoder)) {
 				this.entries.removeLast();
 				entry = new Entry(lastInputDecoder, lastOffset,
-						(encodedLength >= 0 ? lastEncodedLength + encodedLength : encodedLength),
-						(lastDecodedLength >= 0 && decodedLength >= 0 ? lastDecodedLength + decodedLength : -1l));
+						(encodedSize >= 0 ? lastEncodedSize + encodedSize : encodedSize),
+						(lastDecodedSize >= 0 && decodedSize >= 0 ? lastDecodedSize + decodedSize : -1l));
 			}
 		}
-		this.entries.add(entry != null ? entry : new Entry(inputDecoder, offset, encodedLength, decodedLength));
+		this.entries.add(entry != null ? entry : new Entry(inputDecoder, offset, encodedSize, decodedSize));
 		return this;
 	}
 
@@ -136,15 +137,15 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 
 				formatMappingValue(entryComment, entryOffset);
 
-				long entryEncodedLength = entry.encodedLength();
+				long entryEncodedSize = entry.encodedSize();
 
 				entryComment.append(" encoded:");
-				formatMappingValue(entryComment, entryEncodedLength);
+				formatMappingValue(entryComment, entryEncodedSize);
 
-				long entryDecodedLength = entry.decodedLength();
+				long entryDecodedSize = entry.decodedSize();
 
 				entryComment.append(" decoded:");
-				formatMappingValue(entryComment, entryDecodedLength);
+				formatMappingValue(entryComment, entryDecodedSize);
 				out.setStyle(RenderStyle.COMMENT).writeln(entryComment.toString());
 				entry.inputDecoder().render(out);
 				entryIndex++;
@@ -168,14 +169,14 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 
 		private final InputDecoder inputDecoder;
 		private final long offset;
-		private final long encodedLength;
-		private final long decodedLength;
+		private final long encodedSize;
+		private final long decodedSize;
 
-		Entry(InputDecoder inputDecoder, long offset, long encodedLength, long decodedLength) {
+		Entry(InputDecoder inputDecoder, long offset, long encodedSize, long decodedSize) {
 			this.inputDecoder = inputDecoder;
 			this.offset = offset;
-			this.encodedLength = encodedLength;
-			this.decodedLength = decodedLength;
+			this.encodedSize = encodedSize;
+			this.decodedSize = decodedSize;
 		}
 
 		/**
@@ -200,33 +201,33 @@ public class InputDecoderTable implements Iterable<InputDecoderTable.Entry> {
 		}
 
 		/**
-		 * Gets the length of the encoded data.
+		 * Gets the size of the encoded data.
 		 * <p>
-		 * A negative length indicates that the actual length has to be determined during decoding.
+		 * A negative size indicates that the actual size has to be determined during decoding.
 		 * </p>
 		 *
-		 * @return the length of the encoded data.
+		 * @return the size of the encoded data.
 		 */
-		public long encodedLength() {
-			return this.encodedLength;
+		public long encodedSize() {
+			return this.encodedSize;
 		}
 
 		/**
-		 * Gets the length of the decoded data.
+		 * Gets the size of the decoded data.
 		 * <p>
-		 * A negative length indicates that the actual length has to be determined during decoding.
+		 * A negative size indicates that the actual size has to be determined during decoding.
 		 * </p>
 		 *
-		 * @return the length of the encoded data.
+		 * @return the size of the encoded data.
 		 */
-		public long decodedLength() {
-			return this.decodedLength;
+		public long decodedSize() {
+			return this.decodedSize;
 		}
 
 	}
 
 	@Override
-	public Iterator<Entry> iterator() {
+	public Iterator<@NonNull Entry> iterator() {
 		return this.entries.iterator();
 	}
 
