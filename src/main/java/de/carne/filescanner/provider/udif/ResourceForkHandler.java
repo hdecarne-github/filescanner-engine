@@ -200,6 +200,8 @@ class ResourceForkHandler extends DefaultHandler {
 		if (ELEMENT_DICT2.equals(element) && KEY_RESOURCEFORK.equals(this.keyPath[0])
 				&& KEY_BLKX.equals(this.keyPath[1])) {
 			if (!this.blkxDataDecoder.isEmpty() && this.blkxName.length() > 0) {
+				String trimmedBlkxName = this.blkxName.toString().trim();
+
 				try {
 					ByteBuffer blkxData = this.blkxDataDecoder.getResult().order(ByteOrder.BIG_ENDIAN);
 					InputDecoderTable blkxDecoderTable = new InputDecoderTable();
@@ -207,15 +209,14 @@ class ResourceForkHandler extends DefaultHandler {
 							decodeBlkxHeader(blkxData));
 
 					if (blkxDescriptor.dataChunkCount() > 0) {
-						EncodedInputSpecConfig blkxSpecConfig = new EncodedInputSpecConfig(
-								this.blkxName.toString().trim()).inputDecoderTable(blkxDecoderTable)
-										.decodedInputName("image.bin");
+						EncodedInputSpecConfig blkxSpecConfig = new EncodedInputSpecConfig(trimmedBlkxName)
+								.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin");
 						EncodedInputSpec blkxSpec = new EncodedInputSpec(blkxSpecConfig);
 
 						this.blkxSpecs.put(blkxDescriptor, blkxSpec);
 					}
 				} catch (IOException e) {
-					LOG.warning(e, "Failed to decode block list ''{0}''", this.blkxName);
+					LOG.warning(e, "Failed to decode block list ''{0}''", trimmedBlkxName);
 				}
 			}
 			this.blkxDataDecoder.reset();

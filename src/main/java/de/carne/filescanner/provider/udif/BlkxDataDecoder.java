@@ -79,6 +79,7 @@ final class BlkxDataDecoder {
 				value = 63 + (c - '/');
 			} else if (c == '=') {
 				this.padding += 6;
+				value = 0;
 			} else if (!Character.isWhitespace(c)) {
 				this.exception = new IOException("Unexpected character: " + Strings.encode("'" + (char) c + "'"));
 			}
@@ -100,8 +101,7 @@ final class BlkxDataDecoder {
 			b[1] = (byte) ((this.register >> 8) & 0xff);
 			b[2] = (byte) (this.register & 0xff);
 
-			int off = this.padding / 6;
-			int len = b.length - off;
+			int len = b.length - (this.padding / 6);
 
 			if (this.buffer.length < this.decoded + len) {
 				byte[] buffer2 = new byte[this.buffer.length + BUFFER_EXTENT_SIZE];
@@ -109,7 +109,7 @@ final class BlkxDataDecoder {
 				System.arraycopy(this.buffer, 0, buffer2, 0, this.buffer.length);
 				this.buffer = buffer2;
 			}
-			System.arraycopy(b, off, this.buffer, this.decoded, len);
+			System.arraycopy(b, 0, this.buffer, this.decoded, len);
 			this.decoded += len;
 		}
 		this.register = 0;
