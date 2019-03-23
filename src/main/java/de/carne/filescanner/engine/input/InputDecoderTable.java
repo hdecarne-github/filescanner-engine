@@ -30,7 +30,7 @@ import de.carne.filescanner.engine.transfer.RenderStyle;
 /**
  * Defines the actual mapping of one or more encoded data sections to a resulting decoded input data stream.
  *
- * @see InputDecodeCache#decodeInput(String, InputDecoderTable, FileScannerInput, long)
+ * @see InputDecodeCache#decodeInputs(DecodedInputMapper, InputDecoderTable, FileScannerInput, long)
  */
 public class InputDecoderTable implements Iterable<InputDecoderTable.@NonNull Entry> {
 

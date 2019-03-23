@@ -140,25 +140,26 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public FileScannerResult decodeEncodedInput(EncodedInputSpec encodedInputSpec) throws IOException {
+	public FileScannerResult decodeEncodedInputs(EncodedInputSpec encodedInputSpec) throws IOException {
 		LOG.debug("Decoding encoded input spec ''{0}''...", encodedInputSpec);
 
 		long decodeStart = position();
 		FileScannerResultBuilder decodeResult = FileScannerResultBuilder.encodedInputResult(
 				this.decodeStack.peek().builder(), encodedInputSpec, inputRange(), decodeStart, decodeStart);
-		InputDecodeCache.DecodeResult decoded = this.fileScanner.decodeInput(encodedInputSpec.decodedInputName().get(),
-				encodedInputSpec.inputDecoderTable().get(), inputRange(), decodeStart);
+		InputDecodeCache.DecodeResult decoded = this.fileScanner.decodeInputs(
+				encodedInputSpec.decodedInputMapper().get(), encodedInputSpec.inputDecoderTable().get(), inputRange(),
+				decodeStart);
 		long commitPosition = decodeStart + decoded.encodedSize();
 
 		setPosition(commitPosition);
 
-		FileScannerInput decodedInput = decoded.decodedInput();
+		for (FileScannerInput decodedInput : decoded.decodedInputs()) {
+			if (decodedInput.size() > 0) {
+				FileScannerResultBuilder decodedInputResult = Objects.requireNonNull(
+						FileScannerResultBuilder.inputResult(decodeResult, decodedInput).updateAndCommit(-1, false));
 
-		if (decodedInput.size() > 0) {
-			FileScannerResultBuilder decodedInputResult = Objects.requireNonNull(
-					FileScannerResultBuilder.inputResult(decodeResult, decodedInput).updateAndCommit(-1, false));
-
-			this.pendingInputResults.add(decodedInputResult);
+				this.pendingInputResults.add(decodedInputResult);
+			}
 		}
 		decodeResult.updateAndCommit(commitPosition, false);
 		return decodeResult;

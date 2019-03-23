@@ -18,6 +18,7 @@ package de.carne.filescanner.engine.format.spec;
 
 import java.util.function.Supplier;
 
+import de.carne.filescanner.engine.input.DecodedInputMapper;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
@@ -30,11 +31,12 @@ public final class EncodedInputSpecConfig {
 
 	private static final InputDecoder UNDEFINED_INPUT_DECODER_TABLE = InputDecoders
 			.unsupportedInputDecoder("<undefined>");
+	private static final DecodedInputMapper DEFAULT_INPUT_MAPPER = new DecodedInputMapper("decoded.bin");
 
 	private Supplier<String> encodedInputNameHolder;
 	private Supplier<InputDecoderTable> inputDecoderTableHolder = FinalSupplier
 			.of(InputDecoderTable.build(UNDEFINED_INPUT_DECODER_TABLE));
-	private Supplier<String> decodedInputNameHolder = FinalSupplier.of("<undefined>");
+	private Supplier<DecodedInputMapper> decodedInputMapperHolder = FinalSupplier.of(DEFAULT_INPUT_MAPPER);
 
 	/**
 	 * Constructs a new {@linkplain EncodedInputSpecConfig} instance.
@@ -110,17 +112,39 @@ public final class EncodedInputSpecConfig {
 	 * @return the update configuration.
 	 */
 	public EncodedInputSpecConfig decodedInputName(Supplier<String> decodedInputName) {
-		this.decodedInputNameHolder = decodedInputName;
+		return decodedInputMapper(new DecodedInputMapper(decodedInputName));
+	}
+
+	/**
+	 * Sets the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
+	 *
+	 * @param decodedInputMapper the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the actual
+	 * decode result.
+	 * @return the update configuration.
+	 */
+	public EncodedInputSpecConfig decodedInputMapper(DecodedInputMapper decodedInputMapper) {
+		return decodedInputMapper(FinalSupplier.of(decodedInputMapper));
+	}
+
+	/**
+	 * Sets the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
+	 *
+	 * @param decodedInputMapper the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the actual
+	 * decode result.
+	 * @return the update configuration.
+	 */
+	public EncodedInputSpecConfig decodedInputMapper(Supplier<DecodedInputMapper> decodedInputMapper) {
+		this.decodedInputMapperHolder = decodedInputMapper;
 		return this;
 	}
 
 	/**
-	 * Gets the name of the decoded data stream.
+	 * Gets the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
 	 *
-	 * @return the name of the decoded data stream.
+	 * @return the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
 	 */
-	public Supplier<String> decodedInputName() {
-		return this.decodedInputNameHolder;
+	public Supplier<DecodedInputMapper> decodedInputMapper() {
+		return this.decodedInputMapperHolder;
 	}
 
 }

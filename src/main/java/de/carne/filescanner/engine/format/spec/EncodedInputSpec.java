@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.input.DecodedInputMapper;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 
@@ -63,12 +64,12 @@ public final class EncodedInputSpec implements FormatSpec {
 	}
 
 	/**
-	 * Gets the decoded input's name.
+	 * Gets the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
 	 *
-	 * @return the decoded input's name.
+	 * @return the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode result.
 	 */
-	public Supplier<String> decodedInputName() {
-		return this.config.decodedInputName();
+	public Supplier<DecodedInputMapper> decodedInputMapper() {
+		return this.config.decodedInputMapper();
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public final class EncodedInputSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decodeEncodedInput(this);
+		context.decodeEncodedInputs(this);
 	}
 
 	@Override

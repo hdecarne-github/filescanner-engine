@@ -64,38 +64,42 @@ public final class InputDecodeCache implements Closeable {
 	private final List<CacheFile> cacheFiles = new LinkedList<>();
 
 	/**
-	 * Decodes an input stream and maps it to a contiguous decoded input stream.
+	 * Decodes an input stream and maps it to one or more contiguous decoded input streams.
 	 *
-	 * @param name the name of the encoded input stream.
+	 * @param decodedInputMapper the {@linkplain DecodedInputMapper} to use for mapping the decoded input to the decode
+	 * result.
 	 * @param inputDecoderTable the {@linkplain InputDecoderTable} to use for decoding.
 	 * @param input the {@linkplain FileScannerInput} to read the encoded data from.
 	 * @param start the position to start decoding at.
 	 * @return a {@linkplain DecodeResult} instance containing the decode result.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public DecodeResult decodeInput(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
-			long start) throws IOException {
+	public DecodeResult decodeInputs(DecodedInputMapper decodedInputMapper, InputDecoderTable inputDecoderTable,
+			FileScannerInput input, long start) throws IOException {
 		DecodeResult decodeResult;
 
 		switch (inputDecoderTable.size()) {
 		case 0:
-			decodeResult = decodeInput0(name, input, start);
+			decodeResult = decodeInput0(decodedInputMapper, input, start);
 			break;
 		case 1:
-			decodeResult = decodeInput1(name, inputDecoderTable.iterator().next(), input, start);
+			decodeResult = decodeInput1(decodedInputMapper, inputDecoderTable.iterator().next(), input, start);
 			break;
 		default:
-			decodeResult = decodeInputN(name, inputDecoderTable, input, start);
+			decodeResult = decodeInputN(decodedInputMapper, inputDecoderTable, input, start);
 		}
 		return decodeResult;
 	}
 
-	private DecodeResult decodeInput0(String name, FileScannerInput input, long start) {
-		return new DecodeResult(new FileScannerInputRange(name, input, start, start, 0), start, 0);
+	private DecodeResult decodeInput0(DecodedInputMapper decodedInputMapper, FileScannerInput input, long start)
+			throws IOException {
+		return new DecodeResult(
+				decodedInputMapper.map(new FileScannerInputRange(decodedInputMapper.name(), input, start, start, 0)),
+				start, 0);
 	}
 
-	private DecodeResult decodeInput1(String name, InputDecoderTable.Entry inputDecoderTableEntry,
-			FileScannerInput input, long start) throws IOException {
+	private DecodeResult decodeInput1(DecodedInputMapper decodedInputMapper,
+			InputDecoderTable.Entry inputDecoderTableEntry, FileScannerInput input, long start) throws IOException {
 		InputDecoder inputDecoder = inputDecoderTableEntry.inputDecoder();
 		long decodePosition = start;
 		long decodeOffset = inputDecoderTableEntry.offset();
@@ -123,36 +127,41 @@ public final class InputDecodeCache implements Closeable {
 		DecodeResult decodeResult;
 
 		if (InputDecoders.isIdentity(inputDecoder)) {
-			decodeResult = new DecodeResult(new FileScannerInputRange(name, input, decodePosition, decodePosition,
-					decodePosition + encodedSize), decodePosition, encodedSize);
+			decodeResult = new DecodeResult(decodedInputMapper.map(new FileScannerInputRange(decodedInputMapper.name(),
+					input, decodePosition, decodePosition, decodePosition + encodedSize)), decodePosition, encodedSize);
 		} else if (InputDecoders.isZero(inputDecoder)) {
-			decodeResult = new DecodeResult(new ZeroFileScannerInput(name, inputDecoderTableEntry.decodedSize()),
+			decodeResult = new DecodeResult(
+					decodedInputMapper.map(
+							new ZeroFileScannerInput(decodedInputMapper.name(), inputDecoderTableEntry.decodedSize())),
 					decodePosition, 0);
 		} else {
-			decodeResult = decodeToCache(name, input, decodePosition, decodePosition + available, inputDecoder);
+			decodeResult = decodeToCache(decodedInputMapper, input, decodePosition, decodePosition + available,
+					inputDecoder);
 		}
 		return decodeResult;
 	}
 
-	private DecodeResult decodeInputN(String name, InputDecoderTable inputDecoderTable, FileScannerInput input,
-			long start) throws IOException {
-		MappedFileScannerInput decodedInput = new MappedFileScannerInput(name);
+	private DecodeResult decodeInputN(DecodedInputMapper decodedInputMapper, InputDecoderTable inputDecoderTable,
+			FileScannerInput input, long start) throws IOException {
+		String decodedInputMapperName = decodedInputMapper.name();
+		DecodedInputMapper identityMapper = new DecodedInputMapper(decodedInputMapperName);
+		MappedFileScannerInput decodedInput = new MappedFileScannerInput(decodedInputMapperName);
 		long decodePosition = start;
 		long decodedEnd = start;
 
 		for (InputDecoderTable.Entry inputDecoderTableEntry : inputDecoderTable) {
-			DecodeResult result = decodeInput1(name, inputDecoderTableEntry, input,
+			DecodeResult result = decodeInput1(identityMapper, inputDecoderTableEntry, input,
 					(inputDecoderTableEntry.offset() >= 0 ? start : decodePosition));
 
-			decodedInput.add(result.decodedInput());
+			decodedInput.add(result.decodedInputs().get(0));
 			decodePosition = result.decodePosition() + result.encodedSize();
 			decodedEnd = Math.max(decodedEnd, decodePosition);
 		}
-		return new DecodeResult(decodedInput, start, decodedEnd - start);
+		return new DecodeResult(decodedInputMapper.map(decodedInput), start, decodedEnd - start);
 	}
 
-	private DecodeResult decodeToCache(String name, FileScannerInput input, long start, long limit,
-			InputDecoder inputDecoder) throws IOException {
+	private DecodeResult decodeToCache(DecodedInputMapper decodedInputMapper, FileScannerInput input, long start,
+			long limit, InputDecoder inputDecoder) throws IOException {
 		DecodeResult decodeResult;
 
 		try (CacheFileLock cacheFileLock = acquireCacheFileLock();
@@ -171,8 +180,10 @@ public final class InputDecodeCache implements Closeable {
 				buffer.clear();
 			}
 			cacheFile.endDecode(decodedSize);
-			decodeResult = new DecodeResult(new FileScannerInputRange(name, cacheFile.input(), decodedPosition,
-					decodedPosition, decodedPosition + decodedSize), start, decoder.totalIn());
+			decodeResult = new DecodeResult(
+					decodedInputMapper.map(new FileScannerInputRange(decodedInputMapper.name(), cacheFile.input(),
+							decodedPosition, decodedPosition, decodedPosition + decodedSize)),
+					start, decoder.totalIn());
 		} catch (IOException e) {
 			throw new InputDecoderException(inputDecoder, e);
 		}
@@ -229,27 +240,27 @@ public final class InputDecodeCache implements Closeable {
 
 	/**
 	 * This class represents the results of an
-	 * {@linkplain InputDecodeCache#decodeInput(String, InputDecoderTable, FileScannerInput, long)} call.
+	 * {@linkplain InputDecodeCache#decodeInputs(DecodedInputMapper, InputDecoderTable, FileScannerInput, long)} call.
 	 */
 	public static class DecodeResult {
 
-		private final FileScannerInput decodedInput;
+		private final List<FileScannerInput> decodedInputs;
 		private final long decodePosition;
 		private final long encodedSize;
 
-		DecodeResult(FileScannerInput decodedInput, long decodePosition, long encodedSize) {
-			this.decodedInput = decodedInput;
+		DecodeResult(List<FileScannerInput> decodedInputs, long decodePosition, long encodedSize) {
+			this.decodedInputs = decodedInputs;
 			this.decodePosition = decodePosition;
 			this.encodedSize = encodedSize;
 		}
 
 		/**
-		 * Gets the {@linkplain FileScannerInput} instance providing access to the decoded input stream.
+		 * Gets the {@linkplain FileScannerInput} instances providing access to the decode result.
 		 *
-		 * @return the {@linkplain FileScannerInput} instance providing access to the decoded input stream.
+		 * @return the {@linkplain FileScannerInput} instances providing access to the decode result.
 		 */
-		public FileScannerInput decodedInput() {
-			return this.decodedInput;
+		public List<FileScannerInput> decodedInputs() {
+			return this.decodedInputs;
 		}
 
 		/**
