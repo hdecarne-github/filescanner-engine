@@ -20,8 +20,15 @@ import java.net.URL;
 import java.util.Objects;
 
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.spec.DWordArraySpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.spec.QWordSpec;
+import de.carne.filescanner.engine.input.DecodedInputMapper;
+import de.carne.filescanner.engine.input.InputDecoderTable;
+import de.carne.filescanner.engine.input.InputDecoders;
+import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.util.Lazy;
 
 /**
@@ -39,6 +46,10 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 
 	private Lazy<DWordSpec> blockSize = resolveLazy("BLOCK_SIZE", DWordSpec.class);
 	private Lazy<DWordSpec> totalBlocks = resolveLazy("TOTAL_BLOCKS", DWordSpec.class);
+	private Lazy<QWordSpec> extentsLogicalSize = resolveLazy("EXTENTS_LOGICAL_SIZE", QWordSpec.class);
+	private Lazy<DWordArraySpec> extentsExtents = resolveLazy("EXTENTS_EXTENTS", DWordArraySpec.class);
+	private Lazy<QWordSpec> catalogLogicalSize = resolveLazy("CATALOG_LOGICAL_SIZE", QWordSpec.class);
+	private Lazy<DWordArraySpec> catalogExtents = resolveLazy("CATALOG_EXTENTS", DWordArraySpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.hfsPlusFormatSpec.get();
@@ -48,8 +59,28 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 		return this.hfsPlusHeaderSpec.get();
 	}
 
-	protected Long totalBlocksSize() {
-		return (this.totalBlocks.get().get().longValue() * this.blockSize.get().get()) - 0xa00;
+	protected EncodedInputSpecConfig hfsplusEncodedInputConfig() {
+		return new EncodedInputSpecConfig("disk image blocks").decodedInputMapper(this::decodedInputMapper)
+				.inputDecoderTable(this::inputDecoderTable);
+	}
+
+	private DecodedInputMapper decodedInputMapper() {
+		long blockSizeValue = IntHelper.toUnsignedLong(this.blockSize.get().get());
+		ForkData extentsForkData = new ForkData(blockSizeValue, this.extentsLogicalSize.get().get(),
+				this.extentsExtents.get().get(), null);
+		ExtentsFile extentsFile = new ExtentsFile(extentsForkData);
+		ForkData catalogForkData = new ForkData(blockSizeValue, this.catalogLogicalSize.get().get(),
+				this.catalogExtents.get().get(), extentsFile);
+		CatalogFile catalogFile = new CatalogFile(catalogForkData, extentsFile);
+
+		return new HfsPlusInputMapper(catalogFile);
+	}
+
+	private InputDecoderTable inputDecoderTable() {
+		long blockSizeValue = IntHelper.toUnsignedLong(this.blockSize.get().get());
+		long totalBlockSize = (IntHelper.toUnsignedLong(this.totalBlocks.get().get()) * blockSizeValue) - 0xa00;
+
+		return InputDecoderTable.build(InputDecoders.IDENTITY, 0, totalBlockSize, totalBlockSize);
 	}
 
 }

@@ -210,7 +210,7 @@ class ResourceForkHandler extends DefaultHandler {
 
 					if (blkxDescriptor.dataChunkCount() > 0) {
 						EncodedInputSpecConfig blkxSpecConfig = new EncodedInputSpecConfig(trimmedBlkxName)
-								.inputDecoderTable(blkxDecoderTable).decodedInputName("image.bin");
+								.inputDecoderTable(blkxDecoderTable);
 						EncodedInputSpec blkxSpec = new EncodedInputSpec(blkxSpecConfig);
 
 						this.blkxSpecs.put(blkxDescriptor, blkxSpec);

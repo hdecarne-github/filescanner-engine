@@ -140,6 +140,10 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		return children.toArray(new FileScannerResult[children.size()]);
 	}
 
+	private synchronized int childIndex(FileScannerResult child) {
+		return this.committedState.getChildren().indexOf(child);
+	}
+
 	@Override
 	public synchronized void setData(Object data) {
 		this.data = data;
@@ -165,16 +169,27 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	private void keyHelper(ByteArrayOutputStream keyBytes) {
-		if (this.parent != null) {
-			this.parent.keyHelper(keyBytes);
-			keyBytes.write((int) ((this.start >> 56) & 0xff));
-			keyBytes.write((int) ((this.start >> 48) & 0xff));
-			keyBytes.write((int) ((this.start >> 40) & 0xff));
-			keyBytes.write((int) ((this.start >> 32) & 0xff));
-			keyBytes.write((int) ((this.start >> 24) & 0xff));
-			keyBytes.write((int) ((this.start >> 16) & 0xff));
-			keyBytes.write((int) ((this.start >> 8) & 0xff));
-			keyBytes.write((int) (this.start & 0xff));
+		FileScannerResultBuilder checkedParent = this.parent;
+
+		if (checkedParent != null) {
+			checkedParent.keyHelper(keyBytes);
+			if (checkedParent.type != Type.ENCODED_INPUT) {
+				keyBytes.write((int) ((this.start >> 56) & 0xff));
+				keyBytes.write((int) ((this.start >> 48) & 0xff));
+				keyBytes.write((int) ((this.start >> 40) & 0xff));
+				keyBytes.write((int) ((this.start >> 32) & 0xff));
+				keyBytes.write((int) ((this.start >> 24) & 0xff));
+				keyBytes.write((int) ((this.start >> 16) & 0xff));
+				keyBytes.write((int) ((this.start >> 8) & 0xff));
+				keyBytes.write((int) (this.start & 0xff));
+			} else {
+				int inputIndex = checkedParent.childIndex(this);
+
+				keyBytes.write((inputIndex >> 24) & 0xff);
+				keyBytes.write((inputIndex >> 16) & 0xff);
+				keyBytes.write((inputIndex >> 8) & 0xff);
+				keyBytes.write(inputIndex & 0xff);
+			}
 		}
 	}
 

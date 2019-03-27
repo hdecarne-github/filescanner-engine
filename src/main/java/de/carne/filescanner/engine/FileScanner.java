@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
-import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FormatMatcherBuilder.Matcher;
 import de.carne.filescanner.engine.format.HexFormat;
@@ -238,8 +237,6 @@ public final class FileScanner implements Closeable {
 	 * @return the resolved {@linkplain FileScannerResult} path.
 	 */
 	public FileScannerResult[] getResultPath(byte[] resultKey) {
-		Check.assertTrue((resultKey.length % 8) == 0);
-
 		StringBuilder resultKeyString = new StringBuilder();
 		List<FileScannerResult> results = new ArrayList<>();
 		FileScannerResult lastResult = this.rootResult;
@@ -250,43 +247,61 @@ public final class FileScanner implements Closeable {
 		int resultKeyIndex = 0;
 
 		while (resultKeyIndex < resultKey.length) {
-			long resultKeyStart = ((resultKey[resultKeyIndex] & 0xffl) << 56)
-					| ((resultKey[resultKeyIndex + 1] & 0xffl) << 48) | ((resultKey[resultKeyIndex + 2] & 0xffl) << 40)
-					| ((resultKey[resultKeyIndex + 3] & 0xffl) << 32) | ((resultKey[resultKeyIndex + 4] & 0xffl) << 24)
-					| ((resultKey[resultKeyIndex + 5] & 0xffl) << 16) | ((resultKey[resultKeyIndex + 6] & 0xffl) << 8)
-					| (resultKey[resultKeyIndex + 7] & 0xffl);
-
-			resultKeyString.append(", ").append(HexFormat.formatLong(resultKeyStart));
-
-			FileScannerResult[] lastResultChildren = lastResult.children();
-			int scanIndexFrom = 0;
-			int scanIndexTo = lastResultChildren.length;
 			FileScannerResult currentResult = null;
+			FileScannerResult[] lastResultChildren = lastResult.children();
 
-			if (scanIndexTo > 0) {
-				while (scanIndexFrom <= scanIndexTo) {
-					int scanIndex = scanIndexFrom + ((scanIndexTo - scanIndexFrom) / 2);
-					FileScannerResult scanResult = lastResultChildren[scanIndex];
-					long scanResultStart = scanResult.start();
+			if (lastResult.type() != FileScannerResult.Type.ENCODED_INPUT) {
+				long resultStart = ((resultKey[resultKeyIndex] & 0xffl) << 56)
+						| ((resultKey[resultKeyIndex + 1] & 0xffl) << 48)
+						| ((resultKey[resultKeyIndex + 2] & 0xffl) << 40)
+						| ((resultKey[resultKeyIndex + 3] & 0xffl) << 32)
+						| ((resultKey[resultKeyIndex + 4] & 0xffl) << 24)
+						| ((resultKey[resultKeyIndex + 5] & 0xffl) << 16)
+						| ((resultKey[resultKeyIndex + 6] & 0xffl) << 8) | (resultKey[resultKeyIndex + 7] & 0xffl);
 
-					if (scanResultStart == resultKeyStart) {
-						currentResult = scanResult;
-						break;
-					} else if (resultKeyStart < scanResultStart) {
-						scanIndexTo = scanIndex - 1;
-					} else {
-						scanIndexFrom = scanIndex + 1;
-					}
-				}
+				resultKeyString.append(", ").append(HexFormat.formatLong(resultStart));
+				currentResult = getResultByStart(lastResultChildren, resultStart);
+				resultKeyIndex += 8;
+			} else {
+				int resultIndex = ((resultKey[resultKeyIndex] & 0xff) << 24)
+						| ((resultKey[resultKeyIndex + 1] & 0xff) << 16) | ((resultKey[resultKeyIndex + 2] & 0xff) << 8)
+						| (resultKey[resultKeyIndex + 3] & 0xff);
+
+				resultKeyString.append(", ").append(HexFormat.formatInt(resultIndex));
+				currentResult = lastResultChildren[resultIndex];
+				resultKeyIndex += 4;
 			}
 			if (currentResult == null) {
 				throw new IllegalArgumentException("Invalid result key: " + resultKeyString);
 			}
 			results.add(currentResult);
 			lastResult = currentResult;
-			resultKeyIndex += 8;
 		}
 		return results.toArray(new @Nullable FileScannerResult[results.size()]);
+	}
+
+	private @Nullable FileScannerResult getResultByStart(FileScannerResult[] results, long resultStart) {
+		int scanIndexFrom = 0;
+		int scanIndexTo = results.length;
+		FileScannerResult result = null;
+
+		if (scanIndexTo > 0) {
+			while (scanIndexFrom <= scanIndexTo) {
+				int scanIndex = scanIndexFrom + ((scanIndexTo - scanIndexFrom) / 2);
+				FileScannerResult scanResult = results[scanIndex];
+				long scanResultStart = scanResult.start();
+
+				if (scanResultStart == resultStart) {
+					result = scanResult;
+					break;
+				} else if (resultStart < scanResultStart) {
+					scanIndexTo = scanIndex - 1;
+				} else {
+					scanIndexFrom = scanIndex + 1;
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override

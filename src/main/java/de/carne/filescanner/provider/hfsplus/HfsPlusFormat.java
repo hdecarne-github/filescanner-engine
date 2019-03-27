@@ -21,11 +21,15 @@ import java.io.IOException;
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.spi.Format;
+import de.carne.util.SystemProperties;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/HFS_Plus">HFS+ disk image format</a> decoder.
  */
 public class HfsPlusFormat extends Format {
+
+	static final boolean DECODE_RESOURCE_FORK = SystemProperties.booleanValue(HfsPlusFormat.class,
+			"DECODE_RESOURCE_FORK", false);
 
 	private static final String FORMAT_NAME = "HFS+ disk image";
 
