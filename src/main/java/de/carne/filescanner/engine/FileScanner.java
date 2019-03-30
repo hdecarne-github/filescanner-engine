@@ -174,16 +174,25 @@ public final class FileScanner implements Closeable {
 	/**
 	 * Stops a currently running scan.
 	 * <p>
-	 * If the scan has already been completed or stopped this function does nothing.
+	 * If the scan has already been completed or stopped this function has no effect.
+	 * </p>
 	 *
+	 * @param now whether to force a stop (see {@link ExecutorService#shutdownNow()}).
 	 * @param wait whether to wait for the scan to stop ({@code true}) or to return immediately after the stop has been
 	 * requested ({@code false}).
 	 */
-	public void stop(boolean wait) {
+	public void stop(boolean now, boolean wait) {
 		if (!this.threadPool.isTerminated()) {
-			LOG.info("Stopping scan threads...");
 
-			this.threadPool.shutdownNow();
+			if (now) {
+				LOG.info("Stopping scan threads immediately...");
+
+				this.threadPool.shutdownNow();
+			} else {
+				LOG.info("Stopping scan threads gracefully...");
+
+				this.threadPool.shutdown();
+			}
 			if (wait) {
 				try {
 					boolean terminated = this.threadPool.awaitTermination(STOP_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -192,7 +201,7 @@ public final class FileScanner implements Closeable {
 						LOG.warning("Failed to stop all scan threads");
 					}
 				} catch (InterruptedException e) {
-					LOG.warning(e, "Scan stop was interurrupted");
+					LOG.warning(e, "Scan stop has been interrupted");
 
 					Thread.currentThread().interrupt();
 				}
@@ -306,7 +315,7 @@ public final class FileScanner implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		stop(true);
+		stop(true, true);
 		this.rootInput.close();
 		this.inputDecodeCache.close();
 	}
@@ -318,7 +327,9 @@ public final class FileScanner implements Closeable {
 		try {
 			this.threadPool.execute(() -> {
 				try {
-					task.run();
+					if (!this.threadPool.isShutdown()) {
+						task.run();
+					}
 				} catch (Exception e) {
 					LOG.warning(e, "Scan thread failed with exception");
 				} finally {
