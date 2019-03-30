@@ -41,6 +41,7 @@ abstract class BTreeFile<K extends Comparable<K>> {
 		this.forkData = forkData;
 	}
 
+	@SuppressWarnings("squid:S3776")
 	public ByteBuffer findLeafNode(K key) throws IOException {
 		if (this.nodeSize < 0) {
 			processHeaderNode();
