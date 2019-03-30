@@ -19,16 +19,31 @@ package de.carne.filescanner.provider.hfsplus;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class ExtentsFile extends BTreeFile<ExtentsFileKey> {
+class ExtentsFile extends BTreeFile<ExtentsFileKey> {
 
 	public ExtentsFile(ForkData forkData) {
 		super(forkData);
 	}
 
+	public long[] getExtents(int fileId, byte forkType, long startBlock) throws IOException {
+		ExtentsFileKey key = new ExtentsFileKey(forkType, fileId, startBlock);
+		ByteBuffer value = findLeafNode(key);
+		long[] extents = new long[16];
+
+		for (int extentIndex = 0; extentIndex < extents.length; extentIndex++) {
+			extents[extentIndex] = Integer.toUnsignedLong(value.getInt());
+		}
+		return extents;
+	}
+
 	@Override
 	protected ExtentsFileKey decodeNodeKey(ByteBuffer keyBuffer) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		byte forkType = keyBuffer.get();
+		/* byte pad */ keyBuffer.get();
+		int fileId = keyBuffer.getInt();
+		int startBlock = keyBuffer.getInt();
+
+		return new ExtentsFileKey(forkType, fileId, startBlock);
 	}
 
 }

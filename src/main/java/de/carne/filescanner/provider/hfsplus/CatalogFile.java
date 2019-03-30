@@ -30,17 +30,17 @@ import de.carne.util.Strings;
 
 class CatalogFile extends BTreeFile<CatalogFileKey> {
 
+	private final BlockDevice blockDevice;
 	private final ExtentsFile extentsFile;
-	private final long blockSize;
 
 	public CatalogFile(ForkData forkData, ExtentsFile extentsFile) {
 		super(forkData);
+		this.blockDevice = forkData.blockDevice();
 		this.extentsFile = extentsFile;
-		this.blockSize = forkData.blockSize();
 	}
 
-	public void walkFileTree(FileScannerInput input, Consumer<FileScannerInput> consumer) throws IOException {
-		walkLeafNodes(input, new FileTreeConsumer(input, this.blockSize, this.extentsFile, consumer));
+	public void walkFileTree(Consumer<FileScannerInput> consumer) throws IOException {
+		walkLeafNodes(new FileTreeConsumer(this.blockDevice, this.extentsFile, consumer));
 	}
 
 	@Override
@@ -56,16 +56,13 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 
 		private static final Log LOG = new Log();
 
-		private final FileScannerInput input;
-		private final long blockSize;
+		private final BlockDevice blockDevice;
 		private final ExtentsFile extentsFile;
 		private final Map<Integer, CatalogFileKey> folderCache = new HashMap<>();
 		private final Consumer<FileScannerInput> consumer;
 
-		FileTreeConsumer(FileScannerInput input, long blockSize, ExtentsFile extentsFile,
-				Consumer<FileScannerInput> consumer) {
-			this.input = input;
-			this.blockSize = blockSize;
+		FileTreeConsumer(BlockDevice blockDevice, ExtentsFile extentsFile, Consumer<FileScannerInput> consumer) {
+			this.blockDevice = blockDevice;
 			this.extentsFile = extentsFile;
 			this.consumer = consumer;
 		}
@@ -87,11 +84,11 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 				case 4:
 					break;
 				default:
-					LOG.error("Ignoring unexpected record type {0} for catalog file key ''{1}''", recordType,
+					LOG.warning("Ignoring unexpected record type {0} for catalog file key ''{1}''", recordType,
 							Strings.encode(key.toString()));
 				}
 			} catch (IOException e) {
-				LOG.error(e, "Failed to process catalog file key ''{0}''", Strings.encode(key.toString()));
+				LOG.warning(e, "Failed to process catalog file key ''{0}''", Strings.encode(key.toString()));
 			}
 		}
 
@@ -106,19 +103,23 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 
 			buildFolderPath(buffer, key.parentId());
 			buffer.append(key.name());
+			valueBuffer.position(8);
+
+			int fileId = valueBuffer.getInt();
+
 			valueBuffer.position(88);
 
-			ForkData dataFork = decodeForkData(valueBuffer);
+			ForkData dataFork = decodeForkData(fileId, ForkData.DATA_FORK, valueBuffer);
 
 			if (dataFork.logicalSize() != 0) {
-				this.consumer.accept(dataFork.map(this.input, buffer.toString()));
+				this.consumer.accept(dataFork.map(buffer.toString()));
 			}
 			if (HfsPlusFormat.DECODE_RESOURCE_FORK) {
-				ForkData resourceFork = decodeForkData(valueBuffer);
+				ForkData resourceFork = decodeForkData(fileId, ForkData.RESOURCE_FORK, valueBuffer);
 
 				if (resourceFork.logicalSize() != 0) {
 					buffer.append(":resourceFork");
-					this.consumer.accept(resourceFork.map(this.input, buffer.toString()));
+					this.consumer.accept(resourceFork.map(buffer.toString()));
 				}
 			}
 		}
@@ -132,7 +133,7 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 			}
 		}
 
-		private ForkData decodeForkData(ByteBuffer valueBuffer) {
+		private ForkData decodeForkData(int fileId, byte forkType, ByteBuffer valueBuffer) {
 			long logicalSize = valueBuffer.getLong();
 			/* int clumpSize */ valueBuffer.getInt();
 			/* int totalBlocks */ valueBuffer.getInt();
@@ -141,7 +142,7 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 			for (int extentIndex = 0; extentIndex < extents.length; extentIndex++) {
 				extents[extentIndex] = valueBuffer.getInt();
 			}
-			return new ForkData(this.blockSize, logicalSize, extents, this.extentsFile);
+			return new ForkData(this.blockDevice, fileId, forkType, logicalSize, extents, this.extentsFile);
 		}
 
 	}

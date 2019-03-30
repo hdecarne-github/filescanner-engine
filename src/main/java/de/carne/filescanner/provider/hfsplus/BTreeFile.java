@@ -41,25 +41,85 @@ abstract class BTreeFile<K extends Comparable<K>> {
 		this.forkData = forkData;
 	}
 
-	public void walkLeafNodes(FileScannerInput input, BiConsumer<K, ByteBuffer> consumer) throws IOException {
+	public ByteBuffer findLeafNode(K key) throws IOException {
 		if (this.nodeSize < 0) {
-			readHeaderNode(input);
+			processHeaderNode();
+		}
+
+		ByteBuffer nodeBuffer = ByteBuffer.allocate(this.nodeSize).order(ByteOrder.BIG_ENDIAN);
+		int currentNode = this.rootNode;
+
+		while (currentNode != 0) {
+			readNode(nodeBuffer, currentNode);
+
+			int nodeKind = nodeBuffer.get(8);
+
+			if (nodeKind == -1) {
+				break;
+			}
+			if (nodeKind != 0) {
+				throw new IOException("Unexpected node kind: " + nodeKind);
+			}
+
+			int numRecords = Short.toUnsignedInt(nodeBuffer.getShort(10));
+			int nextNode = 0;
+
+			for (int recordNumber = 1; recordNumber <= numRecords; recordNumber++) {
+				int recordOffset = Short.toUnsignedInt(nodeBuffer.getShort(this.nodeSize - (recordNumber * 2)));
+
+				nodeBuffer.position(recordOffset);
+
+				K nodeKey = getNodeKey(nodeBuffer);
+				int nodeValue = nodeBuffer.getInt();
+				int comparison = nodeKey.compareTo(key);
+
+				if (comparison <= 0) {
+					nextNode = nodeValue;
+				}
+				if (comparison >= 0) {
+					break;
+				}
+			}
+			currentNode = nextNode;
+		}
+
+		ByteBuffer valueBuffer = null;
+
+		if (currentNode != 0) {
+			int numRecords = Short.toUnsignedInt(nodeBuffer.getShort(10));
+
+			for (int recordNumber = 1; recordNumber <= numRecords; recordNumber++) {
+				int recordOffset = Short.toUnsignedInt(nodeBuffer.getShort(this.nodeSize - (recordNumber * 2)));
+				int recordLength = Short.toUnsignedInt(nodeBuffer.getShort(this.nodeSize - ((recordNumber + 1) * 2)))
+						- recordOffset;
+
+				nodeBuffer.position(recordOffset);
+
+				K nodeKey = getNodeKey(nodeBuffer);
+
+				if (nodeKey.equals(key)) {
+					valueBuffer = nodeBuffer.slice();
+					valueBuffer.limit(recordLength - (nodeBuffer.position() - recordOffset));
+					break;
+				}
+			}
+		}
+		if (valueBuffer == null) {
+			throw new IOException("Unexpected node key: " + key);
+		}
+		return valueBuffer;
+	}
+
+	public void walkLeafNodes(BiConsumer<K, ByteBuffer> consumer) throws IOException {
+		if (this.nodeSize < 0) {
+			processHeaderNode();
 		}
 		if (this.firstLeafNode != 0) {
 			ByteBuffer nodeBuffer = ByteBuffer.allocate(this.nodeSize).order(ByteOrder.BIG_ENDIAN);
 			int currentLeafNode = this.firstLeafNode;
 
 			while (currentLeafNode != 0) {
-				nodeBuffer.clear();
-
-				long nodePosition = this.forkData.position(Integer.toUnsignedLong(currentLeafNode) * this.nodeSize);
-
-				input.read(nodeBuffer, nodePosition);
-				if (nodeBuffer.hasRemaining()) {
-					throw new InsufficientDataException(input, nodePosition, nodeBuffer.capacity(),
-							nodeBuffer.position());
-				}
-				nodeBuffer.flip();
+				readNode(nodeBuffer, currentLeafNode);
 
 				int numRecords = Short.toUnsignedInt(nodeBuffer.getShort(10));
 
@@ -70,19 +130,10 @@ abstract class BTreeFile<K extends Comparable<K>> {
 
 					nodeBuffer.position(recordOffset);
 
-					int keyLength = Short.toUnsignedInt(nodeBuffer.getShort());
-
-					ByteBuffer keyBuffer = nodeBuffer.slice();
-
-					keyBuffer.limit(keyLength);
-
-					K nodeKey = decodeNodeKey(keyBuffer);
-
-					nodeBuffer.position(recordOffset + 2 + keyLength);
-
+					K nodeKey = getNodeKey(nodeBuffer);
 					ByteBuffer valueBuffer = nodeBuffer.slice();
 
-					valueBuffer.limit(recordLength - keyLength);
+					valueBuffer.limit(recordLength - (nodeBuffer.position() - recordOffset));
 					consumer.accept(nodeKey, valueBuffer);
 				}
 				currentLeafNode = nodeBuffer.getInt(0);
@@ -92,8 +143,9 @@ abstract class BTreeFile<K extends Comparable<K>> {
 
 	protected abstract K decodeNodeKey(ByteBuffer nodeBuffer) throws IOException;
 
-	private void readHeaderNode(FileScannerInput input) throws IOException {
+	private void processHeaderNode() throws IOException {
 		ByteBuffer headerRecordBuffer = ByteBuffer.allocate(HEADER_RECORD_SIZE).order(ByteOrder.BIG_ENDIAN);
+		FileScannerInput input = this.forkData.blockDevice().input();
 		long forkDataStart = this.forkData.position(0);
 
 		input.read(headerRecordBuffer, forkDataStart);
@@ -111,6 +163,29 @@ abstract class BTreeFile<K extends Comparable<K>> {
 		this.nodeSize = uncheckedNodSize;
 		this.rootNode = headerRecordBuffer.getInt(16);
 		this.firstLeafNode = headerRecordBuffer.getInt(24);
+	}
+
+	private void readNode(ByteBuffer buffer, int node) throws IOException {
+		buffer.clear();
+
+		long nodePosition = this.forkData.position(Integer.toUnsignedLong(node) * this.nodeSize);
+		FileScannerInput input = this.forkData.blockDevice().input();
+
+		input.read(buffer, nodePosition);
+		if (buffer.hasRemaining()) {
+			throw new InsufficientDataException(input, nodePosition, buffer.capacity(), buffer.position());
+		}
+		buffer.flip();
+	}
+
+	private K getNodeKey(ByteBuffer buffer) throws IOException {
+		int keyLength = Short.toUnsignedInt(buffer.getShort());
+
+		ByteBuffer keyBuffer = buffer.slice();
+
+		keyBuffer.limit(keyLength);
+		buffer.position(buffer.position() + keyLength);
+		return decodeNodeKey(keyBuffer);
 	}
 
 }

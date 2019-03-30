@@ -26,13 +26,21 @@ import de.carne.filescanner.engine.input.MappedFileScannerInput;
 
 final class ForkData {
 
-	private final long blockSize;
+	public static final byte DATA_FORK = 0x00;
+	public static final byte RESOURCE_FORK = (byte) 0xff;
+
+	private final BlockDevice blockDevice;
+	private final int fileId;
+	private final byte forkType;
 	private final long logicalSize;
 	private final long[] extents;
 	private final @Nullable ExtentsFile extentsFile;
 
-	public ForkData(long blockSize, long logicalSize, int[] extents, @Nullable ExtentsFile extentsFile) {
-		this.blockSize = blockSize;
+	public ForkData(BlockDevice blockDevice, int fileId, byte forkType, long logicalSize, int[] extents,
+			@Nullable ExtentsFile extentsFile) {
+		this.blockDevice = blockDevice;
+		this.fileId = fileId;
+		this.forkType = forkType;
 		this.logicalSize = logicalSize;
 		this.extents = new long[extents.length];
 		for (int extentIndex = 0; extentIndex < extents.length; extentIndex++) {
@@ -41,8 +49,8 @@ final class ForkData {
 		this.extentsFile = extentsFile;
 	}
 
-	public long blockSize() {
-		return this.blockSize;
+	public BlockDevice blockDevice() {
+		return this.blockDevice;
 	}
 
 	public long logicalSize() {
@@ -53,50 +61,68 @@ final class ForkData {
 		long position = 0;
 		long remainingOffset = offset;
 
-		for (int extentIndex = 0; extentIndex < this.extents.length && position == 0; extentIndex += 2) {
-			long startBlock = this.extents[extentIndex];
-			long blockCount = this.extents[extentIndex + 1];
+		while (position == 0) {
+			long currentBlock = this.blockDevice.block(offset - remainingOffset);
+			long[] currentExtents = getExtents(currentBlock);
 
-			if (startBlock == 0 && blockCount == 0) {
-				throw new IOException("Invalid fork data offset: " + HexFormat.formatLong(offset));
+			for (int extentIndex = 0; extentIndex < currentExtents.length && position == 0; extentIndex += 2) {
+				long startBlock = currentExtents[extentIndex];
+				long blockCount = currentExtents[extentIndex + 1];
+
+				if (startBlock == 0 && blockCount == 0) {
+					throw new IOException("Invalid fork data offset: " + HexFormat.formatLong(offset));
+				}
+
+				long extentStart = this.blockDevice.offset(startBlock);
+				long extentSize = this.blockDevice.size(blockCount);
+
+				if (remainingOffset < extentSize) {
+					position = extentStart + remainingOffset;
+				} else {
+					remainingOffset -= extentSize;
+				}
 			}
-
-			long extentStart = (startBlock * this.blockSize) - 0x600;
-			long extentSize = blockCount * this.blockSize;
-
-			if (remainingOffset < extentSize) {
-				position = extentStart + remainingOffset;
-			} else {
-				remainingOffset -= extentSize;
-			}
-		}
-		if (position == 0) {
-			throw new IOException("Extent overflow support not yet implemented");
 		}
 		return position;
 	}
 
-	public FileScannerInput map(FileScannerInput input, String name) throws IOException {
+	private long[] getExtents(long startBlock) throws IOException {
+		long[] foundExtents;
+
+		if (startBlock == 0) {
+			foundExtents = this.extents;
+		} else if (this.extentsFile != null) {
+			foundExtents = this.extentsFile.getExtents(this.fileId, this.forkType, startBlock);
+		} else {
+			throw new IOException("Invalid fork data block: " + startBlock);
+		}
+		return foundExtents;
+	}
+
+	public FileScannerInput map(String name) throws IOException {
 		MappedFileScannerInput mappedInput = new MappedFileScannerInput(name);
 		long inputSize = 0;
 
-		for (int extentIndex = 0; extentIndex < this.extents.length && inputSize < this.logicalSize; extentIndex += 2) {
-			long startBlock = this.extents[extentIndex];
-			long blockCount = this.extents[extentIndex + 1];
+		while (inputSize < this.logicalSize) {
+			long currentBlock = this.blockDevice.block(inputSize);
+			long[] currentExtents = getExtents(currentBlock);
 
-			if (startBlock == 0 && blockCount == 0) {
-				break;
+			for (int extentIndex = 0; extentIndex < currentExtents.length
+					&& inputSize < this.logicalSize; extentIndex += 2) {
+				long startBlock = currentExtents[extentIndex];
+				long blockCount = currentExtents[extentIndex + 1];
+
+				if (startBlock == 0 && blockCount == 0) {
+					break;
+				}
+
+				long extentStart = this.blockDevice.offset(startBlock);
+				long extentSize = this.blockDevice.size(blockCount);
+				long mapSize = Math.min(extentSize, this.logicalSize - inputSize);
+
+				mappedInput.add(this.blockDevice.input(), extentStart, extentStart + mapSize);
+				inputSize += mapSize;
 			}
-
-			long extentStart = (startBlock * this.blockSize) - 0x600;
-			long extentSize = (blockCount * this.blockSize);
-			long mapSize = Math.min(extentSize, this.logicalSize - inputSize);
-
-			mappedInput.add(input, extentStart, extentStart + mapSize);
-			inputSize += mapSize;
-		}
-		if (inputSize < this.logicalSize) {
-			throw new IOException("Extent overflow support not yet implemented");
 		}
 		return mappedInput;
 	}

@@ -381,6 +381,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		public CommitState addChild(FileScannerResultBuilder commitChild) {
+			FileScannerResult.Type commitChildType = commitChild.type();
 			long commitChildStart = commitChild.start();
 			int addIndex = 0;
 
@@ -388,7 +389,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 				long childStart = child.start();
 
 				if (childStart >= commitChildStart) {
-					if (commitChild.end() > childStart) {
+					if (commitChildType != FileScannerResult.Type.INPUT && commitChild.end() > childStart) {
 						LOG.warning("Overlapping results ''{0}'' - ''{1}''", commitChild, child);
 					}
 					break;
@@ -396,7 +397,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 				addIndex++;
 			}
 			this.children.add(addIndex, commitChild);
-			return (commitChild.type() != FileScannerResult.Type.INPUT ? updateEnd(commitChild.end()) : this);
+			return (commitChildType != FileScannerResult.Type.INPUT ? updateEnd(commitChild.end()) : this);
 		}
 
 		public List<FileScannerResultBuilder> getChildren() {

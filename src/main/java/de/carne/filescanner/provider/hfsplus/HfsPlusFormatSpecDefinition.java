@@ -65,20 +65,14 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private DecodedInputMapper decodedInputMapper() {
-		long blockSizeValue = IntHelper.toUnsignedLong(this.blockSize.get().get());
-		ForkData extentsForkData = new ForkData(blockSizeValue, this.extentsLogicalSize.get().get(),
-				this.extentsExtents.get().get(), null);
-		ExtentsFile extentsFile = new ExtentsFile(extentsForkData);
-		ForkData catalogForkData = new ForkData(blockSizeValue, this.catalogLogicalSize.get().get(),
-				this.catalogExtents.get().get(), extentsFile);
-		CatalogFile catalogFile = new CatalogFile(catalogForkData, extentsFile);
-
-		return new HfsPlusInputMapper(catalogFile);
+		return new HfsPlusInputMapper(this.blockSize.get().get(), this.extentsLogicalSize.get().get(),
+				this.extentsExtents.get().get(), this.catalogLogicalSize.get().get(), this.catalogExtents.get().get());
 	}
 
 	private InputDecoderTable inputDecoderTable() {
 		long blockSizeValue = IntHelper.toUnsignedLong(this.blockSize.get().get());
-		long totalBlockSize = (IntHelper.toUnsignedLong(this.totalBlocks.get().get()) * blockSizeValue) - 0xa00;
+		long totalBlocksValue = IntHelper.toUnsignedLong(this.totalBlocks.get().get());
+		long totalBlockSize = (blockSizeValue != 0 ? (totalBlocksValue * blockSizeValue) - 0xa00 : 0);
 
 		return InputDecoderTable.build(InputDecoders.IDENTITY, 0, totalBlockSize, totalBlockSize);
 	}

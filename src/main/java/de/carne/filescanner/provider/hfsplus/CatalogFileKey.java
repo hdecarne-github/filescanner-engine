@@ -16,7 +16,7 @@
  */
 package de.carne.filescanner.provider.hfsplus;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,12 +40,19 @@ final class CatalogFileKey implements Comparable<CatalogFileKey> {
 
 	@Override
 	public int compareTo(CatalogFileKey o) {
-		return (this.parentId != o.parentId ? Integer.signum(this.parentId - o.parentId) : this.name.compareTo(o.name));
+		int comparison;
+
+		if (this.parentId != o.parentId) {
+			comparison = Long.compare(Integer.toUnsignedLong(this.parentId), Integer.toUnsignedLong(o.parentId));
+		} else {
+			comparison = this.name.compareTo(o.name);
+		}
+		return comparison;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.parentId, this.name);
+		return Arrays.hashCode(new int[] { this.parentId, this.name.hashCode() });
 	}
 
 	@Override

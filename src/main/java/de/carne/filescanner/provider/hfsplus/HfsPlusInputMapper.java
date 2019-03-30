@@ -28,11 +28,20 @@ class HfsPlusInputMapper extends DecodedInputMapper {
 
 	private static final Log LOG = new Log();
 
-	private final CatalogFile catalogFile;
+	private final long blockSize;
+	private final long extentsFileSize;
+	private final int[] extentsFileExtents;
+	private final long catalogFileSize;
+	private final int[] catalogFileExtents;
 
-	public HfsPlusInputMapper(CatalogFile catalogFile) {
+	public HfsPlusInputMapper(long blockSize, long extentsFileSize, int[] extentsFileExtents, long catalogFileSize,
+			int[] catalogFileExtents) {
 		super("disk image blocks");
-		this.catalogFile = catalogFile;
+		this.blockSize = blockSize;
+		this.extentsFileSize = extentsFileSize;
+		this.extentsFileExtents = extentsFileExtents;
+		this.catalogFileSize = catalogFileSize;
+		this.catalogFileExtents = catalogFileExtents;
 	}
 
 	@Override
@@ -40,7 +49,15 @@ class HfsPlusInputMapper extends DecodedInputMapper {
 		List<FileScannerInput> inputs = new LinkedList<>();
 
 		try {
-			this.catalogFile.walkFileTree(input, inputs::add);
+			BlockDevice blockDevice = new BlockDevice(input, this.blockSize);
+			ForkData extentsFileForkData = new ForkData(blockDevice, 3, ForkData.DATA_FORK, this.extentsFileSize,
+					this.extentsFileExtents, null);
+			ExtentsFile extentsFile = new ExtentsFile(extentsFileForkData);
+			ForkData catalogFileForkData = new ForkData(blockDevice, 4, ForkData.DATA_FORK, this.catalogFileSize,
+					this.catalogFileExtents, extentsFile);
+			CatalogFile catalogFile = new CatalogFile(catalogFileForkData, extentsFile);
+
+			catalogFile.walkFileTree(inputs::add);
 		} catch (Exception e) {
 			LOG.error(e, "Failed to decode HFS+ file system");
 		}
