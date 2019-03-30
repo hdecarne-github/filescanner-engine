@@ -104,7 +104,7 @@ public final class FileScanner implements Closeable {
 		long scanPosition = start;
 		FileScannerInputRange scanRange = input.range(scanPosition, end);
 
-		while (scanPosition < end) {
+		while (scanPosition < end && !this.threadPool.isShutdown()) {
 			List<Format> matchingFormats = formatMatcher.match(scanRange, scanPosition);
 			FileScannerResult decodeResult = null;
 			long decodeResultSize = -1;
