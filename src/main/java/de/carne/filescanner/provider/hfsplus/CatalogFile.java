@@ -95,7 +95,9 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 		private void processFolder(CatalogFileKey key, ByteBuffer valueBuffer) {
 			int folderId = valueBuffer.getInt(8);
 
-			this.folderCache.put(folderId, key);
+			if (folderId != 2) {
+				this.folderCache.put(folderId, key);
+			}
 		}
 
 		private void processFile(CatalogFileKey key, ByteBuffer valueBuffer) throws IOException {
