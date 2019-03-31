@@ -104,18 +104,13 @@ class ResourceForkHandler extends DefaultHandler {
 	private final SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
 
 	@SuppressWarnings("squid:S2755")
-	public static CompositeSpec parse(InputStream input) throws IOException {
+	public static CompositeSpec parse(InputStream input) throws IOException, SAXException {
 		ResourceForkHandler handler = new ResourceForkHandler();
+		XMLReader reader = XMLReaderFactory.createXMLReader();
 
-		try {
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-
-			reader.setEntityResolver(LocalEntityResolver.getInstance());
-			reader.setContentHandler(handler);
-			reader.parse(new InputSource(input));
-		} catch (SAXException e) {
-			throw new IOException("XML parse failure", e);
-		}
+		reader.setEntityResolver(LocalEntityResolver.getInstance());
+		reader.setContentHandler(handler);
+		reader.parse(new InputSource(input));
 
 		StructSpec parsedSpec = new StructSpec();
 

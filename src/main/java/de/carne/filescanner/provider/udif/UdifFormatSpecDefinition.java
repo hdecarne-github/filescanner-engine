@@ -16,7 +16,6 @@
  */
 package de.carne.filescanner.provider.udif;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
@@ -74,7 +73,7 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 		try (InputStream resourceForkInput = resourceFork.stream()) {
 			dataForkSpec = ResourceForkHandler.parse(resourceForkInput);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOG.warning(e, "Failed to decode UDIF resource fork XML");
 		}
 		return dataForkSpec;
