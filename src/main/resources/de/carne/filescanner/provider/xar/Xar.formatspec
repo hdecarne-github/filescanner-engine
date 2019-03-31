@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// XAR file format: https://en.wikipedia.org/wiki/Xar_(archiver)
+//
+
+// Symbols
+
+CKSUM_ALG_SYMBOLS:
+dword_symbols {
+   0: "XAR_CKSUM_NONE"
+   1: "XAR_CKSUM_SHA1"
+   2: "XAR_CKSUM_MD5"
+   3: "XAR_CKSUM_OTHER"
+}
+
+// Specs
+
+XAR_HEADER:
+struct "xar_header" {
+	dword "magic"
+		->validate(0x78617221)
+HEADER_SIZE@XAR_ARCHIVE:
+	word "size"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	word "version"
+		->validate(1)
+TOC_LENGTH@XAR_ARCHIVE:
+	qword "toc_length_compressed"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	qword "toc_length_uncompressed"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "cksum_alg" 
+		->format(@PrettyFormat)
+		->renderer(@CKSUM_ALG_SYMBOLS)
+	char[#tocCksumNameSize] "toc_cksum_name"
+}	->bigEndian()
+
+TOC:
+struct "toc" {
+TOC_XML@XAR_ARCHIVE:
+	range[@TOC_LENGTH] ""
+}	->bigEndian()
+
+XAR_ARCHIVE:
+format_spec "XAR archive" {
+	@XAR_HEADER
+	@TOC
+	conditional #heapSpec
+}

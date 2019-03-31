@@ -8,4 +8,5 @@ de.carne.filescanner.provider.jpeg.JpegFormat
 de.carne.filescanner.provider.png.PngFormat
 de.carne.filescanner.provider.tar.TarFormat
 de.carne.filescanner.provider.udif.UdifFormat
+de.carne.filescanner.provider.xar.XarFormat
 de.carne.filescanner.provider.zip.ZipFormat
