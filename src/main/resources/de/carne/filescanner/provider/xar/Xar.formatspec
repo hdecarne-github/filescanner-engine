@@ -66,5 +66,5 @@ XAR_ARCHIVE:
 format_spec "XAR archive" {
 	@XAR_HEADER
 	@TOC
-	conditional #heapSpec
+	conditional #heapSpec {}
 }
