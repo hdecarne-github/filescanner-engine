@@ -37,6 +37,8 @@ import de.carne.util.Lazy;
  */
 final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 
+	private static final DeflateInputDecoder DEFLATE_INPUT_DECODER = new DeflateInputDecoder();
+
 	@Override
 	protected URL getFormatSpecResource() {
 		return Objects.requireNonNull(getClass().getResource("Zip.formatspec"));
@@ -65,6 +67,10 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private long encodedInputSize() {
+		return Integer.toUnsignedLong(this.lfhCompressedSize.get().get().intValue());
+	}
+
+	private long optionalEncodedInputSize() {
 		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
 		boolean ddPresent = (bitFlag & 0x0008) != 0;
 
@@ -80,7 +86,7 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 			inputDecoderTable = InputDecoderTable.build(InputDecoders.IDENTITY, -1l, encodedInputSize(), -1l);
 			break;
 		case 0x08:
-			inputDecoderTable = InputDecoderTable.build(new DeflateInputDecoder(), -1l, encodedInputSize(), -1l);
+			inputDecoderTable = InputDecoderTable.build(DEFLATE_INPUT_DECODER, -1l, optionalEncodedInputSize(), -1l);
 			break;
 		default:
 			inputDecoderTable = InputDecoderTable.build(
