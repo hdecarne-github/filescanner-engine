@@ -18,6 +18,7 @@ package de.carne.filescanner.test.engine.format.spec;
 
 import java.util.Arrays;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -50,6 +51,7 @@ class FormatSpecDefinitionTest {
 		testFormat.addQWordArrayAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(Arrays.toString(value)));
 		testFormat.addStreamValueAttributeRenderer(TEST_RENDERER, (out, value) -> out.write(value.toString()));
 		testFormat.load();
+		Assertions.assertTrue(true);
 	}
 
 }

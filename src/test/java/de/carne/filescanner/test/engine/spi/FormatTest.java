@@ -16,8 +16,10 @@
  */
 package de.carne.filescanner.test.engine.spi;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.spi.Format;
 
 /**
@@ -25,13 +27,16 @@ import de.carne.filescanner.engine.spi.Format;
  */
 class FormatTest {
 
+	private static final Log LOG = new Log();
+
 	@Test
 	void testLoadFormats() {
 		Iterable<Format> formats = Format.providers();
 
 		for (Format format : formats) {
-			System.out.println(String.format("Format: '%1$s'", format.name()));
+			LOG.notice("Format: '{0}'", format.name());
 		}
+		Assertions.assertTrue(true);
 	}
 
 }
