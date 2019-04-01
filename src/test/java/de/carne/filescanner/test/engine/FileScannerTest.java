@@ -158,6 +158,11 @@ class FileScannerTest {
 		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
 	}
 
+	@Test
+	void testXarArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.XAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+	}
+
 	private Status runFileScanner(Path file, Collection<Format> formats, int resultCount)
 			throws IOException, InterruptedException {
 		Status status = new Status();

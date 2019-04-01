@@ -121,6 +121,13 @@ public final class TestFiles {
 			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip", "certmgr-1.1.1.zip");
 
 	/**
+	 * https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg
+	 */
+	public static final TestFile XAR_ARCHIVE = new TestFile(
+			"https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg",
+			"MacPorts-2.5.4-10.14-Mojave.pkg");
+
+	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows_1_1_1.exe
 	 */
 	public static final TestFile I4J_INSTALLER_WINDOWS = new TestFile(
