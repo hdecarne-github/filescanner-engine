@@ -31,6 +31,8 @@ import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.QWordSpec;
 import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
@@ -42,7 +44,9 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private Map<StreamValue, CompositeSpec> heapSpecCache = new WeakHashMap<>();
+	private static final TocExporter TOC_EXPORTER = new TocExporter();
+
+	private final Map<StreamValue, CompositeSpec> heapSpecCache = new WeakHashMap<>();
 
 	@Override
 	protected URL getFormatSpecResource() {
@@ -68,6 +72,14 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 		int headerSizeValue = ShortHelper.toUnsignedInt(this.headerSize.get().get());
 
 		return Math.max(headerSizeValue - 28, 0);
+	}
+
+	protected FileScannerResultRenderer tocRenderer() {
+		return TOC_EXPORTER;
+	}
+
+	protected FileScannerResultExportHandler tocExporter() {
+		return TOC_EXPORTER;
 	}
 
 	protected CompositeSpec heapSpec() {

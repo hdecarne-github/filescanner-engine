@@ -49,7 +49,17 @@ public enum TransferType {
 	/**
 	 * TIFF image data.
 	 */
-	IMAGE_TIFF("image/tiff");
+	IMAGE_TIFF("image/tiff"),
+
+	/**
+	 * Plain text data.
+	 */
+	TEXT_PLAIN("text/plain"),
+
+	/**
+	 * XML text data.
+	 */
+	TEXT_XML("text/xml");
 
 	private final String mimeType;
 
