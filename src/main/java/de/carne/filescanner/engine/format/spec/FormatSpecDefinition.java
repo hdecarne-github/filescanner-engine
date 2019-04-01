@@ -35,12 +35,16 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
@@ -467,10 +471,19 @@ public abstract class FormatSpecDefinition {
 		URL formatSpecResourceUrl = getFormatSpecResource();
 
 		try (InputStream resourceStream = formatSpecResourceUrl.openStream()) {
+			ErrorListener errorListener = new ErrorListener(formatSpecResourceUrl);
 			CharStream input = CharStreams.fromStream(resourceStream);
 			FormatSpecGrammarLexer lexer = new FormatSpecGrammarLexer(input);
+
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(errorListener);
+
 			TokenStream tokens = new CommonTokenStream(lexer);
 			FormatSpecGrammarParser parser = new FormatSpecGrammarParser(tokens);
+
+			parser.removeErrorListeners();
+			parser.addErrorListener(errorListener);
+
 			Loader loader = new Loader(this::loadHelper);
 
 			loader.visitFormatSpecs(parser.formatSpecs());
@@ -481,6 +494,23 @@ public abstract class FormatSpecDefinition {
 			lateBinding.run();
 		}
 		this.lateBindings.clear();
+	}
+
+	private static class ErrorListener extends BaseErrorListener {
+
+		private final URL formatSpecResourceUrl;
+
+		ErrorListener(URL formatSpecResourceUrl) {
+			this.formatSpecResourceUrl = formatSpecResourceUrl;
+		}
+
+		@Override
+		public void syntaxError(@Nullable Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
+				int charPositionInLine, @Nullable String msg, @Nullable RecognitionException e) {
+			throw new ParseCancellationException(
+					this.formatSpecResourceUrl + "[" + line + ":" + charPositionInLine + "] '" + msg, e);
+		}
+
 	}
 
 	private static class Loader extends FormatSpecGrammarBaseVisitor<FormatSpecDefinition> {
@@ -1557,8 +1587,8 @@ public abstract class FormatSpecDefinition {
 
 		Token startToken = ctx.getStart();
 
-		message.append("[").append(startToken.getLine()).append(":").append(startToken.getCharPositionInLine())
-				.append("] ");
+		message.append(getFormatSpecResource()).append("[").append(startToken.getLine()).append(":")
+				.append(startToken.getCharPositionInLine()).append("] ");
 		message.append(String.format(format, args));
 		return new IllegalArgumentException(message.toString(), cause);
 	}
