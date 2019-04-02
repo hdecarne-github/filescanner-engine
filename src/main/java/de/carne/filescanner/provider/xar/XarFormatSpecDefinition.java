@@ -16,14 +16,18 @@
  */
 package de.carne.filescanner.provider.xar;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.zip.InflaterInputStream;
 
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
@@ -33,6 +37,9 @@ import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
+import de.carne.filescanner.engine.transfer.StyledTextRenderer;
+import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
@@ -44,7 +51,25 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private static final TocExporter TOC_EXPORTER = new TocExporter();
+	private static final StyledTextRenderer TOC_RENDERER = new StyledTextRenderer(TransferType.TEXT_XML) {
+
+		@Override
+		protected InputStream newResultStream(FileScannerResult result) throws IOException {
+			return new InflaterInputStream(result.input().inputStream(result.start(), result.end()));
+		}
+
+	};
+
+	private static final RawTransferHandler TOC_EXPORT_HANDLER = new RawTransferHandler("Table of content XML",
+			TransferType.TEXT_XML, ".xml") {
+
+		@Override
+		protected ReadableByteChannel newResultChannel(FileScannerResult result) throws IOException {
+			return Channels
+					.newChannel(new InflaterInputStream(result.input().inputStream(result.start(), result.end())));
+		}
+
+	};
 
 	private final Map<StreamValue, CompositeSpec> heapSpecCache = new WeakHashMap<>();
 
@@ -75,11 +100,11 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected FileScannerResultRenderer tocRenderer() {
-		return TOC_EXPORTER;
+		return TOC_RENDERER;
 	}
 
-	protected FileScannerResultExportHandler tocExporter() {
-		return TOC_EXPORTER;
+	protected FileScannerResultExportHandler tocExportHandler() {
+		return TOC_EXPORT_HANDLER;
 	}
 
 	protected CompositeSpec heapSpec() {

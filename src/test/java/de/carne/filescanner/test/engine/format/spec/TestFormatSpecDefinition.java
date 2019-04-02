@@ -26,7 +26,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.ScanSpecConfig;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
-import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 
 final class TestFormatSpecDefinition extends FormatSpecDefinition {
 
@@ -40,11 +40,11 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected FileScannerResultRenderer customRenderer() {
-		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+		return RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 	}
 
 	protected FileScannerResultExportHandler customExport() {
-		return RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+		return RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 	}
 
 	protected CompositeSpec conditionalSpec() {

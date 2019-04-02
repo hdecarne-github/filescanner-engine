@@ -60,7 +60,7 @@ TOC_XML@XAR_ARCHIVE:
 	range[@TOC_LENGTH] ""
 }	->bigEndian()
 	->renderer(#tocRenderer)
-	->export(#tocExporter)
+	->export(#tocExportHandler)
 
 XAR_ARCHIVE:
 format_spec "XAR archive" {

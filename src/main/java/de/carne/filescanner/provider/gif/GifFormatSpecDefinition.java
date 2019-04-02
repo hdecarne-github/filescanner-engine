@@ -25,7 +25,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
-import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.util.Lazy;
 
 /**
@@ -56,11 +56,11 @@ final class GifFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected FileScannerResultRenderer gifRenderer() {
-		return RawFileScannerResultExporter.IMAGE_GIF_EXPORTER;
+		return RawTransferHandler.IMAGE_GIF_TRANSFER;
 	}
 
 	protected FileScannerResultExportHandler gifExporter() {
-		return RawFileScannerResultExporter.IMAGE_GIF_EXPORTER;
+		return RawTransferHandler.IMAGE_GIF_TRANSFER;
 	}
 
 	protected CompositeSpec globalColorTableSpec() {

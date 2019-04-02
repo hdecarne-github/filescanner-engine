@@ -26,52 +26,65 @@ import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
- * {@linkplain FileScannerResultExportHandler} implementation for raw data export.
+ * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRenderer} implementation for raw data
+ * transfer.
  */
-public class RawFileScannerResultExporter implements FileScannerResultExportHandler, FileScannerResultRenderer {
+public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRenderer {
 
 	/**
-	 * Predefined APPLICATION_OCTET_STREAM exporter.
+	 * Predefined APPLICATION_OCTET_STREAM transfer handler.
 	 */
-	public static final RawFileScannerResultExporter APPLICATION_OCTET_STREAM_EXPORTER = new RawFileScannerResultExporter(
-			"Raw", TransferType.APPLICATION_OCTET_STREAM, ".bin");
+	public static final RawTransferHandler APPLICATION_OCTET_STREAM_TRANSFER = new RawTransferHandler("Raw",
+			TransferType.APPLICATION_OCTET_STREAM, ".bin");
 
 	/**
-	 * Predefined IMAGE_BMP exporter.
+	 * Predefined IMAGE_BMP transfer handler.
 	 */
-	public static final RawFileScannerResultExporter IMAGE_BMP_EXPORTER = new RawFileScannerResultExporter(
-			"BMP image file", TransferType.IMAGE_BMP, ".bmp");
+	public static final RawTransferHandler IMAGE_BMP_TRANSFER = new RawTransferHandler("BMP image file",
+			TransferType.IMAGE_BMP, ".bmp");
 
 	/**
-	 * Predefined IMAGE_GIF exporter.
+	 * Predefined IMAGE_GIF transfer handler.
 	 */
-	public static final RawFileScannerResultExporter IMAGE_GIF_EXPORTER = new RawFileScannerResultExporter(
-			"GIF image file", TransferType.IMAGE_GIF, ".gif");
+	public static final RawTransferHandler IMAGE_GIF_TRANSFER = new RawTransferHandler("GIF image file",
+			TransferType.IMAGE_GIF, ".gif");
 
 	/**
-	 * Predefined IMAGE_JPEG exporter.
+	 * Predefined IMAGE_JPEG transfer handler.
 	 */
-	public static final RawFileScannerResultExporter IMAGE_JPEG_EXPORTER = new RawFileScannerResultExporter(
-			"JPEG image file", TransferType.IMAGE_JPEG, ".jpg");
+	public static final RawTransferHandler IMAGE_JPEG_TRANSFER = new RawTransferHandler("JPEG image file",
+			TransferType.IMAGE_JPEG, ".jpg");
 
 	/**
-	 * Predefined IMAGE_PNG exporter.
+	 * Predefined IMAGE_PNG transfer handler.
 	 */
-	public static final RawFileScannerResultExporter IMAGE_PNG_EXPORTER = new RawFileScannerResultExporter(
-			"PNG image file", TransferType.IMAGE_PNG, ".png");
+	public static final RawTransferHandler IMAGE_PNG_TRANSFER = new RawTransferHandler("PNG image file",
+			TransferType.IMAGE_PNG, ".png");
+
+	/**
+	 * Predefined TEXT_PLAIN transfer handler.
+	 */
+	public static final RawTransferHandler TEXT_PLAIN_TRANSFER = new RawTransferHandler("Plain text file",
+			TransferType.TEXT_PLAIN, ".txt");
+
+	/**
+	 * Predefined TEXT_XML transfer handler.
+	 */
+	public static final RawTransferHandler TEXT_XML_TRANSFER = new RawTransferHandler("XML file", TransferType.TEXT_XML,
+			".xml");
 
 	private final String name;
 	private final TransferType transferType;
 	private final String extension;
 
 	/**
-	 * Constructs a new {@linkplain RawFileScannerResultExporter} instance.
+	 * Constructs a new {@linkplain RawTransferHandler} instance.
 	 *
-	 * @param name the exporter's name.
+	 * @param name the transfer handler's name.
 	 * @param transferType the exporter's transfer data type.
 	 * @param extension the file name extension to use.
 	 */
-	public RawFileScannerResultExporter(String name, TransferType transferType, String extension) {
+	public RawTransferHandler(String name, TransferType transferType, String extension) {
 		this.name = name;
 		this.transferType = transferType;
 		this.extension = extension;
@@ -109,7 +122,7 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 		FileScannerResult result = context.result();
 
 		target.setSize(result.size());
-		try (ReadableByteChannel resultChannel = result.input().byteChannel(result.start(), result.end())) {
+		try (ReadableByteChannel resultChannel = newResultChannel(result)) {
 			IOUtil.copyChannel(target, resultChannel);
 		}
 	}
@@ -125,6 +138,10 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 		out.writeln(new RawTransferSource(result));
 	}
 
+	protected ReadableByteChannel newResultChannel(FileScannerResult result) throws IOException {
+		return result.input().byteChannel(result.start(), result.end());
+	}
+
 	private class RawTransferSource implements TransferSource {
 
 		private final FileScannerResult result;
@@ -135,12 +152,12 @@ public class RawFileScannerResultExporter implements FileScannerResultExportHand
 
 		@Override
 		public String name() {
-			return RawFileScannerResultExporter.this.name();
+			return RawTransferHandler.this.name();
 		}
 
 		@Override
 		public TransferType transferType() {
-			return RawFileScannerResultExporter.this.transferType();
+			return RawTransferHandler.this.transferType();
 		}
 
 		@Override

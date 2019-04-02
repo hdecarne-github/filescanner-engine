@@ -26,7 +26,7 @@ import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
-import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
@@ -63,11 +63,11 @@ final class BmpFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected FileScannerResultRenderer bmpRenderer() {
-		return RawFileScannerResultExporter.IMAGE_BMP_EXPORTER;
+		return RawTransferHandler.IMAGE_BMP_TRANSFER;
 	}
 
 	protected FileScannerResultExportHandler bmpExporter() {
-		return RawFileScannerResultExporter.IMAGE_BMP_EXPORTER;
+		return RawTransferHandler.IMAGE_BMP_TRANSFER;
 	}
 
 	protected CompositeSpec colorTableSpec() {

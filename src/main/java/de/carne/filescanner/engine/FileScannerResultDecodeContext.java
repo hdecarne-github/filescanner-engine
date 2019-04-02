@@ -106,7 +106,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		byteOrder(formatSpec.byteOrder());
 
-		FileScannerResultBuilder decodeResult = this.decodeStack.peek().builder();
+		FileScannerResultBuilder decodeResult = Objects.requireNonNull(this.decodeStack.peek()).builder();
 
 		if (isResultSpec) {
 			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec,
@@ -145,7 +145,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		long decodeStart = position();
 		FileScannerResultBuilder decodeResult = FileScannerResultBuilder.encodedInputResult(
-				this.decodeStack.peek().builder(), encodedInputSpec, inputRange(), decodeStart, decodeStart);
+				Objects.requireNonNull(this.decodeStack.peek()).builder(), encodedInputSpec, inputRange(), decodeStart,
+				decodeStart);
 		InputDecodeCache.DecodeResult decoded = this.fileScanner.decodeInputs(
 				encodedInputSpec.decodedInputMapper().get(), encodedInputSpec.inputDecoderTable().get(), inputRange(),
 				decodeStart);
@@ -175,7 +176,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	public <T> void bindContextValue(AttributeSpec<T> attribute, @NonNull T value) {
 		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.encode(Objects.toString(value)));
 
-		this.decodeStack.peek().contextValues().put(attribute, value);
+		Objects.requireNonNull(this.decodeStack.peek()).contextValues().put(attribute, value);
 	}
 
 	/**
@@ -190,14 +191,14 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute,
 				Strings.encode(Objects.toString(value)));
 
-		this.decodeStack.peek().builder().bindResultValue(scope, attribute, value);
+		Objects.requireNonNull(this.decodeStack.peek()).builder().bindResultValue(scope, attribute, value);
 	}
 
 	@Override
 	public <T> T getValue(AttributeSpec<T> attribute) {
 		LOG.debug("Resolving attribute value ''{0}''", attribute);
 
-		Scope result = this.decodeStack.peek();
+		Scope result = Objects.requireNonNull(this.decodeStack.peek());
 		Object contextValue = result.contextValues().get(attribute);
 		T value = (contextValue != null ? Check.isInstanceOf(contextValue, attribute.type())
 				: result.builder().getValue(attribute, false));
@@ -212,7 +213,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * {@linkplain FileScanner} user.
 	 */
 	public void commit() {
-		commit(this.decodeStack.peek().builder());
+		commit(Objects.requireNonNull(this.decodeStack.peek()).builder());
 	}
 
 	private void commit(FileScannerResultBuilder result) {

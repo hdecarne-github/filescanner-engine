@@ -80,6 +80,7 @@ struct "Resource fork" {
 XML_PLIST@UDIF_FORMAT:
 	range[@XML_LENGTH] ""
 }	->bigEndian()
+	->renderer(#resourceForkRenderer)
 
 UDIF_FORMAT:
 format_spec "Universal Disk Image" {

@@ -42,7 +42,7 @@ import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultExporter;
-import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
@@ -319,7 +319,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		FileScannerResultExportHandler[] handlers = new FileScannerResultExportHandler[Math.max(1,
 				this.exportHandlers.size())];
 
-		handlers[0] = RawFileScannerResultExporter.APPLICATION_OCTET_STREAM_EXPORTER;
+		handlers[0] = RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 
 		int handlerIndex = 0;
 

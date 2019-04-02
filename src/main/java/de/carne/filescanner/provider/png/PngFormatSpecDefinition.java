@@ -24,7 +24,7 @@ import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
-import de.carne.filescanner.engine.transfer.RawFileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.util.Lazy;
 
 /**
@@ -51,11 +51,11 @@ final class PngFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected FileScannerResultRenderer pngRenderer() {
-		return RawFileScannerResultExporter.IMAGE_PNG_EXPORTER;
+		return RawTransferHandler.IMAGE_PNG_TRANSFER;
 	}
 
 	protected FileScannerResultExportHandler pngExporter() {
-		return RawFileScannerResultExporter.IMAGE_PNG_EXPORTER;
+		return RawTransferHandler.IMAGE_PNG_TRANSFER;
 	}
 
 	protected String genericChunkName() {
