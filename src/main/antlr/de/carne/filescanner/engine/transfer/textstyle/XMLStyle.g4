@@ -22,7 +22,7 @@ package de.carne.filescanner.engine.transfer.textstyle;
 
 NEWLINE: '\r\n'|'\n'|'\r';
 
-
+COMMENT: '<!--' .*? '-->';
 PREAMBLE: '<?xml' .*? '>';
 DTD: '<!' .*? '>';
 

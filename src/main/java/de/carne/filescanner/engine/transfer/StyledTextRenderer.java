@@ -67,6 +67,7 @@ public class StyledTextRenderer implements FileScannerResultRenderer {
 			break;
 		case TEXT_XML:
 			this.lexerFactory = XMLStyle::new;
+			this.styleMap.put(XMLStyle.COMMENT, RenderStyle.COMMENT);
 			this.styleMap.put(XMLStyle.PREAMBLE, RenderStyle.LABEL);
 			this.styleMap.put(XMLStyle.DTD, RenderStyle.LABEL);
 			this.styleMap.put(XMLStyle.DEFAULT, RenderStyle.VALUE);
