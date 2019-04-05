@@ -114,14 +114,7 @@ class TocHandler extends DefaultHandler {
 		StructSpec parsedSpec = new StructSpec();
 
 		for (Map.Entry<Long, EncodedInputSpecConfig> tocEntry : handler.tocEntries.entrySet()) {
-			EncodedInputSpecConfig encodedInputSpecConfig = tocEntry.getValue();
-			StructSpec tocEntrySpec = new StructSpec();
-
-			tocEntrySpec.result(String.format("heap entry \"%s\"",
-					Strings.encode(encodedInputSpecConfig.decodedInputMapper().get().name())));
-			tocEntrySpec.add(new EncodedInputSpec(tocEntry.getValue()));
-
-			DecodeAtSpec heapEntrySpec = new DecodeAtSpec(tocEntrySpec);
+			DecodeAtSpec heapEntrySpec = new DecodeAtSpec(new EncodedInputSpec(tocEntry.getValue()));
 
 			heapEntrySpec.position(heapOffset + tocEntry.getKey().longValue());
 			parsedSpec.add(heapEntrySpec);
@@ -183,7 +176,8 @@ class TocHandler extends DefaultHandler {
 
 		if (name != null && dataLength != null && dataOffset != null && dataSize != null && dataEncoding != null) {
 			String path = tocEntry.path();
-			EncodedInputSpecConfig encodedInputSpecConfig = new EncodedInputSpecConfig("encoded data");
+			EncodedInputSpecConfig encodedInputSpecConfig = new EncodedInputSpecConfig(
+					String.format("heap entry \"%s\"", Strings.encode(name)));
 
 			encodedInputSpecConfig.decodedInputName(path);
 

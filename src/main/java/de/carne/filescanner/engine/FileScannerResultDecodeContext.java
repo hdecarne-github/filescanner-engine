@@ -108,7 +108,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 		FileScannerResultBuilder decodeResult = Objects.requireNonNull(this.decodeStack.peek()).builder();
 
-		if (isResultSpec) {
+		if (isResultSpec && !(formatSpec instanceof EncodedInputSpec)) {
 			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec,
 					relocated, inputRange(), position());
 

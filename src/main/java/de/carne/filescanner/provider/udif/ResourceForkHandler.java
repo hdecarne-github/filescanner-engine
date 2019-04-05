@@ -36,7 +36,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DecodeAtSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
@@ -128,29 +127,13 @@ class ResourceForkHandler extends DefaultHandler {
 					parsedSpec.add(dataForkAtSpec);
 				}
 
-				StructSpec sectorRangeSpec = new StructSpec();
+				DecodeAtSpec entryAtSpec = new DecodeAtSpec(entry.getValue());
 
-				sectorRangeSpec.result(formatSectorRangeName(blkxDescriptor));
-				sectorRangeSpec.add(entry.getValue());
-
-				DecodeAtSpec sectorRangeAtAtSpec = new DecodeAtSpec(sectorRangeSpec);
-
-				sectorRangeAtAtSpec.position(blkxPosition);
-				dataForkSpec.add(sectorRangeAtAtSpec);
+				entryAtSpec.position(blkxPosition);
+				dataForkSpec.add(entryAtSpec);
 			}
 		}
 		return parsedSpec;
-	}
-
-	private static String formatSectorRangeName(BlkxDescriptor blkxDescriptor) {
-		StringBuilder name = new StringBuilder();
-
-		name.append("Sector[");
-		HexFormat.formatLong(name, blkxDescriptor.sectorStart());
-		name.append('-');
-		HexFormat.formatLong(name, blkxDescriptor.sectorEnd());
-		name.append(']');
-		return name.toString();
 	}
 
 	@Override

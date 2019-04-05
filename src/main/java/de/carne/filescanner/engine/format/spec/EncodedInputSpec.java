@@ -32,7 +32,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  * If the encoded input's size is unknown a decoder has to be defined and is responsible for determining the actual
  * size. If size and decoder are set, the former limits the available data for the decoder.
  */
-public final class EncodedInputSpec implements FormatSpec {
+public final class EncodedInputSpec extends CompositeSpec {
 
 	private final EncodedInputSpecConfig config;
 
@@ -43,6 +43,7 @@ public final class EncodedInputSpec implements FormatSpec {
 	 */
 	public EncodedInputSpec(EncodedInputSpecConfig encodedInputConfig) {
 		this.config = encodedInputConfig;
+		result(this.config.encodedInputName());
 	}
 
 	/**
@@ -88,12 +89,12 @@ public final class EncodedInputSpec implements FormatSpec {
 	}
 
 	@Override
-	public void decode(FileScannerResultDecodeContext context) throws IOException {
+	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 		context.decodeEncodedInputs(this);
 	}
 
 	@Override
-	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		// Nothing to do here
 	}
 
