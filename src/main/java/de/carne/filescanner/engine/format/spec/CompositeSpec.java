@@ -29,7 +29,7 @@ import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
+import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
@@ -41,7 +41,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	private boolean result = false;
 	private Supplier<String> resultName = FinalSupplier.of("<undefined>");
-	private @Nullable Supplier<FileScannerResultRenderer> customRenderer = null;
+	private @Nullable Supplier<FileScannerResultRendererHandler> customRendererHandler = null;
 	private List<Supplier<FileScannerResultExportHandler>> exportHandlers = new ArrayList<>();
 
 	/**
@@ -87,24 +87,24 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
-	 * Sets a custom {@linkplain FileScannerResultRenderer} for rendering this spec.
+	 * Sets a custom {@linkplain FileScannerResultRendererHandler} for rendering this spec.
 	 *
-	 * @param renderer the {@linkplain FileScannerResultRenderer} to use for rendering this spec.
+	 * @param rendererHandler the {@linkplain FileScannerResultRendererHandler} to use for rendering this spec.
 	 * @return the updated {@linkplain CompositeSpec} for chaining.
 	 */
-	public CompositeSpec renderer(FileScannerResultRenderer renderer) {
-		this.customRenderer = FinalSupplier.of(renderer);
+	public CompositeSpec renderer(FileScannerResultRendererHandler rendererHandler) {
+		this.customRendererHandler = FinalSupplier.of(rendererHandler);
 		return this;
 	}
 
 	/**
-	 * Sets a custom {@linkplain FileScannerResultRenderer} for rendering this spec.
+	 * Sets a custom {@linkplain FileScannerResultRendererHandler} for rendering this spec.
 	 *
-	 * @param renderer the {@linkplain FileScannerResultRenderer} to use for rendering this spec.
+	 * @param rendererHandler the {@linkplain FileScannerResultRendererHandler} to use for rendering this spec.
 	 * @return the updated {@linkplain CompositeSpec} for chaining.
 	 */
-	public CompositeSpec renderer(Supplier<FileScannerResultRenderer> renderer) {
-		this.customRenderer = renderer;
+	public CompositeSpec renderer(Supplier<FileScannerResultRendererHandler> rendererHandler) {
+		this.customRendererHandler = rendererHandler;
 		return this;
 	}
 
@@ -186,8 +186,8 @@ public abstract class CompositeSpec implements FormatSpec {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		if (this.customRenderer != null) {
-			this.customRenderer.get().render(out, context);
+		if (this.customRendererHandler != null) {
+			this.customRendererHandler.get().render(out, context);
 		}
 	}
 

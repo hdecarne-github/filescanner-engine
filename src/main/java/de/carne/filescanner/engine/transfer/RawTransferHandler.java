@@ -26,10 +26,10 @@ import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
- * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRenderer} implementation for raw data
+ * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for raw data
  * transfer.
  */
-public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRenderer {
+public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRendererHandler {
 
 	/**
 	 * Predefined APPLICATION_OCTET_STREAM transfer handler.

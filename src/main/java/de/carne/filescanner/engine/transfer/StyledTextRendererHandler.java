@@ -37,30 +37,30 @@ import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.textstyle.XMLStyle;
 
 /**
- * {@linkplain FileScannerResultRenderer} implementation supported styled text rendering.
+ * {@linkplain FileScannerResultRendererHandler} implementation supported styled text rendering.
  */
-public class StyledTextRenderer implements FileScannerResultRenderer {
+public class StyledTextRendererHandler implements FileScannerResultRendererHandler {
 
 	private final @Nullable Function<CharStream, Lexer> lexerFactory;
 	private final Map<Integer, RenderStyle> styleMap = new HashMap<>();
 	private final Charset charset;
 
 	/**
-	 * Constructs a new {@linkplain StyledTextRenderer} instance.
+	 * Constructs a new {@linkplain StyledTextRendererHandler} instance.
 	 *
 	 * @param transferType the {@linkplain TransferType} used to determine the render style.
 	 */
-	public StyledTextRenderer(TransferType transferType) {
+	public StyledTextRendererHandler(TransferType transferType) {
 		this(transferType, StandardCharsets.UTF_8);
 	}
 
 	/**
-	 * Constructs a new {@linkplain StyledTextRenderer} instance.
+	 * Constructs a new {@linkplain StyledTextRendererHandler} instance.
 	 *
 	 * @param transferType the {@linkplain TransferType} used to determine the render style.
 	 * @param charset the {@linkplain Charset} of the text to display.
 	 */
-	public StyledTextRenderer(TransferType transferType, Charset charset) {
+	public StyledTextRendererHandler(TransferType transferType, Charset charset) {
 		switch (transferType) {
 		case TEXT_PLAIN:
 			this.lexerFactory = null;

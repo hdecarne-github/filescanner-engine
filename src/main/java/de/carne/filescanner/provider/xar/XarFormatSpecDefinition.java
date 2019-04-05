@@ -36,9 +36,9 @@ import de.carne.filescanner.engine.format.spec.QWordSpec;
 import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRenderer;
+import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
-import de.carne.filescanner.engine.transfer.StyledTextRenderer;
+import de.carne.filescanner.engine.transfer.StyledTextRendererHandler;
 import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
@@ -51,7 +51,7 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private static final StyledTextRenderer TOC_RENDERER = new StyledTextRenderer(TransferType.TEXT_XML) {
+	private static final StyledTextRendererHandler TOC_RENDERER = new StyledTextRendererHandler(TransferType.TEXT_XML) {
 
 		@Override
 		protected InputStream newResultStream(FileScannerResult result) throws IOException {
@@ -99,7 +99,7 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 		return Math.max(headerSizeValue - 28, 0);
 	}
 
-	protected FileScannerResultRenderer tocRenderer() {
+	protected FileScannerResultRendererHandler tocRenderer() {
 		return TOC_RENDERER;
 	}
 
