@@ -49,6 +49,7 @@ Renderer: 'renderer';
 Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
+StopBefore: 'stopBefore';
 StopAfter: 'stopAfter';
 Min: 'min';
 Max: 'max';
@@ -183,7 +184,11 @@ sequenceSpec
 	;
 	
 anonymousSequenceSpec
-	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopAfterModifier|sequenceSpecMinModifier|sequenceSpecMaxModifier|sequenceSpecSizeModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: Sequence textExpression? structSpecElement (Apply (sequenceSpecStopBeforeModifier|sequenceSpecStopAfterModifier|sequenceSpecMinModifier|sequenceSpecMaxModifier|sequenceSpecSizeModifier|compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	;
+	
+sequenceSpecStopBeforeModifier
+	: StopBefore LBracket specReference RBracket
 	;
 	
 sequenceSpecStopAfterModifier

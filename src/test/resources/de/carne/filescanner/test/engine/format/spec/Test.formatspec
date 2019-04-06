@@ -200,6 +200,7 @@ array[1] "test array" {
 
 TEST_SEQUENCE:
 sequence @TEST_STRUCT
+	->stopBefore(@TEST_STRUCT)
 	->stopAfter(@TEST_STRUCT)
 	->size(1)
 	->min(1)

@@ -107,6 +107,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.S
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecMinModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecSizeModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SequenceSpecStopBeforeModifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SimpleTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.SpecReferenceContext;
@@ -704,6 +705,7 @@ public abstract class FormatSpecDefinition {
 		FormatSpec elementSpec = loadStructSpecElement(specCtx.structSpecElement(), rootCtx);
 		SequenceSpec spec = new SequenceSpec(elementSpec);
 
+		applyStopBeforeModifier(spec, specCtx.sequenceSpecStopBeforeModifier(), rootCtx);
 		applyStopAfterModifier(spec, specCtx.sequenceSpecStopAfterModifier(), rootCtx);
 		applyMinModifier(spec, specCtx.sequenceSpecMinModifier());
 		applyMaxModifier(spec, specCtx.sequenceSpecMaxModifier());
@@ -716,6 +718,15 @@ public abstract class FormatSpecDefinition {
 		LOG.debug(LOG_LOADED_SPEC, spec);
 
 		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private void applyStopBeforeModifier(SequenceSpec spec, List<SequenceSpecStopBeforeModifierContext> modifierCtx,
+			FormatSpecsContext rootCtx) {
+		for (SequenceSpecStopBeforeModifierContext stopBeforeCtx : modifierCtx) {
+			spec.stopBefore(resolveSpec(rootCtx, stopBeforeCtx.specReference().referencedSpec().specIdentifier(),
+					FormatSpec.class));
+		}
 	}
 
 	@SuppressWarnings("null")

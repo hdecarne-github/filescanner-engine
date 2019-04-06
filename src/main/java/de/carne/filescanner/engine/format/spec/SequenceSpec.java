@@ -33,7 +33,8 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 public class SequenceSpec extends CompositeSpec {
 
 	private final FormatSpec elementSpec;
-	private @Nullable FormatSpec stopSpec = null;
+	private @Nullable FormatSpec stopBeforeSpec = null;
+	private @Nullable FormatSpec stopAfterSpec = null;
 	private @Nullable Supplier<? extends Number> minSize = null;
 	private @Nullable Supplier<? extends Number> maxSize = null;
 
@@ -47,13 +48,24 @@ public class SequenceSpec extends CompositeSpec {
 	}
 
 	/**
-	 * Sets the last sequence element's {@linkplain FormatSpec}.
+	 * Sets the {@linkplain FormatSpec} of the last sequence element.
 	 *
-	 * @param stopAfterSpec the last sequence element's {@linkplain FormatSpec}.
+	 * @param stopSpec the {@linkplain FormatSpec} to stop after.
 	 * @return the updated {@linkplain SequenceSpec}.
 	 */
-	public SequenceSpec stopAfter(FormatSpec stopAfterSpec) {
-		this.stopSpec = stopAfterSpec;
+	public SequenceSpec stopBefore(FormatSpec stopSpec) {
+		this.stopBeforeSpec = stopSpec;
+		return this;
+	}
+
+	/**
+	 * Sets the {@linkplain FormatSpec} following the sequence.
+	 *
+	 * @param stopSpec the {@linkplain FormatSpec} to stop before.
+	 * @return the updated {@linkplain SequenceSpec}.
+	 */
+	public SequenceSpec stopAfter(FormatSpec stopSpec) {
+		this.stopAfterSpec = stopSpec;
 		return this;
 	}
 
@@ -148,10 +160,13 @@ public class SequenceSpec extends CompositeSpec {
 		boolean done = false;
 
 		while (!done) {
-			FormatSpec checkedStopSpec = this.stopSpec;
+			FormatSpec checkedStopBeforeSpec = this.stopBeforeSpec;
+			FormatSpec checkedStopAfterSpec = this.stopAfterSpec;
 
-			if (checkedStopSpec != null && context.matchFormat(checkedStopSpec)) {
-				checkedStopSpec.decode(context);
+			if (checkedStopBeforeSpec != null && context.matchFormat(checkedStopBeforeSpec)) {
+				done = true;
+			} else if (checkedStopAfterSpec != null && context.matchFormat(checkedStopAfterSpec)) {
+				checkedStopAfterSpec.decode(context);
 				done = true;
 			} else if (context.matchFormat(this.elementSpec)) {
 				this.elementSpec.decode(context);
