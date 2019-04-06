@@ -109,10 +109,23 @@ public final class TestFiles {
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.jpg", "w3c_home.jpg");
 
 	/**
+	 * https://curl.haxx.se/download/curl-7.54.1.tar.lzma
+	 */
+	public static final TestFile LZMA_ARCHIVE = new TestFile("https://curl.haxx.se/download/curl-7.54.1.tar.lzma",
+			"curl-7.54.1.tar.lzma");
+
+	/**
 	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png
 	 */
 	public static final TestFile PNG_IMAGE = new TestFile(
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png", "w3c_home.png");
+
+	/**
+	 * https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg
+	 */
+	public static final TestFile XAR_ARCHIVE = new TestFile(
+			"https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg",
+			"MacPorts-2.5.4-10.14-Mojave.pkg");
 
 	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip
@@ -121,11 +134,11 @@ public final class TestFiles {
 			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip", "certmgr-1.1.1.zip");
 
 	/**
-	 * https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg
+	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg
 	 */
-	public static final TestFile XAR_ARCHIVE = new TestFile(
-			"https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg",
-			"MacPorts-2.5.4-10.14-Mojave.pkg");
+	public static final TestFile I4J_INSTALLER_MACOS = new TestFile(
+			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg",
+			"certmgr_macos_1_1_0.dmg");
 
 	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows_1_1_1.exe
@@ -140,12 +153,5 @@ public final class TestFiles {
 	public static final TestFile I4J_INSTALLER_WINDOWS64 = new TestFile(
 			"https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr_windows-x64_1_1_1.exe",
 			"certmgr_windows-x64_1_1_1.exe");
-
-	/**
-	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg
-	 */
-	public static final TestFile I4J_INSTALLER_MACOS = new TestFile(
-			"https://github.com/hdecarne/certmgr/releases/download/v1.1.0/certmgr_macos_1_1_0.dmg",
-			"certmgr_macos_1_1_0.dmg");
 
 }

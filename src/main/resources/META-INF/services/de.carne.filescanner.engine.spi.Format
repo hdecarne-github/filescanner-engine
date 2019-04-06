@@ -5,6 +5,7 @@ de.carne.filescanner.provider.gif.GifFormat
 de.carne.filescanner.provider.gzip.GzipFormat
 de.carne.filescanner.provider.hfsplus.HfsPlusFormat
 de.carne.filescanner.provider.jpeg.JpegFormat
+de.carne.filescanner.provider.lzma.LzmaFormat
 de.carne.filescanner.provider.png.PngFormat
 de.carne.filescanner.provider.tar.TarFormat
 de.carne.filescanner.provider.udif.UdifFormat

@@ -44,6 +44,11 @@ public class SimpleTextRenderer implements Renderer {
 	}
 
 	@Override
+	public boolean isStyled() {
+		return false;
+	}
+
+	@Override
 	public int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
 		EmitCounter counter = new EmitCounter();
 

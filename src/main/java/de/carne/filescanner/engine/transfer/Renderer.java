@@ -26,7 +26,19 @@ import java.util.Set;
 public interface Renderer extends Closeable {
 
 	/**
-	 * Emit any necessary prologue output.
+	 * Checks whether this {@linkplain Renderer} supports styling.
+	 * <p>
+	 * This information may be used to optimize rendering.
+	 * </p>
+	 *
+	 * @return {@code true} if this {@linkplain Renderer} supports styling.
+	 */
+	default boolean isStyled() {
+		return true;
+	}
+
+	/**
+	 * Emits any necessary prologue output.
 	 *
 	 * @param options The rendering options.
 	 * @throws IOException if an I/O error occurs.
@@ -36,7 +48,7 @@ public interface Renderer extends Closeable {
 	}
 
 	/**
-	 * Emit simple text.
+	 * Emits simple text.
 	 *
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param text the text to emit.
@@ -47,7 +59,7 @@ public interface Renderer extends Closeable {
 	int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException;
 
 	/**
-	 * Emit simple text.
+	 * Emits simple text.
 	 *
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param text the text to emit.
@@ -62,8 +74,8 @@ public interface Renderer extends Closeable {
 	}
 
 	/**
-	 * Emit media data.
-	 * 
+	 * Emits media data.
+	 *
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param source the media data to emit.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
@@ -73,7 +85,7 @@ public interface Renderer extends Closeable {
 	int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException;
 
 	/**
-	 * Emit simple text.
+	 * Emits simple text.
 	 *
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param source the media data to emit.
@@ -89,7 +101,7 @@ public interface Renderer extends Closeable {
 	}
 
 	/**
-	 * Emit any necessary epilogue output.
+	 * Emits any necessary epilogue output.
 	 *
 	 * @throws IOException if an I/O error occurs.
 	 */

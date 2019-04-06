@@ -102,9 +102,23 @@ public final class RenderOutput implements Closeable {
 	}
 
 	/**
+	 * Checks whether this output's {@linkplain Renderer} supports styling.
+	 * <p>
+	 * This information may be used to optimize rendering.
+	 * </p>
+	 *
+	 * @return {@code true} if this output's {@linkplain Renderer} supports styling.
+	 * @see Renderer#isStyled()
+	 */
+	public boolean isStyled() {
+		return this.renderer.isStyled();
+	}
+
+	/**
 	 * Enables the given {@linkplain RenderOption}.
 	 * <p>
 	 * Render options can only be changed before the first output is generated.
+	 * </p>
 	 *
 	 * @param option the {@linkplain RenderOption} to enable.
 	 * @return the updated {@linkplain RenderOutput} for chaining.
@@ -119,6 +133,7 @@ public final class RenderOutput implements Closeable {
 	 * Disables the given {@linkplain RenderOption}.
 	 * <p>
 	 * Render options can only be changed before the first output is generated.
+	 * </p>
 	 *
 	 * @param option the {@linkplain RenderOption} to disable.
 	 * @return the updated {@linkplain RenderOutput} for chaining.

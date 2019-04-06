@@ -494,6 +494,11 @@ public abstract class FormatSpecDefinition {
 			lateBinding.run();
 		}
 		this.lateBindings.clear();
+		afterLoad();
+	}
+
+	protected void afterLoad() {
+		// Default is to do nothing
 	}
 
 	private static class ErrorListener extends BaseErrorListener {
@@ -844,7 +849,8 @@ public abstract class FormatSpecDefinition {
 	@SuppressWarnings("null")
 	private void applyRendererModifier(CompositeSpec spec, List<CompositeSpecRendererModifierContext> modifierCtx) {
 		for (CompositeSpecRendererModifierContext rendererCtx : modifierCtx) {
-			spec.renderer(resolveExternalReference(rendererCtx.externalReference(), FileScannerResultRendererHandler.class));
+			spec.renderer(
+					resolveExternalReference(rendererCtx.externalReference(), FileScannerResultRendererHandler.class));
 		}
 	}
 

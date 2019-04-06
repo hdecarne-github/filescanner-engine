@@ -134,8 +134,18 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testLzmaArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.LZMA_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+	}
+
+	@Test
 	void testPngImageFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.PNG_IMAGE.path(), Formats.all().enabledFormats(), 1);
+	}
+
+	@Test
+	void testUdifFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
@@ -149,18 +159,13 @@ class FileScannerTest {
 	}
 
 	@Test
-	void testUdifFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), Formats.all().enabledFormats(), 1);
+	void testXarArchiveFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.XAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
-	}
-
-	@Test
-	void testXarArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.XAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
 	}
 
 	private Status runFileScanner(Path file, Collection<Format> formats, int resultCount)

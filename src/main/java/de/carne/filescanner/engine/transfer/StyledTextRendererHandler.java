@@ -82,7 +82,7 @@ public class StyledTextRendererHandler implements FileScannerResultRendererHandl
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		Function<CharStream, Lexer> checkedLexerFactory = this.lexerFactory;
 
-		if (checkedLexerFactory != null) {
+		if (checkedLexerFactory != null && out.isStyled()) {
 			try (InputStream resultStream = newResultStream(context.result())) {
 				CharStream lexerInput = CharStreams.fromStream(resultStream, this.charset);
 				Lexer lexer = checkedLexerFactory.apply(lexerInput);

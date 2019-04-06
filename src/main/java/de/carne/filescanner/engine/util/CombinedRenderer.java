@@ -48,6 +48,18 @@ public class CombinedRenderer implements Renderer {
 	}
 
 	@Override
+	public boolean isStyled() {
+		boolean isStyled = false;
+
+		for (Renderer renderer : this.renderers) {
+			if (renderer.isStyled()) {
+				isStyled = true;
+			}
+		}
+		return isStyled;
+	}
+
+	@Override
 	public void emitPrologue(Set<RenderOption> options) throws IOException {
 		for (Renderer renderer : this.renderers) {
 			renderer.emitPrologue(options);
