@@ -23,9 +23,10 @@ package de.carne.filescanner.engine.transfer.textstyle;
 NEWLINE: '\r\n'|'\n'|'\r';
 
 COMMENT: '<!--' .*? '-->';
+CDATA: '<![CDATA[' .*? ']]>';
 PREAMBLE: '<?xml' .*? '>';
 DTD: '<!' .*? '>';
 
 ELEMENT: '<' .*? '>';
 
-DEFAULT: .+? -> channel(HIDDEN);
+DEFAULT: ~('<'|'\r'|'\n')+ -> channel(HIDDEN);
