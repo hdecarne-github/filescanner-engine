@@ -79,12 +79,14 @@ final class LzmaFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private static final long UNKNOWN_UNCOMPRESSED_SIZE = -1l;
+	private static final long MIN_UNCOMPRESSED_SIZE = 1l;
 	private static final long MAX_UNCOMPRESSED_SIZE = 1l << 38;
 
 	private static boolean validateUncompressedSize(Long value) {
 		long uncompressedSizeValue = value.longValue();
 
-		return uncompressedSizeValue == UNKNOWN_UNCOMPRESSED_SIZE || uncompressedSizeValue <= MAX_UNCOMPRESSED_SIZE;
+		return uncompressedSizeValue == UNKNOWN_UNCOMPRESSED_SIZE
+				|| (MIN_UNCOMPRESSED_SIZE <= uncompressedSizeValue && uncompressedSizeValue <= MAX_UNCOMPRESSED_SIZE);
 	}
 
 	public CompositeSpec formatSpec() {
