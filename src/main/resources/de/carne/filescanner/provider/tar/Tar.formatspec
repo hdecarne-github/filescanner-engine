@@ -60,7 +60,7 @@ HEADER_SIZE@TAR_ENTRY:
 		->renderer(@TYPEFLAG_SYMBOLS)
 	char[100] "linkname"
 	char[6] "magic"
-		->validate("ustar " || "ustar\u0000")
+		->validate("ustar " || "ustar\u0000" || "\u0000\u0000\u0000\u0000\u0000\u0000")
 	char[2] "version"
 	char[32] "uname"
 	char[32] "gname"
