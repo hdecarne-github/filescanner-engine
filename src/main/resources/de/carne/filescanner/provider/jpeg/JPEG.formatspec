@@ -186,7 +186,8 @@ JPEG_FORMAT:
 format_spec "JPEG image data" {
 	@JPEG_SOI_APP0_MARKER
 	sequence @JPEG_MARKER
-		->stopAfter(@JPEG_EOI_MARKER)
+		->stopBefore(@JPEG_EOI_MARKER)
+	@JPEG_EOI_MARKER
 }	->bigEndian()
 	->renderer(#jpegRenderer)
 	->export(#jpegExporter)

@@ -114,7 +114,8 @@ PNG_FORMAT:
 format_spec "PNG image data" {
 	@PNG_FILE_SIGNATURE
 	sequence @PNG_CHUNK
-		->stopAfter(@PNG_IEND_CHUNK)
+		->stopBefore(@PNG_IEND_CHUNK)
+	@PNG_IEND_CHUNK
 }	->bigEndian()
 	->renderer(#pngRenderer)
 	->export(#pngExporter)

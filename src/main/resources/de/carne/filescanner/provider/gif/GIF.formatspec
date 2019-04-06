@@ -194,6 +194,7 @@ format_spec "GIF image data" {
 		@GIF_GLOBAL_COLOR_TABLE
 	}
 	sequence @GIF_BLOCK
-		->stopAfter(@GIF_TRAILER	)
+		->stopBefore(@GIF_TRAILER)
+	@GIF_TRAILER
 }	->renderer(#gifRenderer)
 	->export(#gifExporter)
