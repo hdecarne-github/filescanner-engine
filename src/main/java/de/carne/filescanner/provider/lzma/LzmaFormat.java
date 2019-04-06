@@ -23,7 +23,7 @@ import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.spi.Format;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Lempel–Ziv–Markov_chain_algorithm">LZMA file format</a> decoder.
+ * <a href="https://en.wikipedia.org/wiki/Lempel-Ziv-Markov_chain_algorithm">LZMA file format</a> decoder.
  */
 public class LzmaFormat extends Format {
 
