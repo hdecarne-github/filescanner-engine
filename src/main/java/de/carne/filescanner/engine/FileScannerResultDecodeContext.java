@@ -17,7 +17,6 @@
 package de.carne.filescanner.engine;
 
 import java.io.IOException;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	private static final Log LOG = new Log();
 
 	private final FileScanner fileScanner;
-	private final Deque<Scope> decodeStack = new LinkedList<>();
+	private final LinkedList<Scope> decodeStack = new LinkedList<>();
 	private final List<FileScannerResultBuilder> pendingInputResults = new LinkedList<>();
 
 	FileScannerResultDecodeContext(FileScanner fileScanner, FileScannerResultBuilder parent,
@@ -64,7 +63,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public FileScannerResult decodeComposite(CompositeSpec formatSpec) throws IOException {
-		return decodeComposite(formatSpec, false);
+		return decodeComposite(formatSpec, 0, false);
 	}
 
 	/**
@@ -72,29 +71,29 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 *
 	 * @param formatSpec the {@linkplain CompositeSpec} to decode.
 	 * @param decodePosition the position to start decoding at.
+	 * @param decodeLevel the level to put the decode result.
 	 * @return the decoded {@linkplain FileScannerResult} (may be of size 0).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long decodePosition) throws IOException {
+	public FileScannerResult decodeComposite(CompositeSpec formatSpec, long decodePosition, int decodeLevel)
+			throws IOException {
 		long currentPosition = position();
 		FileScannerResult decodeResult;
 
-		if (decodePosition != currentPosition) {
-			LOG.debug("Decode relocated at {0}...", HexFormat.formatLong(decodePosition));
+		LOG.debug("Decode relocated at {0}:{1}...", HexFormat.formatLong(decodePosition), decodeLevel);
 
-			setPosition(decodePosition);
-			try {
-				decodeResult = decodeComposite(formatSpec, true);
-			} finally {
-				setPosition(currentPosition);
-			}
-		} else {
-			decodeResult = decodeComposite(formatSpec, false);
+		setPosition(decodePosition);
+		try {
+			decodeResult = decodeComposite(formatSpec, decodeLevel,
+					decodePosition != currentPosition || decodeLevel != 0);
+		} finally {
+			setPosition(currentPosition);
 		}
 		return decodeResult;
 	}
 
-	private FileScannerResult decodeComposite(CompositeSpec formatSpec, boolean relocated) throws IOException {
+	private FileScannerResult decodeComposite(CompositeSpec formatSpec, int decodeLevel, boolean relocated)
+			throws IOException {
 		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
 
 		boolean isRootSpec = this.decodeStack.size() == 1;
@@ -109,8 +108,8 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		FileScannerResultBuilder decodeResult = Objects.requireNonNull(this.decodeStack.peek()).builder();
 
 		if (isResultSpec && !(formatSpec instanceof EncodedInputSpec)) {
-			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(decodeResult, formatSpec,
-					relocated, inputRange(), position());
+			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(
+					getDecodeParent(decodeResult, decodeLevel), formatSpec, relocated, inputRange(), position());
 
 			this.decodeStack.push(new Scope(formatSpecResult));
 			try {
@@ -131,6 +130,10 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 			formatSpec.decodeComposite(this);
 		}
 		return decodeResult;
+	}
+
+	private FileScannerResultBuilder getDecodeParent(FileScannerResultBuilder builder, int decodeLevel) {
+		return (decodeLevel == 0 ? builder : builder.parent());
 	}
 
 	/**

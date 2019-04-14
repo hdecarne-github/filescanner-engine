@@ -152,9 +152,11 @@ public class ArraySpec extends CompositeSpec {
 			int elementCount = this.size.get().intValue();
 
 			for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
-				out.setStyle(RenderStyle.LABEL);
-				out.write(formatArrayLabel(elementIndex));
+				String arrayLabel = formatArrayLabel(elementIndex);
+
 				for (AttributeSpec<?> element : this.elements) {
+					out.setStyle(RenderStyle.LABEL);
+					out.write(arrayLabel);
 					element.render(out, context);
 				}
 			}

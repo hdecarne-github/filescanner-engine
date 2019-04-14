@@ -26,8 +26,8 @@ import de.carne.filescanner.provider.util.FileNames;
 import de.carne.io.IOUtil;
 
 /**
- * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for raw data
- * transfer.
+ * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for raw
+ * data transfer.
  */
 public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRendererHandler {
 
@@ -60,6 +60,12 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	 */
 	public static final RawTransferHandler IMAGE_PNG_TRANSFER = new RawTransferHandler("PNG image file",
 			TransferType.IMAGE_PNG, ".png");
+
+	/**
+	 * Predefined IMAGE_TIFF transfer handler.
+	 */
+	public static final RawTransferHandler IMAGE_TIFF_TRANSFER = new RawTransferHandler("TIFF image file",
+			TransferType.IMAGE_TIFF, ".tif");
 
 	/**
 	 * Predefined TEXT_PLAIN transfer handler.

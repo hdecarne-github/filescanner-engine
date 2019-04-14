@@ -252,7 +252,7 @@ encodedInputSpec
 	;
 
 decodeAtSpec
-	: DecodeAt numberExpression compositeSpecExpression
+	: DecodeAt numberExpression (Colon numberValue)? compositeSpecExpression
 	;
 	
 attributeSpec

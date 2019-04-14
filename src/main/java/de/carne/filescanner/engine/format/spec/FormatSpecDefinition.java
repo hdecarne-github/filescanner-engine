@@ -917,6 +917,12 @@ public abstract class FormatSpecDefinition {
 
 		spec.position(loadNumberExpression(specCtx.numberExpression()));
 
+		NumberValueContext levelCtx = specCtx.numberValue();
+
+		if (levelCtx != null) {
+			spec.level(decodeLongValue(levelCtx).intValue());
+		}
+
 		LOG.debug(LOG_LOADED_SPEC, spec);
 
 		return spec;
@@ -1394,7 +1400,7 @@ public abstract class FormatSpecDefinition {
 		ExternalReferenceContext externalReferenceCtx;
 
 		if ((numberValueCtx = ctx.numberValue()) != null) {
-			numberExpression = FinalSupplier.of(Integer.decode(numberValueCtx.getText()));
+			numberExpression = FinalSupplier.of(Long.decode(numberValueCtx.getText()));
 		} else if ((specReferenceCtx = ctx.specReference()) != null) {
 			numberExpression = resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(),
 					NumberAttributeSpec.class);
@@ -1404,6 +1410,16 @@ public abstract class FormatSpecDefinition {
 			throw newLoadException(ctx, "Unexpected number expression");
 		}
 		return numberExpression;
+	}
+
+	private Long decodeLongValue(NumberValueContext ctx) {
+		Long value;
+		try {
+			value = Long.decode(ctx.getText());
+		} catch (NumberFormatException e) {
+			throw newLoadException(e, ctx, "Unexpected number value");
+		}
+		return value;
 	}
 
 	@SuppressWarnings("null")

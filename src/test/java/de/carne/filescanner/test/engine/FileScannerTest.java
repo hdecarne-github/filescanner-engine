@@ -144,6 +144,11 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testTiffImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.TIFF_IMAGE.path(), Formats.all().enabledFormats(), 1);
+	}
+
+	@Test
 	void testUdifFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), Formats.all().enabledFormats(), 1);
 	}

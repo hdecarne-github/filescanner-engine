@@ -188,7 +188,7 @@ SCOPED_BIND@TEST_FORMAT:
 		@TEST_UNION
 	}
 	encoded #encodedInputSpecConfig
-	decodeAt @POSITION @TEST_HEADER
+	decodeAt @POSITION:1 @TEST_HEADER
 }	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)

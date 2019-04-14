@@ -121,6 +121,12 @@ public final class TestFiles {
 			"https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.png", "w3c_home.png");
 
 	/**
+	 * http://skuld.bmsc.washington.edu/raster3d/examples/glow.tiff
+	 */
+	public static final TestFile TIFF_IMAGE = new TestFile(
+			"http://skuld.bmsc.washington.edu/raster3d/examples/glow.tiff", "glow.tiff");
+
+	/**
 	 * https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg
 	 */
 	public static final TestFile XAR_ARCHIVE = new TestFile(

@@ -31,6 +31,7 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 public class DecodeAtSpec implements FormatSpec {
 
 	private Supplier<? extends Number> position = FinalSupplier.of(Integer.valueOf(0));
+	private int level = 0;
 	private final CompositeSpec spec;
 
 	/**
@@ -40,7 +41,7 @@ public class DecodeAtSpec implements FormatSpec {
 	 */
 	public DecodeAtSpec(CompositeSpec spec) {
 		if (!spec.isResult()) {
-			throw new IllegalArgumentException("Relocated spec must be a result spec");
+			throw new IllegalArgumentException("Relocated spec is not a result spec: " + spec);
 		}
 		this.spec = spec;
 	}
@@ -66,6 +67,20 @@ public class DecodeAtSpec implements FormatSpec {
 		return position(FinalSupplier.of(positionValue));
 	}
 
+	/**
+	 * Sets the level of this spec.
+	 *
+	 * @param levelValue the level of this spec.
+	 * @return the updated {@linkplain DecodeAtSpec} instance for chaining.
+	 */
+	public DecodeAtSpec level(int levelValue) {
+		if (levelValue < 0) {
+			throw new IllegalArgumentException("Invalid level value: " + levelValue);
+		}
+		this.level = levelValue;
+		return this;
+	}
+
 	@Override
 	public boolean isFixedSize() {
 		return this.spec.isFixedSize();
@@ -83,7 +98,7 @@ public class DecodeAtSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decodeComposite(this.spec, this.position.get().longValue());
+		context.decodeComposite(this.spec, this.position.get().longValue(), this.level);
 	}
 
 	@Override
