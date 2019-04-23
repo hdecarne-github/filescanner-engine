@@ -22,13 +22,18 @@ import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.transfer.RenderOutput;
 
 /**
  * Conditional {@linkplain CompositeSpec}.
  */
 public class ConditionalCompositeSpec extends CompositeSpec {
 
+	private final FileScannerResultContextValueSpec<CompositeSpec> resolvedSpec = new FileScannerResultContextValueSpec<>(
+			CompositeSpec.class, ConditionalCompositeSpec.class.getSimpleName() + "#resolvedSpec");
 	private final Supplier<CompositeSpec> spec;
 
 	/**
@@ -57,7 +62,13 @@ public class ConditionalCompositeSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(@NonNull FileScannerResultDecodeContext context) throws IOException {
-		this.spec.get().decode(context);
+		context.bindDecodedValue(this.resolvedSpec, this.spec.get()).decodeComposite(context);
+	}
+
+	@Override
+	public void renderComposite(@NonNull RenderOutput out, @NonNull FileScannerResultRenderContext context)
+			throws IOException {
+		context.getValue(this.resolvedSpec).renderComposite(out, context);
 	}
 
 	@Override
