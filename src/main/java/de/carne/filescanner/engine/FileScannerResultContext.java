@@ -20,8 +20,6 @@ import java.io.IOException;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.filescanner.engine.format.spec.AttributeSpec;
-
 /**
  * Input data processor base class responsible for context specific attribute value access.
  */
@@ -79,12 +77,12 @@ public abstract class FileScannerResultContext {
 	}
 
 	/**
-	 * Gets a bound attribute value.
+	 * Gets a bound context value.
 	 *
-	 * @param <T> the actual attribute type.
-	 * @param attribute the {@linkplain AttributeSpec} to retrieve the value of.
-	 * @return the attribute value.
+	 * @param <T> the actual value type.
+	 * @param valueSpec the context value to retrieve.
+	 * @return the context value.
 	 */
-	public abstract <T> T getValue(AttributeSpec<T> attribute);
+	public abstract <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec);
 
 }

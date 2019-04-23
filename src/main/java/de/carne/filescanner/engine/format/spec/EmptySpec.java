@@ -16,23 +16,38 @@
  */
 package de.carne.filescanner.engine.format.spec;
 
-/**
- * Utility class providing {@linkplain AttributeSpec} related functions.
- */
-public final class AttributeSpecs {
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
-	private AttributeSpecs() {
-		// Prevent instantiation
+import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.transfer.RenderOutput;
+
+class EmptySpec extends CompositeSpec {
+
+	@Override
+	public boolean isFixedSize() {
+		return true;
 	}
 
-	/**
-	 * Predefined attribute to access the current input's name.
-	 */
-	public static final CharArraySpec INPUT_NAME = new CharArraySpec("<input name>");
+	@Override
+	public int matchSize() {
+		return 0;
+	}
 
-	/**
-	 * Predefined attribute to access the current input's size.
-	 */
-	public static final QWordSpec INPUT_SIZE = new QWordSpec("<input size>");
+	@Override
+	public boolean matches(ByteBuffer buffer) {
+		return true;
+	}
+
+	@Override
+	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
+		// nothing to do here
+	}
+
+	@Override
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		// Nothing to do here
+	}
 
 }

@@ -40,7 +40,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 
 	private static final Log LOG = new Log();
 
-	private final Map<Object, Object> contextValues = new HashMap<>();
+	private final Map<FileScannerResultContextValueSpec<?>, Object> contextValues = new HashMap<>();
 	private final FileScannerResultBuilder result;
 
 	FileScannerResultRenderContext(FileScannerResultBuilder result) throws IOException {
@@ -105,13 +105,13 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	}
 
 	@Override
-	public <T> T getValue(AttributeSpec<T> attributeSpec) {
-		Object value = this.contextValues.get(attributeSpec);
+	public <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec) {
+		Object value = this.contextValues.get(valueSpec);
 
 		if (value == null) {
-			value = this.result.getValue(attributeSpec, true);
+			value = this.result.getValue(valueSpec, true);
 		}
-		return Check.isInstanceOf(value, attributeSpec.type());
+		return Check.isInstanceOf(value, valueSpec.type());
 	}
 
 	/**

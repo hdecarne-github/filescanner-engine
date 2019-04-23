@@ -19,9 +19,7 @@ package de.carne.filescanner.provider.tiff;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
@@ -42,8 +40,6 @@ import de.carne.util.Lazy;
  * See TIFF.formatspec
  */
 final class TiffFormatSpecDefinition extends FormatSpecDefinition {
-
-	private final Map<Integer, FormatSpec> specCache = new WeakHashMap<>();
 
 	@Override
 	protected URL getFormatSpecResource() {
@@ -75,23 +71,17 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		int dataType = this.tdirType.get().get().intValue();
 		int dataCount = this.tdirCount.get().get().intValue();
 		int dataSize = calculateDataSize(dataType, dataCount);
-		FormatSpec entrySpec = FormatSpecs.EMPTY;
+		FormatSpec resultSpec = FormatSpecs.EMPTY;
 
 		if (dataSize > 4) {
-			Integer tdirOffsetValue = this.tdirOffset.get().get();
+			long dataOffset = this.tdirOffset.get().get().longValue();
+			StructSpec entrySpec = new StructSpec();
 
-			entrySpec = this.specCache.computeIfAbsent(tdirOffsetValue,
-					dataOffset -> directoryEntryLEHelper(dataOffset, dataSize));
+			entrySpec.result("TIFFEntry");
+			entrySpec.add(new RangeSpec("").size(dataSize));
+			resultSpec = new DecodeAtSpec(entrySpec).position(dataOffset).level(1);
 		}
-		return entrySpec;
-	}
-
-	private FormatSpec directoryEntryLEHelper(Integer offset, int size) {
-		StructSpec entrySpec = new StructSpec();
-
-		entrySpec.result("TIFFEntry");
-		entrySpec.add(new RangeSpec("").size(size));
-		return new DecodeAtSpec(entrySpec).position(offset.longValue()).level(1);
+		return resultSpec;
 	}
 
 	private int calculateDataSize(int dataType, int dataCount) {
@@ -129,19 +119,15 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		FormatSpec nextDirectorySpec;
 
 		if (nextDirOffValue.intValue() != 0) {
-			nextDirectorySpec = this.specCache.computeIfAbsent(nextDirOffValue, this::nextDirectoryLEHelper);
+			DecodeAtSpec directoryAtSpec = new DecodeAtSpec(this.tiffDirectoryLESpec.get());
+
+			directoryAtSpec.position(IntHelper.toUnsignedLong(nextDirOffValue));
+			directoryAtSpec.level(1);
+			nextDirectorySpec = directoryAtSpec;
 		} else {
 			nextDirectorySpec = FormatSpecs.EMPTY;
 		}
 		return nextDirectorySpec;
-	}
-
-	private FormatSpec nextDirectoryLEHelper(Integer dirOff) {
-		DecodeAtSpec directoryAtSpec = new DecodeAtSpec(this.tiffDirectoryLESpec.get());
-
-		directoryAtSpec.position(IntHelper.toUnsignedLong(dirOff));
-		directoryAtSpec.level(1);
-		return directoryAtSpec;
 	}
 
 	protected FileScannerResultRendererHandler tiffRenderer() {

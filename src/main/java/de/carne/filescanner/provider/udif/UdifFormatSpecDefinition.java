@@ -18,13 +18,11 @@ package de.carne.filescanner.provider.udif;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.StreamValue;
-import de.carne.filescanner.engine.format.spec.AttributeSpecs;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
@@ -41,9 +39,8 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private static final StyledTextRendererHandler RESOURCE_FORK_RENDERER = new StyledTextRendererHandler(TransferType.TEXT_XML);
-
-	private Map<StreamValue, CompositeSpec> dataForkSpecCache = new WeakHashMap<>();
+	private static final StyledTextRendererHandler RESOURCE_FORK_RENDERER = new StyledTextRendererHandler(
+			TransferType.TEXT_XML);
 
 	@Override
 	protected URL getFormatSpecResource() {
@@ -68,17 +65,12 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected Long imageDataSize() {
-		return AttributeSpecs.INPUT_SIZE.get().longValue() - this.udifTrailerSpec.get().matchSize();
+		return FileScannerResultContextValueSpecs.INPUT_SIZE.get().longValue() - this.udifTrailerSpec.get().matchSize();
 	}
 
 	protected CompositeSpec dataForkSpec() {
-		StreamValue resourceFork = this.resourceForkSpec.get().get();
-
-		return this.dataForkSpecCache.computeIfAbsent(resourceFork, this::dataForkSpecHelper);
-	}
-
-	private CompositeSpec dataForkSpecHelper(StreamValue resourceFork) {
 		CompositeSpec dataForkSpec = FormatSpecs.EMPTY;
+		StreamValue resourceFork = this.resourceForkSpec.get().get();
 
 		try (InputStream resourceForkInput = resourceFork.stream()) {
 			dataForkSpec = ResourceForkHandler.parse(resourceForkInput);

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.format.spec.AttributeSpecs;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
@@ -71,7 +71,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	private String decodedInputName() {
-		String[] splitInputName = FileUtil.splitPath(AttributeSpecs.INPUT_NAME.get());
+		String[] splitInputName = FileUtil.splitPath(FileScannerResultContextValueSpecs.INPUT_NAME.get());
 
 		return splitInputName[1] + MANGLED_EXTENSION_MAP.getOrDefault(splitInputName[2], "");
 	}

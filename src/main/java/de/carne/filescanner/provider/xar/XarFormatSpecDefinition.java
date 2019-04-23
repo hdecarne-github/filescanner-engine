@@ -21,9 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.zip.InflaterInputStream;
 
 import de.carne.boot.logging.Log;
@@ -71,8 +69,6 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	};
 
-	private final Map<StreamValue, CompositeSpec> heapSpecCache = new WeakHashMap<>();
-
 	@Override
 	protected URL getFormatSpecResource() {
 		return Objects.requireNonNull(getClass().getResource("Xar.formatspec"));
@@ -108,15 +104,10 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	protected CompositeSpec heapSpec() {
+		CompositeSpec heapSpec = FormatSpecs.EMPTY;
 		StreamValue tocXmlValue = this.tocXml.get().get();
-
-		return this.heapSpecCache.computeIfAbsent(tocXmlValue, this::heapSpecHelper);
-	}
-
-	private CompositeSpec heapSpecHelper(StreamValue tocXmlValue) {
 		long heapOffset = LongHelper.toUnsignedLong(this.headerSize.get().get())
 				+ LongHelper.toUnsignedLong(this.tocLength.get().get());
-		CompositeSpec heapSpec = FormatSpecs.EMPTY;
 
 		try (InputStream tocXmlInput = new InflaterInputStream(tocXmlValue.stream())) {
 			heapSpec = TocHandler.parse(tocXmlInput, heapOffset);

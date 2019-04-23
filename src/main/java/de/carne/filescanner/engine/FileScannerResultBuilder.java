@@ -33,8 +33,6 @@ import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
-import de.carne.filescanner.engine.format.spec.AttributeSpec;
-import de.carne.filescanner.engine.format.spec.AttributeSpecs;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
@@ -197,20 +195,23 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		return Objects.requireNonNull(this.parent);
 	}
 
-	protected synchronized <T> void bindValue(AttributeSpec<T> attribute, @NonNull T value) {
-		modifyState().getValues().put(attribute, value);
+	protected synchronized <T> void bindValue(FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value) {
+		modifyState().getValues().put(valueSpec, value);
 	}
 
-	public abstract <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value);
+	public abstract <T> void bindResultValue(CompositeSpec scope, FileScannerResultContextValueSpec<T> valueSpec,
+			@NonNull T value);
+
+	public abstract <T> void bindDecodedValue(FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value);
 
 	@Nullable
-	protected synchronized <T> T getResultValue(AttributeSpec<T> attribute, boolean committed) {
-		Object value = (committed ? this.committedState : this.currentState).getValues().get(attribute);
+	protected synchronized <T> T getResultValue(FileScannerResultContextValueSpec<T> valueSpec, boolean committed) {
+		Object value = (committed ? this.committedState : this.currentState).getValues().get(valueSpec);
 
-		return (value != null ? Check.isInstanceOf(value, attribute.type()) : null);
+		return (value != null ? Check.isInstanceOf(value, valueSpec.type()) : null);
 	}
 
-	public abstract <T> T getValue(AttributeSpec<T> attribute, boolean committed);
+	public abstract <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec, boolean committed);
 
 	public void resolveExportHandlers(List<Supplier<FileScannerResultExportHandler>> handlers) {
 		for (Supplier<FileScannerResultExportHandler> handler : handlers) {
@@ -415,8 +416,8 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange)
 				throws IOException {
 			super(parent, FileScannerResult.Type.INPUT, inputRange, FinalSupplier.of(inputRange.name()));
-			bindValue(AttributeSpecs.INPUT_NAME, inputRange.name());
-			bindValue(AttributeSpecs.INPUT_SIZE, inputRange.size());
+			bindValue(FileScannerResultContextValueSpecs.INPUT_NAME, inputRange.name());
+			bindValue(FileScannerResultContextValueSpecs.INPUT_SIZE, inputRange.size());
 		}
 
 		@Override
@@ -432,16 +433,22 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
-			throw new IllegalStateException("Cannot bind value to input result '" + this + "'");
+		public <T> void bindResultValue(CompositeSpec scope, FileScannerResultContextValueSpec<T> valueSpec, T value) {
+			throw new IllegalStateException("Cannot bind result value to input result '" + this + "'");
 		}
 
 		@Override
-		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			@Nullable T value = getResultValue(attribute, committed);
+		public <T> void bindDecodedValue(@NonNull FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value) {
+			throw new IllegalStateException("Cannot bind decoded value to input result '" + this + "'");
+		}
+
+		@Override
+		public <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec, boolean committed) {
+			// Always search uncommitted (because input results are never committed and never reverted)
+			@Nullable T value = getResultValue(valueSpec, false);
 
 			if (value == null) {
-				throw new IllegalStateException("Failed to retrieve context attribute '" + attribute + "'");
+				throw new IllegalStateException("Failed to retrieve context value '" + valueSpec + "'");
 			}
 			return value;
 		}
@@ -473,25 +480,35 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value) {
+		public <T> void bindResultValue(CompositeSpec scope, FileScannerResultContextValueSpec<T> valueSpec,
+				@NonNull T value) {
 			if (this.formatSpec.equals(scope)) {
-				bindValue(attribute, value);
+				bindValue(valueSpec, value);
 			} else {
-				parent().bindResultValue(scope, attribute, value);
+				parent().bindResultValue(scope, valueSpec, value);
 			}
 		}
 
 		@Override
-		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			@Nullable T value = getResultValue(attribute, committed);
+		public <T> void bindDecodedValue(@NonNull FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value) {
+			if (this.formatSpec.isResult()) {
+				bindValue(valueSpec, value);
+			} else {
+				parent().bindDecodedValue(valueSpec, value);
+			}
+		}
+
+		@Override
+		public <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec, boolean committed) {
+			@Nullable T value = getResultValue(valueSpec, committed);
 
 			if (value == null) {
-				value = Objects.requireNonNull(parent().getValue(attribute, committed));
+				value = Objects.requireNonNull(parent().getValue(valueSpec, committed));
 				if (this.relocated) {
-					LOG.debug("Re-binding relocated context attribute '':{0}'' = ''{1}''", attribute,
+					LOG.debug("Re-binding relocated context value '':{0}'' = ''{1}''", valueSpec,
 							Strings.encode(Objects.toString(value)));
 
-					bindValue(attribute, value);
+					bindValue(valueSpec, value);
 				}
 			}
 			return value;
@@ -520,15 +537,20 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, T value) {
-			throw new IllegalStateException("Cannot bind value to encoded input result '" + this + "'");
+		public <T> void bindResultValue(CompositeSpec scope, FileScannerResultContextValueSpec<T> valueSpec, T value) {
+			throw new IllegalStateException("Cannot bind result value to encoded input result '" + this + "'");
 		}
 
 		@Override
-		public <T> T getValue(AttributeSpec<T> attribute, boolean committed) {
-			@Nullable T value = getResultValue(attribute, committed);
+		public <T> void bindDecodedValue(@NonNull FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value) {
+			throw new IllegalStateException("Cannot bind decoded value to encoded input result '" + this + "'");
+		}
 
-			return (value != null ? value : parent().getValue(attribute, committed));
+		@Override
+		public <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec, boolean committed) {
+			@Nullable T value = getResultValue(valueSpec, committed);
+
+			return (value != null ? value : parent().getValue(valueSpec, committed));
 		}
 
 	}

@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.filescanner.engine.FileScannerResultContext;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
@@ -43,11 +43,9 @@ import de.carne.util.Strings;
  *
  * @param <T> The actual attribute type.
  */
-public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
+public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec<T> implements FormatSpec {
 
-	private final Class<T> type;
 	private final BiPredicate<T, T> typeEquals;
-	private final Supplier<String> name;
 	private AttributeFormatter<T> format = Object::toString;
 	private final List<AttributeValidator<T>> validators = new ArrayList<>();
 	private final List<AttributeRenderer<T>> renderers = new ArrayList<>();
@@ -63,9 +61,8 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @param name the attribute's name.
 	 */
 	protected AttributeSpec(Class<T> type, BiPredicate<T, T> typeEquals, Supplier<String> name) {
-		this.type = type;
+		super(type, name);
 		this.typeEquals = typeEquals;
-		this.name = name;
 	}
 
 	/**
@@ -77,24 +74,6 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 */
 	protected AttributeSpec(Class<T> type, BiPredicate<T, T> typeEquals, String name) {
 		this(type, typeEquals, FinalSupplier.of(name));
-	}
-
-	/**
-	 * Gets the attribute's type.
-	 *
-	 * @return the attribute's type.
-	 */
-	public Class<T> type() {
-		return this.type;
-	}
-
-	/**
-	 * Gets the attribute's name.
-	 *
-	 * @return the attribute's name.
-	 */
-	public String name() {
-		return this.name.get();
 	}
 
 	/**
@@ -117,7 +96,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	public AttributeSpec<T> format(String formatter) {
 		AttributeFormatter<T> attributeFormatter;
 
-		if (this.type.isArray()) {
+		if (type().isArray()) {
 			attributeFormatter = value -> {
 				StringBuilder buffer = new StringBuilder();
 				int length = Array.getLength(value);
@@ -166,7 +145,7 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
 	 */
 	public AttributeSpec<T> validate(Set<T> values) {
-		if (this.type.isArray()) {
+		if (type().isArray()) {
 			validate(value -> values.stream().anyMatch(value2 -> this.typeEquals.test(value, value2)));
 		} else {
 			validate(values::contains);
@@ -232,10 +211,11 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
+		long decodeStart = context.position();
 		T value = decodeValue(context);
 
 		if (!validateValue(value)) {
-			throw new UnexpectedDataException("Unexpected " + this, context.position(), value);
+			throw new UnexpectedDataException("Unexpected " + this, decodeStart, value);
 		}
 		switch (this.bindMode) {
 		case NONE:
@@ -263,10 +243,10 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 			break;
 		}
 
-		String actualName = this.name.get();
+		String name = name();
 
-		if (Strings.notEmpty(actualName)) {
-			out.setStyle(RenderStyle.NORMAL).write(actualName);
+		if (Strings.notEmpty(name)) {
+			out.setStyle(RenderStyle.NORMAL).write(name);
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		}
 		out.setStyle(RenderStyle.VALUE).write(this.format.format(value));
@@ -274,34 +254,6 @@ public abstract class AttributeSpec<T> implements FormatSpec, Supplier<T> {
 			renderer.render(out, value);
 		}
 		out.writeln();
-	}
-
-	@Override
-	public T get() {
-		return FileScannerResultContext.get().getValue(this);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-
-		buffer.append('(');
-		formatType(buffer, this.type);
-		buffer.append(")'");
-		buffer.append(this.name);
-		buffer.append("'");
-		return buffer.toString();
-	}
-
-	private static void formatType(StringBuilder buffer, Class<?> type) {
-		Class<?> componenentType = type.getComponentType();
-
-		if (componenentType != null) {
-			formatType(buffer, componenentType);
-			buffer.append("[]");
-		} else {
-			buffer.append(type.getName());
-		}
 	}
 
 }

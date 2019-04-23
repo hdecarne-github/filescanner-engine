@@ -94,7 +94,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 	private FileScannerResult decodeComposite(CompositeSpec formatSpec, int decodeLevel, boolean relocated)
 			throws IOException {
-		LOG.debug("Decoding composite spec ''{0}''...", formatSpec);
+		LOG.debug("Decoding composite spec {0}...", formatSpec);
 
 		boolean isRootSpec = this.decodeStack.size() == 1;
 		boolean isResultSpec = formatSpec.isResult();
@@ -144,7 +144,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public FileScannerResult decodeEncodedInputs(EncodedInputSpec encodedInputSpec) throws IOException {
-		LOG.debug("Decoding encoded input spec ''{0}''...", encodedInputSpec);
+		LOG.debug("Decoding encoded input spec {0}...", encodedInputSpec);
 
 		long decodeStart = position();
 		FileScannerResultBuilder decodeResult = FileScannerResultBuilder.encodedInputResult(
@@ -172,41 +172,60 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	/**
 	 * Binds an attribute value in {@linkplain AttributeBindMode#CONTEXT} mode.
 	 *
-	 * @param <T> the actual attribute type.
-	 * @param attribute the attribute to bind.
+	 * @param <T> the actual value type.
+	 * @param valueSpec the attribute to bind to.
 	 * @param value the attribute value to bind.
+	 * @return the bound attribute value.
 	 */
-	public <T> void bindContextValue(AttributeSpec<T> attribute, @NonNull T value) {
-		LOG.debug("Binding context attribute '':{0}'' = ''{1}''", attribute, Strings.encode(Objects.toString(value)));
+	public <T> T bindContextValue(AttributeSpec<T> valueSpec, @NonNull T value) {
+		LOG.debug("Binding context attribute {0} = ''{1}''", valueSpec, Strings.encode(Objects.toString(value)));
 
-		Objects.requireNonNull(this.decodeStack.peek()).contextValues().put(attribute, value);
+		Objects.requireNonNull(this.decodeStack.peek()).contextValues().put(valueSpec, value);
+		return value;
 	}
 
 	/**
 	 * Binds an attribute value in {@linkplain AttributeBindMode#RESULT} mode.
 	 *
-	 * @param <T> the actual attribute type.
+	 * @param <T> the actual value type.
 	 * @param scope the bind scope to use.
-	 * @param attribute the attribute to bind.
+	 * @param valueSpec the attribute to bind to.
 	 * @param value the attribute value to bind.
+	 * @return the bound attribute value.
 	 */
-	public <T> void bindResultValue(CompositeSpec scope, AttributeSpec<T> attribute, @NonNull T value) {
-		LOG.debug("Binding result attribute ''{0}:{1}'' = ''{2}''", scope, attribute,
+	public <T> T bindResultValue(CompositeSpec scope, AttributeSpec<T> valueSpec, @NonNull T value) {
+		LOG.debug("Binding result attribute {0}:{1} = ''{2}''", scope, valueSpec,
 				Strings.encode(Objects.toString(value)));
 
-		Objects.requireNonNull(this.decodeStack.peek()).builder().bindResultValue(scope, attribute, value);
+		Objects.requireNonNull(this.decodeStack.peek()).builder().bindResultValue(scope, valueSpec, value);
+		return value;
+	}
+
+	/**
+	 * Binds a decoded value to a given context position.
+	 *
+	 * @param <T> the actual value type.
+	 * @param valueSpec the decode result to bind to.
+	 * @param value the decoded value to bind.
+	 * @return the bound attribute value.
+	 */
+	public <T> T bindDecodedValue(FileScannerResultContextValueSpec<T> valueSpec, @NonNull T value) {
+		LOG.debug("Binding decoded value {0} = ''{1}''", valueSpec, Strings.encode(Objects.toString(value)));
+
+		Objects.requireNonNull(this.decodeStack.peek()).builder().bindDecodedValue(valueSpec, value);
+		return value;
 	}
 
 	@Override
-	public <T> T getValue(AttributeSpec<T> attribute) {
-		LOG.debug("Resolving attribute value ''{0}''", attribute);
+	public <T> T getValue(FileScannerResultContextValueSpec<T> valueSpec) {
+		LOG.debug("Resolving context value {0}", valueSpec);
 
 		Scope result = Objects.requireNonNull(this.decodeStack.peek());
-		Object contextValue = result.contextValues().get(attribute);
-		T value = (contextValue != null ? Check.isInstanceOf(contextValue, attribute.type())
-				: result.builder().getValue(attribute, false));
+		Object contextValue = result.contextValues().get(valueSpec);
+		T value = (contextValue != null ? Check.isInstanceOf(contextValue, valueSpec.type())
+				: result.builder().getValue(valueSpec, false));
 
-		LOG.debug("Resolved attribute value ''{0}'' = ''{1}''", attribute, Strings.encode(Objects.toString(value)));
+		LOG.debug("Resolved context value {0} = ''{1}''", valueSpec, Strings.encode(Objects.toString(value)));
 
 		return value;
 	}

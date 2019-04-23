@@ -14,20 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.format.spec;
+package de.carne.filescanner.engine;
 
 /**
- * Utility class providing {@linkplain FormatSpec} related functions.
+ * Utility class providing {@linkplain FileScannerResultContextValueSpec} related functions.
  */
-public final class FormatSpecs {
+public final class FileScannerResultContextValueSpecs {
 
-	private FormatSpecs() {
+	private FileScannerResultContextValueSpecs() {
 		// Prevent instantiation
 	}
 
 	/**
-	 * Empty {@linkplain CompositeSpec} with no decode result.
+	 * Predefined attribute to access the current input's name.
 	 */
-	public static final CompositeSpec EMPTY = new EmptySpec();
+	public static final FileScannerResultContextValueSpec<String> INPUT_NAME = new FileScannerResultContextValueSpec<>(
+			String.class, "#inputName");
+
+	/**
+	 * Predefined attribute to access the current input's size.
+	 */
+	public static final FileScannerResultContextValueSpec<Long> INPUT_SIZE = new FileScannerResultContextValueSpec<>(
+			Long.class, "#inputSize");
 
 }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.AttributeSpecs;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.format.spec.ByteSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
@@ -106,7 +106,7 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 		if ((flg & 0x08) == 0x08) {
 			decodedInputName.append(this.gzipHeaderFname.get().get());
 		} else {
-			String[] splitInputName = FileUtil.splitPath(AttributeSpecs.INPUT_NAME.get());
+			String[] splitInputName = FileUtil.splitPath(FileScannerResultContextValueSpecs.INPUT_NAME.get());
 
 			decodedInputName.append(splitInputName[1]);
 			decodedInputName.append(MANGLED_EXTENSION_MAP.getOrDefault(splitInputName[2], ""));

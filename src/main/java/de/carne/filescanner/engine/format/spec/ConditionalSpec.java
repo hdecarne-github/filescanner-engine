@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -31,6 +32,8 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public class ConditionalSpec implements FormatSpec {
 
+	private final FileScannerResultContextValueSpec<FormatSpec> resolvedSpec = new FileScannerResultContextValueSpec<>(
+			FormatSpec.class, ConditionalSpec.class.getSimpleName() + "#resolvedSpec");
 	private final Supplier<FormatSpec> spec;
 
 	/**
@@ -59,12 +62,12 @@ public class ConditionalSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		this.spec.get().decode(context);
+		context.bindDecodedValue(this.resolvedSpec, this.spec.get()).decode(context);
 	}
 
 	@Override
 	public void render(@NonNull RenderOutput out, @NonNull FileScannerResultRenderContext context) throws IOException {
-		this.spec.get().render(out, context);
+		context.getValue(this.resolvedSpec).render(out, context);
 	}
 
 	@Override
