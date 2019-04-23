@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.check.Check;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
@@ -36,6 +37,8 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public class SequenceSpec extends CompositeSpec {
 
+	private final FileScannerResultContextValueSpec<Integer> elementCount = new FileScannerResultContextValueSpec<>(
+			Integer.class, SequenceSpec.class.getSimpleName() + "#elementCount");
 	private final FormatSpec elementSpec;
 	private @Nullable FormatSpec stopBeforeSpec = null;
 	private @Nullable FormatSpec stopAfterSpec = null;
@@ -183,37 +186,19 @@ public class SequenceSpec extends CompositeSpec {
 		if (matchCount < minMatchCount) {
 			throw new UnexpectedDataException("Insufficent sequence length", decodeStart);
 		}
+		context.bindDecodedValue(this.elementCount, matchCount);
 	}
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
 		if (!isResult() || out.isEmpty()) {
-			int minMatchCount = (this.minSize != null ? this.minSize.get().intValue() : 0);
-			int maxMatchCount = (this.maxSize != null ? this.maxSize.get().intValue() : Integer.MAX_VALUE);
+			int decodedElementCount = context.getValue(this.elementCount).intValue();
 
-			Check.assertTrue(minMatchCount >= 0);
-			Check.assertTrue(maxMatchCount >= minMatchCount);
-
-			if (this.stopBeforeSpec == null && (this.stopAfterSpec != null || minMatchCount == maxMatchCount)) {
-				int matchCount = 0;
-				boolean done = false;
-
-				while (!done) {
-					out.setStyle(RenderStyle.LABEL);
-					out.writeln(formatElementLabel(matchCount));
-
-					FormatSpec checkedStopAfterSpec = this.stopAfterSpec;
-
-					if (checkedStopAfterSpec != null && context.matchFormat(checkedStopAfterSpec)) {
-						checkedStopAfterSpec.render(out, context);
-						done = true;
-					} else {
-						this.elementSpec.render(out, context);
-						matchCount++;
-						done = (matchCount >= maxMatchCount);
-					}
-				}
+			for (int elementIndex = 0; elementIndex < decodedElementCount; elementIndex++) {
+				out.setStyle(RenderStyle.LABEL);
+				out.writeln(formatElementLabel(elementIndex));
+				this.elementSpec.render(out, context);
 			}
 		}
 	}
