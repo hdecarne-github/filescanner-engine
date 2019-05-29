@@ -65,6 +65,15 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	}
 
 	/**
+	 * Gets this context's remaining data bytes.
+	 * 
+	 * @return this context's remaining data bytes.
+	 */
+	public long remaining() {
+		return this.inputRange.end() - this.position;
+	}
+
+	/**
 	 * Sets the read position for the next read operation.
 	 *
 	 * @param position the position to set.

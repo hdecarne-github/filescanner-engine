@@ -33,10 +33,10 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 public abstract class Format {
 
 	private final String name;
-
 	private final List<CompositeSpec> headerSpecs = new ArrayList<>();
 	private final List<CompositeSpec> trailerSpecs = new ArrayList<>();
 	private final List<Pattern> inputNamePatterns = new ArrayList<>();
+	private boolean absolute = false;
 
 	/**
 	 * Constructs a new {@linkplain Format} instance.
@@ -86,6 +86,21 @@ public abstract class Format {
 	 */
 	protected Format registerInputNamePattern(Pattern inputNamePattern) {
 		this.inputNamePatterns.add(inputNamePattern);
+		return this;
+	}
+
+	/**
+	 * Defines whether this format is absolute or not.
+	 * <p>
+	 * If a format is absolute it only can be decoded starting from position 0. A non-absolute format can be decoded
+	 * starting from any position.
+	 * </p>
+	 *
+	 * @param absolute the absolute flag to set.
+	 * @return the updated {@linkplain Format} instance for chaining.
+	 */
+	protected Format setAbsolute(boolean absolute) {
+		this.absolute = absolute;
 		return this;
 	}
 
@@ -159,6 +174,19 @@ public abstract class Format {
 	 */
 	public List<Pattern> inputNamePatterns() {
 		return Collections.unmodifiableList(this.inputNamePatterns);
+	}
+
+	/**
+	 * Checks if this format is absolute.
+	 * <p>
+	 * If a format is absolute it only can be decoded starting from position 0. A non-absolute format can be decoded
+	 * starting from any position.
+	 * </p>
+	 *
+	 * @return {@code true} if this format is absolute.
+	 */
+	public final boolean isAbsolute() {
+		return this.absolute;
 	}
 
 	/**

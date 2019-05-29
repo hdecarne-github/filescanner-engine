@@ -75,6 +75,12 @@ qword_flag_symbols {
 
 // Specs
 
+TEST_RAW:
+format_spec "raw" {
+	raw {
+	}
+}
+
 TEST_FORMAT:
 format_spec #specialText {
 	struct "inline struct" {
@@ -188,7 +194,7 @@ SCOPED_BIND@TEST_FORMAT:
 		@TEST_UNION
 	}
 	encoded #encodedInputSpecConfig
-	decodeAt @POSITION:1 @TEST_HEADER
+	decode_at @POSITION:1 @TEST_HEADER
 }	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)

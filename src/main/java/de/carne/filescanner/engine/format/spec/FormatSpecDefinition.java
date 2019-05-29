@@ -99,6 +99,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.Q
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RangeSpecContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RawSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.RegexTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScanSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
@@ -647,7 +648,11 @@ public abstract class FormatSpecDefinition {
 	private void loadFormatSpec(FormatSpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		StructSpec spec = new StructSpec();
+		RawSpecContext rawCtx = specCtx.rawSpec();
 
+		if (rawCtx != null) {
+			spec.add(loadRawSpec(rawCtx, rootCtx));
+		}
 		for (StructSpecElementContext elementCtx : specCtx.structSpecElement()) {
 			spec.add(loadStructSpecElement(elementCtx, rootCtx));
 		}
@@ -659,6 +664,19 @@ public abstract class FormatSpecDefinition {
 		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
+	}
+
+	@SuppressWarnings("null")
+	private RawSpec loadRawSpec(RawSpecContext specCtx, FormatSpecsContext rootCtx) {
+		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
+			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
+		}
+
+		RawSpec spec = new RawSpec();
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
 	}
 
 	@SuppressWarnings("null")

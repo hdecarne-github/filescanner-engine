@@ -80,6 +80,7 @@ final class FormatMatcherBuilder {
 			this.matchTrailerBuffer = ByteBuffer.allocate(matchTrailerBufferSize);
 		}
 
+		@SuppressWarnings("squid:S3776")
 		public List<Format> match(FileScannerInputRange inputRange, long scanPosition) throws IOException {
 			this.matchHeaderBuffer.rewind();
 			inputRange.read(this.matchHeaderBuffer, scanPosition);
@@ -97,21 +98,25 @@ final class FormatMatcherBuilder {
 			int inputNameMatches = 0;
 
 			for (Format format : this.matcherFormats) {
-				if (format.hasHeaderSpecs()) {
-					if (matchHeaderSpecs(format, this.matchHeaderBuffer)) {
-						matchingFormats.add(trailerMatches + headerMatches, format);
-						headerMatches++;
+				if (scanPosition == 0 || !format.isAbsolute()) {
+					if (format.hasHeaderSpecs()) {
+						if (matchHeaderSpecs(format, this.matchHeaderBuffer)) {
+							matchingFormats.add(trailerMatches + headerMatches, format);
+							headerMatches++;
+						}
+					} else if (format.hasTrailerSpecs()) {
+						if (matchTrailerSpecs(format, this.matchTrailerBuffer)) {
+							matchingFormats.add(trailerMatches, format);
+							trailerMatches++;
+						}
+					} else if (format.hasInputNamePatterns()) {
+						if (matchInputNamePatterns(format, inputRange.name())) {
+							matchingFormats.add(trailerMatches + headerMatches + inputNameMatches, format);
+							inputNameMatches++;
+						}
+					} else {
+						matchingFormats.add(format);
 					}
-				} else if (format.hasTrailerSpecs()) {
-					if (scanPosition == 0 && matchTrailerSpecs(format, this.matchTrailerBuffer)) {
-						matchingFormats.add(trailerMatches, format);
-						trailerMatches++;
-					}
-				} else if (scanPosition == 0 && matchInputNamePatterns(format, inputRange.name())) {
-					matchingFormats.add(trailerMatches + headerMatches + inputNameMatches, format);
-					inputNameMatches++;
-				} else {
-					matchingFormats.add(format);
 				}
 			}
 			return matchingFormats;

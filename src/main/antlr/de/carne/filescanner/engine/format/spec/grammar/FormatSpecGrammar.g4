@@ -33,6 +33,7 @@ DWordFlagSymbols: 'dword_flag_symbols';
 QWordFlagSymbols: 'qword_flag_symbols';
 
 FormatSpec: 'format_spec';
+Raw: 'raw';
 Struct: 'struct';
 Array: 'array';
 Sequence: 'sequence';
@@ -41,7 +42,7 @@ Scan: 'scan';
 Range: 'range';
 Conditional: 'conditional';
 Encoded: 'encoded';
-DecodeAt: 'decodeAt';
+DecodeAt: 'decode_at';
 Validate: 'validate';
 Text: 'text';
 Format: 'format';
@@ -156,7 +157,15 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket structSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	: specIdentifier Colon FormatSpec textExpression LCBracket (rawSpec|structSpecElement+) RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
+	;
+	
+rawSpec
+	: Raw LCBracket specReference* RCBracket
+	;
+	
+mimeTypeIdentifier
+	: Identifier
 	;
 
 structSpec

@@ -39,6 +39,8 @@ public class LzmaFormat extends Format {
 		this.formatSpecDefinition = new LzmaFormatSpecDefinition();
 		this.formatSpecDefinition.load();
 		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
+		// To reduce the number of false positives this format is considered absolute
+		setAbsolute(true);
 	}
 
 	@Override
