@@ -59,7 +59,12 @@ public enum TransferType {
 	/**
 	 * XML text data.
 	 */
-	TEXT_XML("text/xml");
+	TEXT_XML("text/xml"),
+
+	/**
+	 * PDF data.
+	 */
+	APPLICATION_PDF("application/pdf");
 
 	private final String mimeType;
 

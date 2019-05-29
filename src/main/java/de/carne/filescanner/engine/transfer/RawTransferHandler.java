@@ -79,6 +79,12 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	public static final RawTransferHandler TEXT_XML_TRANSFER = new RawTransferHandler("XML file", TransferType.TEXT_XML,
 			".xml");
 
+	/**
+	 * Predefined TEXT_XML transfer handler.
+	 */
+	public static final RawTransferHandler APPLICATION_PDF_TRANSFER = new RawTransferHandler("PDF file",
+			TransferType.APPLICATION_PDF, ".pdf");
+
 	private final String name;
 	private final TransferType transferType;
 	private final String extension;
