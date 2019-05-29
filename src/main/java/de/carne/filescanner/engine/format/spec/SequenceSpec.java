@@ -194,10 +194,13 @@ public class SequenceSpec extends CompositeSpec {
 		super.renderComposite(out, context);
 		if (!isResult() || out.isEmpty()) {
 			int decodedElementCount = context.getValue(this.elementCount).intValue();
+			boolean renderLabel = !FormatSpecs.isResult(this.elementSpec);
 
 			for (int elementIndex = 0; elementIndex < decodedElementCount; elementIndex++) {
-				out.setStyle(RenderStyle.LABEL);
-				out.writeln(formatElementLabel(elementIndex));
+				if (renderLabel) {
+					out.setStyle(RenderStyle.LABEL);
+					out.writeln(formatElementLabel(elementIndex));
+				}
 				this.elementSpec.render(out, context);
 			}
 		}

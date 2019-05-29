@@ -30,4 +30,14 @@ public final class FormatSpecs {
 	 */
 	public static final CompositeSpec EMPTY = new EmptySpec();
 
+	/**
+	 * Checks whether a {@linkplain FormatSpec} is a result.
+	 * 
+	 * @param spec the {@linkplain FormatSpec} to check.
+	 * @return {@code true} if the submitted {@linkplain FormatSpec} is a result.
+	 */
+	public static boolean isResult(FormatSpec spec) {
+		return spec instanceof CompositeSpec && ((CompositeSpec) spec).isResult();
+	}
+
 }
