@@ -39,6 +39,7 @@ public class UdifFormat extends Format {
 		this.formatSpecDefinition = new UdifFormatSpecDefinition();
 		this.formatSpecDefinition.load();
 		registerTrailerSpec(this.formatSpecDefinition.trailerSpec());
+		setAbsolute(true);
 	}
 
 	@Override

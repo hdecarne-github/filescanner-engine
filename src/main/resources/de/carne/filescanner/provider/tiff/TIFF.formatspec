@@ -254,7 +254,7 @@ struct "TIFFHeaderClassic" {
 		->validate(42)
 TIFF_DIROFF:
 	dword "tiff_diroff"
-	decodeAt @TIFF_DIROFF:1 @TIFF_DIRECTORY_LE
+	decode_at @TIFF_DIROFF:1 @TIFF_DIRECTORY_LE
 }
 
 TIFF_DIRECTORY_LE:
