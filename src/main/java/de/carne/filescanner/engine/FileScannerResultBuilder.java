@@ -227,15 +227,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			commitResult = this;
 			modifyState().updateEnd(commitPosition);
 		}
-		if (!this.currentState.equals(this.committedState) && this.start < this.currentState.end()) {
+
+		FileScannerResultBuilder checkedParent = this.parent;
+
+		if (!this.currentState.equals(this.committedState)
+				&& (checkedParent == null || this.start < this.currentState.end())) {
 			commitResult = this;
 
 			boolean initialCommit = UNCOMMITTED.equals(this.committedState);
 
 			this.committedState = this.currentState.commit();
-
-			FileScannerResultBuilder checkedParent = this.parent;
-
 			if (checkedParent != null) {
 				if (this.type != Type.INPUT) {
 					commitResult = checkedParent.updateAndCommitParent(commitPosition, this, initialCommit, fullCommit);
