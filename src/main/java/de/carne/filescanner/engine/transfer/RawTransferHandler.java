@@ -19,6 +19,10 @@ package de.carne.filescanner.engine.transfer;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
@@ -41,31 +45,31 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	 * Predefined IMAGE_BMP transfer handler.
 	 */
 	public static final RawTransferHandler IMAGE_BMP_TRANSFER = new RawTransferHandler("BMP image file",
-			TransferType.IMAGE_BMP, ".bmp");
+			TransferType.IMAGE_BMP, ".bmp", RenderOption.TRANSPARENCY);
 
 	/**
 	 * Predefined IMAGE_GIF transfer handler.
 	 */
 	public static final RawTransferHandler IMAGE_GIF_TRANSFER = new RawTransferHandler("GIF image file",
-			TransferType.IMAGE_GIF, ".gif");
+			TransferType.IMAGE_GIF, ".gif", RenderOption.TRANSPARENCY);
 
 	/**
 	 * Predefined IMAGE_JPEG transfer handler.
 	 */
 	public static final RawTransferHandler IMAGE_JPEG_TRANSFER = new RawTransferHandler("JPEG image file",
-			TransferType.IMAGE_JPEG, ".jpg");
+			TransferType.IMAGE_JPEG, ".jpg", RenderOption.TRANSPARENCY);
 
 	/**
 	 * Predefined IMAGE_PNG transfer handler.
 	 */
 	public static final RawTransferHandler IMAGE_PNG_TRANSFER = new RawTransferHandler("PNG image file",
-			TransferType.IMAGE_PNG, ".png");
+			TransferType.IMAGE_PNG, ".png", RenderOption.TRANSPARENCY);
 
 	/**
 	 * Predefined IMAGE_TIFF transfer handler.
 	 */
 	public static final RawTransferHandler IMAGE_TIFF_TRANSFER = new RawTransferHandler("TIFF image file",
-			TransferType.IMAGE_TIFF, ".tif");
+			TransferType.IMAGE_TIFF, ".tif", RenderOption.TRANSPARENCY);
 
 	/**
 	 * Predefined TEXT_PLAIN transfer handler.
@@ -88,6 +92,7 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	private final String name;
 	private final TransferType transferType;
 	private final String extension;
+	private final Set<RenderOption> renderOptions = new HashSet<>();
 
 	/**
 	 * Constructs a new {@linkplain RawTransferHandler} instance.
@@ -95,11 +100,16 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	 * @param name the transfer handler's name.
 	 * @param transferType the exporter's transfer data type.
 	 * @param extension the file name extension to use.
+	 * @param renderOptions the render options to use.
 	 */
-	public RawTransferHandler(String name, TransferType transferType, String extension) {
+	public RawTransferHandler(String name, TransferType transferType, String extension,
+			@NonNull RenderOption... renderOptions) {
 		this.name = name;
 		this.transferType = transferType;
 		this.extension = extension;
+		for (RenderOption renderOption : renderOptions) {
+			this.renderOptions.add(renderOption);
+		}
 	}
 
 	@Override
@@ -142,7 +152,9 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		if (out.isEmpty()) {
-			out.enableOption(RenderOption.TRANSPARENCY);
+			for (RenderOption renderOption : this.renderOptions) {
+				out.enableOption(renderOption);
+			}
 		}
 
 		FileScannerResult result = context.result();
