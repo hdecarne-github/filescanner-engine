@@ -43,6 +43,7 @@ public class HfsPlusFormat extends Format {
 		this.formatSpecDefinition = new HfsPlusFormatSpecDefinition();
 		this.formatSpecDefinition.load();
 		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
+		setAbsolute(true);
 	}
 
 	@Override
