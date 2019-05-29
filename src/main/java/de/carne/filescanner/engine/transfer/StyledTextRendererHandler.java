@@ -46,6 +46,12 @@ public class StyledTextRendererHandler implements FileScannerResultRendererHandl
 	private final Charset charset;
 
 	/**
+	 * Predefined TEXT_XML renderer handler.
+	 */
+	public static final StyledTextRendererHandler XML_RENDERER_HANDLER = new StyledTextRendererHandler(
+			TransferType.TEXT_XML);
+
+	/**
 	 * Constructs a new {@linkplain StyledTextRendererHandler} instance.
 	 *
 	 * @param transferType the {@linkplain TransferType} used to determine the render style.

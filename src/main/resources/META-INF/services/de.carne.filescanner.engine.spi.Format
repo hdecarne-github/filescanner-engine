@@ -12,4 +12,5 @@ de.carne.filescanner.provider.tar.TarFormat
 de.carne.filescanner.provider.tiff.TiffFormat
 de.carne.filescanner.provider.udif.UdifFormat
 de.carne.filescanner.provider.xar.XarFormat
+de.carne.filescanner.provider.xml.XmlFormat
 de.carne.filescanner.provider.zip.ZipFormat
