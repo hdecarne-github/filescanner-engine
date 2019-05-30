@@ -24,9 +24,17 @@
 // Specs
 
 PDF_MAGIC:
-struct {
-	char[5] "magic"
-		->validate("%PDF-")
+union {
+	struct {
+		byte[3] "bom"
+			->validate({ 0xef, 0xbb, 0xbf })
+		char[5] "magic"
+			->validate("%PDF-")
+	}
+	struct {
+		char[5] "magic"
+			->validate("%PDF-")
+	}
 }
 
 PDF_STREAM:
