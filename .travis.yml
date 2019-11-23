@@ -27,10 +27,8 @@ script: if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./gradlew -s build artifacto
 
 notifications:
   email: false
-  slack:
-    rooms:
-      - secure: oJwwZn0aRlvqVfHSm4XSzuh+WXEOr+xUM9dz/SWQPxkYuE94p9hvcEmRZvOkbKTQk7d/VSOmluZVhyu8GHiqPnB4m/w5Xqqvg2NZw7Uo9itweKprcPiPmozs2kHSgdwf5FZYieBU8NSGHp0YAZwYl86m2GzdIls/8harcz3EXLAbSvaUHc0sqljwri9Dthxh5YE5Zolqg4aXc4XJdES4ZHB9vysHmV/LReVeyWIuxvjrmeVZEjJggrxmD3JmxVisFf68n7gxgQ9zK+L4QVWUVNBdgvS+np6kayS8xA6T2OiWOeNEWBBxqU9VaEdkFeEN3GHvrhP60aVyILWaX5J/9AQxLBZPO48VpfWvbpoCQKZ1cMuDFVtL5ylTLZuByp5oPgl+WQmQeA2z0XbFEP8lobHvlnNiUDMN3s7I5GCExDt0V3wEzjgJjQnvQlrpBIULvaH6c9wXr3NoWcmcAMg4GA8Wa+CD2bMRaypOo9RZrGrd1thZDfFyRCu6LJvu3c3VkTESwJCSH+tJ36NHNHJpOi7R/wb6LDc+8UUpT09dOHWLvHNV4OakL/m5B95MsT0sqg/tKzLOk2AnpJ92ZOskOUDqB5VolUyBrRThO/Pfk3u31NeMgxHGRGF6C0d9jzqkoX500Nb8h3KA+ezNKKCUyTeCkXEwDiscnY5N2nb7da8=
-    on_success: change
+  webhooks: https://outlook.office.com/webhook/27c453a8-ba7e-434b-aa1c-3f3518bae970@204cfc34-134c-421b-9da1-8d11960a08c0/TravisCI/19103ea0fa0047e09b0b5f8e6dbca$
+  on_success: change
 
 # See https://docs.travis-ci.com/user/languages/java/#caching
 before_cache:
