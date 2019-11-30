@@ -20,6 +20,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -33,7 +35,7 @@ import de.carne.util.SystemProperties;
  */
 public class BufferedFileChannelInput extends FileScannerInput implements Closeable {
 
-	private final ThreadLocal<Buffer> threadBuffer = ThreadLocal.withInitial(Buffer::new);
+	private final Map<Thread, Buffer> threadBuffers = new HashMap<>();
 	private final FileChannelInput input;
 
 	/**
@@ -48,7 +50,11 @@ public class BufferedFileChannelInput extends FileScannerInput implements Closea
 
 	@Override
 	public void close() throws IOException {
-		this.input.close();
+		try {
+			this.input.close();
+		} finally {
+			clearBuffers();
+		}
 	}
 
 	@Override
@@ -58,12 +64,20 @@ public class BufferedFileChannelInput extends FileScannerInput implements Closea
 
 	@Override
 	public int read(ByteBuffer buffer, long position) throws IOException {
-		return this.threadBuffer.get().read(this.input, buffer, position);
+		return getBuffer().read(this.input, buffer, position);
 	}
 
 	@Override
 	public ByteBuffer read(long position, int size) throws IOException {
-		return this.threadBuffer.get().read(this.input, position, size);
+		return getBuffer().read(this.input, position, size);
+	}
+
+	private synchronized Buffer getBuffer() {
+		return this.threadBuffers.computeIfAbsent(Thread.currentThread(), t -> new Buffer());
+	}
+
+	private synchronized void clearBuffers() {
+		this.threadBuffers.clear();
 	}
 
 	private static class Buffer {
@@ -85,7 +99,6 @@ public class BufferedFileChannelInput extends FileScannerInput implements Closea
 			}
 			LOG.info("Using input buffer size {0}", HexFormat.formatInt(bufferSize));
 			BUFFER_SIZE = bufferSize;
-
 		}
 
 		private SoftReference<@Nullable ByteBuffer> bufferReference = new SoftReference<>(null);

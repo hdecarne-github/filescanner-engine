@@ -71,7 +71,11 @@ public abstract class FileScannerResultContext {
 			try {
 				runnable.run();
 			} finally {
-				CONTEXT.set(previousContext);
+				if (previousContext != null) {
+					CONTEXT.set(previousContext);
+				} else {
+					CONTEXT.remove();
+				}
 			}
 		}
 	}
