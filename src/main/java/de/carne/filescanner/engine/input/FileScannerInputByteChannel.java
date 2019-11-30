@@ -18,11 +18,15 @@ package de.carne.filescanner.engine.input;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.NonWritableChannelException;
+import java.nio.channels.SeekableByteChannel;
+import java.util.Objects;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-class FileScannerInputByteChannel implements ReadableByteChannel {
+import de.carne.boot.check.Check;
+
+class FileScannerInputByteChannel implements SeekableByteChannel {
 
 	private final FileScannerInput input;
 	private final long start;
@@ -48,9 +52,7 @@ class FileScannerInputByteChannel implements ReadableByteChannel {
 
 	@Override
 	public synchronized int read(@Nullable ByteBuffer dst) throws IOException {
-		if (dst == null) {
-			throw new IllegalArgumentException();
-		}
+		Objects.requireNonNull(dst);
 
 		int read;
 
@@ -69,6 +71,34 @@ class FileScannerInputByteChannel implements ReadableByteChannel {
 			this.position += read;
 		}
 		return read;
+	}
+
+	@Override
+	public int write(@Nullable ByteBuffer src) throws IOException {
+		throw new NonWritableChannelException();
+	}
+
+	@Override
+	public long position() throws IOException {
+		return this.position - this.start;
+	}
+
+	@Override
+	public SeekableByteChannel position(long newPosition) throws IOException {
+		Check.isTrue(newPosition >= 0);
+
+		this.position = newPosition;
+		return this;
+	}
+
+	@Override
+	public long size() throws IOException {
+		return this.end - this.start;
+	}
+
+	@Override
+	public SeekableByteChannel truncate(long size) throws IOException {
+		throw new NonWritableChannelException();
 	}
 
 }

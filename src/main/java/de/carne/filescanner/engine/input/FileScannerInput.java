@@ -19,7 +19,7 @@ package de.carne.filescanner.engine.input;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
@@ -116,15 +116,15 @@ public abstract class FileScannerInput {
 	}
 
 	/**
-	 * Creates a {@linkplain ReadableByteChannel} instance backed up by this {@linkplain FileScannerInput} and
+	 * Creates a {@linkplain SeekableByteChannel} instance backed up by this {@linkplain FileScannerInput} and
 	 * restricted to the given range.
 	 *
 	 * @param start the start position of the requested range.
 	 * @param end the end position of the requested range.
-	 * @return the created {@linkplain ReadableByteChannel} instance.
+	 * @return the created {@linkplain SeekableByteChannel} instance.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public ReadableByteChannel byteChannel(long start, long end) throws IOException {
+	public SeekableByteChannel byteChannel(long start, long end) throws IOException {
 		Check.assertTrue(0 <= start);
 		Check.assertTrue(start <= end);
 		Check.assertTrue(end <= size());
