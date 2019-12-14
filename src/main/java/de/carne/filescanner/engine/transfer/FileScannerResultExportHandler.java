@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.engine.transfer;
 
+import java.io.IOException;
+
 import de.carne.filescanner.engine.FileScannerResult;
 
 /**
@@ -39,7 +41,7 @@ public interface FileScannerResultExportHandler extends FileScannerResultExporte
 
 	/**
 	 * Gets the default file extension to use for a file export.
-	 * 
+	 *
 	 * @return the default file extension to use for a file export.
 	 */
 	String defaultFileExtension();
@@ -49,7 +51,8 @@ public interface FileScannerResultExportHandler extends FileScannerResultExporte
 	 *
 	 * @param result the {@linkplain FileScannerResult} instance to export.
 	 * @return the default file name to use for a file export.
+	 * @throws IOException if an I/O error occurs.
 	 */
-	String defaultFileName(FileScannerResult result);
+	String defaultFileName(FileScannerResult result) throws IOException;
 
 }

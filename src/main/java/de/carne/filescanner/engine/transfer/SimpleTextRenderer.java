@@ -27,6 +27,8 @@ import de.carne.filescanner.engine.util.EmitCounter;
  */
 public class SimpleTextRenderer implements Renderer {
 
+	private static final String INDENT = "    ";
+
 	private final Writer writer;
 
 	/**
@@ -49,9 +51,12 @@ public class SimpleTextRenderer implements Renderer {
 	}
 
 	@Override
-	public int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
+	public int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
 		EmitCounter counter = new EmitCounter();
 
+		for (int indentCount = 0; indentCount < indent; indentCount++) {
+			this.writer.write(INDENT);
+		}
 		this.writer.write(counter.count(text));
 		if (lineBreak) {
 			this.writer.write(counter.count(System.lineSeparator()));
@@ -60,7 +65,8 @@ public class SimpleTextRenderer implements Renderer {
 	}
 
 	@Override
-	public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
+	public int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
+			throws IOException {
 		// Do nothing
 		return 0;
 	}

@@ -16,6 +16,8 @@
  */
 package de.carne.filescanner.provider.util;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 /**
  * Utility class providing file name related functions.
  */
@@ -25,8 +27,8 @@ public final class FileNames {
 		// prevent instantiation
 	}
 
-	private static final String REMOVE_FILE_NAME_CHARS = "<|>|\\||:|\\\\|/|\\\"|\\?|\\*";
-	private static final String REPLACE_FILE_NAME_CHARS = " |\\r\\n|\\r|\\n|\\.";
+	private static final String REMOVE_FILE_NAME_CHARS = "^\\\\|^/|<|>|\\||:|\\\"|\\?|\\*";
+	private static final String REPLACE_FILE_NAME_CHARS = "\\\\|/| |\\r\\n|\\r|\\n";
 
 	/**
 	 * Removes a common set of invalid file name characters from a file name.
@@ -35,20 +37,23 @@ public final class FileNames {
 	 * for the end user due to special characters.
 	 *
 	 * @param fileName the file name to mangle.
+	 * @param extension the (optional) file name extension to mangle into the file name.
 	 * @return the file name with the well known invalid characters removed.
 	 */
-	public static String mangleFileName(String fileName) {
-		return fileName.replaceAll(REMOVE_FILE_NAME_CHARS, "").replaceAll(REPLACE_FILE_NAME_CHARS, "_").trim();
-	}
+	public static String mangleFileName(String fileName, @Nullable String extension) {
+		String mangledFileName = fileName.replaceAll(REMOVE_FILE_NAME_CHARS, "")
+				.replaceAll(REPLACE_FILE_NAME_CHARS, "_").trim();
 
-	/**
-	 * Normalizes a file path by replacing any DOS style file separator ({@code \}) with the Unix one ({@code /}).
-	 *
-	 * @param filePath the file path to normalize.
-	 * @return the normalized file path.
-	 */
-	public static String normalizeFilePath(String filePath) {
-		return filePath.replace('\\', '/');
+		if (extension != null) {
+			int extensionIndex = mangledFileName.lastIndexOf('.');
+
+			if (extensionIndex > 0) {
+				mangledFileName = mangledFileName.substring(0, extensionIndex) + extension;
+			} else {
+				mangledFileName += extension;
+			}
+		}
+		return mangledFileName;
 	}
 
 }

@@ -25,8 +25,9 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.FileScannerResult.Type;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.provider.util.FileNames;
+import de.carne.filescanner.engine.FileScannerResults;
 import de.carne.io.IOUtil;
 
 /**
@@ -128,15 +129,9 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	}
 
 	@Override
-	public String defaultFileName(FileScannerResult result) {
-		String fileName;
-
-		if (result.type() == FileScannerResult.Type.INPUT) {
-			fileName = FileNames.normalizeFilePath(result.input().name());
-		} else {
-			fileName = FileNames.mangleFileName(result.name()) + defaultFileExtension();
-		}
-		return fileName;
+	public String defaultFileName(FileScannerResult result) throws IOException {
+		return FileScannerResults.defaultFileName(result,
+				(result.type() != Type.INPUT ? defaultFileExtension() : null));
 	}
 
 	@Override

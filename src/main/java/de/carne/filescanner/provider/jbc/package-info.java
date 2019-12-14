@@ -14,22 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.provider.util;
+@NonNullByDefault
+package de.carne.filescanner.provider.jbc;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import de.carne.filescanner.provider.util.FileNames;
-
-/**
- * Test {@linkplain FileNames} class.
- */
-class FileNamesTest {
-
-	@Test
-	void testMangleFileName() {
-		Assertions.assertEquals("temp_folder__t_e_s.t",
-				FileNames.mangleFileName("\\<t>em:p/f:o\"l|d?e*r\r\n t\re\ns.p", ".t"));
-	}
-
-}
+import org.eclipse.jdt.annotation.NonNullByDefault;

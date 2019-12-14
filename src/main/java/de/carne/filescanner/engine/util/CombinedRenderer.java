@@ -67,42 +67,43 @@ public class CombinedRenderer implements Renderer {
 	}
 
 	@Override
-	public int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
+	public int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
 		int emitted = 0;
 
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitText(style, text, lineBreak), emitted);
+			emitted = Math.max(renderer.emitText(indent, style, text, lineBreak), emitted);
 		}
 		return emitted;
 	}
 
 	@Override
-	public int emitText(RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
+	public int emitText(int indent, RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
 		int emitted = 0;
 
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitText(style, text, href, lineBreak), emitted);
+			emitted = Math.max(renderer.emitText(indent, style, text, href, lineBreak), emitted);
 		}
 		return emitted;
 	}
 
 	@Override
-	public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
-		int emitted = 0;
-
-		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitMediaData(style, source, lineBreak), emitted);
-		}
-		return emitted;
-	}
-
-	@Override
-	public int emitMediaData(RenderStyle style, TransferSource source, long href, boolean lineBreak)
+	public int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
 			throws IOException {
 		int emitted = 0;
 
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitMediaData(style, source, href, lineBreak), emitted);
+			emitted = Math.max(renderer.emitMediaData(indent, style, source, lineBreak), emitted);
+		}
+		return emitted;
+	}
+
+	@Override
+	public int emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
+			throws IOException {
+		int emitted = 0;
+
+		for (Renderer renderer : this.renderers) {
+			emitted = Math.max(renderer.emitMediaData(indent, style, source, href, lineBreak), emitted);
 		}
 		return emitted;
 	}

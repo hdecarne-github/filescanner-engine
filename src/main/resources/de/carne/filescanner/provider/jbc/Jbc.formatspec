@@ -14,22 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.provider.util;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+//
+// Java Byte Code: https://en.wikipedia.org/wiki/Java_class_file
+//
 
-import de.carne.filescanner.provider.util.FileNames;
+// Symbols
 
-/**
- * Test {@linkplain FileNames} class.
- */
-class FileNamesTest {
+// Specs
 
-	@Test
-	void testMangleFileName() {
-		Assertions.assertEquals("temp_folder__t_e_s.t",
-				FileNames.mangleFileName("\\<t>em:p/f:o\"l|d?e*r\r\n t\re\ns.p", ".t"));
-	}
-
+CLASS_MAGIC:
+struct {
+	byte[4] "magic"
+		->validate({ 0xca, 0xfe, 0xba, 0xbe })
 }
+
+CLASS_FILE:
+format_spec "Java Byte Code" {
+	raw {
+		@CLASS_MAGIC
+	}
+}	->renderer(#jbcRenderer)
+	->export(#jbcExporter)

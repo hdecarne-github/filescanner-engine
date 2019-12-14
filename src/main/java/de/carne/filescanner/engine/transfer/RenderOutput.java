@@ -34,6 +34,8 @@ public final class RenderOutput implements Closeable {
 	private long emitted = 0;
 	private final Set<RenderOption> options = new HashSet<>();
 	private boolean prepared = false;
+	private boolean newLine = true;
+	private int currentIndent = 0;
 	private RenderStyle currentStyle = RenderStyle.NORMAL;
 
 	/**
@@ -145,6 +147,28 @@ public final class RenderOutput implements Closeable {
 	}
 
 	/**
+	 * Increases the current indent level.
+	 *
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 */
+	public RenderOutput increaseIndent() {
+		this.currentIndent++;
+		return this;
+	}
+
+	/**
+	 * Decreases the current indent level.
+	 *
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 */
+	public RenderOutput decreaseIndent() {
+		Check.isTrue(this.currentIndent > 0);
+
+		this.currentIndent--;
+		return this;
+	}
+
+	/**
 	 * Sets the {@linkplain RenderStyle} for subsequent write calls.
 	 *
 	 * @param style the {@linkplain RenderStyle} to set.
@@ -164,7 +188,9 @@ public final class RenderOutput implements Closeable {
 	 */
 	public RenderOutput write(String text) throws IOException {
 		prepareIfNeeded();
-		this.emitted += this.renderer.emitText(this.currentStyle, text, false);
+		this.emitted += this.renderer.emitText((this.newLine ? this.currentIndent : -1), this.currentStyle, text,
+				false);
+		this.newLine = false;
 		return this;
 	}
 
@@ -177,7 +203,8 @@ public final class RenderOutput implements Closeable {
 	 */
 	public RenderOutput writeln(String text) throws IOException {
 		prepareIfNeeded();
-		this.emitted += this.renderer.emitText(this.currentStyle, text, true);
+		this.emitted += this.renderer.emitText((this.newLine ? this.currentIndent : -1), this.currentStyle, text, true);
+		this.newLine = true;
 		return this;
 	}
 
@@ -190,7 +217,9 @@ public final class RenderOutput implements Closeable {
 	 */
 	public RenderOutput write(TransferSource source) throws IOException {
 		prepareIfNeeded();
-		this.emitted += this.renderer.emitMediaData(this.currentStyle, source, false);
+		this.emitted += this.renderer.emitMediaData((this.newLine ? this.currentIndent : -1), this.currentStyle, source,
+				false);
+		this.newLine = false;
 		return this;
 	}
 
@@ -203,7 +232,9 @@ public final class RenderOutput implements Closeable {
 	 */
 	public RenderOutput writeln(TransferSource source) throws IOException {
 		prepareIfNeeded();
-		this.emitted += this.renderer.emitMediaData(this.currentStyle, source, true);
+		this.emitted += this.renderer.emitMediaData((this.newLine ? this.currentIndent : -1), this.currentStyle, source,
+				true);
+		this.newLine = true;
 		return this;
 	}
 
@@ -214,9 +245,7 @@ public final class RenderOutput implements Closeable {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public RenderOutput writeln() throws IOException {
-		prepareIfNeeded();
-		this.emitted += this.renderer.emitText(this.currentStyle, "", true);
-		return this;
+		return writeln("");
 	}
 
 	@Override

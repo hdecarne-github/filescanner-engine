@@ -118,7 +118,7 @@ public class HtmlReportGenerator {
 			}
 
 			@Override
-			public int emitText(RenderStyle style, String text, boolean lineBreak) throws IOException {
+			public int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
 				out.write("<span class=\"" + style.name().toLowerCase() + "\">");
 				out.write(Strings.encodeHtml(text));
 				out.write("</span>");
@@ -129,8 +129,10 @@ public class HtmlReportGenerator {
 			}
 
 			@Override
-			public int emitMediaData(RenderStyle style, TransferSource source, boolean lineBreak) throws IOException {
-				return emitText(style, "[" + source.transferType().mimeType() + ":" + source.name() + "]", lineBreak);
+			public int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
+					throws IOException {
+				return emitText(indent, style, "[" + source.transferType().mimeType() + ":" + source.name() + "]",
+						lineBreak);
 			}
 
 		})) {
