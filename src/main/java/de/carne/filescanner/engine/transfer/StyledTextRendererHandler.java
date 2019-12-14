@@ -86,6 +86,8 @@ public class StyledTextRendererHandler implements FileScannerResultRendererHandl
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		out.enableOption(RenderOption.WRAP);
+
 		Function<CharStream, Lexer> checkedLexerFactory = this.lexerFactory;
 
 		if (checkedLexerFactory != null && out.isStyled()) {

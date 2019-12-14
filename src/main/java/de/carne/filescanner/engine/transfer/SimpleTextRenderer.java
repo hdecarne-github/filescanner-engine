@@ -19,8 +19,6 @@ package de.carne.filescanner.engine.transfer;
 import java.io.IOException;
 import java.io.Writer;
 
-import de.carne.filescanner.engine.util.EmitCounter;
-
 /**
  * {@linkplain Renderer} implementation suitable for creating a plain {@linkplain String} representation of a scan
  * result.
@@ -51,24 +49,20 @@ public class SimpleTextRenderer implements Renderer {
 	}
 
 	@Override
-	public int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
-		EmitCounter counter = new EmitCounter();
-
+	public void emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
 		for (int indentCount = 0; indentCount < indent; indentCount++) {
 			this.writer.write(INDENT);
 		}
-		this.writer.write(counter.count(text));
+		this.writer.write(text);
 		if (lineBreak) {
-			this.writer.write(counter.count(System.lineSeparator()));
+			this.writer.write(System.lineSeparator());
 		}
-		return counter.value();
 	}
 
 	@Override
-	public int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
+	public void emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
 			throws IOException {
 		// Do nothing
-		return 0;
 	}
 
 	@Override

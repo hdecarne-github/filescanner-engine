@@ -54,10 +54,9 @@ public interface Renderer extends Closeable {
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param text the text to emit.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
-	 * @return the number of emitted characters (for output limiting).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException;
+	void emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException;
 
 	/**
 	 * Emits simple text.
@@ -67,12 +66,11 @@ public interface Renderer extends Closeable {
 	 * @param text the text to emit.
 	 * @param href the position to link to.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
-	 * @return the number of emitted characters (for output limiting).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	default int emitText(int indent, RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
+	default void emitText(int indent, RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
 		// Default is to emit without a link
-		return emitText(indent, style, text, lineBreak);
+		emitText(indent, style, text, lineBreak);
 	}
 
 	/**
@@ -82,10 +80,9 @@ public interface Renderer extends Closeable {
 	 * @param style the {@linkplain RenderStyle} to use.
 	 * @param source the media data to emit.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
-	 * @return the number of emitted characters (for output limiting).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak) throws IOException;
+	void emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak) throws IOException;
 
 	/**
 	 * Emits simple text.
@@ -95,13 +92,12 @@ public interface Renderer extends Closeable {
 	 * @param source the media data to emit.
 	 * @param href the position to link to.
 	 * @param lineBreak whether to emit a line break after the text ({@code true}) or not ({@code false}).
-	 * @return the number of emitted characters (for output limiting).
 	 * @throws IOException if an I/O error occurs.
 	 */
-	default int emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
+	default void emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
 			throws IOException {
 		// Default is to emit without a link
-		return emitMediaData(indent, style, source, lineBreak);
+		emitMediaData(indent, style, source, lineBreak);
 	}
 
 	/**
@@ -109,7 +105,7 @@ public interface Renderer extends Closeable {
 	 *
 	 * @throws IOException if an I/O error occurs.
 	 */
-	default void emitEpilouge() throws IOException {
+	default void emitEpilogue() throws IOException {
 		// Default is to emit nothing
 	}
 

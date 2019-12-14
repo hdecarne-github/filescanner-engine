@@ -24,6 +24,11 @@ public enum RenderOption {
 	/**
 	 * Use transparent background.
 	 */
-	TRANSPARENCY
+	TRANSPARENCY,
+
+	/**
+	 * Use automatic text wrapping
+	 */
+	WRAP;
 
 }

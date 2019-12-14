@@ -67,51 +67,39 @@ public class CombinedRenderer implements Renderer {
 	}
 
 	@Override
-	public int emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
-		int emitted = 0;
-
+	public void emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitText(indent, style, text, lineBreak), emitted);
+			renderer.emitText(indent, style, text, lineBreak);
 		}
-		return emitted;
 	}
 
 	@Override
-	public int emitText(int indent, RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
-		int emitted = 0;
-
+	public void emitText(int indent, RenderStyle style, String text, long href, boolean lineBreak) throws IOException {
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitText(indent, style, text, href, lineBreak), emitted);
+			renderer.emitText(indent, style, text, href, lineBreak);
 		}
-		return emitted;
 	}
 
 	@Override
-	public int emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
+	public void emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
 			throws IOException {
-		int emitted = 0;
-
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitMediaData(indent, style, source, lineBreak), emitted);
+			renderer.emitMediaData(indent, style, source, lineBreak);
 		}
-		return emitted;
 	}
 
 	@Override
-	public int emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
+	public void emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
 			throws IOException {
-		int emitted = 0;
-
 		for (Renderer renderer : this.renderers) {
-			emitted = Math.max(renderer.emitMediaData(indent, style, source, href, lineBreak), emitted);
+			renderer.emitMediaData(indent, style, source, href, lineBreak);
 		}
-		return emitted;
 	}
 
 	@Override
-	public void emitEpilouge() throws IOException {
+	public void emitEpilogue() throws IOException {
 		for (Renderer renderer : this.renderers) {
-			renderer.emitEpilouge();
+			renderer.emitEpilogue();
 		}
 	}
 

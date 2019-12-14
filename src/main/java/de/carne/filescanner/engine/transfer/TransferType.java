@@ -81,4 +81,12 @@ public enum TransferType {
 		return this.mimeType;
 	}
 
+	public boolean isText() {
+		return this.mimeType.startsWith("text/");
+	}
+
+	public boolean isImage() {
+		return this.mimeType.startsWith("image/");
+	}
+
 }
