@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.TransferType;
-import de.carne.mcd.common.MCDOutputChannel;
+import de.carne.mcd.common.MCDOutput;
 import de.carne.mcd.common.MachineCodeDecoder;
 import de.carne.mcd.jvm.JvmMachineCodeDecoder;
 
@@ -88,24 +88,24 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 		FileScannerResult result = context.result();
 
 		try (SeekableByteChannel mcdInput = result.input().byteChannel(result.start(), result.end());
-				MCDOutputChannel mcdOutput = new RenderOutputChannel(out)) {
+				MCDOutput mcdOutput = new MCDRenderOutput(out)) {
 			this.mcd.decode(mcdInput, mcdOutput);
 		} catch (IOException e) {
 			LOG.error(e, "Failed to completely decode ''{0}''", this.mcd.name());
 		}
 	}
 
-	private static class RenderOutputChannel implements MCDOutputChannel {
+	private static class MCDRenderOutput implements MCDOutput {
 
 		private final RenderOutput out;
 
-		RenderOutputChannel(RenderOutput out) {
+		MCDRenderOutput(RenderOutput out) {
 			this.out = out;
 		}
 
 		@Override
-		public boolean isOpen() {
-			return true;
+		public void flush() throws IOException {
+			// Nothing to do here
 		}
 
 		@Override
@@ -114,90 +114,90 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 		}
 
 		@Override
-		public MCDOutputChannel increaseIndent() throws IOException {
+		public MCDRenderOutput increaseIndent() throws IOException {
 			this.out.increaseIndent();
 			return this;
 		}
 
 		@Override
-		public MCDOutputChannel decreaseIndent() throws IOException {
+		public MCDRenderOutput decreaseIndent() throws IOException {
 			this.out.decreaseIndent();
 			return this;
 		}
 
 		@Override
-		public MCDOutputChannel println() throws IOException {
+		public MCDRenderOutput println() throws IOException {
 			this.out.writeln();
 			return this;
 		}
 
 		@Override
-		public MCDOutputChannel print(String text) throws IOException {
+		public MCDRenderOutput print(String text) throws IOException {
 			return printStyle(RenderStyle.NORMAL, text);
 		}
 
 		@Override
-		public MCDOutputChannel println(String text) throws IOException {
+		public MCDRenderOutput println(String text) throws IOException {
 			return printlnStyle(RenderStyle.NORMAL, text);
 		}
 
 		@Override
-		public MCDOutputChannel printValue(String value) throws IOException {
+		public MCDRenderOutput printValue(String value) throws IOException {
 			return printStyle(RenderStyle.VALUE, value);
 		}
 
 		@Override
-		public MCDOutputChannel printlnValue(String value) throws IOException {
+		public MCDRenderOutput printlnValue(String value) throws IOException {
 			return printlnStyle(RenderStyle.VALUE, value);
 		}
 
 		@Override
-		public MCDOutputChannel printComment(String comment) throws IOException {
+		public MCDRenderOutput printComment(String comment) throws IOException {
 			return printStyle(RenderStyle.COMMENT, comment);
 		}
 
 		@Override
-		public MCDOutputChannel printlnComment(String comment) throws IOException {
+		public MCDRenderOutput printlnComment(String comment) throws IOException {
 			return printlnStyle(RenderStyle.COMMENT, comment);
 		}
 
 		@Override
-		public MCDOutputChannel printKeyword(String keyword) throws IOException {
+		public MCDRenderOutput printKeyword(String keyword) throws IOException {
 			return printStyle(RenderStyle.KEYWORD, keyword);
 		}
 
 		@Override
-		public MCDOutputChannel printlnKeyword(String keyword) throws IOException {
+		public MCDRenderOutput printlnKeyword(String keyword) throws IOException {
 			return printlnStyle(RenderStyle.KEYWORD, keyword);
 		}
 
 		@Override
-		public MCDOutputChannel printOperator(String operator) throws IOException {
+		public MCDRenderOutput printOperator(String operator) throws IOException {
 			return printStyle(RenderStyle.OPERATOR, operator);
 		}
 
 		@Override
-		public MCDOutputChannel printlnOperator(String operator) throws IOException {
+		public MCDRenderOutput printlnOperator(String operator) throws IOException {
 			return printlnStyle(RenderStyle.OPERATOR, operator);
 		}
 
 		@Override
-		public MCDOutputChannel printLabel(String label) throws IOException {
+		public MCDRenderOutput printLabel(String label) throws IOException {
 			return printStyle(RenderStyle.LABEL, label);
 		}
 
 		@Override
-		public MCDOutputChannel printlnLabel(String label) throws IOException {
+		public MCDRenderOutput printlnLabel(String label) throws IOException {
 			return printlnStyle(RenderStyle.LABEL, label);
 		}
 
-		private MCDOutputChannel printStyle(RenderStyle style, String text) throws IOException {
+		private MCDRenderOutput printStyle(RenderStyle style, String text) throws IOException {
 			this.out.setStyle(style);
 			this.out.write(text);
 			return this;
 		}
 
-		private MCDOutputChannel printlnStyle(RenderStyle style, String text) throws IOException {
+		private MCDRenderOutput printlnStyle(RenderStyle style, String text) throws IOException {
 			this.out.setStyle(style);
 			this.out.writeln(text);
 			return this;

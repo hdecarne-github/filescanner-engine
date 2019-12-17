@@ -23,18 +23,18 @@ import java.io.Writer;
  * {@linkplain Renderer} implementation suitable for creating a plain {@linkplain String} representation of a scan
  * result.
  */
-public class SimpleTextRenderer implements Renderer {
+public class PlainTextRenderer implements Renderer {
 
 	private static final String INDENT = "    ";
 
 	private final Writer writer;
 
 	/**
-	 * Constructs a new {@linkplain SimpleTextRenderer} instance.
+	 * Constructs a new {@linkplain PlainTextRenderer} instance.
 	 *
 	 * @param writer the {@linkplain Writer} to write the rendered output into.
 	 */
-	public SimpleTextRenderer(Writer writer) {
+	public PlainTextRenderer(Writer writer) {
 		this.writer = writer;
 	}
 

@@ -81,10 +81,20 @@ public enum TransferType {
 		return this.mimeType;
 	}
 
+	/**
+	 * Checks whether this instances's corresponding MIME type is of type text.
+	 * 
+	 * @return {@code true} if this instances's corresponding MIME type is of type text.
+	 */
 	public boolean isText() {
 		return this.mimeType.startsWith("text/");
 	}
 
+	/**
+	 * Checks whether this instances's corresponding MIME type is of type image.
+	 * 
+	 * @return {@code true} if this instances's corresponding MIME type is of type image.
+	 */
 	public boolean isImage() {
 		return this.mimeType.startsWith("image/");
 	}

@@ -39,7 +39,7 @@ import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
-import de.carne.filescanner.engine.transfer.SimpleTextRenderer;
+import de.carne.filescanner.engine.transfer.PlainTextRenderer;
 import de.carne.filescanner.engine.util.CombinedRenderer;
 import de.carne.filescanner.engine.util.HtmlReportGenerator;
 import de.carne.filescanner.test.TestFiles;
@@ -52,7 +52,7 @@ class FileScannerTest {
 
 	static final Log LOG = new Log();
 
-	private final Renderer systemOutRenderer = new SimpleTextRenderer(new PrintWriter(System.out, true));
+	private final Renderer systemOutRenderer = new PlainTextRenderer(new PrintWriter(System.out, true));
 
 	private static class Status implements FileScannerStatus {
 
