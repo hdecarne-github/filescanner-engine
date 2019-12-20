@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.jbc;
+package de.carne.filescanner.provider.jvm;
 
 import java.io.IOException;
 
@@ -25,18 +25,18 @@ import de.carne.filescanner.engine.spi.Format;
 /**
  * <a href="https://en.wikipedia.org/wiki/Java_class_file">Java Byte Code format</a> decoder.
  */
-public class JbcFormat extends Format {
+public class ClassFormat extends Format {
 
-	private static final String FORMAT_NAME = "Java Byte Code";
+	private static final String FORMAT_NAME = "Java class file";
 
-	private final JbcFormatSpecDefinition formatSpecDefinition;
+	private final ClassFormatSpecDefinition formatSpecDefinition;
 
 	/**
-	 * Constructs a new {@linkplain JbcFormat} instance.
+	 * Constructs a new {@linkplain ClassFormat} instance.
 	 */
-	public JbcFormat() {
+	public ClassFormat() {
 		super(FORMAT_NAME);
-		this.formatSpecDefinition = new JbcFormatSpecDefinition();
+		this.formatSpecDefinition = new ClassFormatSpecDefinition();
 		this.formatSpecDefinition.load();
 		registerHeaderSpec(this.formatSpecDefinition.headerSpec());
 		setAbsolute(true);

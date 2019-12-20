@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.provider.jbc;
+package de.carne.filescanner.provider.jvm;
 
 import java.net.URL;
 import java.util.Objects;
@@ -29,30 +29,30 @@ import de.carne.util.Lazy;
 /**
  * See Jbc.formatspec
  */
-final class JbcFormatSpecDefinition extends FormatSpecDefinition {
+final class ClassFormatSpecDefinition extends FormatSpecDefinition {
 
 	@Override
 	protected URL getFormatSpecResource() {
-		return Objects.requireNonNull(getClass().getResource("Jbc.formatspec"));
+		return Objects.requireNonNull(getClass().getResource("Class.formatspec"));
 	}
 
-	private Lazy<CompositeSpec> jbcFormatSpec = resolveLazy("CLASS_FILE", CompositeSpec.class);
-	private Lazy<CompositeSpec> jbcMagicSpec = resolveLazy("CLASS_MAGIC", CompositeSpec.class);
+	private Lazy<CompositeSpec> classFormatSpec = resolveLazy("CLASS_FILE", CompositeSpec.class);
+	private Lazy<CompositeSpec> classMagicSpec = resolveLazy("CLASS_MAGIC", CompositeSpec.class);
 
 	public CompositeSpec formatSpec() {
-		return this.jbcFormatSpec.get();
+		return this.classFormatSpec.get();
 	}
 
 	public CompositeSpec headerSpec() {
-		return this.jbcMagicSpec.get();
+		return this.classMagicSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler jbcRenderer() {
-		return McdTransferHandler.JVM_TRANSFER;
+	protected FileScannerResultRendererHandler classRenderer() {
+		return McdTransferHandler.JAVA_CLASS_FILE_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler jbcExporter() {
-		return McdTransferHandler.JVM_TRANSFER;
+	protected FileScannerResultExportHandler classExporter() {
+		return McdTransferHandler.JAVA_CLASS_FILE_TRANSFER;
 	}
 
 }

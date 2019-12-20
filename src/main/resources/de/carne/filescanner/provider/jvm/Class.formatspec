@@ -16,7 +16,7 @@
  */
 
 //
-// Java Byte Code: https://en.wikipedia.org/wiki/Java_class_file
+// Java class file: https://en.wikipedia.org/wiki/Java_class_file
 //
 
 // Symbols
@@ -30,9 +30,9 @@ struct {
 }
 
 CLASS_FILE:
-format_spec "Java Byte Code" {
+format_spec "Java class file" {
 	raw {
 		@CLASS_MAGIC
 	}
-}	->renderer(#jbcRenderer)
-	->export(#jbcExporter)
+}	->renderer(#classRenderer)
+	->export(#classExporter)

@@ -31,7 +31,7 @@ import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.mcd.common.MCDOutput;
 import de.carne.mcd.common.MachineCodeDecoder;
-import de.carne.mcd.jvm.JvmMachineCodeDecoder;
+import de.carne.mcd.jvm.ClassFileDecoder;
 
 /**
  * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for
@@ -42,9 +42,10 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 	private static final Log LOG = new Log();
 
 	/**
-	 * Java Byte Code handler.
+	 * Java Class File handler.
 	 */
-	public static final McdTransferHandler JVM_TRANSFER = new McdTransferHandler(new JvmMachineCodeDecoder(), ".jbc");
+	public static final McdTransferHandler JAVA_CLASS_FILE_TRANSFER = new McdTransferHandler(new ClassFileDecoder(),
+			".jcf");
 
 	private final MachineCodeDecoder mcd;
 	private final String extension;
