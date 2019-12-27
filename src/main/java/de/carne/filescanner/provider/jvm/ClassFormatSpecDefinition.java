@@ -27,7 +27,7 @@ import de.carne.filescanner.provider.util.McdTransferHandler;
 import de.carne.util.Lazy;
 
 /**
- * See Jbc.formatspec
+ * See Class.formatspec
  */
 final class ClassFormatSpecDefinition extends FormatSpecDefinition {
 

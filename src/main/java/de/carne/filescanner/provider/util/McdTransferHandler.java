@@ -42,7 +42,7 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 	private static final Log LOG = new Log();
 
 	/**
-	 * Java Class File handler.
+	 * Java class file handler.
 	 */
 	public static final McdTransferHandler JAVA_CLASS_FILE_TRANSFER = new McdTransferHandler(new ClassFileDecoder(),
 			".jcf");

@@ -23,7 +23,7 @@ import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.spi.Format;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Java_class_file">Java Byte Code format</a> decoder.
+ * <a href="https://en.wikipedia.org/wiki/Java_class_file">Java class file format</a> decoder.
  */
 public class ClassFormat extends Format {
 
