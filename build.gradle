@@ -57,6 +57,11 @@ generateGrammarSource {
 	arguments += [ "-visitor" ]
 }
 
+tasks.withType(JavaCompile) {
+	// Do not generate debug infos
+	options.compilerArgs += ["-g:none"]
+}
+
 jar {
 	def buildTimestamp = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
