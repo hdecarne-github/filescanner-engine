@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2019 Holger de Carne and contributors, All Rights Reserved.
+ * Copyright (c) 2007-2020 Holger de Carne and contributors, All Rights Reserved.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -190,6 +190,16 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 		@Override
 		public MCDRenderOutput printlnLabel(String label) throws IOException {
 			return printlnStyle(RenderStyle.LABEL, label);
+		}
+
+		@Override
+		public MCDRenderOutput printError(String error) throws IOException {
+			return printStyle(RenderStyle.ERROR, error);
+		}
+
+		@Override
+		public MCDRenderOutput printlnError(String error) throws IOException {
+			return printlnStyle(RenderStyle.ERROR, error);
 		}
 
 		private MCDRenderOutput printStyle(RenderStyle style, String text) throws IOException {
