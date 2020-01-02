@@ -37,11 +37,12 @@ import de.carne.filescanner.engine.FileScannerStatus;
 import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.PlainTextRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
-import de.carne.filescanner.engine.transfer.PlainTextRenderer;
 import de.carne.filescanner.engine.util.CombinedRenderer;
 import de.carne.filescanner.engine.util.HtmlReportGenerator;
+import de.carne.filescanner.provider.jvm.ClassFormat;
 import de.carne.filescanner.test.TestFiles;
 import de.carne.text.MemoryUnitFormat;
 
@@ -125,7 +126,8 @@ class FileScannerTest {
 
 	@Test
 	void testGzipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.path(),
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
@@ -150,17 +152,20 @@ class FileScannerTest {
 
 	@Test
 	void testUdifFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(),
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
 	void testWindowsExeFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(), Formats.all().enabledFormats(), 2);
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(),
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 2);
 	}
 
 	@Test
 	void testWindows64ExeFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(), Formats.all().enabledFormats(), 2);
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(),
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 2);
 	}
 
 	@Test
@@ -170,7 +175,8 @@ class FileScannerTest {
 
 	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(),
+				1);
 	}
 
 	private Status runFileScanner(Path file, Collection<Format> formats, int resultCount)
