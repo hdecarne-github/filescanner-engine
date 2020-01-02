@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class ExeFormat extends Format {
 
-	private static final String FORMAT_NAME = "EXE image";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "EXE image";
 
 	private final ExeFormatSpecDefinition formatSpecDefinition;
 

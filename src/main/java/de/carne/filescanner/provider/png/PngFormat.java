@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class PngFormat extends Format {
 
-	private static final String FORMAT_NAME = "PNG image data";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "PNG image data";
 
 	private final PngFormatSpecDefinition formatSpecDefinition;
 

@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class JpegFormat extends Format {
 
-	private static final String FORMAT_NAME = "JPEG image data";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "JPEG image data";
 
 	private final JpegFormatSpecDefinition formatSpecDefinition;
 

@@ -27,6 +27,9 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class BmpFormat extends Format {
 
+	/**
+	 * Format name.
+	 */
 	private static final String FORMAT_NAME = "BMP image data";
 
 	private final BmpFormatSpecDefinition formatSpecDefinition;

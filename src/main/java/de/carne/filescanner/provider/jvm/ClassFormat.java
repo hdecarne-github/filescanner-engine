@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class ClassFormat extends Format {
 
-	private static final String FORMAT_NAME = "Java class file";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "Java class file";
 
 	private final ClassFormatSpecDefinition formatSpecDefinition;
 

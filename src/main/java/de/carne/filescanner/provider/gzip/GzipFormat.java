@@ -27,6 +27,9 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class GzipFormat extends Format {
 
+	/**
+	 * Format name.
+	 */
 	private static final String FORMAT_NAME = "Gzip archive";
 
 	private final GzipFormatSpecDefinition formatSpecDefinition;

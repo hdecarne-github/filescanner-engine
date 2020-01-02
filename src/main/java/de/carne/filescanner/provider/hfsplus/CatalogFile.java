@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.util.Strings;
+import de.carne.util.SystemProperties;
 
 class CatalogFile extends BTreeFile<CatalogFileKey> {
 
@@ -55,6 +56,9 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 	private static class FileTreeConsumer implements BiConsumer<CatalogFileKey, ByteBuffer> {
 
 		private static final Log LOG = new Log();
+
+		private static final boolean DECODE_RESOURCE_FORK = SystemProperties.booleanValue(HfsPlusFormat.class,
+				"DECODE_RESOURCE_FORK", false);
 
 		private final BlockDevice blockDevice;
 		private final ExtentsFile extentsFile;
@@ -116,7 +120,7 @@ class CatalogFile extends BTreeFile<CatalogFileKey> {
 			if (dataFork.logicalSize() != 0) {
 				this.consumer.accept(dataFork.map(buffer.toString()));
 			}
-			if (HfsPlusFormat.DECODE_RESOURCE_FORK) {
+			if (DECODE_RESOURCE_FORK) {
 				ForkData resourceFork = decodeForkData(fileId, ForkData.RESOURCE_FORK, valueBuffer);
 
 				if (resourceFork.logicalSize() != 0) {

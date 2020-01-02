@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class Bzip2Format extends Format {
 
-	private static final String FORMAT_NAME = "BZip2 archive";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "BZip2 archive";
 
 	private final Bzip2FormatSpecDefinition formatSpecDefinition;
 
