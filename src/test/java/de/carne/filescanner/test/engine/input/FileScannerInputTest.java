@@ -37,9 +37,9 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInput() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
-			Assertions.assertEquals(TestFiles.ZIP_ARCHIVE.path().toString(), input.name());
-			Assertions.assertEquals(Files.size(TestFiles.ZIP_ARCHIVE.path()), input.size());
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
+			Assertions.assertEquals(TestFiles.ZIP_ARCHIVE.getPath().toString(), input.name());
+			Assertions.assertEquals(Files.size(TestFiles.ZIP_ARCHIVE.getPath()), input.size());
 
 			ByteBuffer buffer = input.read(0x2e, 4);
 
@@ -52,7 +52,7 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInputByteChannel() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 			try (ReadableByteChannel channel = input.byteChannel(0x2e, 0x2e + 4)) {
 				Assertions.assertTrue(channel.isOpen());
 
@@ -77,7 +77,7 @@ class FileScannerInputTest {
 
 	@Test
 	void testFileScannerInputStream() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 			try (InputStream stream = input.inputStream(0x2e, 0x2e + 4)) {
 				Assertions.assertTrue(stream.markSupported());
 				Assertions.assertEquals(4, stream.available());

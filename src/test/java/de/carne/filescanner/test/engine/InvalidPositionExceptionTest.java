@@ -34,7 +34,7 @@ class InvalidPositionExceptionTest {
 
 	@Test
 	void testExceptionMessage() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 
 			Assertions.assertEquals("Invalid read position 0000000000000042h (input: '" + input + "')",
 					new InvalidPositionException(input, 0x42).getMessage());

@@ -33,7 +33,7 @@ class InsufficientDataExceptionTest {
 
 	@Test
 	void testExceptionMessage() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 			Assertions.assertEquals(
 					"Insufficient data while reading from input '" + input
 							+ "' position 0000000000000042h (requested: 42 available: 12)",

@@ -35,7 +35,7 @@ class MappedFileScannerInputTest {
 
 	@Test
 	void testMapping() throws IOException {
-		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.path())) {
+		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 			MappedFileScannerInput mapping = new MappedFileScannerInput("<mapped inputs>");
 
 			mapping.add(new ZeroFileScannerInput(100), 0, 100);
