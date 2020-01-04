@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class XmlFormat extends Format {
 
-	private static final String FORMAT_NAME = "XML file";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "XML file";
 
 	private final XmlFormatSpecDefinition formatSpecDefinition;
 

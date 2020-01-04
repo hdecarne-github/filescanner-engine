@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class XarFormat extends Format {
 
-	private static final String FORMAT_NAME = "XAR archive";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "XAR archive";
 
 	private final XarFormatSpecDefinition formatSpecDefinition;
 

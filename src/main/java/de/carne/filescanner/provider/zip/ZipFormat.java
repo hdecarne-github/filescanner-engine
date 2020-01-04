@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class ZipFormat extends Format {
 
-	private static final String FORMAT_NAME = "ZIP archive";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "ZIP archive";
 
 	private final ZipFormatSpecDefinition formatSpecDefinition;
 

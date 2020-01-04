@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class TarFormat extends Format {
 
-	private static final String FORMAT_NAME = "tar archive";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "tar archive";
 
 	private final TarFormatSpecDefinition formatSpecDefinition;
 

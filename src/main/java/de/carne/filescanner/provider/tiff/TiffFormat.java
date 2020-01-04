@@ -28,7 +28,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class TiffFormat extends Format {
 
-	private static final String FORMAT_NAME = "TIFF image data";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "TIFF image data";
 
 	private final TiffFormatSpecDefinition formatSpecDefinition;
 

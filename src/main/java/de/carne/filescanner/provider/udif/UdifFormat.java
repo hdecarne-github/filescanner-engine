@@ -27,7 +27,10 @@ import de.carne.filescanner.engine.spi.Format;
  */
 public class UdifFormat extends Format {
 
-	private static final String FORMAT_NAME = "Universal Disk Image";
+	/**
+	 * Format name.
+	 */
+	public static final String FORMAT_NAME = "Universal Disk Image";
 
 	private final UdifFormatSpecDefinition formatSpecDefinition;
 
