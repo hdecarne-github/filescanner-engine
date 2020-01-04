@@ -43,6 +43,7 @@ import de.carne.filescanner.engine.transfer.Renderer;
 import de.carne.filescanner.engine.util.CombinedRenderer;
 import de.carne.filescanner.engine.util.HtmlReportGenerator;
 import de.carne.filescanner.provider.jvm.ClassFormat;
+import de.carne.filescanner.provider.zip.ZipFormat;
 import de.carne.filescanner.test.TestFiles;
 import de.carne.text.MemoryUnitFormat;
 
@@ -111,71 +112,71 @@ class FileScannerTest {
 
 	@Test
 	void testBmpImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.BMP_IMAGE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.BMP_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testBzip2ArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.BZIP2_ARCHIVE.path(), Formats.all().enabledFormats(), 2);
+		runFileScanner(TestFiles.BZIP2_ARCHIVE.getPath(), Formats.all().enabledFormats(), 2);
 	}
 
 	@Test
 	void testGifImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.GIF_IMAGE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.GIF_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testGzipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.path(),
+		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.getPath(),
 				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
 	void testJpegImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.JPEG_IMAGE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.JPEG_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testLzmaArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.LZMA_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.LZMA_ARCHIVE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testPngImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.PNG_IMAGE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.PNG_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testTiffImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.TIFF_IMAGE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.TIFF_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testUdifFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.path(),
-				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 1);
+		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.getPath(),
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
 	void testWindowsExeFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.path(),
-				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 2);
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.getPath(),
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
 	void testWindows64ExeFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.path(),
-				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 2);
+		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.getPath(),
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
 	}
 
 	@Test
 	void testXarArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.XAR_ARCHIVE.path(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.XAR_ARCHIVE.getPath(), Formats.all().enabledFormats(), 1);
 	}
 
 	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.ZIP_ARCHIVE.path(), Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(),
+		runFileScanner(TestFiles.ZIP_ARCHIVE.getPath(), Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(),
 				1);
 	}
 
