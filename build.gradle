@@ -48,6 +48,7 @@ dependencies {
 	implementation(group: "de.carne.common", name: "java-default", version: project.javaDefaultVersion)
 	implementation(group: "de.carne.common", name: "java-compression", version: project.javaCompressionVersion)
 	implementation(group: "de.carne.common", name: "java-mcd-jvm", version: project.javaMcdVersion)
+	implementation(group: "de.carne.common", name: "java-mcd-x86", version: project.javaMcdVersion)
 	implementation(group: "org.antlr", name: "antlr4-runtime", version: project.antlrVersion)
 	antlr(group: "org.antlr", name: "antlr4", version: project.antlrVersion)
 	testImplementation(group: "de.carne.common", name: "java-test", version: project.javaTestVersion)

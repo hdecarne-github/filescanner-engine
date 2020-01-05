@@ -23,8 +23,11 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
+import de.carne.filescanner.provider.util.McdTransferHandler;
 import de.carne.util.Lazy;
 
 /**
@@ -56,6 +59,14 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 		long nextHeaderOffset = IntHelper.toUnsignedLong(this.stubNextHeaderOffset.get().get());
 
 		return nextHeaderOffset - 0x40 - (relocationCount * 4);
+	}
+
+	protected FileScannerResultRendererHandler x86b16Renderer() {
+		return McdTransferHandler.X86B16_TRANSFER;
+	}
+
+	protected FileScannerResultExportHandler x86b16Exporter() {
+		return McdTransferHandler.X86B16_TRANSFER;
 	}
 
 }

@@ -178,7 +178,8 @@ struct "DOS stub image" {
 	}
 	struct ".TEXT" {
 		range[#stubTextSize] ""
-	}
+	}	->renderer(#x86b16Renderer)
+		->export(#x86b16Exporter)
 }
 
 IMAGE_FILE_HEADER:
