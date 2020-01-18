@@ -43,8 +43,14 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> exeFormatSpec = resolveLazy("EXE_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> exeHeaderSpec = resolveLazy("IMAGE_DOS_HEADER", CompositeSpec.class);
 
+	private Lazy<WordSpec> imageFileMachine = resolveLazy("IMAGE_FILE_MACHINE", WordSpec.class);
 	private Lazy<WordSpec> stubRelocationCount = resolveLazy("STUB_RELOCATION_COUNT", WordSpec.class);
 	private Lazy<DWordSpec> stubNextHeaderOffset = resolveLazy("NEXT_HEADER_OFFSET", DWordSpec.class);
+	private Lazy<DWordSpec> ntSectionCharacteristics = resolveLazy("NT_SECTION_CHARACTERISTICS", DWordSpec.class);
+
+	private Lazy<CompositeSpec> genericSeciontSpec = resolveLazy("IMAGE_NT_GENERIC_SECTION", CompositeSpec.class);
+	private Lazy<CompositeSpec> i386SeciontSpec = resolveLazy("IMAGE_NT_I386_SECTION", CompositeSpec.class);
+	private Lazy<CompositeSpec> amd64SeciontSpec = resolveLazy("IMAGE_NT_AMD64_SECTION", CompositeSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.exeFormatSpec.get();
@@ -67,6 +73,43 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 
 	protected FileScannerResultExportHandler x86b16Exporter() {
 		return McdTransferHandler.X86B16_TRANSFER;
+	}
+
+	protected FileScannerResultRendererHandler x86b32Renderer() {
+		return McdTransferHandler.X86B32_TRANSFER;
+	}
+
+	protected FileScannerResultExportHandler x86b32Exporter() {
+		return McdTransferHandler.X86B32_TRANSFER;
+	}
+
+	protected FileScannerResultRendererHandler x86b64Renderer() {
+		return McdTransferHandler.X86B64_TRANSFER;
+	}
+
+	protected FileScannerResultExportHandler x86b64Exporter() {
+		return McdTransferHandler.X86B64_TRANSFER;
+	}
+
+	protected CompositeSpec sectionSpec() {
+		int characteristics = this.ntSectionCharacteristics.get().get().intValue();
+		CompositeSpec spec = this.genericSeciontSpec.get();
+
+		if ((characteristics & 0x00000020) == 0x00000020) {
+			int machine = ShortHelper.toUnsignedInt(this.imageFileMachine.get().get());
+
+			switch (machine) {
+			case 0x014c:
+				spec = this.i386SeciontSpec.get();
+				break;
+			case 0x8664:
+				spec = this.amd64SeciontSpec.get();
+				break;
+			default:
+				// Nothing to do here
+			}
+		}
+		return spec;
 	}
 
 }

@@ -18,6 +18,7 @@ package de.carne.filescanner.provider.util;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
+import java.util.function.Supplier;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResult;
@@ -33,6 +34,8 @@ import de.carne.mcd.common.MCDOutput;
 import de.carne.mcd.common.MachineCodeDecoder;
 import de.carne.mcd.jvm.ClassFileDecoder;
 import de.carne.mcd.x86.X86b16Decoder;
+import de.carne.mcd.x86.X86b32Decoder;
+import de.carne.mcd.x86.X86b64Decoder;
 
 /**
  * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for
@@ -42,28 +45,45 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 
 	private static final Log LOG = new Log();
 
+	private static final String EXTENSION_TXT = ".txt";
+
 	/**
 	 * Java class file handler.
 	 */
-	public static final McdTransferHandler JAVA_CLASS_FILE_TRANSFER = new McdTransferHandler(new ClassFileDecoder(),
-			".jcf");
+	public static final McdTransferHandler JAVA_CLASS_FILE_TRANSFER = new McdTransferHandler(ClassFileDecoder::new,
+			ClassFileDecoder.NAME, EXTENSION_TXT);
 
 	/**
 	 * x86-16 code handler.
 	 */
-	public static final McdTransferHandler X86B16_TRANSFER = new McdTransferHandler(new X86b16Decoder(), ".asm");
+	public static final McdTransferHandler X86B16_TRANSFER = new McdTransferHandler(X86b16Decoder::new,
+			X86b16Decoder.NAME, EXTENSION_TXT);
 
-	private final MachineCodeDecoder mcd;
+	/**
+	 * x86-32 code handler.
+	 */
+	public static final McdTransferHandler X86B32_TRANSFER = new McdTransferHandler(X86b32Decoder::new,
+			X86b32Decoder.NAME, EXTENSION_TXT);
+
+	/**
+	 * x86-64 code handler.
+	 */
+	public static final McdTransferHandler X86B64_TRANSFER = new McdTransferHandler(X86b64Decoder::new,
+			X86b64Decoder.NAME, EXTENSION_TXT);
+
+	private final Supplier<MachineCodeDecoder> mcd;
+	private final String name;
 	private final String extension;
 
-	private McdTransferHandler(MachineCodeDecoder mcd, String extension) {
+	private McdTransferHandler(Supplier<MachineCodeDecoder> mcd, String name, String extension) {
 		this.mcd = mcd;
+		this.name = name;
 		this.extension = extension;
 	}
 
 	@Override
 	public String name() {
-		return this.mcd.name();
+		return this.name;
 	}
 
 	@Override
@@ -86,7 +106,9 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 		FileScannerResult result = context.result();
 
 		try (SeekableByteChannel mcdInput = result.input().byteChannel(result.start(), result.end())) {
-			this.mcd.decode(mcdInput, target);
+			MachineCodeDecoder decoder = this.mcd.get();
+
+			decoder.decode(mcdInput, target);
 		}
 	}
 
@@ -96,9 +118,11 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 
 		try (SeekableByteChannel mcdInput = result.input().byteChannel(result.start(), result.end());
 				MCDOutput mcdOutput = new MCDRenderOutput(out)) {
-			this.mcd.decode(mcdInput, mcdOutput);
+			MachineCodeDecoder decoder = this.mcd.get();
+
+			decoder.decode(mcdInput, mcdOutput);
 		} catch (IOException e) {
-			LOG.error(e, "Failed to completely decode ''{0}''", this.mcd.name());
+			LOG.error(e, "Failed to completely decode ''{0}''", this.name);
 		}
 	}
 

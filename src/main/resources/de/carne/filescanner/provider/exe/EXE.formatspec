@@ -184,6 +184,7 @@ struct "DOS stub image" {
 
 IMAGE_FILE_HEADER:
 struct "IMAGE_FILE_HEADER" {
+IMAGE_FILE_MACHINE@NT_IMAGE:
 	word "Machine"
 		->renderer(@NT_MACHINE)
 NT_NUMBER_OF_SECTIONS@NT_IMAGE:
@@ -380,19 +381,41 @@ NT_SECTION_DATA_POSITION@IMAGE_NT_SECTIONS:
 		->format(@PrettyFormat)
 	word "NumberOfLinenumbers"
 		->format(@PrettyFormat)
+NT_SECTION_CHARACTERISTICS@IMAGE_NT_SECTIONS:
 	dword "Characteristics"
 		->renderer(@NT_SECTION_CHARACTERISTICS)
 }
 
 IMAGE_NT_GENERIC_SECTION:
-struct text("IMAGE_SECTION[%s]", @NT_SECTION_NAME) {
+struct {
 	range[@NT_SECTION_DATA_SIZE] ""
+}
+
+IMAGE_NT_I386_SECTION:
+struct {
+	range[@NT_SECTION_DATA_SIZE] ""
+}	->renderer(#x86b32Renderer)
+	->export(#x86b32Exporter)
+
+IMAGE_NT_AMD64_SECTION:
+struct {
+	range[@NT_SECTION_DATA_SIZE] ""
+}	->renderer(#x86b32Renderer)
+	->export(#x86b32Exporter)
+
+IMAGE_NT_SECTION_DATA:
+struct text("IMAGE_SECTION[%s]", @NT_SECTION_NAME) {
+	conditional #sectionSpec {
+		@IMAGE_NT_GENERIC_SECTION
+		@IMAGE_NT_I386_SECTION
+		@IMAGE_NT_AMD64_SECTION
+	}
 }
 
 IMAGE_NT_SECTION:
 struct {
 	@IMAGE_NT_SECTION_HEADER
-	decode_at @NT_SECTION_DATA_POSITION @IMAGE_NT_GENERIC_SECTION
+	decode_at @NT_SECTION_DATA_POSITION @IMAGE_NT_SECTION_DATA
 }
 
 IMAGE_NT_SECTIONS:
