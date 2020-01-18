@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
@@ -66,7 +64,7 @@ public class ConditionalSpec implements FormatSpec {
 	}
 
 	@Override
-	public void render(@NonNull RenderOutput out, @NonNull FileScannerResultRenderContext context) throws IOException {
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		context.getValue(this.resolvedSpec).render(out, context);
 	}
 

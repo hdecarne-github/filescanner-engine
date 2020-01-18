@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
@@ -61,13 +59,12 @@ public class ConditionalCompositeSpec extends CompositeSpec {
 	}
 
 	@Override
-	public void decodeComposite(@NonNull FileScannerResultDecodeContext context) throws IOException {
+	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
 		context.bindDecodedValue(this.resolvedSpec, this.spec.get()).decodeComposite(context);
 	}
 
 	@Override
-	public void renderComposite(@NonNull RenderOutput out, @NonNull FileScannerResultRenderContext context)
-			throws IOException {
+	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		context.getValue(this.resolvedSpec).renderComposite(out, context);
 	}
 
