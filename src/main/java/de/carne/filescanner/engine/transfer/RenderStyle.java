@@ -24,36 +24,51 @@ public enum RenderStyle {
 	/**
 	 * 'normal' style.
 	 */
-	NORMAL,
+	NORMAL("n"),
 
 	/**
 	 * 'value' style.
 	 */
-	VALUE,
+	VALUE("v"),
 
 	/**
 	 * 'comment' style.
 	 */
-	COMMENT,
+	COMMENT("c"),
 
 	/**
 	 * 'keyword' style.
 	 */
-	KEYWORD,
+	KEYWORD("k"),
 
 	/**
 	 * 'operator' style.
 	 */
-	OPERATOR,
+	OPERATOR("o"),
 
 	/**
 	 * 'label' style.
 	 */
-	LABEL,
+	LABEL("l"),
 
 	/**
 	 * 'error' style.
 	 */
-	ERROR
+	ERROR("e");
+
+	private final String shortName;
+
+	private RenderStyle(String shortName) {
+		this.shortName = shortName;
+	}
+
+	/**
+	 * Gets this style's short name.
+	 * 
+	 * @return this style's short name.
+	 */
+	public String shortName() {
+		return this.shortName;
+	}
 
 }
