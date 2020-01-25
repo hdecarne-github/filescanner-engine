@@ -13,13 +13,8 @@ plugins {
 // Build helpers
 def snapshotBuild = project.version.endsWith("-SNAPSHOT")
 
-def resolveProperty(propertyName, envName) {
-	def resolved = (project.findProperty(propertyName) ?: System.getenv(envName));
-
-	if(resolved == null) {
-		throw new GradleException("Missing property/environment variable: '${propertyName}'/'${envName}'")
-	}
-	return resolved; 
+def resolveProperty(propertyName, envName, defValue = "<undefined>") {
+	return ((project.findProperty(propertyName) ?: System.getenv(envName)) ?: defValue);
 }
 
 // Project
@@ -59,14 +54,20 @@ generateGrammarSource {
 }
 
 jar {
-	def buildTimestamp = new java.text.SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
 	manifest {
 		attributes(
-			"Automatic-Module-Name": automaticModuleName,
-			"X-Module-Name": project.name,
-			"X-Module-Version": project.version,
-			"X-Module-Build": buildTimestamp)
+			'Automatic-Module-Name': automaticModuleName,
+			'Created-By': "Gradle ${gradle.gradleVersion} (${System.properties['os.name']}:${System.properties['os.arch']}:${System.properties['os.version']})",
+			'Build-Jdk' : System.properties['java.version'],
+			'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").format(new Date()),
+			'X-Compile-Target-JDK': targetCompatibility,
+			'X-Compile-Source-JDK': sourceCompatibility,
+			'X-Module-Id': project.name,
+			'X-Module-Name': project.name,
+			'X-Module-Version': project.version,
+			'X-Module-DocURL': projectUrl,
+			'X-Module-License': projectLicenseUrl
+		)
 	}
 }
 
@@ -166,6 +167,9 @@ bintray {
 	user = project.resolveProperty("bintrayUser", "BINTRAY_USER")
 	key = project.resolveProperty("bintrayKey", "BINTRAY_KEY")
 	publications = [ "Bintray" ]
+	dryRun = (project.findProperty("bintray.dryRun") ?: false);
+	publish = (project.findProperty("bintray.publish") ?: !snapshotBuild);
+	override = (project.findProperty("bintray.override") ?: false);
 	pkg {
 		repo = "maven"
 		name = project.name
@@ -175,6 +179,10 @@ bintray {
 			gpg {
 				sign = true
 				passphrase = project.resolveProperty("bintrayGpgPassphrase", "BINTRAY_GPG_PASSPHRASE")
+			}
+			mavenCentralSync {
+				user = project.resolveProperty("ossrhUsername", "OSSRH_USERNAME")
+				password = project.resolveProperty("ossrhPassword", "OSSRH_PASSWORD")
 			}
 		}
 	}
