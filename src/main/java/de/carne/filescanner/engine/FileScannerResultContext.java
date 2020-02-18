@@ -56,12 +56,12 @@ public abstract class FileScannerResultContext {
 	}
 
 	/**
-	 * Runs the submitted {@linkplain FileScannerRunnable} within this {@linkplain FileScannerResultContext} instance.
+	 * Runs the submitted {@linkplain FileScannerRunnableV} within this {@linkplain FileScannerResultContext} instance.
 	 *
-	 * @param runnable the {@linkplain FileScannerRunnable} to run.
+	 * @param runnable the {@linkplain FileScannerRunnableV} to run.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	protected void run(FileScannerRunnable runnable) throws IOException {
+	protected void runV(FileScannerRunnableV runnable) throws IOException {
 		FileScannerResultContext previousContext = CONTEXT.get();
 
 		if (equals(previousContext)) {
@@ -78,6 +78,34 @@ public abstract class FileScannerResultContext {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Runs the submitted {@linkplain FileScannerRunnableT} within this {@linkplain FileScannerResultContext} instance.
+	 *
+	 * @param runnable the {@linkplain FileScannerRunnableT} to run.
+	 * @return the processing result.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	protected <T> T runT(FileScannerRunnableT<T> runnable) throws IOException {
+		FileScannerResultContext previousContext = CONTEXT.get();
+		T result;
+
+		if (equals(previousContext)) {
+			result = runnable.run();
+		} else {
+			CONTEXT.set(this);
+			try {
+				result = runnable.run();
+			} finally {
+				if (previousContext != null) {
+					CONTEXT.set(previousContext);
+				} else {
+					CONTEXT.remove();
+				}
+			}
+		}
+		return result;
 	}
 
 	/**

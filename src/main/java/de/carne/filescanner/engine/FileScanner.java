@@ -320,7 +320,7 @@ public final class FileScanner implements Closeable {
 		this.inputDecodeCache.close();
 	}
 
-	private void queueScanTask(FileScannerRunnable task) {
+	private void queueScanTask(FileScannerRunnableV task) {
 		synchronized (this) {
 			this.runningScanTasks++;
 		}

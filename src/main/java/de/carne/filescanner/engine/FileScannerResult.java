@@ -22,10 +22,9 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.input.FileScannerInput;
-import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.TransferSource;
 
 /**
  * {@linkplain FileScanner} result object.
@@ -146,11 +145,11 @@ public interface FileScannerResult {
 	/**
 	 * Exports this {@linkplain FileScannerResult}.
 	 *
-	 * @param target the {@linkplain ExportTarget} to to to.
-	 * @param exporter the {@linkplain FileScannerResultExporter} instance to use.
+	 * @param exportHandler the {@linkplain FileScannerResultExportHandler} instance to use.
+	 * @return the {@linkplain TransferSource} instance representing the exported data.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException;
+	TransferSource export(FileScannerResultExportHandler exportHandler) throws IOException;
 
 	/**
 	 * Sets the custom data object associated with this {@linkplain FileScannerResult}.

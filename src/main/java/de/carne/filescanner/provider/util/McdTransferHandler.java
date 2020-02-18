@@ -17,18 +17,21 @@
 package de.carne.filescanner.provider.util;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.function.Supplier;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.FileScannerResults;
-import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.mcd.common.MCDOutput;
 import de.carne.mcd.common.MachineCodeDecoder;
@@ -38,10 +41,10 @@ import de.carne.mcd.x86.X86b32Decoder;
 import de.carne.mcd.x86.X86b64Decoder;
 
 /**
- * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for
+ * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRenderHandler} implementation for
  * machine code data decodable via the java-mcd library.
  */
-public class McdTransferHandler implements FileScannerResultExportHandler, FileScannerResultRendererHandler {
+public class McdTransferHandler implements FileScannerResultExportHandler, FileScannerResultRenderHandler {
 
 	private static final Log LOG = new Log();
 
@@ -102,14 +105,45 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 	}
 
 	@Override
-	public void export(ExportTarget target, FileScannerResultRenderContext context) throws IOException {
-		FileScannerResult result = context.result();
+	public TransferSource export(FileScannerResultRenderContext context) throws IOException {
+		Supplier<MachineCodeDecoder> exportMcd = this.mcd;
+		FileScannerResult exportResult = context.result();
 
-		try (SeekableByteChannel mcdInput = result.input().byteChannel(result.start(), result.end())) {
-			MachineCodeDecoder decoder = this.mcd.get();
+		return new TransferSource() {
 
-			decoder.decode(mcdInput, target);
-		}
+			@Override
+			public String name() {
+				return McdTransferHandler.this.name();
+			}
+
+			@Override
+			public TransferType transferType() {
+				return McdTransferHandler.this.transferType();
+			}
+
+			@Override
+			public long size() {
+				return -1;
+			}
+
+			@Override
+			public void transfer(WritableByteChannel target) throws IOException {
+				try (SeekableByteChannel mcdInput = exportResult.input().byteChannel(exportResult.start(),
+						exportResult.end())) {
+					MachineCodeDecoder decoder = exportMcd.get();
+
+					decoder.decode(mcdInput, target);
+				}
+			}
+
+			@Override
+			public void transfer(OutputStream target) throws IOException {
+				try (WritableByteChannel targetChannel = Channels.newChannel(target)) {
+					transfer(targetChannel);
+				}
+			}
+		};
+
 	}
 
 	@Override

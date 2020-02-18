@@ -24,7 +24,7 @@ import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.filescanner.provider.util.McdTransferHandler;
@@ -67,7 +67,7 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 		return nextHeaderOffset - 0x40 - (relocationCount * 4);
 	}
 
-	protected FileScannerResultRendererHandler x86b16Renderer() {
+	protected FileScannerResultRenderHandler x86b16Renderer() {
 		return McdTransferHandler.X86B16_TRANSFER;
 	}
 
@@ -75,7 +75,7 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 		return McdTransferHandler.X86B16_TRANSFER;
 	}
 
-	protected FileScannerResultRendererHandler x86b32Renderer() {
+	protected FileScannerResultRenderHandler x86b32Renderer() {
 		return McdTransferHandler.X86B32_TRANSFER;
 	}
 
@@ -83,7 +83,7 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 		return McdTransferHandler.X86B32_TRANSFER;
 	}
 
-	protected FileScannerResultRendererHandler x86b64Renderer() {
+	protected FileScannerResultRenderHandler x86b64Renderer() {
 		return McdTransferHandler.X86B64_TRANSFER;
 	}
 

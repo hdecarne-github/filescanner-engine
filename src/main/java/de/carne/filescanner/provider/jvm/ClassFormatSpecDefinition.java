@@ -22,7 +22,7 @@ import java.util.Objects;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.provider.util.McdTransferHandler;
 import de.carne.util.Lazy;
 
@@ -47,7 +47,7 @@ final class ClassFormatSpecDefinition extends FormatSpecDefinition {
 		return this.classMagicSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler classRenderer() {
+	protected FileScannerResultRenderHandler classRenderer() {
 		return McdTransferHandler.JAVA_CLASS_FILE_TRANSFER;
 	}
 

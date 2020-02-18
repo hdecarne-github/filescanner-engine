@@ -14,27 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.transfer;
+package de.carne.filescanner.engine;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
-
 /**
- * Export function for {@linkplain FileScannerResult} instances.
+ * {@linkplain FileScanner} specific {@linkplain Runnable} derivative aware of scan specific exceptions.
  */
 @FunctionalInterface
-public interface FileScannerResultExporter {
+interface FileScannerRunnableV {
 
 	/**
-	 * Exports the {@linkplain FileScannerResult} instances represented by the given
-	 * {@linkplain FileScannerResultRenderContext}.
+	 * Run {@linkplain FileScanner} logic.
 	 *
-	 * @param target the {@linkplain ExportTarget} to export to.
-	 * @param context the {@linkplain FileScannerResultRenderContext} to render.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void export(ExportTarget target, FileScannerResultRenderContext context) throws IOException;
+	void run() throws IOException;
 
 }

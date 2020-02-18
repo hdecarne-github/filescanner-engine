@@ -38,7 +38,7 @@ union {
 }
 
 PDF_STREAM:
-format_spec "PDF stream" {
+format_spec "PDF file" {
 	raw {
 		@PDF_MAGIC
 	}

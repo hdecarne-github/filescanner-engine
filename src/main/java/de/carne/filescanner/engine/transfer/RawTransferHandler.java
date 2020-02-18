@@ -17,6 +17,8 @@
 package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.HashSet;
@@ -31,10 +33,10 @@ import de.carne.filescanner.engine.FileScannerResults;
 import de.carne.io.IOUtil;
 
 /**
- * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRendererHandler} implementation for raw
+ * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRenderHandler} implementation for raw
  * data transfer.
  */
-public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRendererHandler {
+public class RawTransferHandler implements FileScannerResultExportHandler, FileScannerResultRenderHandler {
 
 	/**
 	 * Predefined APPLICATION_OCTET_STREAM transfer handler.
@@ -135,13 +137,8 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 	}
 
 	@Override
-	public void export(ExportTarget target, FileScannerResultRenderContext context) throws IOException {
-		FileScannerResult result = context.result();
-
-		target.setSize(result.size());
-		try (ReadableByteChannel resultChannel = newResultChannel(result)) {
-			IOUtil.copyChannel(target, resultChannel);
-		}
+	public TransferSource export(FileScannerResultRenderContext context) throws IOException {
+		return new RawTransferSource(context.result());
 	}
 
 	@Override
@@ -180,10 +177,22 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 		}
 
 		@Override
+		public long size() {
+			return this.result.size();
+		}
+
+		@Override
 		public void transfer(WritableByteChannel target) throws IOException {
 			try (ReadableByteChannel resultChannel = this.result.input().byteChannel(this.result.start(),
 					this.result.end())) {
 				IOUtil.copyChannel(target, resultChannel);
+			}
+		}
+
+		@Override
+		public void transfer(OutputStream target) throws IOException {
+			try (InputStream resultStream = this.result.input().inputStream(this.result.start(), this.result.end())) {
+				IOUtil.copyStream(target, resultStream);
 			}
 		}
 

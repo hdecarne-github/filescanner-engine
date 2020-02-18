@@ -57,6 +57,11 @@ public enum TransferType {
 	TEXT_PLAIN("text/plain"),
 
 	/**
+	 * HTML text data.
+	 */
+	TEXT_HTML("text/html"),
+
+	/**
 	 * XML text data.
 	 */
 	TEXT_XML("text/xml"),
@@ -83,7 +88,7 @@ public enum TransferType {
 
 	/**
 	 * Checks whether this instances's corresponding MIME type is of type text.
-	 * 
+	 *
 	 * @return {@code true} if this instances's corresponding MIME type is of type text.
 	 */
 	public boolean isText() {
@@ -92,7 +97,7 @@ public enum TransferType {
 
 	/**
 	 * Checks whether this instances's corresponding MIME type is of type image.
-	 * 
+	 *
 	 * @return {@code true} if this instances's corresponding MIME type is of type image.
 	 */
 	public boolean isImage() {

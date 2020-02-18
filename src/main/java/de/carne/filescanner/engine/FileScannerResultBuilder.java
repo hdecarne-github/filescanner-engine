@@ -37,12 +37,11 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
-import de.carne.filescanner.engine.transfer.ExportTarget;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultExporter;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.text.MemoryUnitFormat;
 import de.carne.util.Strings;
@@ -333,10 +332,10 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException {
+	public TransferSource export(FileScannerResultExportHandler exportHandler) throws IOException {
 		FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
 
-		context.export(target, exporter);
+		return context.export(exportHandler);
 	}
 
 	private static final class CommitState {

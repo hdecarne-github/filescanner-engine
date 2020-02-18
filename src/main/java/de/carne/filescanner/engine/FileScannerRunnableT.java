@@ -17,18 +17,20 @@
 package de.carne.filescanner.engine;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 /**
- * {@linkplain FileScanner} specific {@linkplain Runnable} derivative aware of scan specific exceptions.
+ * {@linkplain FileScanner} specific {@linkplain Supplier} derivative aware of scan specific exceptions.
  */
 @FunctionalInterface
-public interface FileScannerRunnable {
+interface FileScannerRunnableT<T> {
 
 	/**
 	 * Run {@linkplain FileScanner} logic.
-	 *
+	 * 
+	 * @return the processing result.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void run() throws IOException;
+	T run() throws IOException;
 
 }

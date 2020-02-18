@@ -23,7 +23,7 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.DWordSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.util.Lazy;
 
@@ -50,7 +50,7 @@ final class PngFormatSpecDefinition extends FormatSpecDefinition {
 		return this.pngHeaderSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler pngRenderer() {
+	protected FileScannerResultRenderHandler pngRenderer() {
 		return RawTransferHandler.IMAGE_PNG_TRANSFER;
 	}
 

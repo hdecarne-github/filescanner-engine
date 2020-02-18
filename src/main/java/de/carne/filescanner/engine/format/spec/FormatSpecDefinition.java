@@ -127,7 +127,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.W
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.WordSymbolsContext;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.IntHelper;
@@ -879,7 +879,7 @@ public abstract class FormatSpecDefinition {
 	private void applyRendererModifier(CompositeSpec spec, List<CompositeSpecRendererModifierContext> modifierCtx) {
 		for (CompositeSpecRendererModifierContext rendererCtx : modifierCtx) {
 			spec.renderer(
-					resolveExternalReference(rendererCtx.externalReference(), FileScannerResultRendererHandler.class));
+					resolveExternalReference(rendererCtx.externalReference(), FileScannerResultRenderHandler.class));
 		}
 	}
 

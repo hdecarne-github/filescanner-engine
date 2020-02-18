@@ -29,9 +29,9 @@ import de.carne.filescanner.engine.format.spec.AttributeBindMode;
 import de.carne.filescanner.engine.format.spec.AttributeSpec;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
-import de.carne.filescanner.engine.transfer.ExportTarget;
-import de.carne.filescanner.engine.transfer.FileScannerResultExporter;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.TransferSource;
 
 /**
  * Input data processor class used during result rendering and exporting.
@@ -68,7 +68,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 		if (!inContext(getClass()) || !formatSpec.isResult()) {
 			LOG.debug("Rendering format spec ''{0}''...", formatSpec);
 
-			run(() -> {
+			runV(() -> {
 				ByteOrder previousByteOrder = byteOrder(formatSpec.byteOrder());
 
 				try {
@@ -90,7 +90,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	public void render(RenderOutput out, EncodedInputSpec encodedInputSpec) throws IOException {
 		LOG.debug("Rendering encoded input spec ''{0}''...", encodedInputSpec);
 
-		run(() -> encodedInputSpec.inputDecoderTable().get().render(out));
+		runV(() -> encodedInputSpec.inputDecoderTable().get().render(out));
 	}
 
 	/**
@@ -115,16 +115,16 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	}
 
 	/**
-	 * Executes the given {@linkplain FileScannerResultExporter} instance.
+	 * Executes the given {@linkplain FileScannerResultExportHandler} instance.
 	 *
-	 * @param target the {@linkplain ExportTarget} to export to.
-	 * @param exporter the {@linkplain FileScannerResultExporter} instance to execute.
+	 * @param exportHandler the {@linkplain FileScannerResultExportHandler} instance to execute.
+	 * @return the {@linkplain TransferSource} instance representing the exported data.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public void export(ExportTarget target, FileScannerResultExporter exporter) throws IOException {
-		LOG.debug("Executing exporter ''{0}''...", exporter);
+	public TransferSource export(FileScannerResultExportHandler exportHandler) throws IOException {
+		LOG.debug("Executing export handler ''{0}''...", exportHandler);
 
-		run(() -> exporter.export(target, this));
+		return runT(() -> exportHandler.export(this));
 	}
 
 }

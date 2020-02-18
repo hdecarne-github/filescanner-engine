@@ -25,7 +25,7 @@ import de.carne.filescanner.engine.FileScannerResultRenderContext;
  * Render function for {@linkplain FileScannerResult} instances.
  */
 @FunctionalInterface
-public interface FileScannerResultRendererHandler {
+public interface FileScannerResultRenderHandler {
 
 	/**
 	 * Renders the {@linkplain FileScannerResult} instances represented by the given

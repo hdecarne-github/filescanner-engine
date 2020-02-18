@@ -27,8 +27,8 @@ import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.spec.FormatSpecs;
 import de.carne.filescanner.engine.format.spec.RangeSpec;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
-import de.carne.filescanner.engine.transfer.StyledTextRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.StyledTextRenderHandler;
 import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.util.Lazy;
 
@@ -39,7 +39,7 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private static final StyledTextRendererHandler RESOURCE_FORK_RENDERER = new StyledTextRendererHandler(
+	private static final StyledTextRenderHandler RESOURCE_FORK_RENDERER = new StyledTextRenderHandler(
 			TransferType.TEXT_XML);
 
 	@Override
@@ -60,7 +60,7 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 		return this.udifTrailerSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler resourceForkRenderer() {
+	protected FileScannerResultRenderHandler resourceForkRenderer() {
 		return RESOURCE_FORK_RENDERER;
 	}
 

@@ -37,9 +37,9 @@ import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.textstyle.XMLStyle;
 
 /**
- * {@linkplain FileScannerResultRendererHandler} implementation supported styled text rendering.
+ * {@linkplain FileScannerResultRenderHandler} implementation supported styled text rendering.
  */
-public class StyledTextRendererHandler implements FileScannerResultRendererHandler {
+public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 
 	private final @Nullable Function<CharStream, Lexer> lexerFactory;
 	private final Map<Integer, RenderStyle> styleMap = new HashMap<>();
@@ -48,25 +48,25 @@ public class StyledTextRendererHandler implements FileScannerResultRendererHandl
 	/**
 	 * Predefined TEXT_XML renderer handler.
 	 */
-	public static final StyledTextRendererHandler XML_RENDERER_HANDLER = new StyledTextRendererHandler(
+	public static final StyledTextRenderHandler XML_RENDERER_HANDLER = new StyledTextRenderHandler(
 			TransferType.TEXT_XML);
 
 	/**
-	 * Constructs a new {@linkplain StyledTextRendererHandler} instance.
+	 * Constructs a new {@linkplain StyledTextRenderHandler} instance.
 	 *
 	 * @param transferType the {@linkplain TransferType} used to determine the render style.
 	 */
-	public StyledTextRendererHandler(TransferType transferType) {
+	public StyledTextRenderHandler(TransferType transferType) {
 		this(transferType, StandardCharsets.UTF_8);
 	}
 
 	/**
-	 * Constructs a new {@linkplain StyledTextRendererHandler} instance.
+	 * Constructs a new {@linkplain StyledTextRenderHandler} instance.
 	 *
 	 * @param transferType the {@linkplain TransferType} used to determine the render style.
 	 * @param charset the {@linkplain Charset} of the text to display.
 	 */
-	public StyledTextRendererHandler(TransferType transferType, Charset charset) {
+	public StyledTextRenderHandler(TransferType transferType, Charset charset) {
 		switch (transferType) {
 		case TEXT_PLAIN:
 			this.lexerFactory = null;

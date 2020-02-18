@@ -19,11 +19,12 @@ package de.carne.filescanner.engine.transfer;
 import java.io.IOException;
 
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
 
 /**
  * Interface used for exporting a file scanner result.
  */
-public interface FileScannerResultExportHandler extends FileScannerResultExporter {
+public interface FileScannerResultExportHandler {
 
 	/**
 	 * Gets the name of this {@linkplain FileScannerResultExportHandler}.
@@ -54,5 +55,15 @@ public interface FileScannerResultExportHandler extends FileScannerResultExporte
 	 * @throws IOException if an I/O error occurs.
 	 */
 	String defaultFileName(FileScannerResult result) throws IOException;
+
+	/**
+	 * Exports the {@linkplain FileScannerResult} instances represented by the given
+	 * {@linkplain FileScannerResultRenderContext}.
+	 *
+	 * @param context the {@linkplain FileScannerResultRenderContext} to export.
+	 * @return the {@linkplain TransferSource} instance representing the exported data.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	TransferSource export(FileScannerResultRenderContext context) throws IOException;
 
 }

@@ -89,14 +89,6 @@ public class CombinedRenderer implements Renderer {
 	}
 
 	@Override
-	public void emitMediaData(int indent, RenderStyle style, TransferSource source, long href, boolean lineBreak)
-			throws IOException {
-		for (Renderer renderer : this.renderers) {
-			renderer.emitMediaData(indent, style, source, href, lineBreak);
-		}
-	}
-
-	@Override
 	public void emitEpilogue() throws IOException {
 		for (Renderer renderer : this.renderers) {
 			renderer.emitEpilogue();

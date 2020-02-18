@@ -22,7 +22,7 @@ import java.util.Objects;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.util.Lazy;
 
@@ -47,7 +47,7 @@ final class PdfFormatSpecDefinition extends FormatSpecDefinition {
 		return this.pdfMagicSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler pdfRenderer() {
+	protected FileScannerResultRenderHandler pdfRenderer() {
 		return RawTransferHandler.APPLICATION_PDF_TRANSFER;
 	}
 

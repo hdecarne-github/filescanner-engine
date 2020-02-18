@@ -113,7 +113,7 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 
 			this.decodeStack.push(new Scope(formatSpecResult));
 			try {
-				run(() -> {
+				runV(() -> {
 					formatSpec.decodeComposite(this);
 					formatSpecResult.resolveExportHandlers(formatSpec.exportHandlers());
 					if (!isRootSpec) {

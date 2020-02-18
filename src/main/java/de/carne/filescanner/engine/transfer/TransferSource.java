@@ -17,10 +17,11 @@
 package de.carne.filescanner.engine.transfer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.channels.WritableByteChannel;
 
 /**
- * Interface used to transfer byte based data during rendering.
+ * Interface used to transfer byte based data in a generic way.
  */
 public interface TransferSource {
 
@@ -41,11 +42,26 @@ public interface TransferSource {
 	TransferType transferType();
 
 	/**
+	 * Gets the size of the data to transfer (if known in advance).
+	 *
+	 * @return the size of the data to transfer or {@code -1} if the size is not known in advance.
+	 */
+	long size();
+
+	/**
 	 * Transfers the data.
 	 *
 	 * @param target the {@linkplain WritableByteChannel} to transfer the data to.
 	 * @throws IOException if an I/O error occurs.
 	 */
 	void transfer(WritableByteChannel target) throws IOException;
+
+	/**
+	 * Transfers the data.
+	 *
+	 * @param target the {@linkplain OutputStream} to transfer the data to.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	void transfer(OutputStream target) throws IOException;
 
 }

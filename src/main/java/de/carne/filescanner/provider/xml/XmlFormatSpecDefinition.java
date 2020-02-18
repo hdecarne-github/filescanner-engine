@@ -22,9 +22,9 @@ import java.util.Objects;
 import de.carne.filescanner.engine.format.spec.CompositeSpec;
 import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
-import de.carne.filescanner.engine.transfer.StyledTextRendererHandler;
+import de.carne.filescanner.engine.transfer.StyledTextRenderHandler;
 import de.carne.util.Lazy;
 
 /**
@@ -48,8 +48,8 @@ final class XmlFormatSpecDefinition extends FormatSpecDefinition {
 		return this.xmlMagicSpec.get();
 	}
 
-	protected FileScannerResultRendererHandler xmlRenderer() {
-		return StyledTextRendererHandler.XML_RENDERER_HANDLER;
+	protected FileScannerResultRenderHandler xmlRenderer() {
+		return StyledTextRenderHandler.XML_RENDERER_HANDLER;
 	}
 
 	protected FileScannerResultExportHandler xmlExporter() {

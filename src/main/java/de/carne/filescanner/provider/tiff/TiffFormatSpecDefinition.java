@@ -31,7 +31,7 @@ import de.carne.filescanner.engine.format.spec.RangeSpec;
 import de.carne.filescanner.engine.format.spec.StructSpec;
 import de.carne.filescanner.engine.format.spec.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRendererHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.util.Lazy;
@@ -130,7 +130,7 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		return nextDirectorySpec;
 	}
 
-	protected FileScannerResultRendererHandler tiffRenderer() {
+	protected FileScannerResultRenderHandler tiffRenderer() {
 		return RawTransferHandler.IMAGE_TIFF_TRANSFER;
 	}
 
