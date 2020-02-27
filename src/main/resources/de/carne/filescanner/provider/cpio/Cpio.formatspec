@@ -1,0 +1,181 @@
+/*
+ * Copyright (c) 2007-2020 Holger de Carne and contributors, All Rights Reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//
+// cpio file format: https://en.wikipedia.org/wiki/Cpio
+//
+
+// Symbols
+
+// Specs
+
+CPIO_ODC_HEADER:
+struct "cpio_odc_header"  {
+	char[6] "c_magic"
+		->validate("070707")
+	char[6] "c_dev"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_ino"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_mode"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_uid"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_gid"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_nlink"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_rdev"
+		->validate(R"^[0-7]+.*")
+	char[11] "c_mtime"
+		->validate(R"^[0-7]+.*")
+ODC_NAME_SIZE:
+	char[6] "c_namesize"
+		->validate(R"^[0-7]+.*")
+ODC_FILE_SIZE@CPIO_ODC_ENTRY:
+	char[11] "c_filesize"
+		->validate(R"^[0-7]+.*")
+ODC_PATH_NAME@CPIO_ODC_ENTRY:
+	char[#odcNameSize] "c_pathname"
+}
+
+CPIO_ODC_TRAILER:
+struct "cpio_odc_trailer"  {
+	char[6] "c_magic"
+		->validate("070707")
+	char[6] "c_dev"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_ino"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_mode"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_uid"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_gid"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_nlink"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_rdev"
+		->validate(R"^[0-7]+.*")
+	char[11] "c_mtime"
+		->validate(R"^[0-7]+.*")
+	char[6] "c_namesize"
+		->validate("000013")
+	char[11] "c_filesize"
+		->validate("00000000000")
+	char[11] "c_pathname"
+		->validate("TRAILER!!!\u0000")
+}
+
+CPIO_NEWC_HEADER:
+struct "cpio_newc_header" {
+	char[6] "c_magic"
+		->validate("070701")
+	char[8] "c_ino"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_mode"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_uid"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_gid"
+	char[8] "c_nlink"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_mtime"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+NEWC_FILE_SIZE@CPIO_NEWC_ENTRY:
+	char[8] "c_filesize"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_devmajor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_devminor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_rdevmajor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_rdevminor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+NEWC_NAME_SIZE:
+	char[8] "c_namesize"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_check"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+NEWC_PATH_NAME@CPIO_NEWC_ENTRY:
+	char[#newcNameSize] "c_pathname"
+}
+
+CPIO_NEWC_TRAILER:
+struct "cpio_newc_trailer" {
+	char[6] "c_magic"
+		->validate("070701")
+	char[8] "c_ino"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_mode"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_uid"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_gid"
+	char[8] "c_nlink"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_mtime"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_filesize"
+		->validate("00000000")
+	char[8] "c_devmajor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_devminor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_rdevmajor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_rdevminor"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[8] "c_namesize"
+		->validate("0000000b" || "0000000B")
+	char[8] "c_check"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+	char[14] "c_pathname"
+		->validate("TRAILER!!!\u0000\u0000\u0000\u0000")
+}
+
+CPIO_ODC_ENTRY:
+struct text("cpio entry [%s]", @ODC_PATH_NAME) {
+	@CPIO_ODC_HEADER
+	encoded #odcEncodedInputConfig
+}
+
+CPIO_NEWC_ENTRY:
+struct text("cpio entry [%s]", @NEWC_PATH_NAME) {
+	@CPIO_NEWC_HEADER
+	encoded #newcEncodedInputConfig
+}
+
+CPIO_ENTRY:
+union {
+	@CPIO_ODC_ENTRY
+	@CPIO_NEWC_ENTRY
+}
+
+CPIO_TRAILER:
+union {
+	@CPIO_ODC_TRAILER
+	@CPIO_NEWC_TRAILER
+}
+
+CPIO_ARCHIVE:
+format_spec "cpio archive" {
+	@CPIO_ENTRY
+	sequence @CPIO_ENTRY
+		->stopAfter(@CPIO_TRAILER)
+}
