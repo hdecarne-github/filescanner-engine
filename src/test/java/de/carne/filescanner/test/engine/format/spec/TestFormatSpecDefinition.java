@@ -35,27 +35,27 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 		return Objects.requireNonNull(getClass().getResource("Test.formatspec"));
 	}
 
-	protected String specialText() {
+	public String specialText() {
 		return getClass().getSimpleName();
 	}
 
-	protected FileScannerResultRenderHandler customRenderer() {
+	public FileScannerResultRenderHandler customRenderer() {
 		return RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler customExport() {
+	public FileScannerResultExportHandler customExport() {
 		return RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 	}
 
-	protected CompositeSpec conditionalSpec() {
+	public CompositeSpec conditionalSpec() {
 		return FormatSpecs.EMPTY;
 	}
 
-	protected ScanSpecConfig scanConfig() {
+	public ScanSpecConfig scanConfig() {
 		return new ScanSpecConfig(1, buffer -> false);
 	}
 
-	protected EncodedInputSpecConfig encodedInputSpecConfig() {
+	public EncodedInputSpecConfig encodedInputSpecConfig() {
 		return new EncodedInputSpecConfig(".");
 	}
 

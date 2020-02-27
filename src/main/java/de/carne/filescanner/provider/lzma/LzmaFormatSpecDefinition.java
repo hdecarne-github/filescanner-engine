@@ -97,7 +97,7 @@ final class LzmaFormatSpecDefinition extends FormatSpecDefinition {
 		return this.lzmaHeaderSpec.get();
 	}
 
-	protected EncodedInputSpecConfig lzmaEncodedInputConfig() {
+	public EncodedInputSpecConfig lzmaEncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
 				.inputDecoderTable(this::inputDecoderTable);
 	}

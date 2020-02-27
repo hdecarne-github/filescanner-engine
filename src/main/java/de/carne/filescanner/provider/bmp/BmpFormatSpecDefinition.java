@@ -62,15 +62,15 @@ final class BmpFormatSpecDefinition extends FormatSpecDefinition {
 		return this.bmpHeaderSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler bmpRenderer() {
+	public FileScannerResultRenderHandler bmpRenderer() {
 		return RawTransferHandler.IMAGE_BMP_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler bmpExporter() {
+	public FileScannerResultExportHandler bmpExporter() {
 		return RawTransferHandler.IMAGE_BMP_TRANSFER;
 	}
 
-	protected CompositeSpec colorTableSpec() {
+	public CompositeSpec colorTableSpec() {
 		CompositeSpec colorTableSpec = FormatSpecs.EMPTY;
 
 		if (this.biCompression.get().get() == 3) {
@@ -82,7 +82,7 @@ final class BmpFormatSpecDefinition extends FormatSpecDefinition {
 		return colorTableSpec;
 	}
 
-	protected Integer colorTableSize() {
+	public Integer colorTableSize() {
 		int colorTableSize = this.biClrUsed.get().get();
 
 		if (colorTableSize == 0) {
@@ -91,7 +91,7 @@ final class BmpFormatSpecDefinition extends FormatSpecDefinition {
 		return colorTableSize;
 	}
 
-	protected Long imageSize() {
+	public Long imageSize() {
 		long imageSize = IntHelper.toUnsignedLong(this.biSizeImage.get().get());
 
 		if (imageSize == 0) {

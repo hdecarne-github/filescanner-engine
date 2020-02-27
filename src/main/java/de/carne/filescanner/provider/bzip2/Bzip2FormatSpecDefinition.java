@@ -57,7 +57,7 @@ final class Bzip2FormatSpecDefinition extends FormatSpecDefinition {
 		return this.bzip2HeaderSpec.get();
 	}
 
-	protected EncodedInputSpecConfig bzip2EncodedInputConfig() {
+	public EncodedInputSpecConfig bzip2EncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
 				.inputDecoderTable(this::inputDecoderTable);
 	}

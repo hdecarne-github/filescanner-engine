@@ -91,7 +91,7 @@ struct "IEND chunk" {
 }	->bigEndian()
 
 PNG_GENERIC_CHUNK:
-struct #genericChunkName {
+struct text("%s chunk", #genericChunkName) {
 CHUNK_LENGTH:
 	dword "Length"
 		->format(@PrettyFormat)

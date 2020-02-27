@@ -365,7 +365,11 @@ numberArrayValueSet
 	;
 	
 textExpression
-	: (simpleText|Text LBracket formatText (Comma (specReference))* RBracket|externalReference)
+	: (simpleText|Text LBracket formatText (Comma (formatTextArgument))* RBracket)
+	;
+	
+formatTextArgument
+	: (specReference|externalReference)
 	;
 	
 simpleText

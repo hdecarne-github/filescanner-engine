@@ -60,38 +60,38 @@ final class ExeFormatSpecDefinition extends FormatSpecDefinition {
 		return this.exeHeaderSpec.get();
 	}
 
-	protected Long stubTextSize() {
+	public Long stubTextSize() {
 		int relocationCount = ShortHelper.toUnsignedInt(this.stubRelocationCount.get().get());
 		long nextHeaderOffset = IntHelper.toUnsignedLong(this.stubNextHeaderOffset.get().get());
 
 		return nextHeaderOffset - 0x40 - (relocationCount * 4);
 	}
 
-	protected FileScannerResultRenderHandler x86b16Renderer() {
+	public FileScannerResultRenderHandler x86b16Renderer() {
 		return McdTransferHandler.X86B16_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler x86b16Exporter() {
+	public FileScannerResultExportHandler x86b16Exporter() {
 		return McdTransferHandler.X86B16_TRANSFER;
 	}
 
-	protected FileScannerResultRenderHandler x86b32Renderer() {
+	public FileScannerResultRenderHandler x86b32Renderer() {
 		return McdTransferHandler.X86B32_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler x86b32Exporter() {
+	public FileScannerResultExportHandler x86b32Exporter() {
 		return McdTransferHandler.X86B32_TRANSFER;
 	}
 
-	protected FileScannerResultRenderHandler x86b64Renderer() {
+	public FileScannerResultRenderHandler x86b64Renderer() {
 		return McdTransferHandler.X86B64_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler x86b64Exporter() {
+	public FileScannerResultExportHandler x86b64Exporter() {
 		return McdTransferHandler.X86B64_TRANSFER;
 	}
 
-	protected CompositeSpec sectionSpec() {
+	public CompositeSpec sectionSpec() {
 		int characteristics = this.ntSectionCharacteristics.get().get().intValue();
 		CompositeSpec spec = this.genericSeciontSpec.get();
 

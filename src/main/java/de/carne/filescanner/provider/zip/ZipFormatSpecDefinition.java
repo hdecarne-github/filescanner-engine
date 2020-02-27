@@ -61,7 +61,7 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 		return this.lfhSpec.get();
 	}
 
-	protected EncodedInputSpecConfig zipEntryEncodedInputConfig() {
+	public EncodedInputSpecConfig zipEntryEncodedInputConfig() {
 		return new EncodedInputSpecConfig("file data").inputDecoderTable(this::inputDecoderTable)
 				.decodedInputName(this::decodedInputName);
 	}
@@ -101,7 +101,7 @@ final class ZipFormatSpecDefinition extends FormatSpecDefinition {
 		return this.lfhFileName.get().get();
 	}
 
-	protected CompositeSpec dataDescriptorSpec() {
+	public CompositeSpec dataDescriptorSpec() {
 		int bitFlag = Short.toUnsignedInt(this.lfhGenerapPurposeBitFlag.get().get().shortValue());
 		boolean ddPresent = (bitFlag & 0x0008) != 0;
 

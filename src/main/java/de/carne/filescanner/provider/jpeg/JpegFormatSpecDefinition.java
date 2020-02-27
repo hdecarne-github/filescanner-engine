@@ -57,24 +57,24 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 		return this.jpegHeaderSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler jpegRenderer() {
+	public FileScannerResultRenderHandler jpegRenderer() {
 		return RawTransferHandler.IMAGE_JPEG_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler jpegExporter() {
+	public FileScannerResultExportHandler jpegExporter() {
 		return RawTransferHandler.IMAGE_JPEG_TRANSFER;
 	}
 
-	protected Integer app0ThumbnailSize() {
+	public Integer app0ThumbnailSize() {
 		return Byte.toUnsignedInt(this.xThumbnail.get().get().byteValue())
 				* Byte.toUnsignedInt(this.yThumbnail.get().get().byteValue());
 	}
 
-	protected Integer genericMarkerDataSize() {
+	public Integer genericMarkerDataSize() {
 		return Short.toUnsignedInt(this.genericLength.get().get().shortValue()) - 2;
 	}
 
-	protected ScanSpecConfig sosScanConfig() {
+	public ScanSpecConfig sosScanConfig() {
 		return new ScanSpecConfig(2, this::matchMarker);
 	}
 

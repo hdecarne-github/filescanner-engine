@@ -30,8 +30,8 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public class ConditionalSpec implements FormatSpec {
 
-	private final FileScannerResultContextValueSpec<FormatSpec> resolvedSpec = new FileScannerResultContextValueSpec<>(
-			FormatSpec.class, ConditionalSpec.class.getSimpleName() + "#resolvedSpec");
+	private final FileScannerResultContextValueSpec<FormatSpec> decodedSpec = new FileScannerResultContextValueSpec<>(
+			FormatSpec.class, getClass().getSimpleName() + ".decodedSpec");
 	private final Supplier<FormatSpec> spec;
 
 	/**
@@ -60,12 +60,12 @@ public class ConditionalSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.bindDecodedValue(this.resolvedSpec, this.spec.get()).decode(context);
+		context.bindDecodedValue(this.decodedSpec, this.spec.get()).decode(context);
 	}
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		context.getValue(this.resolvedSpec).render(out, context);
+		context.getValue(this.decodedSpec).render(out, context);
 	}
 
 	@Override

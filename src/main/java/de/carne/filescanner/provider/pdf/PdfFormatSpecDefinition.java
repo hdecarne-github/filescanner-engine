@@ -47,11 +47,11 @@ final class PdfFormatSpecDefinition extends FormatSpecDefinition {
 		return this.pdfMagicSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler pdfRenderer() {
+	public FileScannerResultRenderHandler pdfRenderer() {
 		return RawTransferHandler.APPLICATION_PDF_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler pdfExporter() {
+	public FileScannerResultExportHandler pdfExporter() {
 		return RawTransferHandler.APPLICATION_PDF_TRANSFER;
 	}
 

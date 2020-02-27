@@ -54,19 +54,19 @@ final class TarFormatSpecDefinition extends FormatSpecDefinition {
 		return this.tarHeaderSpec.get();
 	}
 
-	protected CompositeSpec tarEntryDataSpec() {
+	public CompositeSpec tarEntryDataSpec() {
 		long size = getEntryDataSize();
 
 		return (size > 0 ? this.tarDataSpec.get() : FormatSpecs.EMPTY);
 	}
 
-	protected EncodedInputSpecConfig tarDataEncodedInputConfig() {
+	public EncodedInputSpecConfig tarDataEncodedInputConfig() {
 		return new EncodedInputSpecConfig("data blocks").decodedInputName(this.headerName.get()::getStripped)
 				.inputDecoderTable(this::getEntryDataInputDecoderTable);
 
 	}
 
-	protected Integer tarDataUnusedSize() {
+	public Integer tarDataUnusedSize() {
 		return (512 - (int) (getEntryDataSize() % 512l)) % 512;
 	}
 

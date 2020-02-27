@@ -70,7 +70,7 @@ public abstract class Format {
 	/**
 	 * Registers a trailer {@linkplain CompositeSpec} hinting at this {@linkplain Format} instance.
 	 *
-	 * @param trailerSpec the trailer {CompositeSpec CompositeSpec} to register.
+	 * @param trailerSpec the trailer {CompositeSpec} to register.
 	 * @return the updated {@linkplain Format} instance for chaining.
 	 */
 	protected Format registerTrailerSpec(CompositeSpec trailerSpec) {

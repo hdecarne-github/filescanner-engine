@@ -89,21 +89,21 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 		return this.xarHeaderSpec.get();
 	}
 
-	protected Integer tocCksumNameSize() {
+	public Integer tocCksumNameSize() {
 		int headerSizeValue = ShortHelper.toUnsignedInt(this.headerSize.get().get());
 
 		return Math.max(headerSizeValue - 28, 0);
 	}
 
-	protected FileScannerResultRenderHandler tocRenderer() {
+	public FileScannerResultRenderHandler tocRenderer() {
 		return TOC_RENDERER;
 	}
 
-	protected FileScannerResultExportHandler tocExportHandler() {
+	public FileScannerResultExportHandler tocExportHandler() {
 		return TOC_EXPORT_HANDLER;
 	}
 
-	protected CompositeSpec heapSpec() {
+	public CompositeSpec heapSpec() {
 		CompositeSpec heapSpec = FormatSpecs.EMPTY;
 		StreamValue tocXmlValue = this.tocXml.get().get();
 		long heapOffset = LongHelper.toUnsignedLong(this.headerSize.get().get())

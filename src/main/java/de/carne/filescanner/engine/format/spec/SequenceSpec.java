@@ -22,14 +22,11 @@ import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.UnexpectedDataException;
-import de.carne.filescanner.engine.format.PrettyFormat;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
@@ -37,8 +34,8 @@ import de.carne.filescanner.engine.util.FinalSupplier;
  */
 public class SequenceSpec extends CompositeSpec {
 
-	private final FileScannerResultContextValueSpec<Integer> elementCount = new FileScannerResultContextValueSpec<>(
-			Integer.class, SequenceSpec.class.getSimpleName() + "#elementCount");
+	private final DWordSpec decodedElementCount = new DWordSpec(
+			SequenceSpec.class.getSimpleName() + ".decodedElementCount");
 	private final FormatSpec elementSpec;
 	private @Nullable FormatSpec stopBeforeSpec = null;
 	private @Nullable FormatSpec stopAfterSpec = null;
@@ -161,56 +158,55 @@ public class SequenceSpec extends CompositeSpec {
 		int minMatchCount = (this.minSize != null ? this.minSize.get().intValue() : 0);
 		int maxMatchCount = (this.maxSize != null ? this.maxSize.get().intValue() : Integer.MAX_VALUE);
 
-		Check.assertTrue(minMatchCount >= 0);
-		Check.assertTrue(maxMatchCount >= minMatchCount);
+		if (minMatchCount < 0 || maxMatchCount < minMatchCount) {
+			throw new UnexpectedDataException("Unexpected sequence range " + minMatchCount + ":" + maxMatchCount);
+		}
 
-		boolean done = false;
+		boolean done = maxMatchCount == 0;
 
-		while (!done) {
-			FormatSpec checkedStopBeforeSpec = this.stopBeforeSpec;
-			FormatSpec checkedStopAfterSpec = this.stopAfterSpec;
+		try {
+			while (!done) {
+				FormatSpec checkedStopBeforeSpec = this.stopBeforeSpec;
+				FormatSpec checkedStopAfterSpec = this.stopAfterSpec;
 
-			if (checkedStopBeforeSpec != null && context.matchFormat(checkedStopBeforeSpec)) {
-				done = true;
-			} else if (checkedStopAfterSpec != null && context.matchFormat(checkedStopAfterSpec)) {
-				checkedStopAfterSpec.decode(context);
-				done = true;
-			} else if (context.matchFormat(this.elementSpec)) {
-				this.elementSpec.decode(context);
-				matchCount++;
-				done = (matchCount >= maxMatchCount);
-			} else {
-				done = true;
+				context.bindContextValue(FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX, matchCount);
+				if (checkedStopBeforeSpec != null && context.matchFormat(checkedStopBeforeSpec)) {
+					done = true;
+				} else if (checkedStopAfterSpec != null && context.matchFormat(checkedStopAfterSpec)) {
+					checkedStopAfterSpec.decode(context);
+					done = true;
+				} else if (context.matchFormat(this.elementSpec)) {
+					this.elementSpec.decode(context);
+					matchCount++;
+					done = (matchCount >= maxMatchCount);
+				} else {
+					done = true;
+				}
 			}
+		} finally {
+			context.bindContextValue(FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX, -1);
 		}
 		if (matchCount < minMatchCount) {
 			throw new UnexpectedDataException("Insufficent sequence length", decodeStart);
 		}
-		context.bindDecodedValue(this.elementCount, matchCount);
+		context.bindDecodedValue(this.decodedElementCount, matchCount);
 	}
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
-		if (!isResult() || out.isEmpty()) {
-			int decodedElementCount = context.getValue(this.elementCount).intValue();
-			boolean renderLabel = !FormatSpecs.isResult(this.elementSpec);
+		if (!FormatSpecs.isResult(this.elementSpec)) {
+			int elementCount = context.getValue(this.decodedElementCount).intValue();
 
-			for (int elementIndex = 0; elementIndex < decodedElementCount; elementIndex++) {
-				if (renderLabel) {
-					out.setStyle(RenderStyle.LABEL);
-					out.writeln(formatElementLabel(elementIndex));
+			try {
+				for (int elementIndex = 0; elementIndex < elementCount; elementIndex++) {
+					context.bindContextValue(FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX, elementIndex);
+					this.elementSpec.render(out, context);
 				}
-				this.elementSpec.render(out, context);
+			} finally {
+				context.bindContextValue(FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX, -1);
 			}
 		}
-	}
-
-	private String formatElementLabel(int elementIndex) {
-		StringBuilder buffer = new StringBuilder();
-
-		buffer.append('[').append(PrettyFormat.formatIntNumber(elementIndex)).append("]:");
-		return buffer.toString();
 	}
 
 }

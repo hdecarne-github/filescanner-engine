@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.carne.filescanner.engine.FileScannerResultContextValueSpec;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -30,9 +31,11 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public class UnionSpec extends CompositeSpec {
 
+	private final FileScannerResultContextValueSpec<CompositeSpec> decodedSpec = new FileScannerResultContextValueSpec<>(
+			CompositeSpec.class, getClass().getSimpleName() + ".decodedSpec");
 	private final List<CompositeSpec> elements = new ArrayList<>();
-	private int cachedFixedSize = -1;
-	private int cachedMatchSize = -1;
+	private boolean fixedSize = true;
+	private int matchSize = 0;
 
 	/**
 	 * Adds a format element.
@@ -43,38 +46,19 @@ public class UnionSpec extends CompositeSpec {
 	 */
 	public <T extends CompositeSpec> T add(T element) {
 		this.elements.add(element);
-		this.cachedFixedSize = -1;
-		this.cachedMatchSize = -1;
+		this.fixedSize = this.fixedSize && element.isFixedSize();
+		this.matchSize = Math.max(this.matchSize, element.matchSize());
 		return element;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.cachedFixedSize >= 0 ? this.cachedFixedSize != 0 : isFixedSize0());
-	}
-
-	private synchronized boolean isFixedSize0() {
-		this.cachedFixedSize = 1;
-		for (CompositeSpec element : this.elements) {
-			if (!element.isFixedSize()) {
-				this.cachedFixedSize = 0;
-				break;
-			}
-		}
-		return this.cachedFixedSize != 0;
+		return this.fixedSize;
 	}
 
 	@Override
 	public int matchSize() {
-		return (this.cachedMatchSize >= 0 ? this.cachedMatchSize : matchSize0());
-	}
-
-	private synchronized int matchSize0() {
-		this.cachedMatchSize = 0;
-		for (CompositeSpec element : this.elements) {
-			this.cachedMatchSize = Math.max(this.cachedMatchSize, element.matchSize());
-		}
-		return this.cachedMatchSize;
+		return this.matchSize;
 	}
 
 	@Override
@@ -98,6 +82,7 @@ public class UnionSpec extends CompositeSpec {
 		for (CompositeSpec element : this.elements) {
 			if (context.matchComposite(element)) {
 				element.decode(context);
+				context.bindDecodedValue(this.decodedSpec, element);
 				break;
 			}
 		}
@@ -106,13 +91,11 @@ public class UnionSpec extends CompositeSpec {
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		super.renderComposite(out, context);
-		if (!isResult() || out.isEmpty()) {
-			for (CompositeSpec element : this.elements) {
-				if (context.matchComposite(element)) {
-					element.render(out, context);
-					break;
-				}
-			}
+
+		CompositeSpec element = this.decodedSpec.get();
+
+		if (!element.isResult()) {
+			element.render(out, context);
 		}
 	}
 

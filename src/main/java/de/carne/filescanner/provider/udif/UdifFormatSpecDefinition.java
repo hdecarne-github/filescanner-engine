@@ -60,15 +60,15 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 		return this.udifTrailerSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler resourceForkRenderer() {
+	public FileScannerResultRenderHandler resourceForkRenderer() {
 		return RESOURCE_FORK_RENDERER;
 	}
 
-	protected Long imageDataSize() {
+	public Long imageDataSize() {
 		return FileScannerResultContextValueSpecs.INPUT_SIZE.get().longValue() - this.udifTrailerSpec.get().matchSize();
 	}
 
-	protected CompositeSpec dataForkSpec() {
+	public CompositeSpec dataForkSpec() {
 		CompositeSpec dataForkSpec = FormatSpecs.EMPTY;
 		StreamValue resourceFork = this.resourceForkSpec.get().get();
 

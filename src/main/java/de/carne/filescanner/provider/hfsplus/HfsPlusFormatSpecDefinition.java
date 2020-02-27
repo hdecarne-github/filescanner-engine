@@ -59,7 +59,7 @@ final class HfsPlusFormatSpecDefinition extends FormatSpecDefinition {
 		return this.hfsPlusHeaderSpec.get();
 	}
 
-	protected EncodedInputSpecConfig hfsplusEncodedInputConfig() {
+	public EncodedInputSpecConfig hfsplusEncodedInputConfig() {
 		return new EncodedInputSpecConfig("disk image blocks").decodedInputMapper(this::decodedInputMapper)
 				.inputDecoderTable(this::inputDecoderTable);
 	}

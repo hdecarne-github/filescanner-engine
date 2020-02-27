@@ -50,15 +50,15 @@ final class PngFormatSpecDefinition extends FormatSpecDefinition {
 		return this.pngHeaderSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler pngRenderer() {
+	public FileScannerResultRenderHandler pngRenderer() {
 		return RawTransferHandler.IMAGE_PNG_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler pngExporter() {
+	public FileScannerResultExportHandler pngExporter() {
 		return RawTransferHandler.IMAGE_PNG_TRANSFER;
 	}
 
-	protected String genericChunkName() {
+	public String genericChunkName() {
 		int typeValue = this.pngChunkType.get().get().intValue();
 		StringBuilder typeString = new StringBuilder();
 
@@ -66,7 +66,6 @@ final class PngFormatSpecDefinition extends FormatSpecDefinition {
 		typeString.append(mapChunkTypeChar((typeValue >>> 16) & 0xff));
 		typeString.append(mapChunkTypeChar((typeValue >>> 8) & 0xff));
 		typeString.append(mapChunkTypeChar(typeValue & 0xff));
-		typeString.append(" chunk");
 		return typeString.toString();
 	}
 

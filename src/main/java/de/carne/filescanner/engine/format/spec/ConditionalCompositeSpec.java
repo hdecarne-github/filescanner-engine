@@ -30,8 +30,8 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
  */
 public class ConditionalCompositeSpec extends CompositeSpec {
 
-	private final FileScannerResultContextValueSpec<CompositeSpec> resolvedSpec = new FileScannerResultContextValueSpec<>(
-			CompositeSpec.class, ConditionalCompositeSpec.class.getSimpleName() + "#resolvedSpec");
+	private final FileScannerResultContextValueSpec<CompositeSpec> decodedSpec = new FileScannerResultContextValueSpec<>(
+			CompositeSpec.class, getClass().getSimpleName() + ".decodedSpec");
 	private final Supplier<CompositeSpec> spec;
 
 	/**
@@ -60,12 +60,12 @@ public class ConditionalCompositeSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		context.bindDecodedValue(this.resolvedSpec, this.spec.get()).decodeComposite(context);
+		context.bindDecodedValue(this.decodedSpec, this.spec.get()).decodeComposite(context);
 	}
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		context.getValue(this.resolvedSpec).renderComposite(out, context);
+		context.getValue(this.decodedSpec).renderComposite(out, context);
 	}
 
 	@Override

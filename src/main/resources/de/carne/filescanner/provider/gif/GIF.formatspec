@@ -109,10 +109,10 @@ array[#localColorTableSize] "Local Color Table" {
 GIF_DATA_BLOCK:
 struct {
 IMAGE_DATA_BLOCK_SIZE:
-	byte "Block Size"
+	byte text("Block[%d] Size", #sequenceElementIndex)
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
-	range[@IMAGE_DATA_BLOCK_SIZE] "Block Data"
+	range[@IMAGE_DATA_BLOCK_SIZE] text("Block[%d] Data", #sequenceElementIndex) 
 }
 
 GIF_DATA_TERMINATOR:

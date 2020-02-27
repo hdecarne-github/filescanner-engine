@@ -67,7 +67,7 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		return headerSpecs;
 	}
 
-	protected FormatSpec directoryEntryLE() {
+	public FormatSpec directoryEntryLE() {
 		int dataType = this.tdirType.get().get().intValue();
 		int dataCount = this.tdirCount.get().get().intValue();
 		int dataSize = calculateDataSize(dataType, dataCount);
@@ -114,7 +114,7 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		return dataSize;
 	}
 
-	protected FormatSpec nextDirectoryLE() {
+	public FormatSpec nextDirectoryLE() {
 		Integer nextDirOffValue = this.nextDirOff.get().get();
 		FormatSpec nextDirectorySpec;
 
@@ -130,11 +130,11 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 		return nextDirectorySpec;
 	}
 
-	protected FileScannerResultRenderHandler tiffRenderer() {
+	public FileScannerResultRenderHandler tiffRenderer() {
 		return RawTransferHandler.IMAGE_TIFF_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler tiffExporter() {
+	public FileScannerResultExportHandler tiffExporter() {
 		return RawTransferHandler.IMAGE_TIFF_TRANSFER;
 	}
 

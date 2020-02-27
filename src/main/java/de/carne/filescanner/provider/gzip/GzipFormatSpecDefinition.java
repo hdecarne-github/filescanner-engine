@@ -64,31 +64,31 @@ final class GzipFormatSpecDefinition extends FormatSpecDefinition {
 		return this.gzipHeaderSpec.get();
 	}
 
-	protected FormatSpec fextraSpec() {
+	public FormatSpec fextraSpec() {
 		int flg = ByteHelper.toUnsignedInt(this.gzipHeaderFlg.get().get());
 
 		return ((flg & 0x04) == 0x04 ? this.gzipFextraSpec.get() : FormatSpecs.EMPTY);
 	}
 
-	protected FormatSpec fnameSpec() {
+	public FormatSpec fnameSpec() {
 		int flg = ByteHelper.toUnsignedInt(this.gzipHeaderFlg.get().get());
 
 		return ((flg & 0x08) == 0x08 ? this.gzipFnameSpec.get() : FormatSpecs.EMPTY);
 	}
 
-	protected FormatSpec fcommentSpec() {
+	public FormatSpec fcommentSpec() {
 		int flg = ByteHelper.toUnsignedInt(this.gzipHeaderFlg.get().get());
 
 		return ((flg & 0x10) == 0x10 ? this.gzipFcommentSpec.get() : FormatSpecs.EMPTY);
 	}
 
-	protected FormatSpec fhcrcSpec() {
+	public FormatSpec fhcrcSpec() {
 		int flg = ByteHelper.toUnsignedInt(this.gzipHeaderFlg.get().get());
 
 		return ((flg & 0x02) == 0x02 ? this.gzipFhcrcSpec.get() : FormatSpecs.EMPTY);
 	}
 
-	protected EncodedInputSpecConfig gzipEncodedInputConfig() {
+	public EncodedInputSpecConfig gzipEncodedInputConfig() {
 		return new EncodedInputSpecConfig("Compressed data").decodedInputName(this::decodedInputName)
 				.inputDecoderTable(this::inputDecoderTable);
 	}

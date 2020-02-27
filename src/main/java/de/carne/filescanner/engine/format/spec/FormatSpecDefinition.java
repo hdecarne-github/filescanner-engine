@@ -49,6 +49,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
 import de.carne.boot.logging.Log;
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.format.PrettyFormat;
@@ -88,6 +89,7 @@ import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.E
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FlagSymbolsContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatSpecsContext;
+import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatTextArgumentContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.FormatTextContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberArrayValueContext;
 import de.carne.filescanner.engine.format.spec.grammar.FormatSpecGrammarParser.NumberArrayValueSetContext;
@@ -213,6 +215,36 @@ public abstract class FormatSpecDefinition {
 		this.wordAttributeRenderer.put(DosDateRenderer.class.getSimpleName(), DosDateRenderer.RENDERER);
 		// @AppleDateRenderer
 		this.dwordAttributeRenderer.put(AppleDateRenderer.class.getSimpleName(), AppleDateRenderer.RENDERER);
+	}
+
+	/**
+	 * Gets the current input's name.
+	 *
+	 * @return the current input's name.
+	 * @see FileScannerResultContextValueSpecs#INPUT_NAME
+	 */
+	public final String inputName() {
+		return FileScannerResultContextValueSpecs.INPUT_NAME.get();
+	}
+
+	/**
+	 * Gets the current input's size.
+	 *
+	 * @return the current input's size.
+	 * @see FileScannerResultContextValueSpecs#INPUT_SIZE
+	 */
+	public final Long inputSize() {
+		return FileScannerResultContextValueSpecs.INPUT_SIZE.get();
+	}
+
+	/**
+	 * Gets the current sequence's element index.
+	 *
+	 * @return the current sequence's element index.
+	 * @see FileScannerResultContextValueSpecs#SEQUENCE_ELEMENT_INDEX
+	 */
+	public final Integer sequenceElementIndex() {
+		return FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX.get();
 	}
 
 	/**
@@ -1445,21 +1477,28 @@ public abstract class FormatSpecDefinition {
 		Supplier<String> textExpression;
 		SimpleTextContext simpleTextCtx;
 		FormatTextContext formatTextCtx;
-		ExternalReferenceContext externalReferenceCtx;
 
 		if ((simpleTextCtx = ctx.simpleText()) != null) {
 			textExpression = FinalSupplier.of(decodeQuotedString(simpleTextCtx.getText()));
 		} else if ((formatTextCtx = ctx.formatText()) != null) {
 			String formatText = decodeQuotedString(formatTextCtx.getText());
-			List<AttributeSpec<?>> argumentSpecs = new ArrayList<>();
+			List<Supplier<?>> argumentSpecs = new ArrayList<>();
 
-			for (SpecReferenceContext specReferenceCtx : ctx.specReference()) {
-				argumentSpecs.add(resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(), AttributeSpec.class));
+			for (FormatTextArgumentContext formatTextArgumentCtx : ctx.formatTextArgument()) {
+				SpecReferenceContext specReferenceCtx;
+				ExternalReferenceContext externalReferenceCtx;
+
+				if ((specReferenceCtx = formatTextArgumentCtx.specReference()) != null) {
+					argumentSpecs
+							.add(resolveSpec(specReferenceCtx.referencedSpec().specIdentifier(), AttributeSpec.class));
+				} else if ((externalReferenceCtx = formatTextArgumentCtx.externalReference()) != null) {
+					argumentSpecs.add(resolveExternalReference(externalReferenceCtx, Object.class));
+				} else {
+					throw newLoadException(formatTextArgumentCtx, "Unexpected format text argument expression");
+				}
 			}
 			textExpression = () -> String.format(formatText, argumentSpecs.stream().map(Supplier::get)
 					.map(o -> (o instanceof String ? Strings.encode(StringHelper.strip((String) o)) : o)).toArray());
-		} else if ((externalReferenceCtx = ctx.externalReference()) != null) {
-			textExpression = resolveExternalReference(externalReferenceCtx, String.class);
 		} else {
 			throw newLoadException(ctx, "Unexpected text expression");
 		}
@@ -1483,7 +1522,7 @@ public abstract class FormatSpecDefinition {
 		Method method;
 
 		try {
-			method = getClass().getDeclaredMethod(methodIdentifier);
+			method = getClass().getMethod(methodIdentifier);
 		} catch (NoSuchMethodException e) {
 			throw newLoadException(e, externalReferenceCtx, UNKNOWN_EXTERNAL_REFERENCE, methodIdentifier);
 		}

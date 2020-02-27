@@ -55,15 +55,15 @@ final class GifFormatSpecDefinition extends FormatSpecDefinition {
 		return this.gifHeaderSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler gifRenderer() {
+	public FileScannerResultRenderHandler gifRenderer() {
 		return RawTransferHandler.IMAGE_GIF_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler gifExporter() {
+	public FileScannerResultExportHandler gifExporter() {
 		return RawTransferHandler.IMAGE_GIF_TRANSFER;
 	}
 
-	protected CompositeSpec globalColorTableSpec() {
+	public CompositeSpec globalColorTableSpec() {
 		CompositeSpec globalColorTableSpec = FormatSpecs.EMPTY;
 		int packedFields = this.lsdPackedFields.get().get().byteValue() & 0xff;
 
@@ -73,13 +73,13 @@ final class GifFormatSpecDefinition extends FormatSpecDefinition {
 		return globalColorTableSpec;
 	}
 
-	protected Integer globalColorTableSize() {
+	public Integer globalColorTableSize() {
 		int packedFields = this.lsdPackedFields.get().get().byteValue() & 0xff;
 
 		return 2 << (packedFields & 0x07);
 	}
 
-	protected CompositeSpec localColorTableSpec() {
+	public CompositeSpec localColorTableSpec() {
 		CompositeSpec localColorTableSpec = FormatSpecs.EMPTY;
 		int packedFields = this.imagePackedFields.get().get().byteValue() & 0xff;
 
@@ -89,7 +89,7 @@ final class GifFormatSpecDefinition extends FormatSpecDefinition {
 		return localColorTableSpec;
 	}
 
-	protected Integer localColorTableSize() {
+	public Integer localColorTableSize() {
 		int packedFields = this.imagePackedFields.get().get().byteValue() & 0xff;
 
 		return 2 << (packedFields & 0x07);

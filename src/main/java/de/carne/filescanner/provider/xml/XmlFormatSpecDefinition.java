@@ -48,11 +48,11 @@ final class XmlFormatSpecDefinition extends FormatSpecDefinition {
 		return this.xmlMagicSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler xmlRenderer() {
+	public FileScannerResultRenderHandler xmlRenderer() {
 		return StyledTextRenderHandler.XML_RENDERER_HANDLER;
 	}
 
-	protected FileScannerResultExportHandler xmlExporter() {
+	public FileScannerResultExportHandler xmlExporter() {
 		return RawTransferHandler.TEXT_XML_TRANSFER;
 	}
 

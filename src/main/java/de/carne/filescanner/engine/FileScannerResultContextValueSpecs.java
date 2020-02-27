@@ -16,6 +16,10 @@
  */
 package de.carne.filescanner.engine;
 
+import de.carne.filescanner.engine.format.spec.DWordSpec;
+import de.carne.filescanner.engine.format.spec.QWordSpec;
+import de.carne.filescanner.engine.format.spec.StringSpec;
+
 /**
  * Utility class providing {@linkplain FileScannerResultContextValueSpec} related functions.
  */
@@ -28,13 +32,16 @@ public final class FileScannerResultContextValueSpecs {
 	/**
 	 * Predefined attribute to access the current input's name.
 	 */
-	public static final FileScannerResultContextValueSpec<String> INPUT_NAME = new FileScannerResultContextValueSpec<>(
-			String.class, "#inputName");
+	public static final StringSpec INPUT_NAME = new StringSpec("#inputName");
 
 	/**
 	 * Predefined attribute to access the current input's size.
 	 */
-	public static final FileScannerResultContextValueSpec<Long> INPUT_SIZE = new FileScannerResultContextValueSpec<>(
-			Long.class, "#inputSize");
+	public static final QWordSpec INPUT_SIZE = new QWordSpec("#inputSize");
+
+	/**
+	 * Predefined attribute to access the current sequence's element index.
+	 */
+	public static final DWordSpec SEQUENCE_ELEMENT_INDEX = new DWordSpec("#sequenceElementIndex");
 
 }

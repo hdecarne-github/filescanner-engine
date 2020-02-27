@@ -127,13 +127,23 @@ public final class InputDecodeCache implements Closeable {
 		DecodeResult decodeResult;
 
 		if (InputDecoders.isIdentity(inputDecoder)) {
-			decodeResult = new DecodeResult(decodedInputMapper.map(new FileScannerInputRange(decodedInputMapper.name(),
-					input, decodePosition, decodePosition, decodePosition + encodedSize)), decodePosition, encodedSize);
+			long decodedSize = inputDecoderTableEntry.decodedSize();
+
+			if (decodedSize >= 0) {
+				decodedSize = Math.min(decodedSize, encodedSize);
+			} else {
+				decodedSize = encodedSize;
+			}
+
+			FileScannerInput mappedInput = new FileScannerInputRange(decodedInputMapper.name(), input, decodePosition,
+					decodePosition, decodePosition + decodedSize);
+
+			decodeResult = new DecodeResult(decodedInputMapper.map(mappedInput), decodePosition, encodedSize);
 		} else if (InputDecoders.isZero(inputDecoder)) {
-			decodeResult = new DecodeResult(
-					decodedInputMapper.map(
-							new ZeroFileScannerInput(decodedInputMapper.name(), inputDecoderTableEntry.decodedSize())),
-					decodePosition, 0);
+			FileScannerInput mappedInput = new ZeroFileScannerInput(decodedInputMapper.name(),
+					inputDecoderTableEntry.decodedSize());
+
+			decodeResult = new DecodeResult(decodedInputMapper.map(mappedInput), decodePosition, 0);
 		} else {
 			decodeResult = decodeToCache(decodedInputMapper, input, decodePosition, decodePosition + available,
 					inputDecoder);

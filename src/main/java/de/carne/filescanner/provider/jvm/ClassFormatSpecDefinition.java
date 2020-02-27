@@ -47,11 +47,11 @@ final class ClassFormatSpecDefinition extends FormatSpecDefinition {
 		return this.classMagicSpec.get();
 	}
 
-	protected FileScannerResultRenderHandler classRenderer() {
+	public FileScannerResultRenderHandler classRenderer() {
 		return McdTransferHandler.JAVA_CLASS_FILE_TRANSFER;
 	}
 
-	protected FileScannerResultExportHandler classExporter() {
+	public FileScannerResultExportHandler classExporter() {
 		return McdTransferHandler.JAVA_CLASS_FILE_TRANSFER;
 	}
 
