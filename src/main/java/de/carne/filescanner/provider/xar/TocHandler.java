@@ -34,11 +34,11 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.carne.boot.logging.Log;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.DecodeAtSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.StructSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.DecodeAtSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
+import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;

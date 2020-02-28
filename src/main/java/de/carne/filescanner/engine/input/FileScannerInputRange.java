@@ -19,7 +19,7 @@ package de.carne.filescanner.engine.input;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * {@linkplain FileScannerInput} implementation which restricts access to a specific range of an existing

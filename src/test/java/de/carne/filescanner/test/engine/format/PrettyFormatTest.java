@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import de.carne.filescanner.engine.format.PrettyFormat;
+import de.carne.filescanner.provider.util.PrettyFormat;
 
 /**
  * Test {@linkplain PrettyFormat} class.

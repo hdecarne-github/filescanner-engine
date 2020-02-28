@@ -18,7 +18,7 @@ package de.carne.filescanner.provider.util;
 
 import java.io.IOException;
 
-import de.carne.filescanner.engine.format.spec.AttributeRenderer;
+import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 

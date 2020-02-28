@@ -19,10 +19,10 @@ package de.carne.filescanner.provider.cpio;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.CharArraySpec;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.CharArraySpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.provider.util.Alignment;
@@ -32,6 +32,10 @@ import de.carne.util.Lazy;
  * See Cpio.formatspec
  */
 final class CpioFormatSpecDefinition extends FormatSpecDefinition {
+
+	public CpioFormatSpecDefinition() {
+
+	}
 
 	@Override
 	protected URL getFormatSpecResource() {

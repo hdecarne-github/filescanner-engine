@@ -19,11 +19,11 @@ package de.carne.filescanner.provider.bmp;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.DWordSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
-import de.carne.filescanner.engine.format.spec.FormatSpecs;
-import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.FormatSpecs;
+import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;

@@ -19,12 +19,12 @@ package de.carne.filescanner.provider.hfsplus;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.DWordArraySpec;
-import de.carne.filescanner.engine.format.spec.DWordSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
-import de.carne.filescanner.engine.format.spec.QWordSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.DWordArraySpec;
+import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.QWordSpec;
 import de.carne.filescanner.engine.input.DecodedInputMapper;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;

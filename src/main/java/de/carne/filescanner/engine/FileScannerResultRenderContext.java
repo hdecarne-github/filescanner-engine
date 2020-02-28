@@ -25,10 +25,10 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.boot.check.Check;
 import de.carne.boot.logging.Log;
-import de.carne.filescanner.engine.format.spec.AttributeBindMode;
-import de.carne.filescanner.engine.format.spec.AttributeSpec;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpec;
+import de.carne.filescanner.engine.format.AttributeBindMode;
+import de.carne.filescanner.engine.format.AttributeSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.TransferSource;

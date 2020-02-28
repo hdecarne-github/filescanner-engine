@@ -21,11 +21,11 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.ByteSpec;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
-import de.carne.filescanner.engine.format.spec.ScanSpecConfig;
-import de.carne.filescanner.engine.format.spec.WordSpec;
+import de.carne.filescanner.engine.format.ByteSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.ScanSpecConfig;
+import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RawTransferHandler;

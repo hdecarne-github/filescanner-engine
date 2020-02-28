@@ -16,9 +16,9 @@
  */
 package de.carne.filescanner.engine;
 
-import de.carne.filescanner.engine.format.spec.DWordSpec;
-import de.carne.filescanner.engine.format.spec.QWordSpec;
-import de.carne.filescanner.engine.format.spec.StringSpec;
+import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.QWordSpec;
+import de.carne.filescanner.engine.format.StringSpec;
 
 /**
  * Utility class providing {@linkplain FileScannerResultContextValueSpec} related functions.

@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.spi.Format;
 
 /**

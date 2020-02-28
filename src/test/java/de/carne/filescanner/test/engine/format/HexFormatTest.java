@@ -19,7 +19,7 @@ package de.carne.filescanner.test.engine.format;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * Test {@linkplain HexFormat} class.

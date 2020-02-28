@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.InsufficientDataException;
 import de.carne.filescanner.engine.InvalidPositionException;
-import de.carne.filescanner.engine.format.HexFormat;
+import de.carne.filescanner.provider.util.HexFormat;
 import de.carne.io.Closeables;
 import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;

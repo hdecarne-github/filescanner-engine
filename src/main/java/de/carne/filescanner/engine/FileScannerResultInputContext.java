@@ -21,10 +21,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.format.HexFormat;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * Input data processor base class responsible for input data access.

@@ -23,9 +23,9 @@ import java.util.LinkedList;
 import org.eclipse.jdt.annotation.NonNull;
 
 import de.carne.boot.check.Check;
-import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * Defines the actual mapping of one or more encoded data sections to a resulting decoded input data stream.

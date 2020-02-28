@@ -19,9 +19,9 @@ package de.carne.filescanner.provider.macho;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.DWordSpec;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.DWordSpec;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.util.Lazy;
 

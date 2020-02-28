@@ -18,8 +18,8 @@ package de.carne.filescanner.engine;
 
 import java.text.MessageFormat;
 
-import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * This exception is thrown if not all requested data bytes could be read.

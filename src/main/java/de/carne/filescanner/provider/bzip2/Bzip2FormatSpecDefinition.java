@@ -23,10 +23,10 @@ import java.util.Objects;
 
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
-import de.carne.filescanner.engine.format.spec.ByteSpec;
-import de.carne.filescanner.engine.format.spec.CompositeSpec;
-import de.carne.filescanner.engine.format.spec.EncodedInputSpecConfig;
-import de.carne.filescanner.engine.format.spec.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.ByteSpec;
+import de.carne.filescanner.engine.format.CompositeSpec;
+import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
+import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.provider.util.Bzip2InputDecoder;
 import de.carne.nio.compression.bzip2.Bzip2BlockSize;

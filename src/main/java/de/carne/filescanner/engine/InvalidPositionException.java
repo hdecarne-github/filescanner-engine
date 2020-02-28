@@ -18,9 +18,9 @@ package de.carne.filescanner.engine;
 
 import java.text.MessageFormat;
 
-import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
+import de.carne.filescanner.provider.util.HexFormat;
 
 /**
  * This exception is thrown if the requested read position is invalid.

@@ -20,9 +20,9 @@ import java.io.IOException;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.filescanner.engine.format.HexFormat;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.MappedFileScannerInput;
+import de.carne.filescanner.provider.util.HexFormat;
 
 final class ForkData {
 
