@@ -152,6 +152,7 @@ public abstract class FormatSpecDefinition {
 	private static final String LOG_LOADED_SPEC = "Loaded spec: {0}";
 	private static final String LOG_ASSIGNED_SPEC = "Assigned spec {0}: {1}";
 
+	// Store symbol map keys for validation definitions
 	private final Map<String, Set<Byte>> byteSymbolsMap = new HashMap<>();
 	private final Map<String, Set<Short>> wordSymbolsMap = new HashMap<>();
 	private final Map<String, Set<Integer>> dwordSymbolsMap = new HashMap<>();
