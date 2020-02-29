@@ -83,6 +83,7 @@ public abstract class FileScannerResultContext {
 	/**
 	 * Runs the submitted {@linkplain FileScannerRunnableT} within this {@linkplain FileScannerResultContext} instance.
 	 *
+	 * @param <T> the actual processing result type.
 	 * @param runnable the {@linkplain FileScannerRunnableT} to run.
 	 * @return the processing result.
 	 * @throws IOException if an I/O error occurs.
