@@ -161,6 +161,7 @@ struct "cpio_newc_trailer" {
 		->renderer(@HEX_MODE)
 	char[8] "c_uid"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_gid"
 		->validate(R"^[0-9,a-f,A-F]+.*")
 		->renderer(@HEX_PRETTY)
