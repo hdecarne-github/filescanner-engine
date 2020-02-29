@@ -16,6 +16,7 @@
  */
 package de.carne.filescanner.provider.cpio;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
@@ -23,9 +24,15 @@ import de.carne.filescanner.engine.format.CharArraySpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.SizeRenderer;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
 import de.carne.filescanner.provider.util.Alignment;
+import de.carne.filescanner.provider.util.HexStrings;
+import de.carne.filescanner.provider.util.OctalStrings;
+import de.carne.filescanner.provider.util.PrettyFormat;
+import de.carne.filescanner.provider.util.Unix;
+import de.carne.filescanner.provider.util.UnixDateRenderer;
 import de.carne.util.Lazy;
 
 /**
@@ -34,7 +41,14 @@ import de.carne.util.Lazy;
 final class CpioFormatSpecDefinition extends FormatSpecDefinition {
 
 	public CpioFormatSpecDefinition() {
-
+		addStringAttributeRenderer("OCTAL_PRETTY", OctalStrings.intRenderer(PrettyFormat.INT_FORMATTER));
+		addStringAttributeRenderer("OCTAL_SIZE", OctalStrings.intRenderer(SizeRenderer.INT_RENDERER));
+		addStringAttributeRenderer("OCTAL_DATE", OctalStrings.intRenderer(UnixDateRenderer.RENDERER));
+		addStringAttributeRenderer("OCTAL_MODE", OctalStrings.intRenderer(CpioFormatSpecDefinition::formatMode));
+		addStringAttributeRenderer("HEX_PRETTY", HexStrings.longRenderer(PrettyFormat.LONG_FORMATTER));
+		addStringAttributeRenderer("HEX_SIZE", HexStrings.longRenderer(SizeRenderer.LONG_RENDERER));
+		addStringAttributeRenderer("HEX_DATE", HexStrings.intRenderer(UnixDateRenderer.RENDERER));
+		addStringAttributeRenderer("HEX_MODE", HexStrings.intRenderer(CpioFormatSpecDefinition::formatMode));
 	}
 
 	@Override
@@ -61,10 +75,10 @@ final class CpioFormatSpecDefinition extends FormatSpecDefinition {
 		return this.cpioHeaderSpec.get();
 	}
 
-	public Integer odcNameSize() {
+	public Integer odcNameSize() throws IOException {
 		String nameSizeString = this.odcNameSize.get().get();
 
-		return parseOctInt(nameSizeString);
+		return OctalStrings.parseInt(nameSizeString);
 	}
 
 	public EncodedInputSpecConfig odcEncodedInputConfig() {
@@ -74,14 +88,14 @@ final class CpioFormatSpecDefinition extends FormatSpecDefinition {
 
 	private InputDecoderTable odcInputDecoderTable() {
 		String fileSizeString = this.odcFileSize.get().get();
-		long fileSize = parseOctLong(fileSizeString);
+		long fileSize = OctalStrings.safeParseLong(fileSizeString);
 
 		return InputDecoderTable.build(InputDecoders.IDENTITY, -1, fileSize, -1);
 	}
 
-	public Integer newcNameSize() {
+	public Integer newcNameSize() throws IOException {
 		String nameSizeString = this.newcNameSize.get().get();
-		int nameSize = parseHexInt(nameSizeString);
+		int nameSize = HexStrings.parseInt(nameSizeString);
 
 		return Alignment.dword(2, nameSize);
 	}
@@ -93,71 +107,41 @@ final class CpioFormatSpecDefinition extends FormatSpecDefinition {
 
 	private InputDecoderTable newcInputDecoderTable() {
 		String fileSizeString = this.newcFileSize.get().get();
-		long fileSize = parseHexLong(fileSizeString);
+		long fileSize = HexStrings.safeParseLong(fileSizeString);
 
 		return InputDecoderTable.build(InputDecoders.IDENTITY, -1, Alignment.dword(fileSize), fileSize);
 	}
 
-	private int parseOctInt(String string) {
-		int value = 0;
+	private static String formatMode(Integer mode) {
+		int modeValue = mode.intValue();
+		char type;
 
-		for (char c : string.toCharArray()) {
-			if (c < '0' || '7' < c) {
-				break;
-			}
-			value <<= 3;
-			value += c - '0';
+		switch (modeValue & 0170000) {
+		case 0010000:
+			type = 'p';
+			break;
+		case 0020000:
+			type = 'c';
+			break;
+		case 0040000:
+			type = 'd';
+			break;
+		case 0060000:
+			type = 'b';
+			break;
+		case 0100000:
+			type = '-';
+			break;
+		case 0120000:
+			type = 'l';
+			break;
+		case 0140000:
+			type = 's';
+			break;
+		default:
+			type = '?';
 		}
-		return value;
-	}
-
-	private int parseHexInt(String string) {
-		int value = 0;
-
-		for (char c : string.toCharArray()) {
-			if ('0' <= c && c <= '9') {
-				value <<= 4;
-				value += c - '0';
-			} else if ('a' <= c && c <= 'f') {
-				value <<= 4;
-				value += 10 + c - 'a';
-			} else if ('A' <= c && c <= 'F') {
-				value <<= 4;
-				value += 10 + c - 'A';
-			}
-		}
-		return value;
-	}
-
-	private long parseOctLong(String string) {
-		long value = 0;
-
-		for (char c : string.toCharArray()) {
-			if (c < '0' || '7' < c) {
-				break;
-			}
-			value <<= 3;
-			value += c - '0';
-		}
-		return value;
-	}
-
-	private long parseHexLong(String string) {
-		long value = 0;
-
-		for (char c : string.toCharArray()) {
-			if ('0' <= c && c <= '9') {
-				value <<= 4;
-				value += c - '0';
-			} else if ('a' <= c && c <= 'f') {
-				value <<= 4;
-				value += 10 + c - 'a';
-			} else if ('A' <= c && c <= 'F') {
-				value <<= 4;
-				value += 10 + c - 'A';
-			}
-		}
-		return value;
+		return Unix.formatMode(type, modeValue);
 	}
 
 }

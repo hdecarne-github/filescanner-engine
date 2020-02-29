@@ -29,26 +29,36 @@ struct "cpio_odc_header"  {
 		->validate("070707")
 	char[6] "c_dev"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_ino"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_mode"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_MODE)
 	char[6] "c_uid"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_gid"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_nlink"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_rdev"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[11] "c_mtime"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_DATE)
 ODC_NAME_SIZE:
 	char[6] "c_namesize"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_SIZE)
 ODC_FILE_SIZE@CPIO_ODC_ENTRY:
 	char[11] "c_filesize"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_SIZE)
 ODC_PATH_NAME@CPIO_ODC_ENTRY:
 	char[#odcNameSize] "c_pathname"
 }
@@ -59,24 +69,34 @@ struct "cpio_odc_trailer"  {
 		->validate("070707")
 	char[6] "c_dev"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_ino"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_mode"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_MODE)
 	char[6] "c_uid"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_gid"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_nlink"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[6] "c_rdev"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_PRETTY)
 	char[11] "c_mtime"
 		->validate(R"^[0-7]+.*")
+		->renderer(@OCTAL_DATE)
 	char[6] "c_namesize"
 		->validate("000013")
+		->renderer(@OCTAL_SIZE)
 	char[11] "c_filesize"
 		->validate("00000000000")
+		->renderer(@OCTAL_SIZE)
 	char[11] "c_pathname"
 		->validate("TRAILER!!!\u0000")
 }
@@ -87,29 +107,42 @@ struct "cpio_newc_header" {
 		->validate("070701")
 	char[8] "c_ino"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_mode"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_MODE)
 	char[8] "c_uid"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_gid"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_nlink"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_mtime"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_DATE)
 NEWC_FILE_SIZE@CPIO_NEWC_ENTRY:
 	char[8] "c_filesize"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_SIZE)
 	char[8] "c_devmajor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_devminor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_rdevmajor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_rdevminor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 NEWC_NAME_SIZE:
 	char[8] "c_namesize"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_SIZE)
 	char[8] "c_check"
 		->validate(R"^[0-9,a-f,A-F]+.*")
 NEWC_PATH_NAME@CPIO_NEWC_ENTRY:
@@ -122,27 +155,39 @@ struct "cpio_newc_trailer" {
 		->validate("070701")
 	char[8] "c_ino"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_mode"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_MODE)
 	char[8] "c_uid"
 		->validate(R"^[0-9,a-f,A-F]+.*")
 	char[8] "c_gid"
+		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_nlink"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_mtime"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_DATE)
 	char[8] "c_filesize"
 		->validate("00000000")
+		->renderer(@HEX_SIZE)
 	char[8] "c_devmajor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_devminor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_rdevmajor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_rdevminor"
 		->validate(R"^[0-9,a-f,A-F]+.*")
+		->renderer(@HEX_PRETTY)
 	char[8] "c_namesize"
 		->validate("0000000b" || "0000000B")
+		->renderer(@HEX_SIZE)
 	char[8] "c_check"
 		->validate(R"^[0-9,a-f,A-F]+.*")
 	char[14] "c_pathname"
