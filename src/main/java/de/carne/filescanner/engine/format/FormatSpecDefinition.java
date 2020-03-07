@@ -133,6 +133,7 @@ import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
+import de.carne.filescanner.engine.util.SizeRenderer;
 import de.carne.filescanner.engine.util.StringHelper;
 import de.carne.filescanner.provider.util.AppleDateRenderer;
 import de.carne.filescanner.provider.util.DosDateRenderer;

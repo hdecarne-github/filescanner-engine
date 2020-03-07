@@ -26,6 +26,7 @@ import de.carne.filescanner.engine.StreamValueDecoder;
 import de.carne.filescanner.engine.ValueStreamer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.util.SizeRenderer;
 
 /**
  * Input data specification used for scan marker based specifications.

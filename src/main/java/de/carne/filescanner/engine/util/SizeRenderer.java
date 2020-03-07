@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.format;
+package de.carne.filescanner.engine.util;
 
 import java.io.IOException;
 
+import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.text.MemoryUnitFormat;
