@@ -194,8 +194,9 @@ public class SequenceSpec extends CompositeSpec {
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		super.renderComposite(out, context);
-		if (!FormatSpecs.isResult(this.elementSpec)) {
+		if (hasRenderer()) {
+			super.renderComposite(out, context);
+		} else if (!FormatSpecs.isResult(this.elementSpec)) {
 			int elementCount = context.getValue(this.decodedElementCount).intValue();
 
 			try {

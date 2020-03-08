@@ -24,6 +24,8 @@ import java.util.List;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.util.SizeRenderer;
 
 /**
  * Struct of {@linkplain FormatSpec}s.
@@ -102,11 +104,24 @@ public class StructSpec extends CompositeSpec {
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		super.renderComposite(out, context);
-		if (!isResult() || out.isEmpty()) {
+		if (hasRenderer()) {
+			super.renderComposite(out, context);
+		} else {
 			for (FormatSpec element : this.elements) {
-				element.render(out, context);
+				if (!FormatSpecs.isResult(element)) {
+					element.render(out, context);
+				} else {
+					renderRemaining(out, context);
+					break;
+				}
 			}
+		}
+	}
+
+	private void renderRemaining(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		if (!out.isEmpty()) {
+			out.setStyle(RenderStyle.VALUE).write("{ ... }");
+			SizeRenderer.LONG_RENDERER.render(out, context.remaining());
 		}
 	}
 

@@ -152,6 +152,17 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
+	 * Checks whether this instance has a custom {@linkplain FileScannerResultRenderHandler} set.
+	 *
+	 * @return {@code true} if this instance has a custom {@linkplain FileScannerResultRenderHandler} renderer set.
+	 * @see #renderer(Supplier)
+	 * @see #renderer(FileScannerResultRenderHandler)
+	 */
+	public boolean hasRenderer() {
+		return this.customRenderHandler != null;
+	}
+
+	/**
 	 * Gets this instance's export handlers.
 	 *
 	 * @return this instance's export handlers.

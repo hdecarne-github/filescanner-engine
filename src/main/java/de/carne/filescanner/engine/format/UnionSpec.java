@@ -90,12 +90,10 @@ public class UnionSpec extends CompositeSpec {
 
 	@Override
 	public void renderComposite(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		super.renderComposite(out, context);
-
-		CompositeSpec element = this.decodedSpec.get();
-
-		if (!element.isResult()) {
-			element.render(out, context);
+		if (hasRenderer()) {
+			super.renderComposite(out, context);
+		} else {
+			this.decodedSpec.get().render(out, context);
 		}
 	}
 
