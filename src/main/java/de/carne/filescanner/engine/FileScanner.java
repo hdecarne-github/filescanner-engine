@@ -291,24 +291,21 @@ public final class FileScanner implements Closeable {
 	}
 
 	private @Nullable FileScannerResult getResultByStart(FileScannerResult[] results, long resultStart) {
-		int scanIndexFrom = 0;
-		int scanIndexTo = results.length;
+		int first = 0;
+		int last = results.length - 1;
 		FileScannerResult result = null;
 
-		if (scanIndexTo > 0) {
-			while (scanIndexFrom <= scanIndexTo) {
-				int scanIndex = scanIndexFrom + ((scanIndexTo - scanIndexFrom) / 2);
-				FileScannerResult scanResult = results[scanIndex];
-				long scanResultStart = scanResult.start();
+		while (result == null && first <= last) {
+			int median = first + (last - first) / 2;
+			FileScannerResult currentResult = results[median];
+			long currentResultStart = currentResult.start();
 
-				if (scanResultStart == resultStart) {
-					result = scanResult;
-					break;
-				} else if (resultStart < scanResultStart) {
-					scanIndexTo = scanIndex - 1;
-				} else {
-					scanIndexFrom = scanIndex + 1;
-				}
+			if (resultStart == currentResultStart) {
+				result = currentResult;
+			} else if (resultStart < currentResultStart) {
+				last = median - 1;
+			} else {
+				first = median + 1;
 			}
 		}
 		return result;
