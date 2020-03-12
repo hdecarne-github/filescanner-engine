@@ -72,6 +72,7 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 				ByteOrder previousByteOrder = byteOrder(formatSpec.byteOrder());
 
 				try {
+					bindContextValue(FileScannerResultContextValueSpecs.RESULT_POSITION, position());
 					formatSpec.renderComposite(out, this);
 				} finally {
 					byteOrder(previousByteOrder);

@@ -158,6 +158,21 @@ public final class RenderOutput implements Closeable {
 	}
 
 	/**
+	 * Writes simple text with link to the output using the currently selected {@linkplain RenderStyle}.
+	 *
+	 * @param text the text to write.
+	 * @param href the position to link to.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public RenderOutput write(String text, long href) throws IOException {
+		prepareIfNeeded();
+		this.renderer.emitText((this.newLine ? this.currentIndent : -1), this.currentStyle, text, href, false);
+		this.newLine = false;
+		return this;
+	}
+
+	/**
 	 * Writes simple text as well as a line break to the output using the currently selected {@linkplain RenderStyle}.
 	 *
 	 * @param text the text to write.
@@ -167,6 +182,22 @@ public final class RenderOutput implements Closeable {
 	public RenderOutput writeln(String text) throws IOException {
 		prepareIfNeeded();
 		this.renderer.emitText((this.newLine ? this.currentIndent : -1), this.currentStyle, text, true);
+		this.newLine = true;
+		return this;
+	}
+
+	/**
+	 * Writes simple text with link as well as a line break to the output using the currently selected
+	 * {@linkplain RenderStyle}.
+	 *
+	 * @param text the text to write.
+	 * @param href the position to link to.
+	 * @return the updated {@linkplain RenderOutput} for chaining.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public RenderOutput writeln(String text, long href) throws IOException {
+		prepareIfNeeded();
+		this.renderer.emitText((this.newLine ? this.currentIndent : -1), this.currentStyle, text, href, true);
 		this.newLine = true;
 		return this;
 	}

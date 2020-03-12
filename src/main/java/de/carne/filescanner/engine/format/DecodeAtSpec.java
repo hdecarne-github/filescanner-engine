@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
+import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.FileScannerResultDecodeContext;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -98,7 +99,10 @@ public class DecodeAtSpec implements FormatSpec {
 
 	@Override
 	public void decode(FileScannerResultDecodeContext context) throws IOException {
-		context.decodeComposite(this.spec, this.position.get().longValue(), this.level);
+		long decodeBase = FileScannerResultContextValueSpecs.FORMAT_POSITION.get().longValue();
+		long decodePosition = decodeBase + this.position.get().longValue();
+
+		context.decodeComposite(this.spec, decodePosition, this.level);
 	}
 
 	@Override

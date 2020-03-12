@@ -168,6 +168,7 @@ STUB_RELOCATION_COUNT@STUB_IMAGE:
 	word[10] "e_res2"
 NEXT_HEADER_OFFSET@STUB_IMAGE:
 	dword "e_lfanew"
+		->link()
 }
 
 STUB_IMAGE:
@@ -192,6 +193,7 @@ NT_NUMBER_OF_SECTIONS@NT_IMAGE:
 		->format(@PrettyFormat)
 	dword "TimeDateStamp"
 	dword "PointerToSymbolTable"
+		->link()
 	dword "NumberOfSymbols"
 		->format(@PrettyFormat)
 	word "SizeOfOptionalHeader"
@@ -375,8 +377,11 @@ NT_SECTION_DATA_SIZE@IMAGE_NT_SECTIONS:
 		->renderer(@SizeRenderer)
 NT_SECTION_DATA_POSITION@IMAGE_NT_SECTIONS:
 	dword "PointerToRawData"
+		->link()
 	dword "PointerToRelocations"
+		->link()
 	dword "PointerToLinenumbers"
+		->link()
 	word "NumberOfRelocations"
 		->format(@PrettyFormat)
 	word "NumberOfLinenumbers"

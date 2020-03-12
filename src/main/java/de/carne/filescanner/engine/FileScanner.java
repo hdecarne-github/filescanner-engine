@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
@@ -245,7 +246,7 @@ public final class FileScanner implements Closeable {
 	 * @param resultKey the {@linkplain FileScannerResult} key to resolve.
 	 * @return the resolved {@linkplain FileScannerResult} path.
 	 */
-	public FileScannerResult[] getResultPath(byte[] resultKey) {
+	public @NonNull FileScannerResult[] getResultPath(byte[] resultKey) {
 		StringBuilder resultKeyString = new StringBuilder();
 		List<FileScannerResult> results = new ArrayList<>();
 		FileScannerResult lastResult = this.rootResult;
@@ -286,7 +287,7 @@ public final class FileScanner implements Closeable {
 			results.add(currentResult);
 			lastResult = currentResult;
 		}
-		return results.toArray(new @Nullable FileScannerResult[results.size()]);
+		return results.toArray(new @NonNull FileScannerResult[results.size()]);
 	}
 
 	private @Nullable FileScannerResult getResultByStart(FileScannerResult[] results, long resultStart) {

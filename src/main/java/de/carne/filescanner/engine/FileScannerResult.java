@@ -77,51 +77,58 @@ public interface FileScannerResult {
 	Type type();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} input.
+	 * Gets this {@linkplain FileScannerResult}'s input.
 	 *
-	 * @return this {@linkplain FileScannerResult} input.
+	 * @return this {@linkplain FileScannerResult}'s input.
 	 */
 	FileScannerInput input();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} name.
+	 * Gets this {@linkplain FileScannerResult}'s input result.
 	 *
-	 * @return this {@linkplain FileScannerResult} name.
+	 * @return this {@linkplain FileScannerResult}'s input result.
+	 */
+	FileScannerResult inputResult();
+
+	/**
+	 * Gets this {@linkplain FileScannerResult}'s name.
+	 *
+	 * @return this {@linkplain FileScannerResult}'s name.
 	 */
 	String name();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} start position (within it's input).
+	 * Gets this {@linkplain FileScannerResult}'s start position (within it's input).
 	 *
-	 * @return this {@linkplain FileScannerResult} start position (within it's input).
+	 * @return this {@linkplain FileScannerResult}'s start position (within it's input).
 	 */
 	long start();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} end position (within it's input).
+	 * Gets this {@linkplain FileScannerResult}'s end position (within it's input).
 	 *
-	 * @return this {@linkplain FileScannerResult} end position (within it's input).
+	 * @return this {@linkplain FileScannerResult}'s end position (within it's input).
 	 */
 	long end();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} size.
+	 * Gets this {@linkplain FileScannerResult}'s size.
 	 *
-	 * @return this {@linkplain FileScannerResult} size.
+	 * @return this {@linkplain FileScannerResult}'s size.
 	 */
 	long size();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} children result count.
+	 * Gets this {@linkplain FileScannerResult}'s children result count.
 	 *
-	 * @return this {@linkplain FileScannerResult} children result count.
+	 * @return this {@linkplain FileScannerResult}'s children result count.
 	 */
 	int childrenCount();
 
 	/**
-	 * Gets this {@linkplain FileScannerResult} children results.
+	 * Gets this {@linkplain FileScannerResult}'s children results.
 	 *
-	 * @return this {@linkplain FileScannerResult} children results.
+	 * @return this {@linkplain FileScannerResult}'s children results.
 	 */
 	@NonNull
 	FileScannerResult[] children();

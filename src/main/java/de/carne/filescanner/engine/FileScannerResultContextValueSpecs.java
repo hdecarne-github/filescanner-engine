@@ -40,6 +40,16 @@ public final class FileScannerResultContextValueSpecs {
 	public static final QWordSpec INPUT_SIZE = new QWordSpec("#inputSize");
 
 	/**
+	 * Predefined attribute to access the current format's position.
+	 */
+	public static final QWordSpec FORMAT_POSITION = new QWordSpec("#formatPosition");
+
+	/**
+	 * Predefined attribute to access the current scan result's position.
+	 */
+	public static final QWordSpec RESULT_POSITION = new QWordSpec("#resultPosition");
+
+	/**
 	 * Predefined attribute to access the current sequence's element index.
 	 */
 	public static final DWordSpec SEQUENCE_ELEMENT_INDEX = new DWordSpec("#sequenceElementIndex");

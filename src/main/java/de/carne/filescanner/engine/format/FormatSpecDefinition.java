@@ -61,6 +61,7 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.Anonym
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousUnionSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.ArraySpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AttributeFormatModifierContext;
+import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AttributeLinkModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AttributeRendererModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AttributeSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AttributeValidateNumberArrayModifierContext;
@@ -240,6 +241,24 @@ public abstract class FormatSpecDefinition {
 	 */
 	public final Long inputSize() {
 		return FileScannerResultContextValueSpecs.INPUT_SIZE.get();
+	}
+
+	/**
+	 * Gets the current format's position.
+	 *
+	 * @return the current format's position.
+	 */
+	public final Long formatPosition() {
+		return FileScannerResultContextValueSpecs.FORMAT_POSITION.get();
+	}
+
+	/**
+	 * Gets the current scan result's position.
+	 *
+	 * @return the current scan result's position.
+	 */
+	public final Long resultPosition() {
+		return FileScannerResultContextValueSpecs.RESULT_POSITION.get();
 	}
 
 	/**
@@ -1061,6 +1080,7 @@ public abstract class FormatSpecDefinition {
 				this.byteSymbolsMap);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.byteAttributeRenderer);
+		applyLinkModifier(spec, specCtx.attributeLinkModifier(), ByteAttributeLinkResolver::new);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -1076,6 +1096,7 @@ public abstract class FormatSpecDefinition {
 				this.wordSymbolsMap);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.wordAttributeRenderer);
+		applyLinkModifier(spec, specCtx.attributeLinkModifier(), WordAttributeLinkResolver::new);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -1091,6 +1112,7 @@ public abstract class FormatSpecDefinition {
 				this.dwordSymbolsMap);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.dwordAttributeRenderer);
+		applyLinkModifier(spec, specCtx.attributeLinkModifier(), DWordAttributeLinkResolver::new);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -1106,6 +1128,7 @@ public abstract class FormatSpecDefinition {
 				this.qwordSymbolsMap);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordAttributeFormatter);
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.qwordAttributeRenderer);
+		applyLinkModifier(spec, specCtx.attributeLinkModifier(), QWordAttributeLinkResolver::new);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
@@ -1376,6 +1399,18 @@ public abstract class FormatSpecDefinition {
 			} else {
 				throw newLoadException(formatCtx, "Unexpected renderer modifier");
 			}
+		}
+	}
+
+	@SuppressWarnings("null")
+	private <T> void applyLinkModifier(AttributeSpec<T> spec, List<AttributeLinkModifierContext> modifierCtx,
+			Function<Supplier<? extends Number>, AttributeLinkResolver<T>> linkResolverFactory) {
+		for (AttributeLinkModifierContext linkCtx : modifierCtx) {
+			NumberExpressionContext linkBaseCtx = linkCtx.numberExpression();
+			Supplier<? extends Number> linkBase = (linkBaseCtx != null ? loadNumberExpression(linkBaseCtx)
+					: FileScannerResultContextValueSpecs.FORMAT_POSITION);
+
+			spec.link(linkResolverFactory.apply(linkBase));
 		}
 	}
 

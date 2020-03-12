@@ -106,6 +106,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
+	public FileScannerResult inputResult() {
+		FileScannerResultBuilder inputResult = this;
+
+		while (inputResult.type != Type.INPUT) {
+			inputResult = Objects.requireNonNull(inputResult.parent);
+		}
+		return inputResult;
+	}
+
+	@Override
 	public synchronized String name() {
 		return this.committedState.name().get();
 	}

@@ -47,6 +47,7 @@ Validate: 'validate';
 Text: 'text';
 Format: 'format';
 Renderer: 'renderer';
+Link: 'link';
 Export: 'export';
 LittleEndian: 'littleEndian';
 BigEndian: 'bigEndian';
@@ -269,19 +270,19 @@ attributeSpec
 	;
 
 byteAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Byte textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier|attributeLinkModifier))*
 	;
 
 wordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Word textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier|attributeLinkModifier))*
 	;
 
 dwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? DWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier|attributeLinkModifier))*
 	;
 
 qwordAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? QWord textExpression (Apply (attributeValidateNumberModifier|attributeFormatModifier|attributeRendererModifier|attributeLinkModifier))*
 	;
 
 byteArrayAttributeSpec
@@ -323,13 +324,17 @@ attributeValidateNumberArrayModifier
 attributeValidateStringModifier
 	: Validate LBracket validationTextSet RBracket
 	;
+
+attributeFormatModifier
+	: Format LBracket (formatText|specReference) RBracket
+	;
 	
 attributeRendererModifier
 	: Renderer LBracket specReference RBracket
 	;
-	
-attributeFormatModifier
-	: Format LBracket (formatText|specReference) RBracket
+
+attributeLinkModifier
+	: Link LBracket numberExpression? RBracket
 	;
 	
 stringAttributeCharsetModifier

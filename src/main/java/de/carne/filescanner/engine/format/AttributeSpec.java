@@ -49,6 +49,8 @@ public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec
 	private AttributeFormatter<T> format = Object::toString;
 	private final List<AttributeValidator<T>> validators = new ArrayList<>();
 	private final List<AttributeRenderer<T>> renderers = new ArrayList<>();
+	@Nullable
+	private AttributeLinkResolver<T> link = null;
 	private AttributeBindMode bindMode = AttributeBindMode.NONE;
 	@Nullable
 	private CompositeSpec bindScope = null;
@@ -165,6 +167,17 @@ public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec
 	}
 
 	/**
+	 * Adds an attribute link.
+	 *
+	 * @param linkResolver the link resolver to use.
+	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
+	 */
+	public AttributeSpec<T> link(AttributeLinkResolver<T> linkResolver) {
+		this.link = linkResolver;
+		return this;
+	}
+
+	/**
 	 * Binds the attribute in {@linkplain AttributeBindMode#CONTEXT} mode.
 	 *
 	 * @return the updated {@linkplain AttributeSpec} instance for chaining.
@@ -249,7 +262,16 @@ public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec
 			out.setStyle(RenderStyle.NORMAL).write(name);
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
 		}
-		out.setStyle(RenderStyle.VALUE).write(this.format.format(value));
+		out.setStyle(RenderStyle.VALUE);
+
+		String formattedValue = this.format.format(value);
+		long linkPosition = (this.link != null ? this.link.resolve(value) : -1l);
+
+		if (linkPosition >= 0) {
+			out.write(formattedValue, linkPosition);
+		} else {
+			out.write(formattedValue);
+		}
 		for (AttributeRenderer<T> renderer : this.renderers) {
 			renderer.render(out, value);
 		}

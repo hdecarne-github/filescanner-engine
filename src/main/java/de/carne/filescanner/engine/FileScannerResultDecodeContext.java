@@ -108,10 +108,15 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 		FileScannerResultBuilder decodeResult = Objects.requireNonNull(this.decodeStack.peek()).builder();
 
 		if (isResultSpec && !(formatSpec instanceof EncodedInputSpec)) {
+			long position = position();
 			FileScannerResultBuilder formatSpecResult = FileScannerResultBuilder.formatResult(
-					getDecodeParent(decodeResult, decodeLevel), formatSpec, relocated, inputRange(), position());
+					getDecodeParent(decodeResult, decodeLevel), formatSpec, relocated, inputRange(), position);
 
 			this.decodeStack.push(new Scope(formatSpecResult));
+			if (isRootSpec) {
+				bindResultValue(formatSpec, FileScannerResultContextValueSpecs.FORMAT_POSITION, position);
+			}
+			bindContextValue(FileScannerResultContextValueSpecs.RESULT_POSITION, position);
 			try {
 				runV(() -> {
 					formatSpec.decodeComposite(this);
