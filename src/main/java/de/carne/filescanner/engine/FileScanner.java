@@ -66,6 +66,7 @@ public final class FileScanner implements Closeable {
 	private long lastProgressTimeNanos = 0;
 	private long totalInputBytes = 0;
 	private long scannedBytes = 0;
+	private boolean suppressStatus = false;
 
 	private FileScanner(BufferedFileChannelInput input, Collection<Format> formats, FileScannerStatus status)
 			throws IOException {
@@ -178,36 +179,31 @@ public final class FileScanner implements Closeable {
 	 * If the scan has already been completed or stopped this function has no effect.
 	 * </p>
 	 *
-	 * @param now whether to force a stop (see {@link ExecutorService#shutdownNow()}).
 	 * @param wait whether to wait for the scan to stop ({@code true}) or to return immediately after the stop has been
 	 * requested ({@code false}).
 	 */
-	public void stop(boolean now, boolean wait) {
-		if (!this.threadPool.isTerminated()) {
+	public void stop(boolean wait) {
+		stop0(wait);
+		if (wait) {
+			try {
+				boolean terminated = this.threadPool.awaitTermination(STOP_TIMEOUT, TimeUnit.MILLISECONDS);
 
-			if (now) {
-				LOG.info("Stopping scan threads immediately...");
-
-				this.threadPool.shutdownNow();
-			} else {
-				LOG.info("Stopping scan threads gracefully...");
-
-				this.threadPool.shutdown();
-			}
-			if (wait) {
-				try {
-					boolean terminated = this.threadPool.awaitTermination(STOP_TIMEOUT, TimeUnit.MILLISECONDS);
-
-					if (!terminated) {
-						LOG.warning("Failed to stop all scan threads");
-					}
-				} catch (InterruptedException e) {
-					LOG.warning(e, "Scan stop has been interrupted");
-
-					Thread.currentThread().interrupt();
+				if (!terminated) {
+					LOG.warning("Failed to stop all scan threads");
 				}
+			} catch (InterruptedException e) {
+				LOG.warning(e, "Scan stop has been interrupted");
+
+				Thread.currentThread().interrupt();
 			}
 		}
+	}
+
+	private synchronized void stop0(boolean wait) {
+		LOG.info("Stopping scan threads...");
+
+		this.threadPool.shutdown();
+		this.suppressStatus = wait;
 	}
 
 	/**
@@ -313,7 +309,7 @@ public final class FileScanner implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		stop(true, true);
+		stop(true);
 		this.rootInput.close();
 		this.inputDecodeCache.close();
 	}
@@ -355,6 +351,7 @@ public final class FileScanner implements Closeable {
 
 	private void scanProgress(long totalInputBytesDelta, long scannedBytesDelta) {
 		FileScannerProgress reportProgress = null;
+		boolean callStatus;
 
 		synchronized (this) {
 			this.totalInputBytes += totalInputBytesDelta;
@@ -369,8 +366,9 @@ public final class FileScanner implements Closeable {
 				reportProgress = new FileScannerProgress(this.scanStartedNanos, this.scanTimeNanos, this.scannedBytes,
 						this.totalInputBytes);
 			}
+			callStatus = !this.suppressStatus;
 		}
-		if (reportProgress != null) {
+		if (reportProgress != null && callStatus) {
 			FileScannerProgress progress = reportProgress;
 
 			callStatus(() -> this.status.scanProgress(this, progress));
@@ -378,23 +376,32 @@ public final class FileScanner implements Closeable {
 	}
 
 	private void scanStarted() {
+		boolean callStatus;
+
 		synchronized (this) {
 			this.scanStartedNanos = System.nanoTime();
 			notifyAll();
+			callStatus = !this.suppressStatus;
 		}
-		callStatus(() -> this.status.scanStarted(this));
+		if (callStatus) {
+			callStatus(() -> this.status.scanStarted(this));
+		}
 	}
 
 	private void scanFinished() {
 		long scanTime;
+		boolean callStatus;
 
 		synchronized (this) {
 			scanTime = this.scanTimeNanos = System.nanoTime() - this.scanStartedNanos;
+			callStatus = !this.suppressStatus;
 		}
 
 		LOG.notice("Finished scanning ''{0}'' (scan took: {1} ms)", this.rootResult.name(), scanTime / 1000000l);
 
-		callStatus(() -> this.status.scanFinished(this));
+		if (callStatus) {
+			callStatus(() -> this.status.scanFinished(this));
+		}
 		synchronized (this) {
 			notifyAll();
 		}
