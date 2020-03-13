@@ -33,7 +33,6 @@ import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.InsufficientDataException;
 import de.carne.filescanner.engine.InvalidPositionException;
 import de.carne.filescanner.provider.util.HexFormat;
-import de.carne.io.Closeables;
 import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;
 import de.carne.nio.file.attribute.FileAttributes;
@@ -242,14 +241,14 @@ public final class InputDecodeCache implements Closeable {
 		IOException closeException = null;
 
 		for (CacheFile cacheFile : this.cacheFiles) {
-			if (closeException == null) {
-				try {
-					cacheFile.close();
-				} catch (IOException e) {
+			try {
+				cacheFile.close();
+			} catch (IOException e) {
+				if (closeException == null) {
 					closeException = e;
+				} else {
+					closeException.addSuppressed(e);
 				}
-			} else {
-				Closeables.safeClose(closeException, cacheFile);
 			}
 		}
 		this.cacheFiles.clear();
