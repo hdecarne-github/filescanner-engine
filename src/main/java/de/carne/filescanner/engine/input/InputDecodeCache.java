@@ -62,6 +62,16 @@ public final class InputDecodeCache implements Closeable {
 	}
 
 	private final List<CacheFile> cacheFiles = new LinkedList<>();
+	private final Supplier<Boolean> shutdownCommenced;
+
+	/**
+	 * Constructs a new {@linkplain InputDecodeCache} instance.
+	 *
+	 * @param shutdownCommenced the function to check for a commenced shutdown of this cache.
+	 */
+	public InputDecodeCache(Supplier<Boolean> shutdownCommenced) {
+		this.shutdownCommenced = shutdownCommenced;
+	}
 
 	/**
 	 * Decodes an input stream and maps it to one or more contiguous decoded input streams.
@@ -184,7 +194,7 @@ public final class InputDecodeCache implements Closeable {
 
 			ByteBuffer buffer = ByteBuffer.allocate(DECODE_BUFFER_SIZE);
 
-			while (decoder.decode(buffer, encodedByteChannel) >= 0) {
+			while (!this.shutdownCommenced.get().booleanValue() && decoder.decode(buffer, encodedByteChannel) >= 0) {
 				buffer.flip();
 				decodedSize += cacheFileChannel.write(buffer);
 				buffer.clear();

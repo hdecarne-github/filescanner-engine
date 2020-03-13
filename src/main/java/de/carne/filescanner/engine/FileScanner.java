@@ -71,7 +71,7 @@ public final class FileScanner implements Closeable {
 	private FileScanner(BufferedFileChannelInput input, Collection<Format> formats, FileScannerStatus status)
 			throws IOException {
 		this.formatMatcherBuilder = new FormatMatcherBuilder(formats);
-		this.inputDecodeCache = new InputDecodeCache();
+		this.inputDecodeCache = new InputDecodeCache(this.threadPool::isShutdown);
 		this.rootInput = input;
 		this.rootResult = FileScannerResultBuilder.inputResult(this.rootInput);
 		this.status = status;
@@ -351,7 +351,7 @@ public final class FileScanner implements Closeable {
 
 	private void scanProgress(long totalInputBytesDelta, long scannedBytesDelta) {
 		FileScannerProgress reportProgress = null;
-		boolean callStatus;
+		boolean suppressCallStatus;
 
 		synchronized (this) {
 			this.totalInputBytes += totalInputBytesDelta;
@@ -366,9 +366,9 @@ public final class FileScanner implements Closeable {
 				reportProgress = new FileScannerProgress(this.scanStartedNanos, this.scanTimeNanos, this.scannedBytes,
 						this.totalInputBytes);
 			}
-			callStatus = !this.suppressStatus;
+			suppressCallStatus = this.suppressStatus;
 		}
-		if (reportProgress != null && callStatus) {
+		if (reportProgress != null && suppressCallStatus) {
 			FileScannerProgress progress = reportProgress;
 
 			callStatus(() -> this.status.scanProgress(this, progress));
@@ -376,30 +376,30 @@ public final class FileScanner implements Closeable {
 	}
 
 	private void scanStarted() {
-		boolean callStatus;
+		boolean suppressCallStatus;
 
 		synchronized (this) {
 			this.scanStartedNanos = System.nanoTime();
 			notifyAll();
-			callStatus = !this.suppressStatus;
+			suppressCallStatus = this.suppressStatus;
 		}
-		if (callStatus) {
+		if (!suppressCallStatus) {
 			callStatus(() -> this.status.scanStarted(this));
 		}
 	}
 
 	private void scanFinished() {
 		long scanTime;
-		boolean callStatus;
+		boolean suppressCallStatus;
 
 		synchronized (this) {
 			scanTime = this.scanTimeNanos = System.nanoTime() - this.scanStartedNanos;
-			callStatus = !this.suppressStatus;
+			suppressCallStatus = this.suppressStatus;
 		}
 
 		LOG.notice("Finished scanning ''{0}'' (scan took: {1} ms)", this.rootResult.name(), scanTime / 1000000l);
 
-		if (callStatus) {
+		if (!suppressCallStatus) {
 			callStatus(() -> this.status.scanFinished(this));
 		}
 		synchronized (this) {
