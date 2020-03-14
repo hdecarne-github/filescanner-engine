@@ -368,7 +368,7 @@ public final class FileScanner implements Closeable {
 			}
 			suppressCallStatus = this.suppressStatus;
 		}
-		if (reportProgress != null && suppressCallStatus) {
+		if (reportProgress != null && !suppressCallStatus) {
 			FileScannerProgress progress = reportProgress;
 
 			callStatus(() -> this.status.scanProgress(this, progress));
