@@ -19,7 +19,7 @@ package de.carne.filescanner.provider.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
-import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.function.Supplier;
 
@@ -33,8 +33,9 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.filescanner.engine.transfer.TransferType;
-import de.carne.mcd.common.MCDOutput;
 import de.carne.mcd.common.MachineCodeDecoder;
+import de.carne.mcd.common.io.MCDOutput;
+import de.carne.mcd.common.io.PlainMCDOutput;
 import de.carne.mcd.jvm.ClassFileDecoder;
 import de.carne.mcd.x86.X86b16Decoder;
 import de.carne.mcd.x86.X86b32Decoder;
@@ -128,11 +129,11 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 
 			@Override
 			public void transfer(WritableByteChannel target) throws IOException {
-				try (SeekableByteChannel mcdInput = exportResult.input().byteChannel(exportResult.start(),
-						exportResult.end())) {
+				try (ReadableByteChannel in = exportResult.input().byteChannel(exportResult.start(),
+						exportResult.end()); PlainMCDOutput out = new PlainMCDOutput(target, false)) {
 					MachineCodeDecoder decoder = exportMcd.get();
 
-					decoder.decode(mcdInput, target);
+					decoder.decode(in, out);
 				}
 			}
 
@@ -150,11 +151,10 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		FileScannerResult result = context.result();
 
-		try (SeekableByteChannel mcdInput = result.input().byteChannel(result.start(), result.end());
-				MCDOutput mcdOutput = new MCDRenderOutput(out)) {
+		try (ReadableByteChannel in = result.input().byteChannel(result.start(), result.end())) {
 			MachineCodeDecoder decoder = this.mcd.get();
 
-			decoder.decode(mcdInput, mcdOutput);
+			decoder.decode(in, new MCDRenderOutput(out));
 		} catch (IOException e) {
 			LOG.error(e, "Failed to completely decode ''{0}''", this.name);
 		}
@@ -166,16 +166,6 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 
 		MCDRenderOutput(RenderOutput out) {
 			this.out = out;
-		}
-
-		@Override
-		public void flush() throws IOException {
-			// Nothing to do here
-		}
-
-		@Override
-		public void close() throws IOException {
-			// nothing to do here
 		}
 
 		@Override
