@@ -87,15 +87,19 @@ format_spec text("%s", #specialText) {
 		byte "byte_magic"
 			->validate(0x12)
 			->format("%x")
+			->link()
 		word "word_magic"
 			->validate(0x1234)
 			->format("%x")
+			->link(0x100)
 		dword "dword_magic"
 			->validate(0x12345678)
 			->format("%x")
+			->link()
 		qword "qword_magic"
 			->validate(0x123456789abcdef0)
 			->format("%x")
+			->link()
 	}
 	@TEST_HEADER
 	@TEST_STRUCT
