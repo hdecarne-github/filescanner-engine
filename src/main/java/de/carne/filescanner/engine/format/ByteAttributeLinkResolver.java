@@ -27,7 +27,7 @@ public class ByteAttributeLinkResolver implements AttributeLinkResolver<Byte> {
 
 	/**
 	 * Constructs a new {@linkplain ByteAttributeLinkResolver} instance.
-	 * 
+	 *
 	 * @param linkBase the link base to use for resolving the link position.
 	 */
 	public ByteAttributeLinkResolver(Supplier<? extends Number> linkBase) {
@@ -39,7 +39,7 @@ public class ByteAttributeLinkResolver implements AttributeLinkResolver<Byte> {
 		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue >= 0) {
+		if (linkBaseValue > 0) {
 			linkPosition = linkBaseValue + Byte.toUnsignedLong(value);
 		}
 		return linkPosition;

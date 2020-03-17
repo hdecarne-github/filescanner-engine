@@ -42,7 +42,7 @@ public class QWordAttributeLinkResolver implements AttributeLinkResolver<Long> {
 		if (linkBaseValue >= 0) {
 			long linkOffsetValue = value.longValue();
 
-			if (linkOffsetValue >= 0) {
+			if (linkOffsetValue > 0) {
 				linkPosition = linkBaseValue + value.longValue();
 			}
 		}

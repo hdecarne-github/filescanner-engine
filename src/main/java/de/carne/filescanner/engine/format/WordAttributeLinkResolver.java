@@ -39,7 +39,7 @@ public class WordAttributeLinkResolver implements AttributeLinkResolver<Short> {
 		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue >= 0) {
+		if (linkBaseValue > 0) {
 			linkPosition = linkBaseValue + Short.toUnsignedLong(value);
 		}
 		return linkPosition;
