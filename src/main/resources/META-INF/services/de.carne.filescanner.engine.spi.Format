@@ -1,6 +1,7 @@
 de.carne.filescanner.provider.bmp.BmpFormat
 de.carne.filescanner.provider.bzip2.Bzip2Format
 de.carne.filescanner.provider.cpio.CpioFormat
+de.carne.filescanner.provider.elf.ElfFormat
 de.carne.filescanner.provider.exe.ExeFormat
 de.carne.filescanner.provider.gif.GifFormat
 de.carne.filescanner.provider.gzip.GzipFormat
