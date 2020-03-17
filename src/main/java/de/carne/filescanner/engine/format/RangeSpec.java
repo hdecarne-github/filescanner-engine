@@ -21,8 +21,6 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -108,7 +106,7 @@ public class RangeSpec extends AttributeSpec<StreamValue> {
 	}
 
 	@Override
-	protected StreamValue decodeValue(@NonNull FileScannerResultInputContext context) throws IOException {
+	protected StreamValue decodeValue(FileScannerResultInputContext context) throws IOException {
 		long sizeValue = LongHelper.toUnsignedLong(this.size.get());
 
 		return context.streamValue(sizeValue);
