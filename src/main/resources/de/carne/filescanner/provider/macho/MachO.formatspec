@@ -178,9 +178,10 @@ struct "mach_header_64" {
 	dword "cpusubtype"
 	dword "filetype"
 		->renderer(@MACH_FILETYPE)
-NUMBER_OF_LOAD_COMMANDS@MACHO_FORMAT:
+NUMBER_OF_CMDS@MACHO_FORMAT:
 	dword "ncmds"
 		->format(@PrettyFormat)
+SIZE_OF_CMDS@MACHO_FORMAT:
 	dword "sizeofcmds"
 		->renderer(@SizeRenderer)
 	dword "flags"
@@ -195,12 +196,15 @@ struct text("segment_command_64 [%s]", @SEGMENT_NAME) {
 			->renderer(@MACH_LOAD_COMMAND)
 	dword "cmdsize"
 		->renderer(@SizeRenderer)
-SEGMENT_NAME:
+SEGMENT_NAME@MACHO_FORMAT:
 	char[16] "segname"
 	qword "vmaddr"
 	qword "vmsize"
 		->renderer(@SizeRenderer)
+SEGMENT64_OFFSET@MACHO_FORMAT:
 	qword "fileoff"
+		->link()
+SEGMENT64_SIZE@MACHO_FORMAT:
 	qword "filesize"
 		->renderer(@SizeRenderer)
 	dword "maxprot"
@@ -220,6 +224,7 @@ NUMBER_OF_SECTIONS:
 		qword "size"
 			->renderer(@SizeRenderer)
 		dword "offset"
+			->link()
 		dword "align"
 		dword "reloff"
 		dword "nreloc"
@@ -229,6 +234,10 @@ NUMBER_OF_SECTIONS:
 		dword "reserved2"
 		dword "reserved3"
 	}	->size(@NUMBER_OF_SECTIONS)
+	decode_at #segment64Position:1 struct text("segment_64 [%s]", @SEGMENT_NAME) {
+		range[#segment64Size] ""
+	}	->renderer(#x86b64Renderer)
+		->export(#x86b64Exporter)
 }
 
 LOAD_COMMAND:
@@ -248,7 +257,7 @@ MACHO_IMAGE_64:
 struct {
 	@MACH_HEADER_64
 	sequence @LOAD_COMMAND
-		->size(@NUMBER_OF_LOAD_COMMANDS)
+		->size(@NUMBER_OF_CMDS)
 }
 
 MACHO_FORMAT:

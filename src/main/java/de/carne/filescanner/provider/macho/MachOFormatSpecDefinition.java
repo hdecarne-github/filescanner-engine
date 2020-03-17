@@ -22,7 +22,11 @@ import java.util.Objects;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.DWordSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
+import de.carne.filescanner.engine.format.QWordSpec;
+import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.util.IntHelper;
+import de.carne.filescanner.provider.util.McdTransferHandler;
 import de.carne.util.Lazy;
 
 /**
@@ -38,7 +42,10 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> machoFormatSpec = resolveLazy("MACHO_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> machHeaderSpec = resolveLazy("MACH_HEADER_64", CompositeSpec.class);
 
+	private Lazy<DWordSpec> sizeOfCmds = resolveLazy("SIZE_OF_CMDS", DWordSpec.class);
 	private Lazy<DWordSpec> cmdSize = resolveLazy("CMD_SIZE", DWordSpec.class);
+	private Lazy<QWordSpec> segment64Offset = resolveLazy("SEGMENT64_OFFSET", QWordSpec.class);
+	private Lazy<QWordSpec> segment64Size = resolveLazy("SEGMENT64_SIZE", QWordSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.machoFormatSpec.get();
@@ -50,6 +57,32 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 
 	public Long cmdSize() {
 		return IntHelper.toUnsignedLong(this.cmdSize.get().get()) - 8;
+	}
+
+	public Long segment64Position() {
+		long minOffsetValue = 0x20l + Integer.toUnsignedLong(this.sizeOfCmds.get().get().intValue());
+		long segment64OffsetValue = this.segment64Offset.get().get().longValue();
+
+		return Math.max(minOffsetValue, segment64OffsetValue);
+	}
+
+	public Long segment64Size() {
+		long segment64SizeValue = this.segment64Size.get().get().longValue();
+		long minOffsetValue = 0x20l + Integer.toUnsignedLong(this.sizeOfCmds.get().get().intValue());
+		long segment64OffsetValue = this.segment64Offset.get().get().longValue();
+
+		if (segment64OffsetValue < minOffsetValue) {
+			segment64SizeValue = Math.max(segment64SizeValue - (minOffsetValue - segment64OffsetValue), 0);
+		}
+		return segment64SizeValue;
+	}
+
+	public FileScannerResultRenderHandler x86b64Renderer() {
+		return McdTransferHandler.X86B64_TRANSFER;
+	}
+
+	public FileScannerResultExportHandler x86b64Exporter() {
+		return McdTransferHandler.X86B64_TRANSFER;
 	}
 
 }
