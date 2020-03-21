@@ -36,17 +36,9 @@ public class QWordAttributeLinkResolver implements AttributeLinkResolver<Long> {
 
 	@Override
 	public long resolve(Long value) {
-		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue >= 0) {
-			long linkOffsetValue = value.longValue();
-
-			if (linkOffsetValue > 0) {
-				linkPosition = linkBaseValue + value.longValue();
-			}
-		}
-		return linkPosition;
+		return linkBaseValue + value.longValue();
 	}
 
 }

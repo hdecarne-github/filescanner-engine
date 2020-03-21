@@ -36,13 +36,9 @@ public class DWordAttributeLinkResolver implements AttributeLinkResolver<Integer
 
 	@Override
 	public long resolve(Integer value) {
-		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue > 0) {
-			linkPosition = linkBaseValue + Integer.toUnsignedLong(value);
-		}
-		return linkPosition;
+		return linkBaseValue + Integer.toUnsignedLong(value);
 	}
 
 }

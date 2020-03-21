@@ -36,13 +36,9 @@ public class ByteAttributeLinkResolver implements AttributeLinkResolver<Byte> {
 
 	@Override
 	public long resolve(Byte value) {
-		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue > 0) {
-			linkPosition = linkBaseValue + Byte.toUnsignedLong(value);
-		}
-		return linkPosition;
+		return linkBaseValue + Byte.toUnsignedLong(value);
 	}
 
 }

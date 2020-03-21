@@ -36,13 +36,9 @@ public class WordAttributeLinkResolver implements AttributeLinkResolver<Short> {
 
 	@Override
 	public long resolve(Short value) {
-		long linkPosition = -1l;
 		long linkBaseValue = this.linkBase.get().longValue();
 
-		if (linkBaseValue > 0) {
-			linkPosition = linkBaseValue + Short.toUnsignedLong(value);
-		}
-		return linkPosition;
+		return linkBaseValue + Short.toUnsignedLong(value);
 	}
 
 }
