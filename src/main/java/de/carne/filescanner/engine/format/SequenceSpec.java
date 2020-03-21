@@ -174,6 +174,7 @@ public class SequenceSpec extends CompositeSpec {
 					done = true;
 				} else if (checkedStopAfterSpec != null && context.matchFormat(checkedStopAfterSpec)) {
 					checkedStopAfterSpec.decode(context);
+					matchCount++;
 					done = true;
 				} else if (context.matchFormat(this.elementSpec)) {
 					this.elementSpec.decode(context);
