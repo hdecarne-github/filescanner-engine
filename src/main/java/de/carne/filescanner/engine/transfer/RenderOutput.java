@@ -50,12 +50,17 @@ public final class RenderOutput implements Closeable {
 	 *
 	 * @param result the {@linkplain FileScannerResult} to render.
 	 * @param renderer the {@linkplain Renderer} to use for output generation.
+	 * @param offset the offset to start rendering at.
+	 * @return the number of decoded bytes.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public static void render(FileScannerResult result, Renderer renderer) throws IOException {
+	public static long render(FileScannerResult result, Renderer renderer, long offset) throws IOException {
+		long decoded;
+
 		try (RenderOutput out = new RenderOutput(renderer)) {
-			result.render(out);
+			decoded = result.render(out, offset);
 		}
+		return decoded;
 	}
 
 	/**

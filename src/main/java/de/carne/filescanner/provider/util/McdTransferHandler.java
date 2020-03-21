@@ -150,11 +150,13 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		FileScannerResult result = context.result();
+		long renderStart = context.position();
 
-		try (ReadableByteChannel in = result.input().byteChannel(result.start(), result.end())) {
+		try (ReadableByteChannel in = result.input().byteChannel(renderStart, result.end())) {
 			MachineCodeDecoder decoder = this.mcd.get();
+			long decoded = decoder.decode(in, new MCDRenderOutput(out), renderStart - result.start());
 
-			decoder.decode(in, new MCDRenderOutput(out));
+			context.skip(decoded);
 		} catch (IOException e) {
 			LOG.error(e, "Failed to completely decode ''{0}''", this.name);
 		}

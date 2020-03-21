@@ -311,21 +311,6 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public void render(RenderOutput out) throws IOException {
-		out.setStyle(RenderStyle.NORMAL).write("start");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(start()));
-		out.setStyle(RenderStyle.NORMAL).write("end");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(end()));
-		out.setStyle(RenderStyle.NORMAL).write("size");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(size()));
-		out.setStyle(RenderStyle.COMMENT).write(" // ")
-				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(size() * 1.0));
-	}
-
-	@Override
 	public FileScannerResultExportHandler[] exportHandlers() {
 		FileScannerResultExportHandler[] handlers = new FileScannerResultExportHandler[Math.max(1,
 				this.exportHandlers.size())];
@@ -343,7 +328,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	public TransferSource export(FileScannerResultExportHandler exportHandler) throws IOException {
-		FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
+		FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, 0);
 
 		return context.export(exportHandler);
 	}
@@ -431,7 +416,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException {
+		public long render(RenderOutput out, long offset) throws IOException {
 			out.setStyle(RenderStyle.NORMAL).write("file");
 			out.setStyle(RenderStyle.OPERATOR).write(" = ");
 			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input().name()));
@@ -440,6 +425,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size()));
 			out.setStyle(RenderStyle.COMMENT).write(" // ")
 					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
+			return size();
 		}
 
 		@Override
@@ -480,13 +466,17 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException {
-			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
+		public long render(RenderOutput out, long offset) throws IOException {
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, offset);
 
 			this.formatSpec.render(out, context);
 			if (out.isEmpty()) {
-				super.render(out);
+				FileScannerResults.renderDefault(this, out);
 			}
+			if (context.decoded() == 0) {
+				context.skip(context.remaining());
+			}
+			return context.decoded();
 		}
 
 		@Override
@@ -538,12 +528,13 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public void render(RenderOutput out) throws IOException {
-			super.render(out);
+		public long render(RenderOutput out, long offset) throws IOException {
+			FileScannerResults.renderDefault(this, out);
 
-			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this);
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, 0);
 
 			context.render(out, this.encodedInputSpec);
+			return size();
 		}
 
 		@Override

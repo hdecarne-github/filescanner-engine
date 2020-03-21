@@ -26,6 +26,7 @@ import java.util.zip.InflaterInputStream;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
@@ -52,8 +53,8 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 	private static final StyledTextRenderHandler TOC_RENDERER = new StyledTextRenderHandler(TransferType.TEXT_XML) {
 
 		@Override
-		protected InputStream newResultStream(FileScannerResult result) throws IOException {
-			return new InflaterInputStream(result.input().inputStream(result.start(), result.end()));
+		protected InputStream newResultStream(FileScannerResultRenderContext context) throws IOException {
+			return new InflaterInputStream(super.newResultStream(context));
 		}
 
 	};

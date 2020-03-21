@@ -91,7 +91,7 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 		Function<CharStream, Lexer> checkedLexerFactory = this.lexerFactory;
 
 		if (checkedLexerFactory != null && out.isStyled()) {
-			try (InputStream resultStream = newResultStream(context.result())) {
+			try (InputStream resultStream = newResultStream(context)) {
 				CharStream lexerInput = CharStreams.fromStream(resultStream, this.charset);
 				Lexer lexer = checkedLexerFactory.apply(lexerInput);
 
@@ -109,7 +109,7 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 			}
 
 		} else {
-			try (BufferedReader lineReader = newLineReader(context.result())) {
+			try (BufferedReader lineReader = newLineReader(context)) {
 				String line;
 
 				while ((line = lineReader.readLine()) != null) {
@@ -117,14 +117,17 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 				}
 			}
 		}
+		context.skip(context.remaining());
 	}
 
-	private BufferedReader newLineReader(FileScannerResult result) throws IOException {
-		return new BufferedReader(new InputStreamReader(newResultStream(result), this.charset));
+	private BufferedReader newLineReader(FileScannerResultRenderContext context) throws IOException {
+		return new BufferedReader(new InputStreamReader(newResultStream(context), this.charset));
 	}
 
-	protected InputStream newResultStream(FileScannerResult result) throws IOException {
-		return result.input().inputStream(result.start(), result.end());
+	protected InputStream newResultStream(FileScannerResultRenderContext context) throws IOException {
+		FileScannerResult result = context.result();
+
+		return result.input().inputStream(context.position(), result.end());
 	}
 
 }

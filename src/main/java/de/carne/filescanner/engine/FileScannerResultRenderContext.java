@@ -43,8 +43,8 @@ public class FileScannerResultRenderContext extends FileScannerResultInputContex
 	private final Map<FileScannerResultContextValueSpec<?>, Object> contextValues = new HashMap<>();
 	private final FileScannerResultBuilder result;
 
-	FileScannerResultRenderContext(FileScannerResultBuilder result) throws IOException {
-		super(result.input().range(result.start(), result.end()), result.start());
+	FileScannerResultRenderContext(FileScannerResultBuilder result, long offset) throws IOException {
+		super(result.input().range(result.start(), result.end()), result.start() + offset);
 		this.result = result;
 	}
 

@@ -207,6 +207,8 @@ public class SequenceSpec extends CompositeSpec {
 			} finally {
 				context.bindContextValue(FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX, -1);
 			}
+		} else {
+			context.skip(context.remaining());
 		}
 	}
 

@@ -119,10 +119,14 @@ public class StructSpec extends CompositeSpec {
 	}
 
 	private void renderRemaining(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		if (!out.isEmpty()) {
+		long remaining = context.remaining();
+
+		if (!out.isEmpty() && remaining > 0) {
 			out.setStyle(RenderStyle.VALUE).write("{ ... }");
-			SizeRenderer.LONG_RENDERER.render(out, context.remaining());
+
+			SizeRenderer.LONG_RENDERER.render(out, remaining);
 		}
+		context.skip(remaining);
 	}
 
 }

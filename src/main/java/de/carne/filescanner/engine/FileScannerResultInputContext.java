@@ -32,6 +32,7 @@ import de.carne.filescanner.provider.util.HexFormat;
 public abstract class FileScannerResultInputContext extends FileScannerResultContext {
 
 	private final FileScannerInputRange inputRange;
+	private long initialPosition;
 	private long position;
 	private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 
@@ -43,6 +44,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 */
 	protected FileScannerResultInputContext(FileScannerInputRange inputRange, long position) {
 		this.inputRange = inputRange;
+		this.initialPosition = position;
 		this.position = position;
 	}
 
@@ -66,11 +68,20 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 
 	/**
 	 * Gets this context's remaining data bytes.
-	 * 
+	 *
 	 * @return this context's remaining data bytes.
 	 */
 	public long remaining() {
 		return this.inputRange.end() - this.position;
+	}
+
+	/**
+	 * Gets this context's decoded data bytes.
+	 * 
+	 * @return this context's decoded data bytes.
+	 */
+	public long decoded() {
+		return this.position - this.initialPosition;
 	}
 
 	/**

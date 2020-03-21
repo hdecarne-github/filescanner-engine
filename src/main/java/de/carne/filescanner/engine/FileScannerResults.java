@@ -22,7 +22,12 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResult.Type;
 import de.carne.filescanner.engine.input.FileScannerInput;
+import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.provider.util.FileNames;
+import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.provider.util.PrettyFormat;
+import de.carne.text.MemoryUnitFormat;
 
 /**
  * Utility class providing {@linkplain FileScannerResult} related functions.
@@ -31,6 +36,27 @@ public final class FileScannerResults {
 
 	private FileScannerResults() {
 		// prevent instantiation
+	}
+
+	/**
+	 * Renders the default result representation by writing the basic result attributes.
+	 *
+	 * @param result the {@linkplain FileScannerResult} instance to render.
+	 * @param out the {@linkplain RenderOutput} instance to render into.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	public static void renderDefault(FileScannerResult result, RenderOutput out) throws IOException {
+		out.setStyle(RenderStyle.NORMAL).write("start");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.start()));
+		out.setStyle(RenderStyle.NORMAL).write("end");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.end()));
+		out.setStyle(RenderStyle.NORMAL).write("size");
+		out.setStyle(RenderStyle.OPERATOR).write(" = ");
+		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(result.size()));
+		out.setStyle(RenderStyle.COMMENT).write(" // ")
+				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(result.size() * 1.0));
 	}
 
 	/**

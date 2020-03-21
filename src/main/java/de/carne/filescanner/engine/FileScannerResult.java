@@ -137,9 +137,11 @@ public interface FileScannerResult {
 	 * Renders this {@linkplain FileScannerResult}.
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
+	 * @param offset the offset to start rendering at.
+	 * @return the number of decoded bytes.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	void render(RenderOutput out) throws IOException;
+	long render(RenderOutput out, long offset) throws IOException;
 
 	/**
 	 * Gets the available {@linkplain FileScannerResultExportHandler} instances for this {@linkplain FileScannerResult}.

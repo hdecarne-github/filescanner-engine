@@ -134,7 +134,7 @@ public class HtmlReportGenerator {
 			}
 
 		})) {
-			result.render(renderOutput);
+			result.render(renderOutput, 0);
 		}
 		out.write("</div>");
 		if (resultChildren.length > 0) {

@@ -152,6 +152,7 @@ public class RawTransferHandler implements FileScannerResultExportHandler, FileS
 		FileScannerResult result = context.result();
 
 		out.writeln(new RawTransferSource(result));
+		context.skip(context.remaining());
 	}
 
 	protected ReadableByteChannel newResultChannel(FileScannerResult result) throws IOException {

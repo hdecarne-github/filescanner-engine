@@ -240,7 +240,7 @@ class FileScannerTest {
 
 	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
 		try (Renderer renderer = new CombinedRenderer(this.systemOutRenderer)) {
-			RenderOutput.render(result, renderer);
+			RenderOutput.render(result, renderer, 0);
 			for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
 				exportHandler.defaultFileName(result);
 			}
