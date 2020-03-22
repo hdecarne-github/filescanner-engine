@@ -138,7 +138,14 @@ public class FileScannerResultDecodeContext extends FileScannerResultInputContex
 	}
 
 	private FileScannerResultBuilder getDecodeParent(FileScannerResultBuilder builder, int decodeLevel) {
-		return (decodeLevel == 0 ? builder : builder.parent());
+		FileScannerResultBuilder decodeParent = builder;
+		int remaining = decodeLevel;
+
+		while (remaining > 0) {
+			decodeParent = decodeParent.parent();
+			remaining--;
+		}
+		return decodeParent;
 	}
 
 	/**
