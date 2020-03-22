@@ -48,7 +48,7 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 	/**
 	 * Predefined TEXT_XML renderer handler.
 	 */
-	public static final StyledTextRenderHandler XML_RENDERER_HANDLER = new StyledTextRenderHandler(
+	public static final StyledTextRenderHandler XML_RENDER_HANDLER = new StyledTextRenderHandler(
 			TransferType.TEXT_XML);
 
 	/**
