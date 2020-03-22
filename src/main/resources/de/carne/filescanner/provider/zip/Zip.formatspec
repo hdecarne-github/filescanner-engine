@@ -165,6 +165,7 @@ CDH_FILE_COMMENT_LENGTH:
 	word "internal file attributes"
 	dword "external file attributes"
 	dword "relative offset of local header"
+		->link()
 CDH_FILE_NAME:
 	char[@CDH_FILE_NAME_LENGTH] "file name"
 	byte[@CDH_EXTRA_FIELD_LENGTH] "extra field"
@@ -187,6 +188,7 @@ struct "End of central directory" {
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 	dword "offset of start of central directory"
+		->link()
 EOCD_ZIP_FILE_COMMENT_LENGTH:
 	word ".ZIP file comment length"
 		->format(@PrettyFormat)

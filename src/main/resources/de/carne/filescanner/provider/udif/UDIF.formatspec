@@ -36,10 +36,12 @@ struct "UDIFResourceFile" {
 	dword "Flags"
 	qword "RunningDataForkOffset"
 	qword "DataForkOffset"
+		->link()
 	qword "DataForkLength"
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 	qword "RsrcForkOffset"
+		->link()
 	qword "RsrcForkLength"
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
@@ -56,6 +58,7 @@ struct "UDIFResourceFile" {
 	dword[32] "DataChecksum"
 XML_OFFSET@UDIF_FORMAT:
 	qword "XMLOffset"
+		->link()
 XML_LENGTH@UDIF_FORMAT:
 	qword "XMLLength"
 		->format(@PrettyFormat)

@@ -57,6 +57,7 @@ struct "BITMAPFILEHEADER" {
 		->validate(0x0000)
 BF_OFF_BITS@BMP_FORMAT:
 	dword "bfOffBits"
+		->link()
 }
 
 BMP_INFO_HEADER:
