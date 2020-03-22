@@ -173,6 +173,7 @@ MACH_HEADER_64:
 struct "mach_header_64" {
 	dword "magic"
 		->validate(0xfeedfacf)
+CPU_TYPE@MACHO_FORMAT:
 	dword "cputype"
 		->renderer(@MACH_CPUTYPE)
 	dword "cpusubtype"
@@ -209,6 +210,7 @@ SEGMENT64_SIZE@MACHO_FORMAT:
 		->renderer(@SizeRenderer)
 	dword "maxprot"
 		->renderer(@VM_PROT_FLAGS)
+SEGMENT64_FLAGS@MACHO_FORMAT:
 	dword "initprot"
 		->renderer(@VM_PROT_FLAGS)
 NUMBER_OF_SECTIONS:
@@ -236,8 +238,8 @@ NUMBER_OF_SECTIONS:
 	}	->size(@NUMBER_OF_SECTIONS)
 	decode_at #segment64Position:2 struct text("segment_64 [%s]", @SEGMENT_NAME) {
 		range[#segment64Size] ""
-	}	->renderer(#x86b64Renderer)
-		->export(#x86b64Exporter)
+	}	->renderer(#segment64Renderer)
+		->export(#segment64Exporter)
 }
 
 LOAD_COMMAND:

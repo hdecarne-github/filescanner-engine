@@ -25,6 +25,8 @@ import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.QWordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.RangeRenderHandler;
+import de.carne.filescanner.engine.transfer.RawTransferHandler;
 import de.carne.filescanner.engine.util.IntHelper;
 import de.carne.filescanner.provider.util.McdTransferHandler;
 import de.carne.util.Lazy;
@@ -42,8 +44,10 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> machoFormatSpec = resolveLazy("MACHO_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> machHeaderSpec = resolveLazy("MACH_HEADER_64", CompositeSpec.class);
 
+	private Lazy<DWordSpec> cpuType = resolveLazy("CPU_TYPE", DWordSpec.class);
 	private Lazy<DWordSpec> sizeOfCmds = resolveLazy("SIZE_OF_CMDS", DWordSpec.class);
 	private Lazy<DWordSpec> cmdSize = resolveLazy("CMD_SIZE", DWordSpec.class);
+	private Lazy<DWordSpec> segment64Flags = resolveLazy("SEGMENT64_FLAGS", DWordSpec.class);
 	private Lazy<QWordSpec> segment64Offset = resolveLazy("SEGMENT64_OFFSET", QWordSpec.class);
 	private Lazy<QWordSpec> segment64Size = resolveLazy("SEGMENT64_SIZE", QWordSpec.class);
 
@@ -77,12 +81,30 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 		return segment64SizeValue;
 	}
 
-	public FileScannerResultRenderHandler x86b64Renderer() {
-		return McdTransferHandler.X86B64_TRANSFER;
+	public FileScannerResultRenderHandler segment64Renderer() {
+		int cpuTypeValue = this.cpuType.get().get().intValue();
+		int flags = this.segment64Flags.get().get().intValue();
+		FileScannerResultRenderHandler renderer = RangeRenderHandler.RENDER_HANDLER;
+
+		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */) {
+			if (cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
+				renderer = McdTransferHandler.X86B64_TRANSFER;
+			}
+		}
+		return renderer;
 	}
 
-	public FileScannerResultExportHandler x86b64Exporter() {
-		return McdTransferHandler.X86B64_TRANSFER;
+	public FileScannerResultExportHandler segment64Exporter() {
+		int cpuTypeValue = this.cpuType.get().get().intValue();
+		int flags = this.segment64Flags.get().get().intValue();
+		FileScannerResultExportHandler exporter = RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
+
+		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */) {
+			if (cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
+				exporter = McdTransferHandler.X86B64_TRANSFER;
+			}
+		}
+		return exporter;
 	}
 
 }
