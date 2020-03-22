@@ -234,7 +234,7 @@ NUMBER_OF_SECTIONS:
 		dword "reserved2"
 		dword "reserved3"
 	}	->size(@NUMBER_OF_SECTIONS)
-	decode_at #segment64Position:1 struct text("segment_64 [%s]", @SEGMENT_NAME) {
+	decode_at #segment64Position:2 struct text("segment_64 [%s]", @SEGMENT_NAME) {
 		range[#segment64Size] ""
 	}	->renderer(#x86b64Renderer)
 		->export(#x86b64Exporter)
@@ -256,8 +256,10 @@ union {
 MACHO_IMAGE_64:
 struct {
 	@MACH_HEADER_64
-	sequence @LOAD_COMMAND
-		->size(@NUMBER_OF_CMDS)
+	struct "load_commands" {
+		sequence @LOAD_COMMAND
+			->size(@NUMBER_OF_CMDS)
+	}
 }
 
 MACHO_FORMAT:
