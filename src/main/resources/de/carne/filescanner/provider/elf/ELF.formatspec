@@ -93,6 +93,63 @@ dword_symbols {
 	0x00000001: "EV_CURRENT"
 }
 
+P_TYPE:
+dword_symbols {
+	0x00000000: "PT_NULL"
+	0x00000001: "PT_LOAD"
+	0x00000002: "PT_DYNAMIC"
+	0x00000003: "PT_INTERP"
+	0x00000004: "PT_NOTE"
+	0x00000005: "PT_SHLIB"
+	0x00000006: "PT_PHDR"
+	0x00000007: "PT_TLS"
+	0x6474e550: "PT_GNU_EH_FRAME"
+	0x6474e551: "PT_GNU_STACK"
+	0x6474e552: "PT_GNU_RELRO"
+}
+
+P_FLAGS:
+dword_flag_symbols {
+	0x00000004: "PF_R"
+	0x00000002: "PF_W"
+	0x00000001: "PF_X"
+}
+
+SH_TYPE:
+dword_symbols {
+	0x00000000: "SHT_NULL"
+	0x00000001: "SHT_PROGBITS"
+	0x00000002: "SHT_SYMTAB"
+	0x00000003: "SHT_STRTAB"
+	0x00000004: "SHT_RELA"
+	0x00000005: "SHT_HASH"
+	0x00000006: "SHT_DYNAMIC"
+	0x00000007: "SHT_NOTE"
+	0x00000008: "SHT_NOBITS"
+	0x00000009: "SHT_REL"
+	0x0000000a: "SHT_SHLIB"
+	0x0000000b: "SHT_DYNSYM"
+	0x0000000e: "SHT_INIT_ARRAY"
+	0x0000000f: "SHT_FINI_ARRAY"
+	0x00000010: "SHT_PREINIT_ARRAY"
+	0x00000011: "SHT_GROUP"
+	0x00000012: "SHT_SYMTAB_SHNDX"
+}
+
+SH_FLAGS:
+qword_flag_symbols {
+	0x0000000000000400: "SHF_TLS"
+	0x0000000000000200: "SHF_GROUP"
+	0x0000000000000100: "SHF_OS_NONCONFORMING"
+	0x0000000000000080: "SHF_LINK_ORDER"
+	0x0000000000000040: "SHF_INFO_LINK"
+	0x0000000000000020: "SHF_STRINGS"
+	0x0000000000000010: "SHF_MERGE"
+	0x0000000000000004: "SHF_EXECINSTR"
+	0x0000000000000002: "SHF_ALLOC"
+	0x0000000000000001: "SHF_WRITE"
+}
+
 // Specs
 
 ELF_HEADER_64:
@@ -117,13 +174,16 @@ struct "Elf64_Ehdr" {
 	word "e_type"
 		->validate(@E_TYPE)
 		->renderer(@E_TYPE)
+ELF_MACHINE_64@ELF_FORMAT:
 	word "e_machine"
 		->renderer(@E_MACHINE)
 	dword "e_version"
 		->renderer(@E_VERSION)
 	qword "e_entry"
+PHEADER_OFF_64@ELF_FORMAT:
 	qword "e_phoff"
 		->link()
+SHEADER_OFF_64@ELF_FORMAT:
 	qword "e_shoff"
 		->link()
 	dword "e_flags"
@@ -135,20 +195,78 @@ struct "Elf64_Ehdr" {
 		->validate(0x38)
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
+PHEADER_NUM_64@ELF_FORMAT:
 	word "e_phnum"
 		->format(@PrettyFormat)
 	word "e_shentsize"
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
+SHEADER_NUM_64@ELF_FORMAT:
 	word "e_shnum"
 		->format(@PrettyFormat)
 	word "e_shstrndx"
 		->format(@PrettyFormat)
 }
 
+ELF_PHEADER_64:
+struct "Elf64_Phdr" {
+	dword "p_type"
+		->renderer(@P_TYPE)
+	dword "p_flags"
+		->renderer(@P_FLAGS)
+	qword "p_offset"
+		->link()
+	qword "p_vaddr"
+	qword "p_paddr"
+	qword "p_filesz"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	qword "p_memsz"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	qword "p_align"
+}
+
+ELF_SHEADER_64:
+struct "Elf64_Shdr" {
+	dword "sh_name"
+SHEADER_TYPE_64@ELF_FORMAT:
+	dword "sh_type"
+		->renderer(@SH_TYPE)
+SHEADER_FLAGS_64@ELF_FORMAT:
+	qword "sh_flags"
+		->renderer(@SH_FLAGS)
+	qword "sh_addr"
+SHEADER_OFFSET_64:
+	qword "sh_offset"
+		->link()
+SHEADER_SIZE_64@ELF_FORMAT:
+	qword "sh_size"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	dword "sh_link"
+	dword "sh_info"
+	qword "sh_addralign"
+	qword "sh_entsize"
+		->format(@PrettyFormat)
+		->renderer(@SizeRenderer)
+	decode_at #section64Offset:2 struct "Section" {
+		range[#section64Size] ""
+	}	->renderer(#section64Renderer)
+		->export(#section64Exporter)
+}
+
 ELF_IMAGE_64:
 struct {
 	@ELF_HEADER_64
+	decode_at @PHEADER_OFF_64 struct "Program header table" {
+		sequence @ELF_PHEADER_64
+			->size(@PHEADER_NUM_64)
+	}
+	decode_at @SHEADER_OFF_64 struct "Section header table" {
+		sequence @ELF_SHEADER_64
+			->size(@SHEADER_NUM_64)
+	}
 }
 
 ELF_FORMAT:
