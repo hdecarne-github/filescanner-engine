@@ -251,7 +251,7 @@ union {
 	CMD_SIZE:
 		dword "cmdsize"
 			->renderer(@SizeRenderer)
-		range[#cmdSize] "data"
+		range[#cmdSize] ""
 	}
 }
 

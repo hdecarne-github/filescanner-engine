@@ -86,10 +86,8 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 		int flags = this.segment64Flags.get().get().intValue();
 		FileScannerResultRenderHandler renderer = RangeRenderHandler.RENDER_HANDLER;
 
-		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */) {
-			if (cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
-				renderer = McdTransferHandler.X86B64_TRANSFER;
-			}
+		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */ && cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
+			renderer = McdTransferHandler.X86B64_TRANSFER;
 		}
 		return renderer;
 	}
@@ -99,10 +97,8 @@ final class MachOFormatSpecDefinition extends FormatSpecDefinition {
 		int flags = this.segment64Flags.get().get().intValue();
 		FileScannerResultExportHandler exporter = RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 
-		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */) {
-			if (cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
-				exporter = McdTransferHandler.X86B64_TRANSFER;
-			}
+		if ((flags & 0x4) == 0x04 /* VM_PROT_EXECUTE */ && cpuTypeValue == 0x1000007 /* CPU_TYPE_X86_64 */) {
+			exporter = McdTransferHandler.X86B64_TRANSFER;
 		}
 		return exporter;
 	}
