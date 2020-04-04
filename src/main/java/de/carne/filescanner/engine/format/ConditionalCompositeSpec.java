@@ -60,7 +60,10 @@ public class ConditionalCompositeSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		context.bindDecodedValue(this.decodedSpec, this.spec.get()).decodeComposite(context);
+		CompositeSpec decodedSpec0 = context.bindDecodedValue(this.decodedSpec, this.spec.get());
+
+		decodedSpec0.decodeComposite(context);
+		mergeDecodedExports(decodedSpec0);
 	}
 
 	@Override

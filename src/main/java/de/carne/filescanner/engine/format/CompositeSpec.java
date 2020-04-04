@@ -131,6 +131,13 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
+	 * @param spec
+	 */
+	protected void mergeDecodedExports(CompositeSpec spec) {
+		this.exportHandlers.addAll(spec.exportHandlers);
+	}
+
+	/**
 	 * Checks whether this instance is a result spec.
 	 *
 	 * @return {@code true} if this instance is a result spec.
@@ -154,21 +161,23 @@ public abstract class CompositeSpec implements FormatSpec {
 	/**
 	 * Checks whether this instance has a custom {@linkplain FileScannerResultRenderHandler} set.
 	 *
-	 * @return {@code true} if this instance has a custom {@linkplain FileScannerResultRenderHandler} renderer set.
+	 * @return {@code true} if this instance has a custom {@linkplain FileScannerResultRenderHandler} set.
 	 * @see #renderer(Supplier)
 	 * @see #renderer(FileScannerResultRenderHandler)
 	 */
-	public boolean hasRenderer() {
+	protected boolean hasRenderer() {
 		return this.customRenderHandler != null;
 	}
 
 	/**
-	 * Gets this instance's export handlers.
+	 * Checks whether this instance has at least one {@linkplain FileScannerResultExportHandler} defined.
 	 *
-	 * @return this instance's export handlers.
+	 * @return {@code true} if this instance has at least one {@linkplain FileScannerResultExporterHandler} set.
+	 * @see #export(Supplier)
+	 * @see #export(FileScannerResultExportHandler)
 	 */
-	public List<Supplier<FileScannerResultExportHandler>> exportHandlers() {
-		return Collections.unmodifiableList(this.exportHandlers);
+	protected boolean hasExportHandlers() {
+		return !this.exportHandlers.isEmpty();
 	}
 
 	@Override
@@ -200,6 +209,15 @@ public abstract class CompositeSpec implements FormatSpec {
 		if (this.customRenderHandler != null) {
 			this.customRenderHandler.get().render(out, context);
 		}
+	}
+
+	/**
+	 * Gets this instance's export handlers.
+	 *
+	 * @return this instance's export handlers.
+	 */
+	public List<Supplier<FileScannerResultExportHandler>> exportHandlers() {
+		return Collections.unmodifiableList(this.exportHandlers);
 	}
 
 	@Override

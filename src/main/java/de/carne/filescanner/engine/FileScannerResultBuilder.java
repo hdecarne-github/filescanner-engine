@@ -19,10 +19,13 @@ package de.carne.filescanner.engine;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -57,7 +60,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private final Type type;
 	private final FileScannerInput input;
 	private final long start;
-	private final List<FileScannerResultExportHandler> exportHandlers = new ArrayList<>();
+	private final Set<FileScannerResultExportHandler> exportHandlers = new HashSet<>();
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
 	private @Nullable Object data = null;
@@ -74,6 +77,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		this.input = input;
 		this.start = start;
 		this.currentState = new CommitState(name, end);
+		this.exportHandlers.add(RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER);
 	}
 
 	public static FileScannerResultBuilder inputResult(FileScannerInput input) throws IOException {
@@ -312,17 +316,14 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	@Override
 	public FileScannerResultExportHandler[] exportHandlers() {
-		FileScannerResultExportHandler[] handlers = new FileScannerResultExportHandler[Math.max(1,
-				this.exportHandlers.size())];
-
-		handlers[0] = RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
-
+		FileScannerResultExportHandler[] handlers = new FileScannerResultExportHandler[this.exportHandlers.size()];
 		int handlerIndex = 0;
 
 		for (FileScannerResultExportHandler handler : this.exportHandlers) {
 			handlers[handlerIndex] = handler;
 			handlerIndex++;
 		}
+		Arrays.sort(handlers, (h1, h2) -> h1.name().compareTo(h2.name()));
 		return handlers;
 	}
 

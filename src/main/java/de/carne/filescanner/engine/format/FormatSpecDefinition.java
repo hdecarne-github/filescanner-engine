@@ -975,13 +975,21 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private ConditionalSpec loadConditionalSpec(ConditionalSpecContext specCtx, FormatSpecsContext rootCtx) {
+	private FormatSpec loadConditionalSpec(ConditionalSpecContext specCtx, FormatSpecsContext rootCtx) {
 		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
-			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
+			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), FormatSpec.class);
 		}
 
-		ConditionalSpec spec = new ConditionalSpec(
-				resolveExternalReference(specCtx.externalReference(), FormatSpec.class));
+		ExternalReferenceContext externalReferenceCtx = specCtx.externalReference();
+		Class<?> externalReferenceType = resolveExternalReferenceType(externalReferenceCtx);
+		FormatSpec spec;
+
+		if (CompositeSpec.class.isAssignableFrom(externalReferenceType)) {
+			spec = new ConditionalCompositeSpec(
+					resolveExternalReference(specCtx.externalReference(), CompositeSpec.class));
+		} else {
+			spec = new ConditionalSpec(resolveExternalReference(specCtx.externalReference(), FormatSpec.class));
+		}
 
 		LOG.debug(LOG_LOADED_SPEC, spec);
 
@@ -1587,6 +1595,18 @@ public abstract class FormatSpecDefinition {
 
 	private static final String UNKNOWN_EXTERNAL_REFERENCE = "Unknown reference #%s";
 	private static final String INVALID_EXTERNAL_REFERENCE = "Invalid reference #%s (expected type: %s actual type: %s)";
+
+	private Class<?> resolveExternalReferenceType(ExternalReferenceContext externalReferenceCtx) {
+		String methodIdentifier = externalReferenceCtx.referencedExternal().getText();
+		Method method;
+
+		try {
+			method = getClass().getMethod(methodIdentifier);
+		} catch (NoSuchMethodException e) {
+			throw newLoadException(e, externalReferenceCtx, UNKNOWN_EXTERNAL_REFERENCE, methodIdentifier);
+		}
+		return method.getReturnType();
+	}
 
 	@SuppressWarnings("squid:S3011")
 	private <T> Supplier<T> resolveExternalReference(ExternalReferenceContext externalReferenceCtx, Class<T> type) {

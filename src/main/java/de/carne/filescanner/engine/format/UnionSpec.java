@@ -83,6 +83,7 @@ public class UnionSpec extends CompositeSpec {
 			if (context.matchComposite(element)) {
 				element.decode(context);
 				context.bindDecodedValue(this.decodedSpec, element);
+				mergeDecodedExports(element);
 				break;
 			}
 		}

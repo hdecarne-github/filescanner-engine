@@ -97,8 +97,17 @@ public class StructSpec extends CompositeSpec {
 
 	@Override
 	public void decodeComposite(FileScannerResultDecodeContext context) throws IOException {
-		for (FormatSpec element : this.elements) {
+		if (this.elements.size() != 1) {
+			for (FormatSpec element : this.elements) {
+				element.decode(context);
+			}
+		} else {
+			FormatSpec element = this.elements.get(0);
+
 			element.decode(context);
+			if (element instanceof CompositeSpec) {
+				mergeDecodedExports((CompositeSpec) element);
+			}
 		}
 	}
 
