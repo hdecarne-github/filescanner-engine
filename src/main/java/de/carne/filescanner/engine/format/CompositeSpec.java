@@ -131,7 +131,9 @@ public abstract class CompositeSpec implements FormatSpec {
 	}
 
 	/**
-	 * @param spec
+	 * Merges the given {@linkplain CompositeSpec}'s export handlers into this one's.
+	 *
+	 * @param spec the {@linkplain CompositeSpec} instance to merge the export handlers from.
 	 */
 	protected void mergeDecodedExports(CompositeSpec spec) {
 		this.exportHandlers.addAll(spec.exportHandlers);
@@ -172,7 +174,7 @@ public abstract class CompositeSpec implements FormatSpec {
 	/**
 	 * Checks whether this instance has at least one {@linkplain FileScannerResultExportHandler} defined.
 	 *
-	 * @return {@code true} if this instance has at least one {@linkplain FileScannerResultExporterHandler} set.
+	 * @return {@code true} if this instance has at least one {@linkplain FileScannerResultExportHandler} set.
 	 * @see #export(Supplier)
 	 * @see #export(FileScannerResultExportHandler)
 	 */
