@@ -131,9 +131,7 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 			public void transfer(WritableByteChannel target) throws IOException {
 				try (ReadableByteChannel in = exportResult.input().byteChannel(exportResult.start(),
 						exportResult.end()); PlainMCDOutput out = new PlainMCDOutput(target, false)) {
-					MachineCodeDecoder decoder = exportMcd.get();
-
-					decoder.decode(in, out);
+					exportMcd.get().decode(in, out);
 				}
 			}
 
@@ -153,8 +151,8 @@ public class McdTransferHandler implements FileScannerResultExportHandler, FileS
 		long renderStart = context.position();
 
 		try (ReadableByteChannel in = result.input().byteChannel(renderStart, result.end())) {
-			MachineCodeDecoder decoder = this.mcd.get();
-			long decoded = decoder.decode(in, new MCDRenderOutput(out), renderStart - result.start());
+			long decodeStart = renderStart - result.start();
+			long decoded = this.mcd.get().decode(in, new MCDRenderOutput(out), decodeStart);
 
 			context.skip(decoded);
 		} catch (IOException e) {
