@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.test.engine.format;
+package de.carne.filescanner.test.engine.util;
 
 import java.util.Locale;
 

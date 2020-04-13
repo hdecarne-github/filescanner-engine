@@ -31,8 +31,6 @@ public final class PrettyFormat {
 		// Prevent instantiation
 	}
 
-	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance();
-
 	/**
 	 * {@linkplain AttributeFormatter} for {@linkplain Byte} based character values.
 	 */
@@ -60,7 +58,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatByteNumber(byte value) {
-		return NUMBER_FORMAT.format(value & 0xffl);
+		return NumberFormat.getNumberInstance().format(value & 0xffl);
 	}
 
 	/**
@@ -106,7 +104,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatShortNumber(short value) {
-		return NUMBER_FORMAT.format(value & 0xffffl);
+		return NumberFormat.getNumberInstance().format(value & 0xffffl);
 	}
 
 	/**
@@ -152,7 +150,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatIntNumber(int value) {
-		return NUMBER_FORMAT.format(value & 0xffffffffl);
+		return NumberFormat.getNumberInstance().format(value & 0xffffffffl);
 	}
 
 	/**
@@ -198,7 +196,7 @@ public final class PrettyFormat {
 	 * @return the formatted value.
 	 */
 	public static String formatLongNumber(long value) {
-		return NUMBER_FORMAT.format(value);
+		return NumberFormat.getNumberInstance().format(value);
 	}
 
 	/**
