@@ -45,7 +45,7 @@ public class DWordFlagRenderer extends FlagRenderer<Integer> {
 
 	@Override
 	protected Iterator<Integer> flags() {
-		return new Iterator<Integer>() {
+		return new Iterator<>() {
 
 			private int nextFlag = MSB;
 

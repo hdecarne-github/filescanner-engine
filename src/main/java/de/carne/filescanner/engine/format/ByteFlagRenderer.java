@@ -45,7 +45,7 @@ public class ByteFlagRenderer extends FlagRenderer<Byte> {
 
 	@Override
 	protected Iterator<Byte> flags() {
-		return new Iterator<Byte>() {
+		return new Iterator<>() {
 
 			private byte nextFlag = MSB;
 

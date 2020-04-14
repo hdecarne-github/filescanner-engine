@@ -26,13 +26,15 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.jdt.annotation.NonNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.UnexpectedDataException;
@@ -103,9 +105,10 @@ class ResourceForkHandler extends DefaultHandler {
 	private final SortedMap<BlkxDescriptor, EncodedInputSpec> blkxSpecs = new TreeMap<>();
 
 	@SuppressWarnings("squid:S2755")
-	public static CompositeSpec parse(InputStream input) throws IOException, SAXException {
+	public static CompositeSpec parse(InputStream input)
+			throws IOException, ParserConfigurationException, SAXException {
 		ResourceForkHandler handler = new ResourceForkHandler();
-		XMLReader reader = XMLReaderFactory.createXMLReader();
+		XMLReader reader = SAXParserFactory.newDefaultInstance().newSAXParser().getXMLReader();
 
 		reader.setEntityResolver(LocalEntityResolver.getInstance());
 		reader.setContentHandler(handler);

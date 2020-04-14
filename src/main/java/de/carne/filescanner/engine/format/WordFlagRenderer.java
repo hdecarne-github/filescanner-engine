@@ -45,7 +45,7 @@ public class WordFlagRenderer extends FlagRenderer<Short> {
 
 	@Override
 	protected Iterator<Short> flags() {
-		return new Iterator<Short>() {
+		return new Iterator<>() {
 
 			private short nextFlag = MSB;
 

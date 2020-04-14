@@ -45,7 +45,7 @@ public class QWordFlagRenderer extends FlagRenderer<Long> {
 
 	@Override
 	protected Iterator<Long> flags() {
-		return new Iterator<Long>() {
+		return new Iterator<>() {
 
 			private long nextFlag = MSB;
 

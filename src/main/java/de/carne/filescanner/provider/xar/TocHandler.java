@@ -25,13 +25,15 @@ import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.eclipse.jdt.annotation.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.CompositeSpec;
@@ -103,9 +105,10 @@ class TocHandler extends DefaultHandler {
 	private final NavigableMap<Long, EncodedInputSpecConfig> tocEntries = new TreeMap<>();
 
 	@SuppressWarnings("squid:S2755")
-	public static CompositeSpec parse(InputStream input, long heapOffset) throws IOException, SAXException {
+	public static CompositeSpec parse(InputStream input, long heapOffset)
+			throws IOException, ParserConfigurationException, SAXException {
 		TocHandler handler = new TocHandler();
-		XMLReader reader = XMLReaderFactory.createXMLReader();
+		XMLReader reader = SAXParserFactory.newDefaultInstance().newSAXParser().getXMLReader();
 
 		reader.setEntityResolver(LocalEntityResolver.getInstance());
 		reader.setContentHandler(handler);

@@ -86,7 +86,7 @@ public class ScanSpec extends CompositeSpec {
 	}
 
 	private static StreamValueDecoder<Long> decoder(ValueStreamer streamer) {
-		return new StreamValueDecoder<Long>() {
+		return new StreamValueDecoder<>() {
 
 			private long length = 0;
 
