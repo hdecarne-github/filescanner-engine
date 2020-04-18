@@ -26,7 +26,7 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
 
 /**
- * {@linkplain FormatSpec} defining a generic byte range.
+ * {@linkplain FormatSpec} defining a generic byte range to be skipped during decoding.
  * <p>
  * The range size has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
@@ -68,7 +68,19 @@ public class SkipSpec implements FormatSpec {
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return true;
+		boolean match = false;
+
+		if (isFixedSize()) {
+			int sizeValue = this.size.get().intValue();
+
+			if (sizeValue <= buffer.remaining()) {
+				buffer.position(buffer.position() + sizeValue);
+				match = true;
+			}
+		} else {
+			match = true;
+		}
+		return match;
 	}
 
 	@Override
