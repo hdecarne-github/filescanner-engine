@@ -153,7 +153,7 @@ CATALOG_EXTENTS@HFSPLUS_DISK_IMAGE:
 IMAGE_HEADER:
 struct {
 	struct "Reserved (Boot Blocks)" {
-		range[0x400] ""
+		skip 0x400
 	}	->bigEndian()
 	struct "Volume Header" {
 		@VOLUME_HEADER
@@ -166,7 +166,7 @@ struct {
 		@VOLUME_HEADER
 	}	->bigEndian()
 	struct "Reserved (Manufacturing Block)" {
-		range[0x200] ""
+		skip 0x200
 	}	->bigEndian()
 }	->bigEndian()
 

@@ -81,13 +81,13 @@ XML_LENGTH@UDIF_FORMAT:
 RESOURCE_FORK:
 struct "Resource fork" {
 XML_PLIST@UDIF_FORMAT:
-	range[@XML_LENGTH] ""
+	range[@XML_LENGTH] "plist"
 }	->bigEndian()
 	->renderer(#resourceForkRenderer)
 
 UDIF_FORMAT:
 format_spec "Universal Disk Image" {
-	range[#imageDataSize] "image data"
+	skip #imageDataSize
 	@UDIF_TRAILER
 	decode_at @XML_OFFSET @RESOURCE_FORK
 	conditional #dataForkSpec {}

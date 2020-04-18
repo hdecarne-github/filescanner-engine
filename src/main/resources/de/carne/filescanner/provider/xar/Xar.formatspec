@@ -57,7 +57,7 @@ TOC_LENGTH@XAR_ARCHIVE:
 TOC:
 struct "toc" {
 TOC_XML@XAR_ARCHIVE:
-	range[@TOC_LENGTH] ""
+	range[@TOC_LENGTH] "toc"
 }	->bigEndian()
 	->renderer(#tocRenderer)
 	->export(#tocExportHandler)

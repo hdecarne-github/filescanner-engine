@@ -122,6 +122,7 @@ format_spec text("%s", #specialText) {
 	@TEST_SCAN
 	scan "inline scan" #scanConfig
 	range[42] "data"
+	skip 42
 }
 
 TEST_HEADER:

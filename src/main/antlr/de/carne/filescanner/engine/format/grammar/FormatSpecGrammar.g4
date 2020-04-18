@@ -41,6 +41,7 @@ Union: 'union';
 Scan: 'scan';
 Range: 'range';
 Conditional: 'conditional';
+Skip: 'skip';
 Encoded: 'encoded';
 DecodeAt: 'decode_at';
 Validate: 'validate';
@@ -178,7 +179,7 @@ anonymousStructSpec
 	;
 	
 structSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|encodedInputSpec|decodeAtSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|skipSpec|encodedInputSpec|decodeAtSpec)
 	;
 	
 arraySpec
@@ -256,6 +257,10 @@ conditionalSpec
 conditionalCompositeSpec
 	: Conditional externalReference LCBracket specReference* RCBracket
 	;
+
+skipSpec
+	: Skip numberExpression
+	;
 	
 encodedInputSpec
 	: Encoded externalReference
@@ -266,7 +271,7 @@ decodeAtSpec
 	;
 	
 attributeSpec
-	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|stringAttributeSpec|rangeSpec)
+	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|stringAttributeSpec|rangeAttributeSpec)
 	;
 
 byteAttributeSpec
@@ -309,7 +314,7 @@ stringAttributeSpec
 	: (specIdentifier (At scopeIdentifier)? Colon)? String textExpression (Apply (attributeValidateStringModifier|stringAttributeCharsetModifier|attributeFormatModifier|attributeRendererModifier))*
 	;
 
-rangeSpec
+rangeAttributeSpec
 	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket numberExpression RSBracket textExpression(Apply (attributeRendererModifier))*
 	;
 	

@@ -26,7 +26,7 @@ import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
-import de.carne.filescanner.engine.format.RangeSpec;
+import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.StyledTextRenderHandler;
 import de.carne.filescanner.engine.transfer.TransferType;
@@ -50,7 +50,7 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 	private Lazy<CompositeSpec> udifFormatSpec = resolveLazy("UDIF_FORMAT", CompositeSpec.class);
 	private Lazy<CompositeSpec> udifTrailerSpec = resolveLazy("UDIF_TRAILER", CompositeSpec.class);
 
-	private Lazy<RangeSpec> resourceForkSpec = resolveLazy("XML_PLIST", RangeSpec.class);
+	private Lazy<RangeAttributeSpec> resourceForkSpec = resolveLazy("XML_PLIST", RangeAttributeSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.udifFormatSpec.get();

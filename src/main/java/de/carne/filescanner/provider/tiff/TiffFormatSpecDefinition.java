@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.format.DecodeAtSpec;
 import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
-import de.carne.filescanner.engine.format.RangeSpec;
+import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.format.StructSpec;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
@@ -78,7 +78,7 @@ final class TiffFormatSpecDefinition extends FormatSpecDefinition {
 			StructSpec entrySpec = new StructSpec();
 
 			entrySpec.result("TIFFEntry");
-			entrySpec.add(new RangeSpec("").size(dataSize));
+			entrySpec.add(new RangeAttributeSpec("").size(dataSize));
 			resultSpec = new DecodeAtSpec(entrySpec).position(dataOffset).level(1);
 		}
 		return resultSpec;

@@ -32,7 +32,7 @@ import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.QWordSpec;
-import de.carne.filescanner.engine.format.RangeSpec;
+import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
@@ -80,7 +80,7 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	private Lazy<WordSpec> headerSize = resolveLazy("HEADER_SIZE", WordSpec.class);
 	private Lazy<QWordSpec> tocLength = resolveLazy("TOC_LENGTH", QWordSpec.class);
-	private Lazy<RangeSpec> tocXml = resolveLazy("TOC_XML", RangeSpec.class);
+	private Lazy<RangeAttributeSpec> tocXml = resolveLazy("TOC_XML", RangeAttributeSpec.class);
 
 	public CompositeSpec formatSpec() {
 		return this.xarFormatSpec.get();

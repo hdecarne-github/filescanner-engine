@@ -237,7 +237,7 @@ NUMBER_OF_SECTIONS:
 		dword "reserved3"
 	}	->size(@NUMBER_OF_SECTIONS)
 	decode_at #segment64Position:2 struct text("segment_64 [%s]", @SEGMENT_NAME) {
-		range[#segment64Size] ""
+		skip #segment64Size
 	}	->renderer(#segment64Renderer)
 		->export(#segment64Exporter)
 }
@@ -251,7 +251,7 @@ union {
 	CMD_SIZE:
 		dword "cmdsize"
 			->renderer(@SizeRenderer)
-		range[#cmdSize] ""
+		skip #cmdSize
 	}
 }
 

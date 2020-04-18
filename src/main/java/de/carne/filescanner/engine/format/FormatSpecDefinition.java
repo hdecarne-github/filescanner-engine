@@ -99,7 +99,7 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordA
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordAttributeSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
-import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RangeSpecContext;
+import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RangeAttributeSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RawSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RegexTextContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.ScanSpecContext;
@@ -111,6 +111,7 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.Sequen
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecStopBeforeModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SimpleTextContext;
+import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SkipSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SpecReferenceContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
@@ -1012,6 +1013,15 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
+	private SkipSpec loadSkipSpec(SkipSpecContext specCtx) {
+		SkipSpec spec = new SkipSpec().size(loadNumberExpression(specCtx.numberExpression()));
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
 	private EncodedInputSpec loadEncodedInputSpec(EncodedInputSpecContext specCtx) {
 		EncodedInputSpec spec = new EncodedInputSpec(
 				resolveExternalReference(specCtx.externalReference(), EncodedInputSpecConfig.class).get());
@@ -1050,7 +1060,7 @@ public abstract class FormatSpecDefinition {
 		QwordArrayAttributeSpecContext qwordArrayAttributeSpecCtx;
 		CharArrayAttributeSpecContext charArrayAttributeSpecCtx;
 		StringAttributeSpecContext stringAttributeSpecCtx;
-		RangeSpecContext rangeSpecCtx;
+		RangeAttributeSpecContext rangeAttributeSpecCtx;
 
 		if ((byteAttributeSpecCtx = specCtx.byteAttributeSpec()) != null) {
 			spec = loadByteSpec(byteAttributeSpecCtx, rootCtx);
@@ -1072,8 +1082,8 @@ public abstract class FormatSpecDefinition {
 			spec = loadCharArraySpec(charArrayAttributeSpecCtx, rootCtx);
 		} else if ((stringAttributeSpecCtx = specCtx.stringAttributeSpec()) != null) {
 			spec = loadStringSpec(stringAttributeSpecCtx, rootCtx);
-		} else if ((rangeSpecCtx = specCtx.rangeSpec()) != null) {
-			spec = loadRangeSpec(rangeSpecCtx, rootCtx);
+		} else if ((rangeAttributeSpecCtx = specCtx.rangeAttributeSpec()) != null) {
+			spec = loadRangeAttributeSpec(rangeAttributeSpecCtx, rootCtx);
 		} else {
 			throw newLoadException(specCtx, "Unexpected attribute spec");
 		}
@@ -1240,8 +1250,8 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private RangeSpec loadRangeSpec(RangeSpecContext specCtx, FormatSpecsContext rootCtx) {
-		RangeSpec spec = new RangeSpec(loadTextExpression(specCtx.textExpression()))
+	private RangeAttributeSpec loadRangeAttributeSpec(RangeAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
+		RangeAttributeSpec spec = new RangeAttributeSpec(loadTextExpression(specCtx.textExpression()))
 				.size(loadNumberExpression(specCtx.numberExpression()));
 
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.streamValueAttributeRenderer);
@@ -1468,6 +1478,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
 		AnonymousScanSpecContext anonymousScanSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
+		SkipSpecContext skipSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
 		DecodeAtSpecContext decodeAtSpecCtx;
 
@@ -1487,6 +1498,8 @@ public abstract class FormatSpecDefinition {
 			element = loadAnonymousScanSpec(anonymousScanSpecCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
 			element = loadConditionalSpec(conditionalSpecCtx, rootCtx);
+		} else if ((skipSpecCtx = elementCtx.skipSpec()) != null) {
+			element = loadSkipSpec(skipSpecCtx);
 		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
 			element = loadEncodedInputSpec(encodedInputSpecCtx);
 		} else if ((decodeAtSpecCtx = elementCtx.decodeAtSpec()) != null) {

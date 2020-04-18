@@ -18,51 +18,29 @@ package de.carne.filescanner.engine.format;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 import java.util.function.Supplier;
 
-import de.carne.filescanner.engine.FileScannerResultInputContext;
-import de.carne.filescanner.engine.StreamValue;
+import de.carne.filescanner.engine.FileScannerResultDecodeContext;
+import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.filescanner.engine.util.LongHelper;
-import de.carne.filescanner.engine.util.SizeRenderer;
 
 /**
- * {@linkplain FormatSpec} defining a generic named byte range.
+ * {@linkplain FormatSpec} defining a generic byte range.
  * <p>
  * The range size has to be static or has to be defined via a bound attribute of type {@linkplain Number}.
  */
-public class RangeSpec extends AttributeSpec<StreamValue> {
+public class SkipSpec implements FormatSpec {
 
 	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
-
-	/**
-	 * Constructs a new {@linkplain RangeSpec} instance.
-	 *
-	 * @param name the byte range's name.
-	 */
-	public RangeSpec(Supplier<String> name) {
-		super(StreamValue.class, Objects::equals, name);
-		renderer(this::sizeRenderer);
-	}
-
-	/**
-	 * Constructs a new {@linkplain RangeSpec} instance.
-	 *
-	 * @param name the byte range's name.
-	 */
-	public RangeSpec(String name) {
-		this(FinalSupplier.of(name));
-	}
 
 	/**
 	 * Sets the size (in bytes) of this byte range.
 	 *
 	 * @param sizeSupplier the size (in bytes) of this byte range.
-	 * @return the updated {@linkplain RangeSpec} instance for chaining.
+	 * @return the updated {@linkplain SkipSpec} instance for chaining.
 	 */
-	public RangeSpec size(Supplier<? extends Number> sizeSupplier) {
+	public SkipSpec size(Supplier<? extends Number> sizeSupplier) {
 		this.size = sizeSupplier;
 		return this;
 	}
@@ -71,9 +49,9 @@ public class RangeSpec extends AttributeSpec<StreamValue> {
 	 * Sets the size (in bytes) of this byte range.
 	 *
 	 * @param sizeValue the size (in bytes) of this byte range.
-	 * @return the updated {@linkplain RangeSpec} instance for chaining.
+	 * @return the updated {@linkplain SkipSpec} instance for chaining.
 	 */
-	public RangeSpec size(int sizeValue) {
+	public SkipSpec size(int sizeValue) {
 		this.size = FinalSupplier.of(sizeValue);
 		return this;
 	}
@@ -90,30 +68,17 @@ public class RangeSpec extends AttributeSpec<StreamValue> {
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		boolean match = false;
-
-		if (isFixedSize()) {
-			int sizeValue = this.size.get().intValue();
-
-			if (sizeValue <= buffer.remaining()) {
-				buffer.position(buffer.position() + sizeValue);
-				match = true;
-			}
-		} else {
-			match = true;
-		}
-		return match;
+		return true;
 	}
 
 	@Override
-	protected StreamValue decodeValue(FileScannerResultInputContext context) throws IOException {
-		long sizeValue = LongHelper.toUnsignedLong(this.size.get());
-
-		return context.streamValue(sizeValue);
+	public void decode(FileScannerResultDecodeContext context) throws IOException {
+		context.skip(this.size.get().longValue());
 	}
 
-	private void sizeRenderer(RenderOutput out, StreamValue value) throws IOException {
-		SizeRenderer.LONG_RENDERER.render(out, value.size());
+	@Override
+	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
+		context.skip(this.size.get().longValue());
 	}
 
 }
