@@ -54,41 +54,40 @@ public class ByteArraySpec extends AttributeSpec<byte[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this byte array attribute.
 	 *
-	 * @param sizeSupplier the size (in bytes) of this byte array attribute.
+	 * @param lengthSupplier the length of this byte array attribute.
 	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
-	public ByteArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.size = sizeSupplier;
+	public ByteArraySpec length(Supplier<? extends Number> lengthSupplier) {
+		this.size = lengthSupplier;
 		return this;
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this byte array attribute.
 	 *
-	 * @param sizeValue the size (in bytes) of this byte array attribute.
+	 * @param lengthValue the length of this byte array attribute.
 	 * @return the updated {@linkplain ByteArraySpec} instance for chaining.
 	 */
-	public ByteArraySpec size(int sizeValue) {
-		this.size = FinalSupplier.of(sizeValue);
+	public ByteArraySpec length(int lengthValue) {
+		this.size = FinalSupplier.of(lengthValue);
 		return this;
 	}
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !isFixedSize()
-				|| (this.size.get().intValue() <= buffer.remaining() && validateValue(decodeValue(buffer)));
+		return FormatSpecs.matches(buffer, this.size, b -> validateValue(decodeValue(b)));
 	}
 
 	@Override

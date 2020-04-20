@@ -16,18 +16,22 @@
  */
 package de.carne.filescanner.test.engine;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScanner;
@@ -40,21 +44,26 @@ import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.PlainTextRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
-import de.carne.filescanner.engine.util.CombinedRenderer;
-import de.carne.filescanner.engine.util.HtmlReportGenerator;
 import de.carne.filescanner.provider.jvm.ClassFormat;
 import de.carne.filescanner.provider.zip.ZipFormat;
 import de.carne.filescanner.test.TestFiles;
+import de.carne.test.api.io.TempDir;
+import de.carne.test.diff.Diff;
+import de.carne.test.diff.DiffResult;
+import de.carne.test.extension.TempPathExtension;
 import de.carne.text.MemoryUnitFormat;
 
 /**
  * Test {@linkplain FileScanner} class.
  */
+@ExtendWith(TempPathExtension.class)
 class FileScannerTest {
 
-	static final Log LOG = new Log();
+	private static final Log LOG = new Log();
 
-	private final Renderer systemOutRenderer = new PlainTextRenderer(new PrintWriter(System.out, true));
+	@SuppressWarnings("null")
+	@TempDir
+	Path reportDir;
 
 	private static class Status implements FileScannerStatus {
 
@@ -71,18 +80,21 @@ class FileScannerTest {
 		@Override
 		public void scanStarted(FileScanner scanner) {
 			LOG.info("scanStarted...");
+
 			this.scanStartedCount.addAndGet(1);
 		}
 
 		@Override
 		public void scanFinished(FileScanner scanner) {
 			LOG.info("scanFinished");
+
 			this.scanFinishedCount.addAndGet(1);
 		}
 
 		@Override
 		public void scanProgress(FileScanner scanner, FileScannerProgress progress) {
 			LOG.info("scanProgress");
+
 			this.scanProgressCount.addAndGet(1);
 
 			MemoryUnitFormat format = MemoryUnitFormat.getMemoryUnitInstance();
@@ -105,6 +117,7 @@ class FileScannerTest {
 		@Override
 		public void scanException(FileScanner scanner, Exception cause) {
 			LOG.info("scanException");
+
 			this.scanExceptionCount.addAndGet(1);
 		}
 
@@ -112,76 +125,75 @@ class FileScannerTest {
 
 	@Test
 	void testBmpImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.BMP_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.BMP_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testBzip2ArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.BZIP2_ARCHIVE.getPath(), Formats.all().enabledFormats(), 2);
+		runFileScanner(TestFiles.BZIP2_ARCHIVE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testGifImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.GIF_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.GIF_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testGzipArchiveFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.GZIP_TAR_ARCHIVE.getPath(),
-				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(), 1);
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats());
 	}
 
 	@Test
 	void testJpegImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.JPEG_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.JPEG_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testLzmaArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.LZMA_ARCHIVE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.LZMA_ARCHIVE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testPngImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.PNG_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.PNG_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testTiffImageFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.TIFF_IMAGE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.TIFF_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testUdifFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.I4J_INSTALLER_MACOS.getPath(),
-				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats());
 	}
 
 	@Test
 	void testWindowsExeFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS.getPath(),
-				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats());
 	}
 
 	@Test
 	void testWindows64ExeFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.I4J_INSTALLER_WINDOWS64.getPath(),
-				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats(), 1);
+				Formats.all().disable(ZipFormat.FORMAT_NAME).enabledFormats());
 	}
 
 	@Test
 	void testXarArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.XAR_ARCHIVE.getPath(), Formats.all().enabledFormats(), 1);
+		runFileScanner(TestFiles.XAR_ARCHIVE.getPath(), Formats.all().enabledFormats());
 	}
 
 	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
-		runFileScanner(TestFiles.ZIP_ARCHIVE.getPath(), Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats(),
-				1);
+		runFileScanner(TestFiles.ZIP_ARCHIVE.getPath(),
+				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats());
 	}
 
-	private Status runFileScanner(Path file, Collection<Format> formats, int resultCount)
-			throws IOException, InterruptedException {
+	private Status runFileScanner(Path file, Collection<Format> formats) throws IOException, InterruptedException {
 		Status status = new Status();
 
 		try (FileScanner fileScanner = FileScanner.scan(file, formats, status)) {
@@ -205,49 +217,47 @@ class FileScannerTest {
 			Assertions.assertEquals(100, progress.scanProgress());
 			Assertions.assertTrue(progress.scanRate() >= -1);
 
-			FileScannerResult result = fileScanner.result();
+			Path renderLog = renderResult(file, fileScanner.result());
+			DiffResult<String> diffResult = diffRenderLog(renderLog);
 
-			writeHtmlReport(file, fileScanner);
-			verifyResult(fileScanner, result);
-			renderResult(fileScanner.result());
-
-			FileScannerResult[] formatResult = result.children();
-
-			Assertions.assertEquals(resultCount, formatResult.length);
+			Assertions.assertEquals(DiffResult.lineMatch(), diffResult);
 		}
 		return status;
 	}
 
-	private void writeHtmlReport(Path file, FileScanner fileScanner) throws IOException {
-		Path htmlReportFile = Paths.get(file.toString() + ".html");
+	private Path renderResult(Path file, FileScannerResult result) throws IOException {
+		Path resultLog = this.reportDir.resolve(file.getFileName() + ".log");
 
-		try (Writer out = Files.newBufferedWriter(htmlReportFile, StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING)) {
-			HtmlReportGenerator htmlReport = new HtmlReportGenerator();
-
-			htmlReport.write(fileScanner, out);
+		try (Writer resultLogWriter = Files.newBufferedWriter(resultLog, StandardCharsets.UTF_8,
+				StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)) {
+			renderResultHelper(resultLogWriter, result);
 		}
+		return resultLog;
 	}
 
-	private void verifyResult(FileScanner fileScanner, FileScannerResult result) {
-		FileScannerResult[] resultPath = fileScanner.getResultPath(result.key());
-
-		Assertions.assertEquals(result, resultPath[resultPath.length - 1]);
-		for (FileScannerResult resultChild : result.children()) {
-			verifyResult(fileScanner, resultChild);
-		}
-	}
-
-	private void renderResult(FileScannerResult result) throws IOException, InterruptedException {
-		try (Renderer renderer = new CombinedRenderer(this.systemOutRenderer)) {
+	private void renderResultHelper(Writer resultLogWriter, FileScannerResult result) throws IOException {
+		resultLogWriter.write("// " + result.toString() + System.lineSeparator());
+		try (Renderer renderer = new PlainTextRenderer(resultLogWriter, false)) {
 			RenderOutput.render(result, renderer, 0);
-			for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
-				exportHandler.defaultFileName(result);
-			}
-			for (FileScannerResult resultChild : result.children()) {
-				renderResult(resultChild);
-			}
 		}
+		for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
+			resultLogWriter.write("// Export handler: " + exportHandler.name() + System.lineSeparator());
+		}
+		for (FileScannerResult child : result.children()) {
+			renderResultHelper(resultLogWriter, child);
+		}
+	}
+
+	private DiffResult<String> diffRenderLog(Path renderLog) throws IOException {
+		URL referenceLog = Objects.requireNonNull(getClass().getResource(renderLog.getFileName().toString()));
+		DiffResult<String> diffResult;
+
+		try (BufferedReader referenceLogReader = new BufferedReader(
+				new InputStreamReader(referenceLog.openStream(), StandardCharsets.UTF_8));
+				BufferedReader renderLogReader = Files.newBufferedReader(renderLog)) {
+			diffResult = Diff.lines(referenceLogReader, renderLogReader);
+		}
+		return diffResult;
 	}
 
 }

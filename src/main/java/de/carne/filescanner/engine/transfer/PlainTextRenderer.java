@@ -28,6 +28,7 @@ public class PlainTextRenderer implements Renderer {
 	private static final String INDENT = "    ";
 
 	private final Writer writer;
+	private final boolean autoClose;
 
 	/**
 	 * Constructs a new {@linkplain PlainTextRenderer} instance.
@@ -35,12 +36,27 @@ public class PlainTextRenderer implements Renderer {
 	 * @param writer the {@linkplain Writer} to write the rendered output into.
 	 */
 	public PlainTextRenderer(Writer writer) {
+		this(writer, true);
+	}
+
+	/**
+	 * Constructs a new {@linkplain PlainTextRenderer} instance.
+	 *
+	 * @param writer the {@linkplain Writer} to write the rendered output into.
+	 * @param autoClose whether to close the {@linkplain Writer} when this instance is closed.
+	 */
+	public PlainTextRenderer(Writer writer, boolean autoClose) {
 		this.writer = writer;
+		this.autoClose = autoClose;
 	}
 
 	@Override
 	public void close() throws IOException {
-		this.writer.close();
+		if (this.autoClose) {
+			this.writer.close();
+		} else {
+			this.writer.flush();
+		}
 	}
 
 	@Override
@@ -50,19 +66,29 @@ public class PlainTextRenderer implements Renderer {
 
 	@Override
 	public void emitText(int indent, RenderStyle style, String text, boolean lineBreak) throws IOException {
-		for (int indentCount = 0; indentCount < indent; indentCount++) {
-			this.writer.write(INDENT);
-		}
+		emitIndent(indent);
 		this.writer.write(text);
-		if (lineBreak) {
-			this.writer.write(System.lineSeparator());
-		}
+		emitLineBreak(lineBreak);
 	}
 
 	@Override
 	public void emitMediaData(int indent, RenderStyle style, TransferSource source, boolean lineBreak)
 			throws IOException {
-		// Do nothing
+		emitIndent(indent);
+		this.writer.write("[" + source.transferType().mimeType() + "]");
+		emitLineBreak(lineBreak);
+	}
+
+	private void emitIndent(int indent) throws IOException {
+		for (int indentCount = 0; indentCount < indent; indentCount++) {
+			this.writer.write(INDENT);
+		}
+	}
+
+	private void emitLineBreak(boolean lineBreak) throws IOException {
+		if (lineBreak) {
+			this.writer.write(System.lineSeparator());
+		}
 	}
 
 	@Override
