@@ -77,12 +77,12 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? (this.size.get().intValue() << 1) : 0);
+		return FormatSpecs.matchSize(this.size) << 1;
 	}
 
 	@Override

@@ -1158,7 +1158,7 @@ public abstract class FormatSpecDefinition {
 	private ByteArraySpec loadByteArraySpec(ByteArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		ByteArraySpec spec = new ByteArraySpec(loadTextExpression(specCtx.textExpression()));
 
-		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		spec.length(loadNumberExpression(specCtx.numberExpression()));
 		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
 				ByteHelper::decodeUnsignedArray);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.byteArrayAttributeFormatter);

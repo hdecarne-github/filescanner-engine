@@ -80,7 +80,7 @@ public class RangeAttributeSpec extends AttributeSpec<StreamValue> {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override

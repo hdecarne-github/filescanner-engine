@@ -77,12 +77,12 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? (this.size.get().intValue() << 2) : 0);
+		return FormatSpecs.matchSize(this.size) << 2;
 	}
 
 	@Override

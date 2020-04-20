@@ -75,7 +75,7 @@ public class CharArraySpec extends StringAttributeSpec {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override

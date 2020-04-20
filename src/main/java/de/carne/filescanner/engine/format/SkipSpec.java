@@ -58,29 +58,17 @@ public class SkipSpec implements FormatSpec {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		boolean match = false;
-
-		if (isFixedSize()) {
-			int sizeValue = this.size.get().intValue();
-
-			if (sizeValue <= buffer.remaining()) {
-				buffer.position(buffer.position() + sizeValue);
-				match = true;
-			}
-		} else {
-			match = true;
-		}
-		return match;
+		return FormatSpecs.matches(buffer, this.size);
 	}
 
 	@Override

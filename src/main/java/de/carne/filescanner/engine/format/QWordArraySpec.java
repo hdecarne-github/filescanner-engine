@@ -77,18 +77,18 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 
 	@Override
 	public boolean isFixedSize() {
-		return (this.size instanceof FinalSupplier);
+		return FormatSpecs.isFixedSize(this.size);
 	}
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? (this.size.get().intValue() << 4) : 0);
+		return FormatSpecs.matchSize(this.size) << 3;
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
 		return !isFixedSize()
-				|| ((this.size.get().intValue() << 4) <= buffer.remaining() && validateValue(decodeValue(buffer)));
+				|| ((this.size.get().intValue() << 3) <= buffer.remaining() && validateValue(decodeValue(buffer)));
 	}
 
 	@Override
