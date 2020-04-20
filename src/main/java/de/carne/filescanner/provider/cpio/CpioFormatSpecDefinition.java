@@ -26,13 +26,13 @@ import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
+import de.carne.filescanner.engine.util.Alignment;
+import de.carne.filescanner.engine.util.HexStrings;
+import de.carne.filescanner.engine.util.OctalStrings;
+import de.carne.filescanner.engine.util.PrettyFormat;
 import de.carne.filescanner.engine.util.SizeRenderer;
-import de.carne.filescanner.provider.util.Alignment;
-import de.carne.filescanner.provider.util.HexStrings;
-import de.carne.filescanner.provider.util.OctalStrings;
-import de.carne.filescanner.provider.util.PrettyFormat;
-import de.carne.filescanner.provider.util.Unix;
-import de.carne.filescanner.provider.util.UnixDateRenderer;
+import de.carne.filescanner.engine.util.Unix;
+import de.carne.filescanner.engine.util.UnixDateRenderer;
 import de.carne.util.Lazy;
 
 /**

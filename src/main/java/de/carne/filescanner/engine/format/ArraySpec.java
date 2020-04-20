@@ -27,7 +27,7 @@ import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.filescanner.provider.util.PrettyFormat;
+import de.carne.filescanner.engine.util.PrettyFormat;
 
 /**
  * Fixed number of {@linkplain FormatSpec}s.

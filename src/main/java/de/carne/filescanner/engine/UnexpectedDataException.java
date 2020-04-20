@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.Strings;
 
 /**

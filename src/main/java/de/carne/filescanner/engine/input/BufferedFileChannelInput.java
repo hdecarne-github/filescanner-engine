@@ -26,7 +26,7 @@ import java.util.Map;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.logging.Log;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.SystemProperties;
 
 /**

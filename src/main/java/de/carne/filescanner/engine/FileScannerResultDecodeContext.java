@@ -34,7 +34,7 @@ import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.Strings;
 
 /**

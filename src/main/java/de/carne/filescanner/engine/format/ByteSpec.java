@@ -20,7 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 
 /**
  * Byte (8-bit) format attribute specification.

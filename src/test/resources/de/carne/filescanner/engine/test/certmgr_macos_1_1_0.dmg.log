@@ -1,0 +1,4004 @@
+// committed:FORMAT:Universal Disk Image[0000000000000000h-000000000070c087h]
+start = 0000000000000000h
+end = 000000000070c087h
+size = 7.389.319 // 7,047 MiB
+// Export handler: Raw
+// committed:FORMAT:Data fork[0000000000000000h-000000000070b000h]
+start = 0000000000000000h
+end = 000000000070b000h
+size = 7.385.088 // 7,043 MiB
+// Export handler: Raw
+// committed:ENCODED_INPUT:whole disk (Apple_HFS : 0)[0000000000000000h-000000000070b000h]
+start = 0000000000000000h
+end = 000000000070b000h
+size = 7.385.088 // 7,043 MiB
+encoding = 'stored'
+// Export handler: Raw
+// committed:INPUT:decoded.bin[0000000000000000h-000000000070b000h]
+file = "decoded.bin"
+size = 7.385.088 // 7,043 MiB
+// Export handler: Raw
+// committed:FORMAT:HFS+ disk image[0000000000000000h-000000000070b000h]
+start = 0000000000000000h
+end = 000000000070b000h
+size = 7.385.088 // 7,043 MiB
+// Export handler: Raw
+// committed:FORMAT:Reserved (Boot Blocks)[0000000000000000h-0000000000000400h]
+start = 0000000000000000h
+end = 0000000000000400h
+size = 1.024 // 1 KiB
+// Export handler: Raw
+// committed:FORMAT:Volume Header[0000000000000400h-0000000000000600h]
+signature = 482bh // HFS Plus volume
+version = 0004h // kHFSPlusVersion
+attributes = 80000100h
+1............................... // kHFSUnusedNodeFixBit
+.0.............................. // kHFSContentProtectionBit
+................0............... // kHFSVolumeSoftwareLockBit
+..................0............. // kHFSVolumeJournaledBit
+...................0............ // kHFSCatalogNodeIDsReusedBit
+....................0........... // kHFSBootVolumeInconsistentBit
+.....................0.......... // kHFSVolumeNoCacheRequiredBit
+......................0......... // kHFSVolumeSparedBlocksBit
+.......................1........ // kHFSVolumeUnmountedBit
+........................0....... // kHFSVolumeHardwareLockBit
+lastMountedVersion = 31302e30h
+journalInfoBlock = 00000000h
+createDate = d6ed2af3h // 2018-04-06T13:47:31
+modifyDate = d6ed2af3h // 2018-04-06T13:47:31
+backupDate = d6ed2af3h // 2018-04-06T13:47:31
+checkedDate = d6ed2af3h // 2018-04-06T13:47:31
+fileCount = 30
+folderCount = 7
+blockSize = 4.096 // 4 KiB
+totalBlocks = 1.803
+freeBlocks = 0
+nextAllocation = 00000000h
+rsrcClumpSize = 4.096 // 4 KiB
+dataClumpSize = 4.096 // 4 KiB
+nextCatalogID = 00000036h
+writeCount = 1
+encodingsBitmap = 0000000000000001h
+finderInfo = { 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 8caddfd1h, 36c560fah }
+allocationFile:logicalSize = 4.096 // 4 KiB
+allocationFile:clumpSize = 4.096 // 4 KiB
+allocationFile:totalBlocks = 1
+allocationFile:extents = { 00000709h, 00000001h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+extentsFile:logicalSize = 4.096 // 4 KiB
+extentsFile:clumpSize = 4.096 // 4 KiB
+extentsFile:totalBlocks = 1
+extentsFile:extents = { 00000006h, 00000001h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+catalogFile:logicalSize = 20.480 // 20 KiB
+catalogFile:clumpSize = 4.096 // 4 KiB
+catalogFile:totalBlocks = 5
+catalogFile:extents = { 00000001h, 00000005h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+attributesFile:logicalSize = 8.192 // 8 KiB
+attributesFile:clumpSize = 4.096 // 4 KiB
+attributesFile:totalBlocks = 2
+attributesFile:extents = { 00000007h, 00000002h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+startupFile:logicalSize = 0 // 0 byte
+startupFile:clumpSize = 4.096 // 4 KiB
+startupFile:totalBlocks = 0
+startupFile:extents = { 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+// Export handler: Raw
+// committed:ENCODED_INPUT:disk image blocks[0000000000000600h-000000000070ac00h]
+start = 0000000000000600h
+end = 000000000070ac00h
+size = 7.382.528 // 7,041 MiB
+encoding = 'stored'
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/en.lproj/MainMenu.nib[0000000000000000h-0000000000001e5eh]
+file = "Certificate Manager Installer.app/Contents/Resources/en.lproj/MainMenu.nib"
+size = 7.774 // 7,592 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/en.lproj/Localizable.strings[0000000000000000h-0000000000000544h]
+file = "Certificate Manager Installer.app/Contents/Resources/en.lproj/Localizable.strings"
+size = 1.348 // 1,316 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/en.lproj/InfoPlist.strings[0000000000000000h-00000000000000ech]
+file = "Certificate Manager Installer.app/Contents/Resources/en.lproj/InfoPlist.strings"
+size = 236 // 236 byte
+// Export handler: Raw
+// committed:FORMAT:XML stream[0000000000000000h-00000000000000ech]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+<key>CFBundleName</key>
+<string>Certificate Manager Installer</string>
+</dict>
+</plist>
+// Export handler: Raw
+// Export handler: XML file
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/de.lproj/Localizable.strings[0000000000000000h-000000000000064ah]
+file = "Certificate Manager Installer.app/Contents/Resources/de.lproj/Localizable.strings"
+size = 1.610 // 1,572 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/de.lproj/InfoPlist.strings[0000000000000000h-00000000000000f8h]
+file = "Certificate Manager Installer.app/Contents/Resources/de.lproj/InfoPlist.strings"
+size = 248 // 248 byte
+// Export handler: Raw
+// committed:FORMAT:XML stream[0000000000000000h-00000000000000f8h]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+<key>CFBundleName</key>
+<string>Certificate Manager Installationsprogramm</string>
+</dict>
+</plist>
+// Export handler: Raw
+// Export handler: XML file
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/user.jar[0000000000000000h-0000000000007e16h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/user.jar"
+size = 32.278 // 31,521 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/stats.properties[0000000000000000h-0000000000000134h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/stats.properties"
+size = 308 // 308 byte
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/MessagesDefault[0000000000000000h-0000000000008390h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/MessagesDefault"
+size = 33.680 // 32,891 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/libi4jinst.dylib[0000000000000000h-0000000000016bb4h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/libi4jinst.dylib"
+size = 93.108 // 90,926 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/launchers.xml[0000000000000000h-0000000000000104h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/launchers.xml"
+size = 260 // 260 byte
+// Export handler: Raw
+// committed:FORMAT:XML stream[0000000000000000h-0000000000000104h]
+<?xml version="1.0" encoding="UTF-8"?>
+<launcherIntegrations>
+  <launcher id="60" checkUpdater="false">
+    <application id="440" launchMode="startupSync" launchInNewProcess="true" launchSchedule="updateSchedule" />
+  </launcher>
+</launcherIntegrations>
+// Export handler: Raw
+// Export handler: XML file
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/install4j[0000000000000000h-0000000000007740h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/install4j"
+size = 30.528 // 29,812 KiB
+// Export handler: Raw
+// committed:FORMAT:Java class file[0000000000000000h-0000000000007740h]
+start = 0000000000000000h
+end = 0000000000007740h
+size = 30.528 // 29,812 KiB
+// Export handler: Java class file
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4jruntime.jar[0000000000000000h-00000000001b6ad4h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4jruntime.jar"
+size = 1.796.820 // 1,714 MiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000000df14h-000000000000e985h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000000df14h-000000000000df1ch]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000000df1ch-000000000000df35h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000000df35h-000000000000df6bh]
+Length = 42 // 42 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 42 byte
+CRC = 55e446b2h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[000000000000df6bh-000000000000df7eh]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = 3e6259cfh
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000000df7eh-000000000000df93h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = 42ac3498h
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[000000000000df93h-000000000000dfa3h]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000000dfa3h-000000000000e979h]
+Length = 2.506 // 2,447 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 2,447 KiB
+CRC = d10f0512h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000000e979h-000000000000e985h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001740e9h-0000000000174471h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001740e9h-00000000001740f1h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001740f1h-000000000017410ah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017410ah-0000000000174465h]
+Length = 847 // 847 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 847 byte
+CRC = d58988ceh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000174465h-0000000000174471h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001744e3h-0000000000174a27h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001744e3h-00000000001744ebh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001744ebh-0000000000174504h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000174504h-00000000001749ebh]
+Length = 1.243 // 1,214 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,214 KiB
+CRC = 3529606eh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[00000000001749ebh-0000000000174a1bh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000174a1bh-0000000000174a27h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000174ca9h-000000000017532ch]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000174ca9h-0000000000174cb1h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000174cb1h-0000000000174ccah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000174ccah-0000000000175320h]
+Length = 1.610 // 1,572 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,572 KiB
+CRC = 4c4d53c0h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000175320h-000000000017532ch]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017539dh-00000000001758feh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017539dh-00000000001753a5h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001753a5h-00000000001753beh]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[00000000001753beh-00000000001753ceh]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[00000000001753ceh-00000000001753e3h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = 15284a80h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[00000000001753e3h-0000000000175413h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000175413h-0000000000175438h]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 4469aff5h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000175438h-00000000001758f2h]
+Length = 1.198 // 1,17 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,17 KiB
+CRC = 81f210cch
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000001758f2h-00000000001758feh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000175970h-0000000000175d2bh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000175970h-0000000000175978h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000175978h-0000000000175991h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 24
+Height = 24
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = e0773df8h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000175991h-0000000000175cefh]
+Length = 850 // 850 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 850 byte
+CRC = ac2b1ac8h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000175cefh-0000000000175d1fh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000175d1fh-0000000000175d2bh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000175d94h-0000000000176200h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000175d94h-0000000000175d9ch]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000175d9ch-0000000000175db5h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 28
+Height = 28
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 720ddf94h
+// Export handler: Raw
+// committed:FORMAT:sBIT chunk[0000000000175db5h-0000000000175dc5h]
+Length = 4 // 4 byte
+Chunk Type = 73424954h
+Chunk Data = { ... } // 4 byte
+CRC = 7c086488h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[0000000000175dc5h-0000000000175ddah]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = 4f891cd7h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000175ddah-0000000000175dffh]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 9bee3c1ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000175dffh-0000000000175e1eh]
+Length = 19 // 19 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 19 byte
+CRC = f1be9770h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000175e1eh-00000000001761f4h]
+Length = 970 // 970 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 970 byte
+CRC = 5c7667b8h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000001761f4h-0000000000176200h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000176270h-0000000000176500h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000176270h-0000000000176278h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000176278h-0000000000176291h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000176291h-00000000001764c4h]
+Length = 551 // 551 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 551 byte
+CRC = 87fa4823h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[00000000001764c4h-00000000001764f4h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000001764f4h-0000000000176500h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000176570h-00000000001767ddh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000176570h-0000000000176578h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000176578h-0000000000176591h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000176591h-00000000001765c1h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[00000000001765c1h-00000000001765d4h]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = 4924b9f6h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[00000000001765d4h-00000000001765e9h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = d2dd7efch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[00000000001765e9h-00000000001765f9h]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000001765f9h-00000000001767d1h]
+Length = 460 // 460 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 460 byte
+CRC = b7eb20bbh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000001767d1h-00000000001767ddh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017684fh-0000000000176a74h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017684fh-0000000000176857h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000176857h-0000000000176870h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000176870h-0000000000176a38h]
+Length = 444 // 444 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 444 byte
+CRC = 393ddfach
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000176a38h-0000000000176a68h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000176a68h-0000000000176a74h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000176ae7h-000000000017702bh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000176ae7h-0000000000176aefh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000176aefh-0000000000176b08h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000176b08h-0000000000176fefh]
+Length = 1.243 // 1,214 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,214 KiB
+CRC = 3529606eh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000176fefh-000000000017701fh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017701fh-000000000017702bh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001770a8h-0000000000177388h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001770a8h-00000000001770b0h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001770b0h-00000000001770c9h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000001770c9h-000000000017737ch]
+Length = 679 // 679 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 679 byte
+CRC = d2e1715ch
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017737ch-0000000000177388h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001773f3h-00000000001776f5h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001773f3h-00000000001773fbh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001773fbh-0000000000177414h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000177414h-00000000001776b9h]
+Length = 665 // 665 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 665 byte
+CRC = e7b116fah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[00000000001776b9h-00000000001776e9h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000001776e9h-00000000001776f5h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001789d9h-0000000000178d84h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001789d9h-00000000001789e1h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001789e1h-00000000001789fah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000001789fah-0000000000178d48h]
+Length = 834 // 834 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 834 byte
+CRC = 59f32dcah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000178d48h-0000000000178d78h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000178d78h-0000000000178d84h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000001797e1h-0000000000179adfh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000001797e1h-00000000001797e9h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000001797e9h-0000000000179802h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000179802h-0000000000179832h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[0000000000179832h-0000000000179845h]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = 3e24e4a4h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[0000000000179845h-000000000017985ah]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = d2dd7efch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[000000000017985ah-000000000017986ah]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017986ah-0000000000179ad3h]
+Length = 605 // 605 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 605 byte
+CRC = 7eb24b28h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000179ad3h-0000000000179adfh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017a4b9h-000000000017a99dh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017a4b9h-000000000017a4c1h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017a4c1h-000000000017a4dah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 48
+Height = 48
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 5702f987h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017a4dah-000000000017a961h]
+Length = 1.147 // 1,12 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,12 KiB
+CRC = 421589b0h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017a961h-000000000017a991h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017a991h-000000000017a99dh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017aa05h-000000000017afe1h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017aa05h-000000000017aa0dh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017aa0dh-000000000017aa26h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017aa26h-000000000017afa5h]
+Length = 1.395 // 1,362 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,362 KiB
+CRC = 8939fb6bh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017afa5h-000000000017afd5h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017afd5h-000000000017afe1h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017b9f2h-000000000017bd9dh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017b9f2h-000000000017b9fah]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017b9fah-000000000017ba13h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017ba13h-000000000017bd61h]
+Length = 834 // 834 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 834 byte
+CRC = 59f32dcah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017bd61h-000000000017bd91h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017bd91h-000000000017bd9dh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017be09h-000000000017bf79h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017be09h-000000000017be11h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017be11h-000000000017be2ah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017be2ah-000000000017bf6dh]
+Length = 311 // 311 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 311 byte
+CRC = df17da50h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017bf6dh-000000000017bf79h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017bfe4h-000000000017c2bbh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017bfe4h-000000000017bfech]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017bfech-000000000017c005h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017c005h-000000000017c035h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[000000000017c035h-000000000017c048h]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = 1d933425h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017c048h-000000000017c05dh]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = d2dd7efch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[000000000017c05dh-000000000017c06dh]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017c06dh-000000000017c2afh]
+Length = 566 // 566 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 566 byte
+CRC = 21d5b3afh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017c2afh-000000000017c2bbh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017c321h-000000000017c5f0h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017c321h-000000000017c329h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017c329h-000000000017c342h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:sBIT chunk[000000000017c342h-000000000017c352h]
+Length = 4 // 4 byte
+Chunk Type = 73424954h
+Chunk Data = { ... } // 4 byte
+CRC = 7c086488h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017c352h-000000000017c367h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = f1a2dc43h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017c367h-000000000017c38ch]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 9bee3c1ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017c38ch-000000000017c3abh]
+Length = 19 // 19 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 19 byte
+CRC = f1be9770h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017c3abh-000000000017c5e4h]
+Length = 557 // 557 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 557 byte
+CRC = 60ec2f01h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017c5e4h-000000000017c5f0h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017c65fh-000000000017c831h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017c65fh-000000000017c667h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017c667h-000000000017c680h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017c680h-000000000017c825h]
+Length = 409 // 409 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 409 byte
+CRC = ba17c8f6h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017c825h-000000000017c831h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017c89fh-000000000017cd7ah]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017c89fh-000000000017c8a7h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017c8a7h-000000000017c8c0h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017c8c0h-000000000017cd3eh]
+Length = 1.138 // 1,111 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,111 KiB
+CRC = 370eb305h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017cd3eh-000000000017cd6eh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017cd6eh-000000000017cd7ah]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017cddfh-000000000017d05ah]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017cddfh-000000000017cde7h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017cde7h-000000000017ce00h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017ce00h-000000000017d01eh]
+Length = 530 // 530 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 530 byte
+CRC = 928fc019h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017d01eh-000000000017d04eh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017d04eh-000000000017d05ah]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017d0d5h-000000000017d437h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017d0d5h-000000000017d0ddh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017d0ddh-000000000017d0f6h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017d0f6h-000000000017d126h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[000000000017d126h-000000000017d139h]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = f4965b59h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017d139h-000000000017d14eh]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = d2dd7efch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[000000000017d14eh-000000000017d15eh]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017d15eh-000000000017d42bh]
+Length = 705 // 705 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 705 byte
+CRC = 69b406f0h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017d42bh-000000000017d437h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017d4a6h-000000000017d79ch]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017d4a6h-000000000017d4aeh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017d4aeh-000000000017d4c7h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017d4c7h-000000000017d790h]
+Length = 701 // 701 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 701 byte
+CRC = 84c01e4ah
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017d790h-000000000017d79ch]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017d808h-000000000017e00bh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017d808h-000000000017d810h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017d810h-000000000017d829h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:sBIT chunk[000000000017d829h-000000000017d839h]
+Length = 4 // 4 byte
+Chunk Type = 73424954h
+Chunk Data = { ... } // 4 byte
+CRC = 7c086488h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017d839h-000000000017d84eh]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = fa5ca672h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017d84eh-000000000017d873h]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 9bee3c1ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017d873h-000000000017d891h]
+Length = 18 // 18 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 18 byte
+CRC = 9b006fe7h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017d891h-000000000017dfffh]
+Length = 1.890 // 1,846 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,846 KiB
+CRC = 46d660eah
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017dfffh-000000000017e00bh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017e074h-000000000017e54eh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017e074h-000000000017e07ch]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017e07ch-000000000017e095h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:sBIT chunk[000000000017e095h-000000000017e0a5h]
+Length = 4 // 4 byte
+Chunk Type = 73424954h
+Chunk Data = { ... } // 4 byte
+CRC = 7c086488h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017e0a5h-000000000017e0bah]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = ddea836ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017e0bah-000000000017e0dfh]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 9bee3c1ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017e0dfh-000000000017e0feh]
+Length = 19 // 19 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 19 byte
+CRC = f1be9770h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017e0feh-000000000017e542h]
+Length = 1.080 // 1,055 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,055 KiB
+CRC = db20f368h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017e542h-000000000017e54eh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017e5cch-000000000017ec69h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017e5cch-000000000017e5d4h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017e5d4h-000000000017e5edh]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017e5edh-000000000017ec2dh]
+Length = 1.588 // 1,551 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,551 KiB
+CRC = e254b84eh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017ec2dh-000000000017ec5dh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017ec5dh-000000000017ec69h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017eccfh-000000000017ef57h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017eccfh-000000000017ecd7h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017ecd7h-000000000017ecf0h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 14
+Height = 14
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1f482dd1h
+// Export handler: Raw
+// committed:FORMAT:sBIT chunk[000000000017ecf0h-000000000017ed00h]
+Length = 4 // 4 byte
+Chunk Type = 73424954h
+Chunk Data = { ... } // 4 byte
+CRC = 7c086488h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017ed00h-000000000017ed15h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = 552b90bdh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017ed15h-000000000017ed3ah]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 9bee3c1ah
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017ed3ah-000000000017ed59h]
+Length = 19 // 19 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 19 byte
+CRC = f1be9770h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017ed59h-000000000017ef4bh]
+Length = 486 // 486 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 486 byte
+CRC = da6657e9h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017ef4bh-000000000017ef57h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017efc4h-000000000017f556h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017efc4h-000000000017efcch]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017efcch-000000000017efe5h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017efe5h-000000000017f51ah]
+Length = 1.321 // 1,29 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,29 KiB
+CRC = 99f5daf9h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017f51ah-000000000017f54ah]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017f54ah-000000000017f556h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017f5c5h-000000000017fb1eh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017f5c5h-000000000017f5cdh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017f5cdh-000000000017f5e6h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[000000000017f5e6h-000000000017f5f6h]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[000000000017f5f6h-000000000017f60bh]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = 15284a80h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017f60bh-000000000017f63bh]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017f63bh-000000000017f660h]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 4469aff5h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017f660h-000000000017fb12h]
+Length = 1.190 // 1,162 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,162 KiB
+CRC = 8cdcda1dh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017fb12h-000000000017fb1eh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[000000000017fb8ch-000000000017ff0eh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[000000000017fb8ch-000000000017fb94h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[000000000017fb94h-000000000017fbadh]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000017fbadh-000000000017fed2h]
+Length = 793 // 793 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 793 byte
+CRC = a86f40d6h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[000000000017fed2h-000000000017ff02h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[000000000017ff02h-000000000017ff0eh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4jparams.conf[0000000000000000h-000000000001904bh]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4jparams.conf"
+size = 102.475 // 100,073 KiB
+// Export handler: Raw
+// committed:FORMAT:XML stream[0000000000000000h-000000000001904bh]
+<?xml version="1.0" encoding="UTF-8"?>
+<config install4jVersion="7.0.4" install4jBuild="7124" type="macos" archive="false" bitness="undefined">
+  <general applicationName="Certificate Manager" applicationVersion="1.1.0" mediaSetId="494" applicationId="6863-0001-6800-2736" status="LCOK" mediaName="certmgr_macos_1_1_0" jreVersion="" minJavaVersion="1.8" publisherName="" publisherURL="http://certmgr.carne.de" jreShared="false" lzmaCompression="false" pack200Compression="false" installerType="1" addOnAppId="" suggestPreviousLocations="true" uninstallerFilename="Certificate Manager Uninstaller" uninstallerDirectory="." defaultInstallationDirectory="{appdir}" privilegedInstaller="true" />
+  <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
+    <variable id="en" name="English" messageFile="i4j_extf_0_4rb2g5.utf8" customLocalizationFile="" />
+    <variable id="de" name="German" messageFile="i4j_extf_1_4rb2g5.utf8" customLocalizationFile="" />
+  </languages>
+  <compilerVariables>
+    <variable name="i4jProjectName" value="certmgr" />
+    <variable name="i4jProjectVersion" value="1.1.0" />
+    <variable name="i4jProjectDescription" value="X.509 Certificate Management Application" />
+    <variable name="i4jProjectFullName" value="Certificate Manager" />
+    <variable name="i4lProjectCopyright" value="Copyright © 2015-2018 Holger de Carne and contributors, All Rights Reserved." />
+    <variable name="i4jProjectBaseDir" value="/Users/holger/Desktop/Projekte/github.com/certmgr" />
+    <variable name="i4jProjectBuildDir" value="/Users/holger/Desktop/Projekte/github.com/certmgr/build" />
+    <variable name="i4jProjectUrl" value="http://certmgr.carne.de" />
+    <variable name="sys.version" value="1.1.0" />
+    <variable name="sys.shortName" value="certmgr" />
+    <variable name="sys.fullName" value="Certificate Manager" />
+    <variable name="sys.publisher" value="" />
+    <variable name="sys.publisherUrl" value="http://certmgr.carne.de" />
+    <variable name="sys.setName" value="macOS Single Bundle" />
+    <variable name="sys.platform" value="macos" />
+    <variable name="sys.languageId" value="en" />
+    <variable name="sys.withJre" value="" />
+    <variable name="sys.date" value="20180406" />
+    <variable name="sys.time" value="154721" />
+    <variable name="sys.timestamp" value="1523022441109" />
+    <variable name="sys.javaMinVersion" value="1.8" />
+    <variable name="sys.javaMaxVersion" value="" />
+    <variable name="sys.install4jHome" value="/Applications/install4j.app/Contents/Resources/app" />
+    <variable name="sys.applicationId" value="6863-0001-6800-2736" />
+    <variable name="sys.updatesUrl" value="https://www.carne.de/download/certmgr/updates.xml" />
+    <variable name="sys.fileSeparator" value="/" />
+    <variable name="sys.pathlistSeparator" value=":" />
+  </compilerVariables>
+  <customCode />
+  <styles>
+    <style id="35" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.styles.FormStyle" />
+      </java>
+      <formComponents>
+        <formComponent id="36" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" resetInitOnPrevious="false">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.styles.NestedStyleComponent">
+              <void property="styleId">
+                <string>48</string>
+              </void>
+            </object>
+          </java>
+        </formComponent>
+        <group id="37" customizedId="" idNamespace="">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" />
+          </java>
+          <beans>
+            <formComponent id="38" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="10" insetsLeft="20" insetsBottom="10" insetsRight="20" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.ContentComponent" />
+              </java>
+            </formComponent>
+            <formComponent id="39" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="0" insetsLeft="5" insetsBottom="0" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.SeparatorComponent">
+                  <void property="enabledTitleText">
+                    <boolean>false</boolean>
+                  </void>
+                  <void property="labelText">
+                    <string>install4j</string>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+            <formComponent id="40" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.NestedStyleComponent">
+                  <void property="styleId">
+                    <string>52</string>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+          </beans>
+        </group>
+      </formComponents>
+    </style>
+    <style id="41" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.styles.FormStyle" />
+      </java>
+      <formComponents>
+        <group id="42" customizedId="" idNamespace="">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+              <void property="backgroundColor">
+                <object class="java.awt.Color">
+                  <int>255</int>
+                  <int>255</int>
+                  <int>255</int>
+                  <int>255</int>
+                </object>
+              </void>
+              <void property="borderSides">
+                <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                  <void property="bottom">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
+              </void>
+              <void property="imageEdgeBackgroundColor">
+                <object class="java.awt.Color">
+                  <int>25</int>
+                  <int>143</int>
+                  <int>220</int>
+                  <int>255</int>
+                </object>
+              </void>
+              <void property="imageEdgeBorder">
+                <boolean>true</boolean>
+              </void>
+              <void property="imageFile">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>i4j_extf_7_4rb2g5_18gg8kx.png</string>
+                </object>
+              </void>
+              <void property="insets">
+                <object class="java.awt.Insets">
+                  <int>5</int>
+                  <int>10</int>
+                  <int>10</int>
+                  <int>10</int>
+                </object>
+              </void>
+            </object>
+          </java>
+          <beans>
+            <formComponent id="43" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="0" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.ScreenTitleComponent">
+                  <void property="labelFontSizePercent">
+                    <int>130</int>
+                  </void>
+                  <void property="labelFontStyle">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.runtime.beans.formcomponents.FontStyle</class>
+                      <string>BOLD</string>
+                    </object>
+                  </void>
+                  <void property="labelFontType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.runtime.beans.formcomponents.FontType</class>
+                      <string>DERIVED</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+            <formComponent id="44" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.SeparatorComponent" />
+              </java>
+            </formComponent>
+            <formComponent id="45" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.ContentComponent" />
+              </java>
+            </formComponent>
+          </beans>
+        </group>
+        <formComponent id="46" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="0" insetsRight="0" resetInitOnPrevious="false">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.styles.NestedStyleComponent">
+              <void property="styleId">
+                <string>52</string>
+              </void>
+            </object>
+          </java>
+        </formComponent>
+      </formComponents>
+    </style>
+    <style id="48" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.styles.FormStyle">
+          <void property="fillVertical">
+            <boolean>false</boolean>
+          </void>
+          <void property="standalone">
+            <boolean>false</boolean>
+          </void>
+          <void property="verticalAnchor">
+            <object class="java.lang.Enum" method="valueOf">
+              <class>com.install4j.api.beans.Anchor</class>
+              <string>NORTH</string>
+            </object>
+          </void>
+        </object>
+      </java>
+      <formComponents>
+        <group id="49" customizedId="" idNamespace="">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.groups.VerticalFormComponentGroup">
+              <void property="backgroundColor">
+                <object class="java.awt.Color">
+                  <int>255</int>
+                  <int>255</int>
+                  <int>255</int>
+                  <int>255</int>
+                </object>
+              </void>
+              <void property="borderSides">
+                <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                  <void property="bottom">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
+              </void>
+              <void property="imageAnchor">
+                <object class="java.lang.Enum" method="valueOf">
+                  <class>com.install4j.api.beans.Anchor</class>
+                  <string>NORTHEAST</string>
+                </object>
+              </void>
+              <void property="imageEdgeBorderWidth">
+                <int>2</int>
+              </void>
+              <void property="imageFile">
+                <object class="com.install4j.api.beans.ExternalFile">
+                  <string>icon:${installer:sys.installerApplicationMode}_header.png</string>
+                </object>
+              </void>
+              <void property="imageInsets">
+                <object class="java.awt.Insets">
+                  <int>0</int>
+                  <int>5</int>
+                  <int>1</int>
+                  <int>1</int>
+                </object>
+              </void>
+              <void property="insets">
+                <object class="java.awt.Insets">
+                  <int>0</int>
+                  <int>20</int>
+                  <int>0</int>
+                  <int>10</int>
+                </object>
+              </void>
+            </object>
+          </java>
+          <beans>
+            <formComponent id="50" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.ScreenTitleComponent">
+                  <void property="labelFontStyle">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.runtime.beans.formcomponents.FontStyle</class>
+                      <string>BOLD</string>
+                    </object>
+                  </void>
+                  <void property="labelFontType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.runtime.beans.formcomponents.FontType</class>
+                      <string>DERIVED</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+            <formComponent id="51" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="8" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.ScreenTitleComponent">
+                  <void property="titleType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.runtime.beans.styles.TitleType</class>
+                      <string>SUB_TITLE</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+          </beans>
+        </group>
+      </formComponents>
+    </style>
+    <style id="52" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.styles.FormStyle">
+          <void property="fillVertical">
+            <boolean>false</boolean>
+          </void>
+          <void property="standalone">
+            <boolean>false</boolean>
+          </void>
+          <void property="verticalAnchor">
+            <object class="java.lang.Enum" method="valueOf">
+              <class>com.install4j.api.beans.Anchor</class>
+              <string>SOUTH</string>
+            </object>
+          </void>
+        </object>
+      </java>
+      <formComponents>
+        <group id="53" customizedId="" idNamespace="">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.groups.HorizontalFormComponentGroup">
+              <void property="alignFirstLabel">
+                <boolean>false</boolean>
+              </void>
+              <void property="insets">
+                <object class="java.awt.Insets">
+                  <int>3</int>
+                  <int>5</int>
+                  <int>8</int>
+                  <int>5</int>
+                </object>
+              </void>
+            </object>
+          </java>
+          <beans>
+            <formComponent id="54" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.SpringComponent" />
+              </java>
+            </formComponent>
+            <formComponent id="55" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.StandardControlButtonComponent">
+                  <void property="buttonText">
+                    <string>&lt; ${i18n:ButtonBack}</string>
+                  </void>
+                  <void property="controlButtonType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.api.context.ControlButtonType</class>
+                      <string>PREVIOUS</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+            <formComponent id="56" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.StandardControlButtonComponent">
+                  <void property="buttonText">
+                    <string>${i18n:ButtonNext} &gt;</string>
+                  </void>
+                  <void property="controlButtonType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.api.context.ControlButtonType</class>
+                      <string>NEXT</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+            <formComponent id="57" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="5" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.styles.StandardControlButtonComponent">
+                  <void property="buttonText">
+                    <string>${i18n:ButtonCancel}</string>
+                  </void>
+                  <void property="controlButtonType">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.api.context.ControlButtonType</class>
+                      <string>CANCEL</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+            </formComponent>
+          </beans>
+        </group>
+      </formComponents>
+    </style>
+  </styles>
+  <applications>
+    <application id="installer" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.applications.InstallerApplication" />
+      </java>
+      <variables />
+      <screens>
+        <screen id="1" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+          </java>
+          <actions>
+            <action id="22" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" />
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents />
+        </screen>
+        <screen id="2" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="41">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.WelcomeScreen" />
+          </java>
+          <actions>
+            <action id="7" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_83" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="true" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction">
+                  <void property="excludedVariables">
+                    <array class="java.lang.String" length="1">
+                      <void index="0">
+                        <string>sys.installationDir</string>
+                      </void>
+                    </array>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents>
+            <formComponent id="3" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_84" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${form:welcomeMessage}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="4" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
+                  <void property="consoleScript">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>com.install4j.script.I4jScript_Internal_85</string>
+                      </void>
+                    </object>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="5" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.UpdateAlertComponent" />
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="6" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="20" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${i18n:ClickNext}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="8" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_86" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" />
+          </java>
+          <actions>
+            <action id="11" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_87" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="true" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction">
+                  <void property="excludedVariables">
+                    <array class="java.lang.String" length="1">
+                      <void index="0">
+                        <string>sys.installationDir</string>
+                      </void>
+                    </array>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents>
+            <formComponent id="9" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="25" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${i18n:SelectDirLabel(Certificate Manager)}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="10" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.InstallationDirectoryChooserComponent">
+                  <void property="requestFocus">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="12" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.ComponentsScreen" />
+          </java>
+          <actions />
+          <formComponents>
+            <formComponent id="13" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_88" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${i18n:SelectComponentsLabel2}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="14" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.ComponentSelectorComponent">
+                  <void property="fillVertical">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="15" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="true" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.InstallationScreen" />
+          </java>
+          <actions>
+            <action id="757" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.UninstallPreviousAction" />
+              </java>
+              <actionLists />
+            </action>
+            <action id="17" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="2" errorMessage="${i18n:FileCorrupted}" elevate="true">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.InstallFilesAction" />
+              </java>
+              <actionLists />
+            </action>
+            <action id="18" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_89" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="true">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                  <void property="uninstallerMenuName">
+                    <string>${i18n:UninstallerMenuEntry(Certificate Manager)}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+            <action id="19" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="true">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction">
+                  <void property="itemName">
+                    <string>Certificate Manager 1.1.0</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents>
+            <formComponent id="16" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.ProgressComponent">
+                  <void property="initialStatusMessage">
+                    <string>${i18n:WizardPreparing}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="20" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="true" wizardIndexChangeType="1" wizardIndexKey="" styleId="41">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.FinishedScreen" />
+          </java>
+          <actions>
+            <action id="627" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_90" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction">
+                  <void property="launcherId">
+                    <string>60</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents>
+            <formComponent id="21" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="10" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${form:finishedMessage}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="497" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.UpdateScheduleSelectorComponent">
+                  <void property="initialUpdateSchedule">
+                    <object class="java.lang.Enum" method="valueOf">
+                      <class>com.install4j.api.update.UpdateSchedule</class>
+                      <string>MONTHLY</string>
+                    </object>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="628" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                  <void property="checkboxText">
+                    <string>${i18n:RunEntryExec("Certificate Manager")}</string>
+                  </void>
+                  <void property="initiallySelected">
+                    <boolean>true</boolean>
+                  </void>
+                  <void property="variableName">
+                    <string>executeLauncherAction</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+      </screens>
+    </application>
+    <application id="uninstaller" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.applications.UninstallerApplication">
+          <void property="customMacosExecutableName">
+            <string>${i18n:UninstallerMenuEntry(Certificate Manager)}</string>
+          </void>
+          <void property="useCustomMacosExecutableName">
+            <boolean>true</boolean>
+          </void>
+        </object>
+      </java>
+      <variables />
+      <screens>
+        <screen id="23" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+          </java>
+          <actions>
+            <action id="33" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" />
+              </java>
+              <actionLists />
+            </action>
+            <action id="34" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" />
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents />
+        </screen>
+        <screen id="24" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="41">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
+          </java>
+          <actions />
+          <formComponents>
+            <formComponent id="25" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_91" insetsTop="3" insetsLeft="0" insetsBottom="10" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${form:welcomeMessage}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+            <formComponent id="26" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
+                  <void property="consoleScript">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>com.install4j.script.I4jScript_Internal_92</string>
+                      </void>
+                    </object>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="27" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.UninstallationScreen" />
+          </java>
+          <actions>
+            <action id="29" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" multiExec="false" cancelOnFail="1" errorMessage="" elevate="true">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.UninstallFilesAction" />
+              </java>
+              <actionLists />
+            </action>
+          </actions>
+          <formComponents>
+            <formComponent id="28" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.ProgressComponent">
+                  <void property="initialStatusMessage">
+                    <string>${i18n:UninstallerPreparing}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+        <screen id="32" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="true" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.UninstallFailureScreen" />
+          </java>
+          <actions />
+          <formComponents />
+        </screen>
+        <screen id="30" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="true" wizardIndexChangeType="1" wizardIndexKey="" styleId="41">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
+          </java>
+          <actions />
+          <formComponents>
+            <formComponent id="31" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="10" insetsRight="0" resetInitOnPrevious="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                  <void property="labelText">
+                    <string>${form:successMessage}</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </formComponent>
+          </formComponents>
+        </screen>
+      </screens>
+    </application>
+    <application id="440" customizedId="" idNamespace="">
+      <java class="java.beans.XMLDecoder">
+        <object class="com.install4j.runtime.beans.applications.CustomApplication" id="CustomApplication0">
+          <void property="customIconImageFiles">
+            <void method="add">
+              <object class="com.install4j.api.beans.ExternalFile">
+                <string>i4j_extf_2_4rb2g5_x7nby6.png</string>
+              </object>
+            </void>
+            <void method="add">
+              <object class="com.install4j.api.beans.ExternalFile">
+                <string>i4j_extf_3_4rb2g5_vd2dea.png</string>
+              </object>
+            </void>
+            <void method="add">
+              <object class="com.install4j.api.beans.ExternalFile">
+                <string>i4j_extf_4_4rb2g5_un9apv.png</string>
+              </object>
+            </void>
+            <void method="add">
+              <object class="com.install4j.api.beans.ExternalFile">
+                <string>i4j_extf_5_4rb2g5_1xth8wx.png</string>
+              </object>
+            </void>
+            <void method="add">
+              <object class="com.install4j.api.beans.ExternalFile">
+                <string>i4j_extf_6_4rb2g5_259ij1.png</string>
+              </object>
+            </void>
+          </void>
+          <void property="executableName">
+            <string>Certificate Manager Updater</string>
+          </void>
+          <void property="useCustomIcon">
+            <boolean>true</boolean>
+          </void>
+          <void property="windowTitle">
+            <string>${i18n:updater.WindowTitle("Certificate Manager")}</string>
+          </void>
+        </object>
+      </java>
+      <variables />
+      <screens>
+        <screen id="441" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="0" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+          </java>
+          <actions>
+            <action id="484" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="2" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.update.CheckForUpdateAction">
+                  <void property="showError">
+                    <boolean>false</boolean>
+                  </void>
+                  <void property="url">
+                    <string>https://www.carne.de/download/certmgr/updates.xml</string>
+                  </void>
+                  <void property="variable">
+                    <string>updateDescriptor</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+            <action id="485" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="2" errorMessage="" elevate="false">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                  <void property="failIfNull">
+                    <boolean>true</boolean>
+                  </void>
+                  <void property="script">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>com.install4j.script.I4jScript_Internal_93</string>
+                      </void>
+                    </object>
+                  </void>
+                  <void property="variableName">
+                    <string>updateDescriptorEntry</string>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+            </action>
+            <group id="486" customizedId="" idNamespace="">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.groups.ActionGroup">
+                  <void property="conditionExpression">
+                    <object class="com.install4j.api.beans.ScriptProperty">
+                      <void property="value">
+                        <string>com.install4j.script.I4jScript_Internal_94</string>
+                      </void>
+                    </object>
+                  </void>
+                </object>
+              </java>
+              <actionLists />
+              <beans>
+                <action id="487" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_95</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterNewVersion</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="488" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_96</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterDownloadSize</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="489" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_97</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterComment</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="490" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_98</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterDownloadUrl</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="491" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_99</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>isArchive</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="492" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_100</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>isDmg</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+              </beans>
+            </group>
+          </actions>
+          <formComponents />
+        </screen>
+        <group id="442" customizedId="" idNamespace="">
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.groups.ScreenGroup">
+              <void property="conditionExpression">
+                <object class="com.install4j.api.beans.ScriptProperty">
+                  <void property="value">
+                    <string>com.install4j.script.I4jScript_Internal_101</string>
+                  </void>
+                </object>
+              </void>
+            </object>
+          </java>
+          <beans>
+            <screen id="443" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="subTitle">
+                    <string>${i18n:updater.NewVersionAvailableSubtitle("Certificate Manager")}</string>
+                  </void>
+                  <void property="title">
+                    <string>${i18n:updater.NewVersionAvailableTitle}</string>
+                  </void>
+                </object>
+              </java>
+              <actions />
+              <formComponents>
+                <formComponent id="444" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.KeyValuePairComponent">
+                      <void property="labelText">
+                        <string>${i18n:updater.CurrentVersionLabel}</string>
+                      </void>
+                      <void property="valueLabelColor">
+                        <object class="java.awt.Color">
+                          <int>128</int>
+                          <int>0</int>
+                          <int>0</int>
+                          <int>255</int>
+                        </object>
+                      </void>
+                      <void property="valueLabelFontStyle">
+                        <object class="java.lang.Enum" method="valueOf">
+                          <class>com.install4j.runtime.beans.formcomponents.FontStyle</class>
+                          <string>BOLD</string>
+                        </object>
+                      </void>
+                      <void property="valueLabelFontType">
+                        <object class="java.lang.Enum" method="valueOf">
+                          <class>com.install4j.runtime.beans.formcomponents.FontType</class>
+                          <string>DERIVED</string>
+                        </object>
+                      </void>
+                      <void property="valueLabelText">
+                        <string>${installer:sys.version}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <group id="445" customizedId="" idNamespace="">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.groups.HorizontalFormComponentGroup" />
+                  </java>
+                  <actionLists />
+                  <beans>
+                    <formComponent id="446" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.KeyValuePairComponent">
+                          <void property="labelText">
+                            <string>${i18n:updater.NewVersionLabel}</string>
+                          </void>
+                          <void property="valueLabelColor">
+                            <object class="java.awt.Color">
+                              <int>0</int>
+                              <int>128</int>
+                              <int>0</int>
+                              <int>255</int>
+                            </object>
+                          </void>
+                          <void property="valueLabelFontStyle">
+                            <object class="java.lang.Enum" method="valueOf">
+                              <class>com.install4j.runtime.beans.formcomponents.FontStyle</class>
+                              <string>BOLD</string>
+                            </object>
+                          </void>
+                          <void property="valueLabelFontType">
+                            <object class="java.lang.Enum" method="valueOf">
+                              <class>com.install4j.runtime.beans.formcomponents.FontType</class>
+                              <string>DERIVED</string>
+                            </object>
+                          </void>
+                          <void property="valueLabelText">
+                            <string>${installer:updaterNewVersion}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="447" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_103" insetsTop="3" insetsLeft="5" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.HyperlinkActionLabelComponent">
+                          <void property="actionScript">
+                            <object class="com.install4j.api.beans.ScriptProperty">
+                              <void property="value">
+                                <string>com.install4j.script.I4jScript_Internal_102</string>
+                              </void>
+                            </object>
+                          </void>
+                          <void property="hyperlinkText">
+                            <string>${i18n:updater.ShowComments}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                  </beans>
+                </group>
+                <formComponent id="448" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.SpacerComponent" />
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <formComponent id="449" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                      <void property="labelText">
+                        <string>${i18n:updater.DownloadLocationLabel}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <formComponent id="450" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.DirectoryChooserComponent">
+                      <void property="initialFile">
+                        <string>${installer:sys.downloadsDir}</string>
+                      </void>
+                      <void property="labelText">
+                        <string>${i18n:updater.DownloadToLabel}</string>
+                      </void>
+                      <void property="manualEntryAllowed">
+                        <boolean>false</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterDownloadLocation</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <formComponent id="451" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.KeyValuePairComponent">
+                      <void property="labelText">
+                        <string>${i18n:updater.DownloadSizeLabel}</string>
+                      </void>
+                      <void property="valueLabelText">
+                        <string>${installer:updaterDownloadSize}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+              </formComponents>
+            </screen>
+            <screen id="452" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_104" rollbackBarrier="false" rollbackBarrierExitCode="1" preActivationClass="com.install4j.script.I4jScript_Internal_105" postActivationClass="" validationClass="com.install4j.script.I4jScript_Internal_106" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="scrollable">
+                    <boolean>false</boolean>
+                  </void>
+                  <void property="subTitle">
+                    <string>${i18n:updater.CommentsSubTitle}</string>
+                  </void>
+                  <void property="title">
+                    <string>${i18n:updater.CommentsTitle}</string>
+                  </void>
+                </object>
+              </java>
+              <actions />
+              <formComponents>
+                <formComponent id="453" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_107" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                      <void property="hideIfBlank">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="labelText">
+                        <string>${i18n:updater.CommentsLabel}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <formComponent id="454" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.HtmlDisplayFormComponent">
+                      <void property="displayedText">
+                        <string>${installer:updaterComment}</string>
+                      </void>
+                      <void property="fillVertical">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="textSource">
+                        <object class="java.lang.Enum" method="valueOf">
+                          <class>com.install4j.runtime.beans.screens.components.TextSource</class>
+                          <string>DIRECT</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+                <formComponent id="455" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.ConsoleHandlerFormComponent">
+                      <void property="consoleScript">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_108</string>
+                          </void>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </formComponent>
+              </formComponents>
+            </screen>
+            <screen id="456" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" preActivationClass="" postActivationClass="com.install4j.script.I4jScript_Internal_109" validationClass="" backButtonType="2" finishScreen="false" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FormScreen">
+                  <void property="subTitle">
+                    <string>${i18n:updater.DownloadSubTitle}</string>
+                  </void>
+                  <void property="title">
+                    <string>${i18n:updater.DownloadTitle}</string>
+                  </void>
+                </object>
+              </java>
+              <actions>
+                <action id="457" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>com.install4j.script.I4jScript_Internal_110</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>updaterDownloadFile</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="458" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="2" errorMessage="" elevate="true">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.net.DownloadFileAction">
+                      <void property="targetFile">
+                        <object class="java.io.File">
+                          <string>${installer:updaterDownloadFile}</string>
+                        </object>
+                      </void>
+                      <void property="url">
+                        <string>${installer:updaterDownloadUrl}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+                <action id="459" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="true">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.SetModeAction">
+                      <void property="files">
+                        <array class="java.io.File" length="1">
+                          <void index="0">
+                            <object class="java.io.File">
+                              <string>${installer:updaterDownloadFile}</string>
+                            </object>
+                          </void>
+                        </array>
+                      </void>
+                      <void property="mode">
+                        <string>755</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actionLists />
+                </action>
+              </actions>
+              <formComponents>
+                <formComponent id="460" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.ProgressComponent" />
+                  </java>
+                  <actionLists />
+                </formComponent>
+              </formComponents>
+            </screen>
+            <group id="461" customizedId="" idNamespace="">
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.groups.ScreenGroup" />
+              </java>
+              <beans>
+                <screen id="462" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_111" rollbackBarrier="false" rollbackBarrierExitCode="1" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="true" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.screens.FormScreen">
+                      <void property="title">
+                        <string>${i18n:updater.FinishTitle}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actions>
+                    <group id="463" customizedId="" idNamespace="">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.groups.ActionGroup">
+                          <void property="conditionExpression">
+                            <object class="com.install4j.api.beans.ScriptProperty">
+                              <void property="value">
+                                <string>com.install4j.script.I4jScript_Internal_112</string>
+                              </void>
+                            </object>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                      <beans>
+                        <action id="464" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                          <java class="java.beans.XMLDecoder">
+                            <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                              <void property="script">
+                                <object class="com.install4j.api.beans.ScriptProperty">
+                                  <void property="value">
+                                    <string>com.install4j.script.I4jScript_Internal_113</string>
+                                  </void>
+                                </object>
+                              </void>
+                              <void property="variableName">
+                                <string>installerArguments</string>
+                              </void>
+                            </object>
+                          </java>
+                          <actionLists />
+                        </action>
+                        <action id="465" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                          <java class="java.beans.XMLDecoder">
+                            <object class="com.install4j.runtime.beans.actions.update.ShutdownCallingLauncherAction" />
+                          </java>
+                          <actionLists />
+                        </action>
+                        <action id="466" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="2" errorMessage="${i18n:updater.LaunchError}" elevate="true">
+                          <java class="java.beans.XMLDecoder">
+                            <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                              <void property="arguments">
+                                <array class="java.lang.String" length="1">
+                                  <void index="0">
+                                    <string>${installer:installerArguments}</string>
+                                  </void>
+                                </array>
+                              </void>
+                              <void property="executable">
+                                <object class="java.io.File">
+                                  <string>${installer:updaterDownloadFile}</string>
+                                </object>
+                              </void>
+                              <void property="workingDirectory">
+                                <object class="java.io.File">
+                                  <string>${installer:updaterDownloadLocation}</string>
+                                </object>
+                              </void>
+                            </object>
+                          </java>
+                          <actionLists />
+                        </action>
+                      </beans>
+                    </group>
+                  </actions>
+                  <formComponents>
+                    <formComponent id="467" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_114" insetsTop="3" insetsLeft="0" insetsBottom="20" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                          <void property="hideIfBlank">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="468" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_115" insetsTop="3" insetsLeft="0" insetsBottom="20" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                          <void property="hideIfBlank">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="labelText">
+                            <string>${i18n:updater.FinishInfoText("Certificate Manager")}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="469" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.LabelComponent">
+                          <void property="labelText">
+                            <string>${i18n:updater.LaunchUpdaterQuestion}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="470" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.SpacerComponent">
+                          <void property="height">
+                            <int>5</int>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="471" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_116" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.RadiobuttonsComponent">
+                          <void property="radioButtonLabels">
+                            <array class="java.lang.String" length="2">
+                              <void index="0">
+                                <string>${i18n:updater.LaunchUpdaterLabel}</string>
+                              </void>
+                              <void index="1">
+                                <string>${i18n:updater.DoNotLaunchUpdaterLabel}</string>
+                              </void>
+                            </array>
+                          </void>
+                          <void property="variableName">
+                            <string>updaterLaunchSelection</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="472" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_118" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.HyperlinkActionLabelComponent">
+                          <void property="actionScript">
+                            <object class="com.install4j.api.beans.ScriptProperty">
+                              <void property="value">
+                                <string>com.install4j.script.I4jScript_Internal_117</string>
+                              </void>
+                            </object>
+                          </void>
+                          <void property="hyperlinkText">
+                            <string>${i18n:updater.OpenContainingFolderLabel}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="473" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.ProgressComponent">
+                          <void property="detailVisible">
+                            <boolean>false</boolean>
+                          </void>
+                          <void property="hideInitially">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                  </formComponents>
+                </screen>
+                <screen id="474" customizedId="" idNamespace="" conditionClass="com.install4j.script.I4jScript_Internal_119" rollbackBarrier="false" rollbackBarrierExitCode="1" preActivationClass="" postActivationClass="" validationClass="" backButtonType="2" finishScreen="true" wizardIndexChangeType="1" wizardIndexKey="" styleId="35">
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.screens.FormScreen">
+                      <void property="title">
+                        <string>${i18n:updater.FinishTitle}</string>
+                      </void>
+                    </object>
+                  </java>
+                  <actions>
+                    <group id="475" customizedId="" idNamespace="">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.groups.ActionGroup">
+                          <void property="conditionExpression">
+                            <object class="com.install4j.api.beans.ScriptProperty">
+                              <void property="value">
+                                <string>com.install4j.script.I4jScript_Internal_120</string>
+                              </void>
+                            </object>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                      <beans>
+                        <action id="476" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                          <java class="java.beans.XMLDecoder">
+                            <object class="com.install4j.runtime.beans.actions.update.ShutdownCallingLauncherAction" />
+                          </java>
+                          <actionLists />
+                        </action>
+                        <action id="477" customizedId="" idNamespace="" conditionClass="" rollbackBarrier="false" rollbackBarrierExitCode="1" multiExec="false" cancelOnFail="1" errorMessage="" elevate="false">
+                          <java class="java.beans.XMLDecoder">
+                            <object class="com.install4j.runtime.beans.actions.control.RunScriptAction">
+                              <void property="script">
+                                <object class="com.install4j.api.beans.ScriptProperty">
+                                  <void property="value">
+                                    <string>com.install4j.script.I4jScript_Internal_121</string>
+                                  </void>
+                                </object>
+                              </void>
+                            </object>
+                          </java>
+                          <actionLists />
+                        </action>
+                      </beans>
+                    </group>
+                  </actions>
+                  <formComponents>
+                    <formComponent id="478" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_122" insetsTop="3" insetsLeft="0" insetsBottom="20" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                          <void property="hideIfBlank">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="479" customizedId="" idNamespace="" initClassName="" visibilityClassName="com.install4j.script.I4jScript_Internal_123" insetsTop="3" insetsLeft="0" insetsBottom="20" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
+                          <void property="hideIfBlank">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="labelText">
+                            <string>${i18n:updater.FinishInfoText("Certificate Manager")}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="480" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.LabelComponent">
+                          <void property="labelText">
+                            <string>${i18n:updater.LaunchUpdaterQuestion}</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="481" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.SpacerComponent">
+                          <void property="height">
+                            <int>5</int>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="482" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                          <void property="checkboxText">
+                            <string>${i18n:updater.OpenContainingFolderLabel}</string>
+                          </void>
+                          <void property="initiallySelected">
+                            <boolean>true</boolean>
+                          </void>
+                          <void property="variableName">
+                            <string>updaterOpenDmg</string>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                    <formComponent id="483" customizedId="" idNamespace="" initClassName="" visibilityClassName="" insetsTop="3" insetsLeft="0" insetsBottom="3" insetsRight="0" resetInitOnPrevious="false">
+                      <java class="java.beans.XMLDecoder">
+                        <object class="com.install4j.runtime.beans.formcomponents.ProgressComponent">
+                          <void property="detailVisible">
+                            <boolean>false</boolean>
+                          </void>
+                          <void property="hideInitially">
+                            <boolean>true</boolean>
+                          </void>
+                        </object>
+                      </java>
+                      <actionLists />
+                    </formComponent>
+                  </formComponents>
+                </screen>
+              </beans>
+            </group>
+          </beans>
+        </group>
+      </screens>
+    </application>
+  </applications>
+  <launchers>
+    <launcher type="gui" id="60" customizedId="" menuName="Certificate Manager" excludeFromMenu="false" uninstaller="false" name="Certificate Manager" file="certmgr" />
+    <launcher type="installerApplication" id="uninstaller" customizedId="" menuName="Certificate Manager Uninstaller" excludeFromMenu="false" uninstaller="true" name="Certificate Manager Uninstaller" file=".install4j/Certificate Manager Uninstaller" />
+  </launchers>
+  <components />
+  <externalRoots />
+  <filesets />
+  <fileOptions>
+    <dir name="license" mode="755" />
+    <entry name="certmgr-boot-1.1.0.jar" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+    <entry name="README.txt" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+    <entry name=".install4j/uninstall" overwrite="4" shared="false" mode="755" uninstallMode="0" />
+    <entry name="license/COPYING" overwrite="4" shared="false" mode="644" uninstallMode="0" />
+    <entry name="Certificate Manager.app/Contents/MacOS/JavaApplicationStub" overwrite="3" shared="false" mode="755" uninstallMode="0" />
+  </fileOptions>
+  <uninstallDelete>
+    <entry name="jre/bin/server/classes.jsa" />
+    <entry name="error.log" />
+  </uninstallDelete>
+  <macSpecific runtimeDirParent="Certificate Manager.app/Contents/Resources/app/" minJavaVersion="1.8" singleBundle="true" singleBundleName="Certificate Manager.app" singleBundleLauncherId="60" />
+  <scriptClassOrigins>
+    <class className="com.install4j.script.I4jScript_Internal_83" beanType="action" beanName="Load a response file" propertyName="Condition expression" parentScreen="Welcome" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_84" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Welcome" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_85" beanType="form component" beanName="Console handler" propertyName="Console script" parentScreen="Welcome" importLineCount="0" headerLineCount="19" scriptLineCount="3" />
+    <class className="com.install4j.script.I4jScript_Internal_86" beanType="screen" beanName="Installation location" propertyName="Condition expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_87" beanType="action" beanName="Load a response file" propertyName="Condition expression" parentScreen="Installation location" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_88" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Installation components" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_89" beanType="action" beanName="Create program group" propertyName="Condition expression" parentScreen="Installation" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_90" beanType="action" beanName="Execute launcher" propertyName="Condition expression" parentScreen="Finish" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_91" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Uninstall Welcome" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_92" beanType="form component" beanName="Console handler" propertyName="Console script" parentScreen="Uninstall Welcome" importLineCount="0" headerLineCount="19" scriptLineCount="3" />
+    <class className="com.install4j.script.I4jScript_Internal_93" beanType="action" beanName="Update descriptor entry [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_94" beanType="group" beanName="Update available [Action group]" propertyName="Condition expression" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_95" beanType="action" beanName="New version [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_96" beanType="action" beanName="Download size [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_97" beanType="action" beanName="Comment [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_98" beanType="action" beanName="Download URL [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_99" beanType="action" beanName="Archive [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_100" beanType="action" beanName="DMG [Set a variable]" propertyName="Script" parentScreen="Startup" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_101" beanType="group" beanName="Update available [Screen group]" propertyName="Condition expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_102" beanType="form component" beanName="Hyperlink action label" propertyName="Action script" parentScreen="New version available [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_103" beanType="form component" beanName="Hyperlink action label" propertyName="Visibility script" parentScreen="New version available [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_104" beanType="screen" beanName="Update message [Form]" propertyName="Condition expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="2" />
+    <class className="com.install4j.script.I4jScript_Internal_105" beanType="screen" beanName="Update message [Form]" propertyName="Pre-activation expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="3" />
+    <class className="com.install4j.script.I4jScript_Internal_106" beanType="screen" beanName="Update message [Form]" propertyName="Validation expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="4" />
+    <class className="com.install4j.script.I4jScript_Internal_107" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Update message [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_108" beanType="form component" beanName="Console handler" propertyName="Console script" parentScreen="Update message [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="3" />
+    <class className="com.install4j.script.I4jScript_Internal_109" beanType="screen" beanName="Download new version [Form]" propertyName="Post-activation expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="4" />
+    <class className="com.install4j.script.I4jScript_Internal_110" beanType="action" beanName="Download location [Set a variable]" propertyName="Script" parentScreen="Download new version [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_111" beanType="screen" beanName="Finish [Form]" propertyName="Condition expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_112" beanType="group" beanName="Execute installer [Action group]" propertyName="Condition expression" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_113" beanType="action" beanName="Set installer arguments [Set a variable]" propertyName="Script" parentScreen="Finish [Form]" importLineCount="2" headerLineCount="19" scriptLineCount="20" />
+    <class className="com.install4j.script.I4jScript_Internal_114" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_115" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_116" beanType="form component" beanName="Radio button group" propertyName="Visibility script" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_117" beanType="form component" beanName="Hyperlink action label" propertyName="Action script" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_118" beanType="form component" beanName="Hyperlink action label" propertyName="Visibility script" parentScreen="Finish [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_119" beanType="screen" beanName="Finish DMG Archive [Form]" propertyName="Condition expression" parentScreen="" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_120" beanType="group" beanName="Execute installer [Action group]" propertyName="Condition expression" parentScreen="Finish DMG Archive [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_121" beanType="action" beanName="Open DMG [Run script]" propertyName="Script" parentScreen="Finish DMG Archive [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="2" />
+    <class className="com.install4j.script.I4jScript_Internal_122" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Finish DMG Archive [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_123" beanType="form component" beanName="Multi-line label" propertyName="Visibility script" parentScreen="Finish DMG Archive [Form]" importLineCount="0" headerLineCount="19" scriptLineCount="1" />
+    <class className="com.install4j.script.I4jScript_Internal_0" beanType="Static members" beanName="" propertyName="" parentScreen="" importLineCount="0" headerLineCount="17" scriptLineCount="1" />
+  </scriptClassOrigins>
+</config>
+// Export handler: Raw
+// Export handler: XML file
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_7_4rb2g5_18gg8kx@2x.png[0000000000000000h-0000000000003c3bh]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_7_4rb2g5_18gg8kx@2x.png"
+size = 15.419 // 15,058 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-0000000000003c3bh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 328
+Height = 628
+Bit depth = 8
+Color type = 02h // RGB
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = ff262d2fh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000000021h-0000000000000046h]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 71c9653ch
+// Export handler: Raw
+// committed:FORMAT:iTXt chunk[0000000000000046h-00000000000003d8h]
+Length = 902 // 902 byte
+Chunk Type = 69545874h
+Chunk Data = { ... } // 902 byte
+CRC = 4f7dba27h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000000003d8h-0000000000003c2fh]
+Length = 14.411 // 14,073 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 14,073 KiB
+CRC = 553b0fabh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000003c2fh-0000000000003c3bh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_7_4rb2g5_18gg8kx.png[0000000000000000h-00000000000023f2h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_7_4rb2g5_18gg8kx.png"
+size = 9.202 // 8,986 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-00000000000023f2h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 164
+Height = 314
+Bit depth = 8
+Color type = 02h // RGB
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 17cc6e91h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000000021h-0000000000000046h]
+Length = 25 // 25 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 25 byte
+CRC = 71c9653ch
+// Export handler: Raw
+// committed:FORMAT:iTXt chunk[0000000000000046h-00000000000003d8h]
+Length = 902 // 902 byte
+Chunk Type = 69545874h
+Chunk Data = { ... } // 902 byte
+CRC = 216a74e6h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000000003d8h-00000000000023e6h]
+Length = 8.194 // 8,002 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 8,002 KiB
+CRC = a25f4fafh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000000023e6h-00000000000023f2h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_6_4rb2g5_259ij1.png[0000000000000000h-000000000000203ch]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_6_4rb2g5_259ij1.png"
+size = 8.252 // 8,059 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-000000000000203ch]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 256
+Height = 256
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 5c72a866h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000021h-0000000000002000h]
+Length = 8.147 // 7,956 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 7,956 KiB
+CRC = 04514f95h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000002000h-0000000000002030h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000002030h-000000000000203ch]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_5_4rb2g5_1xth8wx.png[0000000000000000h-0000000000001201h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_5_4rb2g5_1xth8wx.png"
+size = 4.609 // 4,501 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-0000000000001201h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 128
+Height = 128
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = c33e61cbh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000021h-00000000000011c5h]
+Length = 4.504 // 4,398 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 4,398 KiB
+CRC = 5c39e5ffh
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[00000000000011c5h-00000000000011f5h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000000011f5h-0000000000001201h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_4_4rb2g5_un9apv.png[0000000000000000h-000000000000075ch]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_4_4rb2g5_un9apv.png"
+size = 1.884 // 1,84 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-000000000000075ch]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 48
+Height = 48
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 5702f987h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000021h-0000000000000720h]
+Length = 1.779 // 1,737 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,737 KiB
+CRC = 1854bb31h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000000720h-0000000000000750h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000000750h-000000000000075ch]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_3_4rb2g5_vd2dea.png[0000000000000000h-00000000000004a3h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_3_4rb2g5_vd2dea.png"
+size = 1.187 // 1,159 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-00000000000004a3h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000021h-0000000000000467h]
+Length = 1.082 // 1,057 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,057 KiB
+CRC = e9db5fc2h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000000467h-0000000000000497h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000000497h-00000000000004a3h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_2_4rb2g5_x7nby6.png[0000000000000000h-00000000000002f4h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_2_4rb2g5_x7nby6.png"
+size = 756 // 756 byte
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000000h-00000000000002f4h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 16
+Height = 16
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 1ff3ff61h
+// Export handler: Raw
+// committed:FORMAT:tEXt chunk[0000000000000021h-0000000000000051h]
+Length = 36 // 36 byte
+Chunk Type = 74455874h
+Chunk Data = { ... } // 36 byte
+CRC = 7a86dd36h
+// Export handler: Raw
+// committed:FORMAT:tIME chunk[0000000000000051h-0000000000000064h]
+Length = 7 // 7 byte
+Chunk Type = 74494d45h
+Chunk Data = { ... } // 7 byte
+CRC = 6203320fh
+// Export handler: Raw
+// committed:FORMAT:pHYs chunk[0000000000000064h-0000000000000079h]
+Length = 9 // 9 byte
+Chunk Type = 70485973h
+Chunk Data = { ... } // 9 byte
+CRC = d2dd7efch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[0000000000000079h-0000000000000089h]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000089h-00000000000002e8h]
+Length = 595 // 595 byte
+Chunk Type = 49444154h
+Chunk Data = { ... } // 595 byte
+CRC = 2c983c32h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000000002e8h-00000000000002f4h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_1_4rb2g5.utf8[0000000000000000h-0000000000008cf7h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_1_4rb2g5.utf8"
+size = 36.087 // 35,241 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_0_4rb2g5.utf8[0000000000000000h-0000000000008390h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/i4j_extf_0_4rb2g5.utf8"
+size = 33.680 // 32,891 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app/0.dat[0000000000000000h-000000000049f823h]
+file = "Certificate Manager Installer.app/Contents/Resources/app/0.dat"
+size = 4.847.651 // 4,623 MiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/i4jlauncher.config[0000000000000000h-00000000000008bdh]
+file = "Certificate Manager Installer.app/Contents/Resources/i4jlauncher.config"
+size = 2.237 // 2,185 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Resources/app.icns[0000000000000000h-000000000000da46h]
+file = "Certificate Manager Installer.app/Contents/Resources/app.icns"
+size = 55.878 // 54,568 KiB
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000000010h-0000000000001c31h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000010h-0000000000000018h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000018h-0000000000000031h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 256
+Height = 256
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 5c72a866h
+// Export handler: Raw
+// committed:FORMAT:iCCP chunk[0000000000000031h-000000000000044ah]
+Length = 1.037 // 1,013 KiB
+Chunk Type = 69434350h
+Chunk Data = { ... } // 1,013 KiB
+CRC = 5060fe6fh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[000000000000044ah-0000000000001c25h]
+Length = 6.095 // 5,952 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 5,952 KiB
+CRC = cadc55f4h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000001c25h-0000000000001c31h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000001c39h-00000000000024aeh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000001c39h-0000000000001c41h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000001c41h-0000000000001c5ah]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 32
+Height = 32
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 737a7af4h
+// Export handler: Raw
+// committed:FORMAT:iCCP chunk[0000000000001c5ah-0000000000002073h]
+Length = 1.037 // 1,013 KiB
+Chunk Type = 69434350h
+Chunk Data = { ... } // 1,013 KiB
+CRC = 5060fe6fh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000002073h-00000000000024a2h]
+Length = 1.059 // 1,034 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,034 KiB
+CRC = 6e91b203h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000000024a2h-00000000000024aeh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[00000000000024b6h-0000000000002f44h]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[00000000000024b6h-00000000000024beh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[00000000000024beh-00000000000024d7h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 64
+Height = 64
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = aa6971deh
+// Export handler: Raw
+// committed:FORMAT:iCCP chunk[00000000000024d7h-00000000000028f0h]
+Length = 1.037 // 1,013 KiB
+Chunk Type = 69434350h
+Chunk Data = { ... } // 1,013 KiB
+CRC = 5060fe6fh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[00000000000028f0h-0000000000002f38h]
+Length = 1.596 // 1,559 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,559 KiB
+CRC = 4581a612h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000002f38h-0000000000002f44h]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000002f4ch-0000000000004b6dh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000002f4ch-0000000000002f54h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000002f54h-0000000000002f6dh]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 256
+Height = 256
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 5c72a866h
+// Export handler: Raw
+// committed:FORMAT:iCCP chunk[0000000000002f6dh-0000000000003386h]
+Length = 1.037 // 1,013 KiB
+Chunk Type = 69434350h
+Chunk Data = { ... } // 1,013 KiB
+CRC = 5060fe6fh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000003386h-0000000000004b61h]
+Length = 6.095 // 5,952 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 5,952 KiB
+CRC = cadc55f4h
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000004b61h-0000000000004b6dh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:FORMAT:PNG image data[0000000000004b75h-0000000000007c6bh]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000004b75h-0000000000004b7dh]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000004b7dh-0000000000004b96h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 512
+Height = 512
+Bit depth = 8
+Color type = 06h // RGB + Alpha
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = f478d4fah
+// Export handler: Raw
+// committed:FORMAT:iCCP chunk[0000000000004b96h-0000000000004fafh]
+Length = 1.037 // 1,013 KiB
+Chunk Type = 69434350h
+Chunk Data = { ... } // 1,013 KiB
+CRC = 5060fe6fh
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000004fafh-0000000000007c5fh]
+Length = 11.428 // 11,16 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 11,16 KiB
+CRC = f8fb154bh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[0000000000007c5fh-0000000000007c6bh]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/MacOS/JavaApplicationStub[0000000000000000h-00000000000217b0h]
+file = "Certificate Manager Installer.app/Contents/MacOS/JavaApplicationStub"
+size = 137.136 // 133,922 KiB
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/vmoptions.txt[0000000000000000h-00000000000000f3h]
+file = "Certificate Manager Installer.app/Contents/vmoptions.txt"
+size = 243 // 243 byte
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/PkgInfo[0000000000000000h-0000000000000008h]
+file = "Certificate Manager Installer.app/Contents/PkgInfo"
+size = 8 // 8 byte
+// Export handler: Raw
+// committed:INPUT:Certificate Manager Installer.app/Contents/Info.plist[0000000000000000h-00000000000008d1h]
+file = "Certificate Manager Installer.app/Contents/Info.plist"
+size = 2.257 // 2,204 KiB
+// Export handler: Raw
+// committed:FORMAT:XML stream[0000000000000000h-00000000000008d1h]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+<key>CFBundleName</key>
+<string>Certificate Manager Installer</string>
+<key>CFBundleExecutable</key>
+<string>JavaApplicationStub</string>
+<key>CFBundleIconFile</key>
+<string>app.icns</string>
+<key>CFBundleInfoDictionaryVersion</key>
+<string>6.0</string>
+<key>CFBundlePackageType</key>
+<string>APPL</string>
+<key>CFBundleSignature</key>
+<string>????</string>
+<key>CFBundleIdentifier</key>
+<string>com.install4j.6863-0001-6800-2736.940</string>
+<key>CFBundleVersion</key>
+<string>1.1.0</string>
+<key>CFBundleShortVersionString</key>
+<string>1.1.0</string>
+<key>CFBundleGetInfoString</key>
+<string>1.1.0</string>
+<key>CFBundleDevelopmentRegion</key>
+<string>en</string>
+<key>NSHighResolutionCapable</key>
+<true/>
+<key>LSHasLocalizedDisplayName</key>
+<true/>
+<!-- I4J_INSERT_DOCTYPE -->
+<key>LSUIElement</key>
+<true/>
+<key>NSMainNibFile</key>
+<string>MainMenu</string>
+<key>NSPrincipalClass</key>
+<string>NSApplication</string>
+<key>i4j.jreUncompressedSize</key>
+<integer>0</integer>
+<key>i4j.jreLocation</key>
+<string></string>
+<key>LSMinimumSystemVersion</key>
+<string>10.7.3</string>
+<key>i4j.appId</key>
+<string>6863-0001-6800-2736</string>
+<key>i4j.allowPassthrough</key>
+<true/>
+<key>i4j.minVersion</key>
+<string>1.8</string>
+<key>i4j.maxVersion</key>
+<string></string>
+<key>i4j.vmIdPrefix</key>
+<string></string>
+<key>JavaVM</key>
+<dict>
+<key>MainClass</key>
+<string>com.install4j.runtime.launcher.MacLauncher</string>
+<key>VMOptionArray</key>
+<array>
+<string>-Dfile.encoding=UTF-8</string>
+<string>-Dsun.java2d.noddraw=true</string>
+<string>-Dexe4j.moduleName=$APP_PACKAGE</string>
+</array>
+<key>OptionsFile</key>
+<string>$APP_PACKAGE/Contents/vmoptions.txt</string>
+<key>ArgumentArray</key>
+<array>
+</array>
+<key>SearchSequence</key>
+<array>
+<string>Y</string>
+<string>EJAVA_HOME</string>
+<string>EJDK_HOME</string>
+</array>
+<key>VersionInfo</key>
+<string>0_3736679726</string>
+<key>ClassPath</key>
+<string>$APP_PACKAGE/Contents/Resources/app/i4jruntime.jar</string><!-- I4J_INSERT_CLASSPATH -->
+<key>WorkingDirectory</key>
+<string>$APP_PACKAGE/Contents/Resources/app/.</string>
+</dict>
+</dict>
+</plist>
+// Export handler: Raw
+// Export handler: XML file
+// committed:INPUT:.DS_Store[0000000000000000h-0000000000001804h]
+file = ".DS_Store"
+size = 6.148 // 6,004 KiB
+// Export handler: Raw
+// committed:FORMAT:Alternate Volume Header[000000000070ac00h-000000000070ae00h]
+signature = 482bh // HFS Plus volume
+version = 0004h // kHFSPlusVersion
+attributes = 80000100h
+1............................... // kHFSUnusedNodeFixBit
+.0.............................. // kHFSContentProtectionBit
+................0............... // kHFSVolumeSoftwareLockBit
+..................0............. // kHFSVolumeJournaledBit
+...................0............ // kHFSCatalogNodeIDsReusedBit
+....................0........... // kHFSBootVolumeInconsistentBit
+.....................0.......... // kHFSVolumeNoCacheRequiredBit
+......................0......... // kHFSVolumeSparedBlocksBit
+.......................1........ // kHFSVolumeUnmountedBit
+........................0....... // kHFSVolumeHardwareLockBit
+lastMountedVersion = 31302e30h
+journalInfoBlock = 00000000h
+createDate = d6ed2af3h // 2018-04-06T13:47:31
+modifyDate = d6ed2af3h // 2018-04-06T13:47:31
+backupDate = d6ed2af3h // 2018-04-06T13:47:31
+checkedDate = d6ed2af3h // 2018-04-06T13:47:31
+fileCount = 30
+folderCount = 7
+blockSize = 4.096 // 4 KiB
+totalBlocks = 1.803
+freeBlocks = 0
+nextAllocation = 00000000h
+rsrcClumpSize = 4.096 // 4 KiB
+dataClumpSize = 4.096 // 4 KiB
+nextCatalogID = 00000036h
+writeCount = 1
+encodingsBitmap = 0000000000000001h
+finderInfo = { 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 8caddfd1h, 36c560fah }
+allocationFile:logicalSize = 4.096 // 4 KiB
+allocationFile:clumpSize = 4.096 // 4 KiB
+allocationFile:totalBlocks = 1
+allocationFile:extents = { 00000709h, 00000001h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+extentsFile:logicalSize = 4.096 // 4 KiB
+extentsFile:clumpSize = 4.096 // 4 KiB
+extentsFile:totalBlocks = 1
+extentsFile:extents = { 00000006h, 00000001h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+catalogFile:logicalSize = 20.480 // 20 KiB
+catalogFile:clumpSize = 4.096 // 4 KiB
+catalogFile:totalBlocks = 5
+catalogFile:extents = { 00000001h, 00000005h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+attributesFile:logicalSize = 8.192 // 8 KiB
+attributesFile:clumpSize = 4.096 // 4 KiB
+attributesFile:totalBlocks = 2
+attributesFile:extents = { 00000007h, 00000002h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+startupFile:logicalSize = 0 // 0 byte
+startupFile:clumpSize = 4.096 // 4 KiB
+startupFile:totalBlocks = 0
+startupFile:extents = { 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+// Export handler: Raw
+// committed:FORMAT:Reserved (Manufacturing Block)[000000000070ae00h-000000000070b000h]
+start = 000000000070ae00h
+end = 000000000070b000h
+size = 512 // 512 byte
+// Export handler: Raw
+// committed:FORMAT:Resource fork[000000000070b000h-000000000070be87h]
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>resource-fork</key>
+	<dict>
+		<key>blkx</key>
+		<array>
+			<dict>
+				<key>Attributes</key>
+				<string>0x0050</string>
+				<key>Data</key>
+				<data>
+				bWlzaAAAAAEAAAAAAAAAAAAAAAAAADhYAAAAAAAAAAAA
+				AAAA/////gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAIAAAAgjob5HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAACAAAAAQAAAAAAAAAAAAAAAAAAAAAAADhYAAAA
+				AAAAAAAAAAAAAHCwAP////8AAAAAAAAAAAAAOFgAAAAA
+				AAAAAAAAAAAAcLAAAAAAAAAAAAA=
+				</data>
+				<key>ID</key>
+				<string>0</string>
+				<key>Name</key>
+				<string>whole disk (Apple_HFS : 0)</string>
+			</dict>
+		</array>
+		<key>cSum</key>
+		<array>
+			<dict>
+				<key>Attributes</key>
+				<string>0x0000</string>
+				<key>Data</key>
+				<data>
+				AAEAAAACwcCV+A==
+				</data>
+				<key>ID</key>
+				<string>0</string>
+				<key>Name</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>nsiz</key>
+		<array>
+			<dict>
+				<key>Attributes</key>
+				<string>0x0000</string>
+				<key>Data</key>
+				<data>
+				PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRG
+				LTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8v
+				QXBwbGUgQ29tcHV0ZXIvL0RURCBQTElTVCAxLjAvL0VO
+				IiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9w
+				ZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9u
+				PSIxLjAiPgo8ZGljdD4KCTxrZXk+YmxvY2stY2hlY2tz
+				dW0tMjwva2V5PgoJPGludGVnZXI+MzI1MDYyMzk5Mjwv
+				aW50ZWdlcj4KCTxrZXk+cGFydC1udW08L2tleT4KCTxp
+				bnRlZ2VyPjA8L2ludGVnZXI+Cgk8a2V5PnZlcnNpb248
+				L2tleT4KCTxpbnRlZ2VyPjY8L2ludGVnZXI+CjwvZGlj
+				dD4KPC9wbGlzdD4K
+				</data>
+				<key>ID</key>
+				<string>0</string>
+				<key>Name</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>plst</key>
+		<array>
+			<dict>
+				<key>Attributes</key>
+				<string>0x0050</string>
+				<key>Data</key>
+				<data>
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+				AAAAAAAAAAAA
+				</data>
+				<key>ID</key>
+				<string>0</string>
+				<key>Name</key>
+				<string></string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>
+// Export handler: Raw
+// committed:FORMAT:UDIFResourceFile[000000000070be87h-000000000070c087h]
+Signature = "koly"
+Version = 00000004h
+HeaderSize = 512 // 512 byte
+Flags = 00000001h
+RunningDataForkOffset = 0000000000000000h
+DataForkOffset = 0000000000000000h
+DataForkLength = 7.385.088 // 7,043 MiB
+RsrcForkOffset = 0000000000000000h
+RsrcForkLength = 0 // 0 byte
+SegmentNumber = 1
+SegmentCount = 1
+SegmentID = { 0ah, 1ah, c3h, 9ah, c3h, c5h, 24h, ebh, 94h, 40h, c7h, 91h, 07h, 1ch, 28h, 35h }
+DataChecksumType = 00000002h
+DataChecksumSize = 32 // 32 byte
+DataChecksum = { 8e86f91fh, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+XMLOffset = 000000000070b000h
+XMLLength = 3.719 // 3,632 KiB
+Reserved1 = { 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h, 00h }
+ChecksumType = 00000002h
+ChecksumSize = 00000020h
+Checksum = { 810c2e27h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
+ImageVariant = 00000002h
+SectorCount = 0
+reserved2 = 00000000h
+reserved3 = 00000000h
+reserved4 = 00000000h
+// Export handler: Raw

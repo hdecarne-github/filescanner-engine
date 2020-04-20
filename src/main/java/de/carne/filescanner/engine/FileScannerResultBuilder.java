@@ -44,8 +44,8 @@ import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.filescanner.provider.util.HexFormat;
-import de.carne.filescanner.provider.util.PrettyFormat;
+import de.carne.filescanner.engine.util.HexFormat;
+import de.carne.filescanner.engine.util.PrettyFormat;
 import de.carne.text.MemoryUnitFormat;
 import de.carne.util.Strings;
 

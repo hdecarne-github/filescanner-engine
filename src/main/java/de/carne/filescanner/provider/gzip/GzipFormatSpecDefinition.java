@@ -31,7 +31,7 @@ import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.StringSpec;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.util.ByteHelper;
-import de.carne.filescanner.provider.util.DeflateInputDecoder;
+import de.carne.filescanner.engine.util.DeflateInputDecoder;
 import de.carne.nio.file.FileUtil;
 import de.carne.util.Lazy;
 

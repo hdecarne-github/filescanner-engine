@@ -29,7 +29,7 @@ import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.QWordSpec;
 import de.carne.filescanner.engine.input.InputDecoderTable;
-import de.carne.filescanner.provider.util.LzmaInputDecoder;
+import de.carne.filescanner.engine.util.LzmaInputDecoder;
 import de.carne.nio.compression.lzma.LzmaDecoderProperties;
 import de.carne.nio.file.FileUtil;
 import de.carne.util.Lazy;

@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.util.FinalSupplier;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 
 /**
  * Double word array based format attribute specification.

@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.MappedFileScannerInput;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 
 final class ForkData {
 

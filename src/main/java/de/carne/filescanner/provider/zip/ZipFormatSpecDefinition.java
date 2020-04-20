@@ -28,8 +28,8 @@ import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.input.InputDecoders;
-import de.carne.filescanner.provider.util.DeflateInputDecoder;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.DeflateInputDecoder;
+import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.Lazy;
 
 /**

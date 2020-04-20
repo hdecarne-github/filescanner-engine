@@ -1,0 +1,1443 @@
+// committed:FORMAT:EXE image[0000000000000000h-000000000005ca00h]
+start = 0000000000000000h
+end = 000000000005ca00h
+size = 379.392 // 370,5 KiB
+// Export handler: Raw
+// committed:FORMAT:DOS stub image[0000000000000000h-00000000000000f8h]
+start = 0000000000000000h
+end = 00000000000000f8h
+size = 248 // 248 byte
+// Export handler: Raw
+// committed:FORMAT:IMAGE_DOS_HEADER[0000000000000000h-0000000000000040h]
+e_magic = 5a4dh
+e_cblp = 0090h
+e_cp = 0003h
+e_crlc = 0000h
+e_cparhdr = 0004h
+e_minalloc = 0000h
+e_maxalloc = ffffh
+e_ss = 0000h
+e_sp = 00b8h
+e_csum = 0000h
+e_ip = 0000h
+e_cs = 0000h
+e_lfarlc = 0040h
+e_ovno = 0000h
+e_res = { 0000h, 0000h, 0000h, 0000h }
+e_oemid = 0000h
+e_oeminfo = 0000h
+e_res2 = { 0000h, 0000h, 0000h, 0000h, 0000h, 0000h, 0000h, 0000h, 0000h, 0000h }
+e_lfanew = 000000f8h
+// Export handler: Raw
+// committed:FORMAT:.TEXT[0000000000000040h-00000000000000f8h]
+0000: push cs
+0001: pop ds
+0002: mov dx, 0x000e
+0005: mov ah, 0x09
+0007: int 0x21
+0009: mov ax, 0x4c01
+000c: int 0x21
+000e: push sp
+000f: push 0x7369
+0012: and [bx+si+114], dh
+0015: outs dx, ds:[si]
+0016: jb +97 ; 007a
+0019: ins es:[di], dx
+001a: and [bp+di+97], ah
+001d: outs dx, ds:[si]
+001e: outs dx, ds:[si]
+001f: outs dx, ds:[si]
+0020: jz +32 ; 0042
+0022: bound sp, m16
+0024: and [bp+si+117], dh
+0027: outs dx, ds:[si]
+0028: and [bx+di+110], ch
+002b: and [si+79], al
+002e: push bx
+002f: and [di+111], ch
+0032: db 0x0d
+0036: db 0x0d
+0037: or ah, [si]
+0039: add [bx+si], al
+003b: add [bx+si], al
+003d: add [bx+si], al
+003f: add [bp-6], bh
+0042: add dl, al
+0044: cmp bl, [bp+di-31892]
+0048: cmp bl, [bp+di-31892]
+004c: cmp bl, [bp+di-31892]
+0050: xchg dx, sp
+0052: cli
+0053: xor [0x6c9b], 0x83
+0058: xor sp, bx
+005a: stc
+005b: and [bx], 0x9b
+005e: ins es:[di], dx
+005f: sbb [di], 0x5d
+0062: add [bp+di-25799], ax
+0066: ins es:[di], dx
+0067: sbb [di], 0x5d
+006a: add al, [bp+di-25797]
+006e: ins es:[di], dx
+006f: sbb [di], 0x5d
+0072: db 0x17
+0073: xor [bx+di], 0x9b
+0076: ins es:[di], dx
+0077: cmp [bp+si], 0x9b
+007a: ins es:[di], dx
+007b: cmp [bp+di], 0x9a
+007e: ins es:[di], dx
+007f: xor [bp+di], 0xe3
+0082: out dx, eax
+0083: xor di, 0x9b
+0086: ins es:[di], dx
+0087: xor [bp+di], 0xe3
+008a: call +23683 ; 5d10
+008d: fwait
+008e: ins es:[di], dx
+008f: xor [bp+di], 0xe3
+0092: inc [bp+di-25797]
+0096: ins es:[di], dx
+0097: xor [bp+di], 0xe3
+009a: clc
+009b: cmp [bp+di], 0x9b
+009e: ins es:[di], dx
+009f: xor [bp+di], 0xe3
+00a2: std
+00a3: cmp [bp+di], 0x9b
+00a6: ins es:[di], dx
+00a7: adc [bp+si+105], 0x63
+00ab: push 0x9b3a
+00ae: ins es:[di], dx
+00af: add [bx+si], 0x00
+00b2: add [bx+si], al
+00b4: add [bx+si], al
+00b6: add [bx+si], al
+// Export handler: Raw
+// Export handler: x86-16 instructions
+// committed:FORMAT:NT image[00000000000000f8h-000000000005ca00h]
+start = 00000000000000f8h
+end = 000000000005ca00h
+size = 379.144 // 370,258 KiB
+// Export handler: Raw
+// committed:FORMAT:IMAGE_NT_HEADERS[00000000000000f8h-00000000000001f0h]
+Signature = 00004550h
+{ ... } // 244 byte// Export handler: Raw
+// committed:FORMAT:IMAGE_FILE_HEADER[00000000000000fch-0000000000000110h]
+Machine = 014ch // IMAGE_FILE_MACHINE_I386
+NumberOfSections = 5
+TimeDateStamp = 5b866750h
+PointerToSymbolTable = 00000000h
+NumberOfSymbols = 0
+SizeOfOptionalHeader = 224 // 224 byte
+Characteristics = 0102h
+0............... // IMAGE_FILE_BYTES_REVERSED_HI
+.0.............. // IMAGE_FILE_UP_SYSTEM_ONLY
+..0............. // IMAGE_FILE_DLL
+...0............ // IMAGE_FILE_SYSTEM
+....0........... // IMAGE_FILE_NET_RUN_FROM_SWAP
+.....0.......... // IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP
+......0......... // IMAGE_FILE_DEBUG_STRIPPED
+.......1........ // IMAGE_FILE_32BIT_MACHINE
+........0....... // IMAGE_FILE_BYTES_REVERSED_LO
+.........0...... // IMAGE_FILE_16BIT_MACHINE
+..........0..... // IMAGE_FILE_LARGE_ADDRESS_AWARE
+...........0.... // IMAGE_FILE_AGGRESIVE_WS_TRIM
+............0... // IMAGE_FILE_LOCAL_SYMS_STRIPPED
+.............0.. // IMAGE_FILE_LINE_NUMS_STRIPPED
+..............1. // IMAGE_FILE_EXECUTABLE_IMAGE
+...............0 // IMAGE_FILE_RELOCS_STRIPPED
+// Export handler: Raw
+// committed:FORMAT:IMAGE_OPTIONAL_HEADER[0000000000000110h-00000000000001f0h]
+Magic = 010bh
+MajorLinkerVersion = 9
+MinorLinkerVersion = 0
+SizeOfCode = 231.936 // 226,5 KiB
+SizeOfInitializedData = 216.576 // 211,5 KiB
+SizeOfUninitializedData = 0 // 0 byte
+AddressOfEntryPoint = 00025bc0h
+BaseOfCode = 00001000h
+ImageBase = 004000000003a000h
+SectionAlignment = 00001000h // 4 KiB
+FileAlignment = 00000200h // 512 byte
+MajorOperatingSystemVersion = 0005h
+MinorOperatingSystemVersion = 0000h
+MajorImageVersion = 0000h
+MinorImageVersion = 0000h
+MajorSubsystemVersion = 0005h
+MinorSubsystemVersion = 0000h
+Win32VersionValue = 00000000h
+SizeOfImage = 458.752 // 448 KiB
+SizeOfHeaders = 1.024 // 1 KiB
+CheckSum = 00000000h
+Subsystem = 0002h // IMAGE_SUBSYSTEM_WINDOWS_GUI
+DllCharacteristics = 8140h
+1............... // IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE
+..0............. // IMAGE_DLLCHARACTERISTICS_WDM_DRIVER
+....0........... // IMAGE_DLLCHARACTERISTICS_NO_BIND
+.....0.......... // IMAGE_DLLCHARACTERISTICS_NO_SEH
+......0......... // IMAGE_DLLCHARACTERISTICS_NO_ISOLATION
+.......1........ // IMAGE_DLLCHARACTERISTICS_NX_COMPAT
+........0....... // IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY
+.........1...... // IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE
+SizeOfStackReserve = 327.680 // 320 KiB
+SizeOfStackCommit = 4.096 // 4 KiB
+SizeOfHeapReserve = 1.048.576 // 1 MiB
+SizeOfHeapCommit = 4.096 // 4 KiB
+LoaderFlags = 00000000h
+NumberOfRvaAndSizes = 16
+DataDirectory[Export table______________] = { a0150500h, 961d0000h }
+DataDirectory[Import table______________] = { 4cff0400h, 78000000h }
+DataDirectory[Resource table____________] = { 00700600h, 004e0000h }
+DataDirectory[Exception table___________] = { 00000000h, 00000000h }
+DataDirectory[Certificate table_________] = { 00000000h, 00000000h }
+DataDirectory[Base relocation table_____] = { 00c00600h, 082c0000h }
+DataDirectory[Debugging information_____] = { 00000000h, 00000000h }
+DataDirectory[Architecture-specific data] = { 00000000h, 00000000h }
+DataDirectory[Global pointer register___] = { 00000000h, 00000000h }
+DataDirectory[Thread local storage______] = { 00000000h, 00000000h }
+DataDirectory[Load configuration table__] = { 68ec0400h, 40000000h }
+DataDirectory[Bound import table________] = { 00000000h, 00000000h }
+DataDirectory[Import address table______] = { 00a00300h, f0030000h }
+DataDirectory[Delay import descriptor___] = { 00000000h, 00000000h }
+DataDirectory[CLR header________________] = { 00000000h, 00000000h }
+DataDirectory[Reserved__________________] = { 00000000h, 00000000h }
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTIONS[00000000000001f0h-000000000005ca00h]
+start = 00000000000001f0h
+end = 000000000005ca00h
+size = 378.896 // 370,016 KiB
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION_HEADER[.text][00000000000001f0h-0000000000000218h]
+Name = ".text"
+PhysicalAddressOrVirtualSize = 00038985h
+VirtualAddress = 00001000h
+SizeOfRawData = 231.936 // 226,5 KiB
+PointerToRawData = 00000400h
+PointerToRelocations = 00000000h
+PointerToLinenumbers = 00000000h
+NumberOfRelocations = 0
+NumberOfLinenumbers = 0
+Characteristics = 60000020h
+0............................... // IMAGE_SCN_MEM_WRITE
+.1.............................. // IMAGE_SCN_MEM_READ
+..1............................. // IMAGE_SCN_MEM_EXECUTE
+...0............................ // IMAGE_SCN_MEM_SHARED
+....0........................... // IMAGE_SCN_MEM_NOT_PAGED
+.....0.......................... // IMAGE_SCN_MEM_NOT_CACHED
+......0......................... // IMAGE_SCN_MEM_DISCARDABLE
+.......0........................ // IMAGE_SCN_LNK_NRELOC_OVFL
+........0000.................... // IMAGE_SCN_ALIGN_MASK
+............0................... // IMAGE_SCN_MEM_PRELOAD
+.............0.................. // IMAGE_SCN_MEM_LOCKED
+..............0................. // IMAGE_SCN_MEM_PURGEABLE
+...............0................ // IMAGE_SCN_MEM_SYSHEAP (Obsolete)
+................0............... // IMAGE_SCN_MEM_FARDATA
+.................0.............. // IMAGE_SCN_MEM_PROTECTED (Obsolete)
+...................0............ // IMAGE_SCN_LNK_COMDAT
+....................0........... // IMAGE_SCN_LNK_REMOVE
+.....................0.......... // IMAGE_SCN_TYPE_OVER (Reserved)
+......................0......... // IMAGE_SCN_LNK_INFO
+.......................0........ // IMAGE_SCN_LNK_OTHER
+........................0....... // IMAGE_SCN_CNT_UNINITIALIZED_DATA
+.........................0...... // IMAGE_SCN_CNT_INITIALIZED_DATA
+..........................1..... // IMAGE_SCN_CNT_CODE
+...........................0.... // IMAGE_SCN_TYPE_COPY (Reserved)
+............................0... // IMAGE_SCN_TYPE_NO_PAD (Reserved)
+.............................0.. // IMAGE_SCN_TYPE_GROUP (Reserved)
+..............................0. // IMAGE_SCN_TYPE_NOLOAD (Reserved)
+...............................0 // IMAGE_SCN_TYPE_DSECT (Reserved)
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION_HEADER[.rdata][0000000000000218h-0000000000000240h]
+Name = ".rdata"
+PhysicalAddressOrVirtualSize = 00019336h
+VirtualAddress = 0003a000h
+SizeOfRawData = 103.424 // 101 KiB
+PointerToRawData = 00038e00h
+PointerToRelocations = 00000000h
+PointerToLinenumbers = 00000000h
+NumberOfRelocations = 0
+NumberOfLinenumbers = 0
+Characteristics = 40000040h
+0............................... // IMAGE_SCN_MEM_WRITE
+.1.............................. // IMAGE_SCN_MEM_READ
+..0............................. // IMAGE_SCN_MEM_EXECUTE
+...0............................ // IMAGE_SCN_MEM_SHARED
+....0........................... // IMAGE_SCN_MEM_NOT_PAGED
+.....0.......................... // IMAGE_SCN_MEM_NOT_CACHED
+......0......................... // IMAGE_SCN_MEM_DISCARDABLE
+.......0........................ // IMAGE_SCN_LNK_NRELOC_OVFL
+........0000.................... // IMAGE_SCN_ALIGN_MASK
+............0................... // IMAGE_SCN_MEM_PRELOAD
+.............0.................. // IMAGE_SCN_MEM_LOCKED
+..............0................. // IMAGE_SCN_MEM_PURGEABLE
+...............0................ // IMAGE_SCN_MEM_SYSHEAP (Obsolete)
+................0............... // IMAGE_SCN_MEM_FARDATA
+.................0.............. // IMAGE_SCN_MEM_PROTECTED (Obsolete)
+...................0............ // IMAGE_SCN_LNK_COMDAT
+....................0........... // IMAGE_SCN_LNK_REMOVE
+.....................0.......... // IMAGE_SCN_TYPE_OVER (Reserved)
+......................0......... // IMAGE_SCN_LNK_INFO
+.......................0........ // IMAGE_SCN_LNK_OTHER
+........................0....... // IMAGE_SCN_CNT_UNINITIALIZED_DATA
+.........................1...... // IMAGE_SCN_CNT_INITIALIZED_DATA
+..........................0..... // IMAGE_SCN_CNT_CODE
+...........................0.... // IMAGE_SCN_TYPE_COPY (Reserved)
+............................0... // IMAGE_SCN_TYPE_NO_PAD (Reserved)
+.............................0.. // IMAGE_SCN_TYPE_GROUP (Reserved)
+..............................0. // IMAGE_SCN_TYPE_NOLOAD (Reserved)
+...............................0 // IMAGE_SCN_TYPE_DSECT (Reserved)
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION_HEADER[.data][0000000000000240h-0000000000000268h]
+Name = ".data"
+PhysicalAddressOrVirtualSize = 00012ee4h
+VirtualAddress = 00054000h
+SizeOfRawData = 7.680 // 7,5 KiB
+PointerToRawData = 00052200h
+PointerToRelocations = 00000000h
+PointerToLinenumbers = 00000000h
+NumberOfRelocations = 0
+NumberOfLinenumbers = 0
+Characteristics = c0000040h
+1............................... // IMAGE_SCN_MEM_WRITE
+.1.............................. // IMAGE_SCN_MEM_READ
+..0............................. // IMAGE_SCN_MEM_EXECUTE
+...0............................ // IMAGE_SCN_MEM_SHARED
+....0........................... // IMAGE_SCN_MEM_NOT_PAGED
+.....0.......................... // IMAGE_SCN_MEM_NOT_CACHED
+......0......................... // IMAGE_SCN_MEM_DISCARDABLE
+.......0........................ // IMAGE_SCN_LNK_NRELOC_OVFL
+........0000.................... // IMAGE_SCN_ALIGN_MASK
+............0................... // IMAGE_SCN_MEM_PRELOAD
+.............0.................. // IMAGE_SCN_MEM_LOCKED
+..............0................. // IMAGE_SCN_MEM_PURGEABLE
+...............0................ // IMAGE_SCN_MEM_SYSHEAP (Obsolete)
+................0............... // IMAGE_SCN_MEM_FARDATA
+.................0.............. // IMAGE_SCN_MEM_PROTECTED (Obsolete)
+...................0............ // IMAGE_SCN_LNK_COMDAT
+....................0........... // IMAGE_SCN_LNK_REMOVE
+.....................0.......... // IMAGE_SCN_TYPE_OVER (Reserved)
+......................0......... // IMAGE_SCN_LNK_INFO
+.......................0........ // IMAGE_SCN_LNK_OTHER
+........................0....... // IMAGE_SCN_CNT_UNINITIALIZED_DATA
+.........................1...... // IMAGE_SCN_CNT_INITIALIZED_DATA
+..........................0..... // IMAGE_SCN_CNT_CODE
+...........................0.... // IMAGE_SCN_TYPE_COPY (Reserved)
+............................0... // IMAGE_SCN_TYPE_NO_PAD (Reserved)
+.............................0.. // IMAGE_SCN_TYPE_GROUP (Reserved)
+..............................0. // IMAGE_SCN_TYPE_NOLOAD (Reserved)
+...............................0 // IMAGE_SCN_TYPE_DSECT (Reserved)
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION_HEADER[.rsrc][0000000000000268h-0000000000000290h]
+Name = ".rsrc"
+PhysicalAddressOrVirtualSize = 00004e00h
+VirtualAddress = 00067000h
+SizeOfRawData = 19.968 // 19,5 KiB
+PointerToRawData = 00054000h
+PointerToRelocations = 00000000h
+PointerToLinenumbers = 00000000h
+NumberOfRelocations = 0
+NumberOfLinenumbers = 0
+Characteristics = 40000040h
+0............................... // IMAGE_SCN_MEM_WRITE
+.1.............................. // IMAGE_SCN_MEM_READ
+..0............................. // IMAGE_SCN_MEM_EXECUTE
+...0............................ // IMAGE_SCN_MEM_SHARED
+....0........................... // IMAGE_SCN_MEM_NOT_PAGED
+.....0.......................... // IMAGE_SCN_MEM_NOT_CACHED
+......0......................... // IMAGE_SCN_MEM_DISCARDABLE
+.......0........................ // IMAGE_SCN_LNK_NRELOC_OVFL
+........0000.................... // IMAGE_SCN_ALIGN_MASK
+............0................... // IMAGE_SCN_MEM_PRELOAD
+.............0.................. // IMAGE_SCN_MEM_LOCKED
+..............0................. // IMAGE_SCN_MEM_PURGEABLE
+...............0................ // IMAGE_SCN_MEM_SYSHEAP (Obsolete)
+................0............... // IMAGE_SCN_MEM_FARDATA
+.................0.............. // IMAGE_SCN_MEM_PROTECTED (Obsolete)
+...................0............ // IMAGE_SCN_LNK_COMDAT
+....................0........... // IMAGE_SCN_LNK_REMOVE
+.....................0.......... // IMAGE_SCN_TYPE_OVER (Reserved)
+......................0......... // IMAGE_SCN_LNK_INFO
+.......................0........ // IMAGE_SCN_LNK_OTHER
+........................0....... // IMAGE_SCN_CNT_UNINITIALIZED_DATA
+.........................1...... // IMAGE_SCN_CNT_INITIALIZED_DATA
+..........................0..... // IMAGE_SCN_CNT_CODE
+...........................0.... // IMAGE_SCN_TYPE_COPY (Reserved)
+............................0... // IMAGE_SCN_TYPE_NO_PAD (Reserved)
+.............................0.. // IMAGE_SCN_TYPE_GROUP (Reserved)
+..............................0. // IMAGE_SCN_TYPE_NOLOAD (Reserved)
+...............................0 // IMAGE_SCN_TYPE_DSECT (Reserved)
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION_HEADER[.reloc][0000000000000290h-00000000000002b8h]
+Name = ".reloc"
+PhysicalAddressOrVirtualSize = 00003bb4h
+VirtualAddress = 0006c000h
+SizeOfRawData = 15.360 // 15 KiB
+PointerToRawData = 00058e00h
+PointerToRelocations = 00000000h
+PointerToLinenumbers = 00000000h
+NumberOfRelocations = 0
+NumberOfLinenumbers = 0
+Characteristics = 42000040h
+0............................... // IMAGE_SCN_MEM_WRITE
+.1.............................. // IMAGE_SCN_MEM_READ
+..0............................. // IMAGE_SCN_MEM_EXECUTE
+...0............................ // IMAGE_SCN_MEM_SHARED
+....0........................... // IMAGE_SCN_MEM_NOT_PAGED
+.....0.......................... // IMAGE_SCN_MEM_NOT_CACHED
+......1......................... // IMAGE_SCN_MEM_DISCARDABLE
+.......0........................ // IMAGE_SCN_LNK_NRELOC_OVFL
+........0000.................... // IMAGE_SCN_ALIGN_MASK
+............0................... // IMAGE_SCN_MEM_PRELOAD
+.............0.................. // IMAGE_SCN_MEM_LOCKED
+..............0................. // IMAGE_SCN_MEM_PURGEABLE
+...............0................ // IMAGE_SCN_MEM_SYSHEAP (Obsolete)
+................0............... // IMAGE_SCN_MEM_FARDATA
+.................0.............. // IMAGE_SCN_MEM_PROTECTED (Obsolete)
+...................0............ // IMAGE_SCN_LNK_COMDAT
+....................0........... // IMAGE_SCN_LNK_REMOVE
+.....................0.......... // IMAGE_SCN_TYPE_OVER (Reserved)
+......................0......... // IMAGE_SCN_LNK_INFO
+.......................0........ // IMAGE_SCN_LNK_OTHER
+........................0....... // IMAGE_SCN_CNT_UNINITIALIZED_DATA
+.........................1...... // IMAGE_SCN_CNT_INITIALIZED_DATA
+..........................0..... // IMAGE_SCN_CNT_CODE
+...........................0.... // IMAGE_SCN_TYPE_COPY (Reserved)
+............................0... // IMAGE_SCN_TYPE_NO_PAD (Reserved)
+.............................0.. // IMAGE_SCN_TYPE_GROUP (Reserved)
+..............................0. // IMAGE_SCN_TYPE_NOLOAD (Reserved)
+...............................0 // IMAGE_SCN_TYPE_DSECT (Reserved)
+// Export handler: Raw
+// committed:FORMAT:IMAGE_SECTION[.text][0000000000000400h-0000000000038e00h]
+00000000: push ebp
+00000001: mov ebp, esp
+00000003: push [ebp+20]
+00000006: push [ebp+16]
+00000009: push [ebp+12]
+0000000c: push [ebp+8]
+0000000f: call +125367 ; 0001e9cb
+00000014: mov eax, [ebp+8]
+00000017: add esp, 0x10
+0000001a: pop ebp
+0000001b: retn
+0000001c: push ebp
+0000001d: mov ebp, esp
+0000001f: push [ebp+20]
+00000022: push [ebp+16]
+00000025: push [ebp+12]
+00000028: push [ebp+8]
+0000002b: call +125464 ; 0001ea48
+00000030: mov eax, [ebp+8]
+00000033: add esp, 0x10
+00000036: pop ebp
+00000037: retn
+00000038: mov [ecx], 0x0043a44c
+0000003e: jmp +125760 ; 0001eb83
+00000043: push esi
+00000044: mov esi, ecx
+00000046: mov [esi], 0x0043a44c
+0000004c: call +125746 ; 0001eb83
+00000051: test [ah+8], 0x01
+00000056: jz +7 ; 0000005f
+00000058: push esi
+00000059: call +125882 ; 0001ec18
+0000005e: pop ecx
+0000005f: mov eax, esi
+00000061: pop esi
+00000062: retn 0x0004
+00000065: mov eax, [0x455e00]
+0000006a: retn
+0000006b: push esi
+0000006c: push 0x00
+0000006e: push 0x00000080
+00000073: push 0x03
+00000075: push 0x00
+00000077: push 0x03
+00000079: push 0x80000000
+0000007e: call +17357 ; 00004450
+00000083: push eax
+00000084: call [0x0043a158]
+0000008a: mov esi, eax
+0000008c: test esi, esi
+0000008e: jz +5 ; 00000095
+00000090: cmp esi, 0xff
+00000093: jnz +41 ; 000000be
+00000095: push edi
+00000096: call [0x0043a154]
+0000009c: mov edi, eax
+0000009e: call +17325 ; 00004450
+000000a3: push eax
+000000a4: push edi
+000000a5: push esi
+000000a6: push 0x0043a488
+000000ab: call +45054 ; 0000b0ae
+000000b0: push 0x0043a454
+000000b5: call +11978 ; 00002f84
+000000ba: add esp, 0x14
+000000bd: pop edi
+000000be: mov eax, esi
+000000c0: pop esi
+000000c1: retn
+000000c2: push esi
+000000c3: push 0x03
+000000c5: call +124707 ; 0001e7ed
+000000ca: mov esi, [esp+12]
+000000ce: push 0x02
+000000d0: push esi
+000000d1: push eax
+000000d2: mov [0x455e0c], eax
+000000d7: call +125780 ; 0001ec30
+000000dc: mov eax, [0x455e0c]
+000000e1: push esi
+000000e2: mov [eax+2], 0x00
+000000e6: call +125013 ; 0001e940
+000000eb: add esp, 0x14
+000000ee: cmp eax, 0x05
+000000f1: jnz +46 ; 00000121
+000000f3: mov eax, [0x455e04]
+000000f8: test eax, eax
+000000fa: jnz +13 ; 00000109
+000000fc: push 0x03
+000000fe: call +124650 ; 0001e7ed
+00000103: pop ecx
+00000104: mov [0x455e04], eax
+00000109: push 0x02
+0000010b: add esi, 0x03
+0000010e: push esi
+0000010f: push eax
+00000110: call +125723 ; 0001ec30
+00000115: mov eax, [0x455e04]
+0000011a: add esp, 0x0c
+0000011d: mov [eax+2], 0x00
+00000121: pop esi
+00000122: retn
+00000123: mov eax, [0x455e0c]
+00000128: test eax, eax
+0000012a: jz +15 ; 0000013b
+0000012c: push eax
+0000012d: push [esp+8]
+00000131: call +125994 ; 0001ed60
+00000136: pop ecx
+00000137: pop ecx
+00000138: mov al, 0x01
+0000013a: retn
+0000013b: xor al, al
+0000013d: retn
+0000013e: mov eax, [0x455e04]
+00000143: test eax, eax
+00000145: jz +15 ; 00000156
+00000147: push eax
+00000148: push [esp+8]
+0000014c: call +125967 ; 0001ed60
+00000151: pop ecx
+00000152: pop ecx
+00000153: mov al, 0x01
+00000155: retn
+00000156: xor al, al
+00000158: retn
+00000159: push ecx
+0000015a: push ebx
+0000015b: push ebp
+0000015c: push esi
+0000015d: mov esi, [0x0043a15c]
+00000163: push edi
+00000164: mov edi, [esp+24]
+00000168: xor ebp, ebp
+0000016a: push ebp
+0000016b: push ebp
+0000016c: push 0x3c
+0000016e: push edi
+0000016f: call esi
+00000171: push edi
+00000172: call +12626 ; 000032c9
+00000177: pop ecx
+00000178: mov ebx, eax
+0000017a: push ebp
+0000017b: add ebx, 0x04
+0000017e: push ebp
+0000017f: lea eax, [ebp-11055102]
+00000185: salc
+00000186: push edi
+00000187: call +12679 ; 00003313
+0000018c: movsx ebp, ax
+0000018f: push ebp
+00000190: push 0x0043a570
+00000195: call +44925 ; 0000b117
+0000019a: add esp, 0x0c
+0000019d: push 0x00
+0000019f: push 0x00
+000001a1: lea eax, [ebp-11055088]
+000001a7: salc
+000001a8: push edi
+000001a9: call +12645 ; 00003313
+000001ae: cbw
+000001af: push eax
+000001b0: push 0x0043a534
+000001b5: mov [esp+28], eax
+000001b9: call +44889 ; 0000b117
+000001be: imul ebp, ebp, 0x28
+000001c1: add ebp, [esp+28]
+000001c5: lea ebx, [ebp+1750330411]
+000001cb: add [ebp+1139277891], ah
+000001d1: scas es:[di]
+000001d2: add [eax], al
+000001d4: add esp, 0x14
+000001d7: push 0x00
+000001d9: push 0x00
+000001db: lea eax, [ebp-11055088]
+000001e1: salc
+000001e2: push edi
+000001e3: call +12513 ; 000032c9
+000001e8: pop ecx
+000001e9: push 0x00
+000001eb: push 0x00
+000001ed: add ebx, 0x14
+000001f0: push ebx
+000001f1: push edi
+000001f2: mov ebp, eax
+000001f4: call esi
+000001f6: push edi
+000001f7: call +12493 ; 000032c9
+000001fc: mov ebx, eax
+000001fe: push ebx
+000001ff: push ebp
+00000200: push 0x0043a4b8
+00000205: call +44813 ; 0000b117
+0000020a: add esp, 0x10
+0000020d: push 0x00
+0000020f: push 0x00
+00000211: add ebx, ebp
+00000213: push ebx
+00000214: push edi
+00000215: call esi
+00000217: pop edi
+00000218: pop esi
+00000219: pop ebp
+0000021a: pop ebx
+0000021b: pop ecx
+0000021c: retn
+0000021d: push ebp
+0000021e: lea ebp, [ebp-1512412]
+00000224: db 0xff
+00000225: mov eax, 0x00001794
+0000022a: call +126017 ; 0001ee70
+0000022f: mov eax, [0x454980]
+00000234: xor eax, ebp
+00000236: mov [ebp+5904], eax
+0000023c: mov eax, [ebp+5916]
+00000242: push ebx
+00000243: push esi
+00000244: xor ebx, ebx
+00000246: push edi
+00000247: mov [ebp-116], eax
+0000024a: mov eax, [ebp+5920]
+00000250: xor edi, edi
+00000252: cmp [ebp+5928], ebx
+00000258: mov [ebp-120], eax
+0000025b: mov [ebp-108], ebx
+0000025e: jl +194 ; 00000326
+00000264: jnle +12 ; 00000272
+00000266: cmp [ebp+5924], ebx
+0000026c: jbe +180 ; 00000326
+00000272: mov ecx, [ebp+5924]
+00000278: sub ecx, [ebp-108]
+0000027b: mov eax, [ebp+5928]
+00000281: sbb eax, edi
+00000283: js +20 ; 00000299
+00000285: jnle +8 ; 0000028f
+00000287: cmp ecx, 0x00001770
+0000028d: jbe +10 ; 00000299
+0000028f: mov ecx, 0x00001770
+00000294: mov [ebp-124], ebx
+00000297: jmp +3 ; 0000029c
+00000299: mov [ebp-124], eax
+0000029c: push ebx
+0000029d: lea eax, [ebp-1924050788]
+000002a3: mov al, [0x50]
+000002a6: push [ebp-116]
+000002a9: call [0x0043a164]
+000002af: test eax, eax
+000002b1: jz +168 ; 0000035f
+000002b7: mov eax, [ebp-100]
+000002ba: cmp eax, ebx
+000002bc: jz +157 ; 0000035f
+000002c2: cmp [ebp+5932], bl
+000002c8: jz +16 ; 000002da
+000002ca: xor ecx, ecx
+000002cc: cmp eax, ebx
+000002ce: jbe +10 ; 000002da
+000002d0: xor [ch-96+cl], 0x88
+000002d5: cmp ecx, eax
+000002d8: jb -10 ; 000002d0
+000002da: xor esi, esi
+000002dc: cmp eax, ebx
+000002de: jbe +36 ; 00000304
+000002e0: push ebx
+000002e1: lea ecx, [ebp-970239600]
+000002e7: push eax
+000002e8: lea eax, [ebp-11493323]
+000002ee: jnz -120 ; 00000278
+000002f0: call [0x0043a160]
+000002f6: test eax, eax
+000002f8: jz +70 ; 00000340
+000002fa: add esi, [ebp-112]
+000002fd: mov eax, [ebp-100]
+00000300: cmp esi, eax
+00000302: jb -36 ; 000002e0
+00000304: add [ebp-108], eax
+00000307: adc edi, ebx
+00000309: cmp edi, [ebp+5928]
+0000030f: jl +4294967133 ; 00000272
+00000315: jnle +15 ; 00000326
+00000317: mov eax, [ebp+5924]
+0000031d: cmp [ebp-108], eax
+00000320: jb +4294967116 ; 00000272
+00000326: xor eax, eax
+00000328: mov ecx, [ebp+5904]
+0000032e: pop edi
+0000032f: pop esi
+00000330: xor ecx, ebp
+00000332: pop ebx
+00000333: call +125728 ; 0001ee58
+00000338: add ebp, 0x00001714
+0000033e: leave
+0000033f: retn
+00000340: call [0x0043a154]
+00000346: push eax
+00000347: mov eax, [ebp-100]
+0000034a: sub eax, esi
+0000034c: push eax
+0000034d: push 0x0043a5d8
+00000352: call +44375 ; 0000b0ae
+00000357: add esp, 0x0c
+0000035a: push 0x02
+0000035c: pop eax
+0000035d: jmp -55 ; 00000328
+0000035f: push edi
+00000360: push [ebp-108]
+00000363: call [0x0043a154]
+00000369: push eax
+0000036a: push [ebp-100]
+0000036d: push 0x0043a5a0
+00000372: call +44343 ; 0000b0ae
+00000377: xor eax, eax
+00000379: add esp, 0x14
+0000037c: jmp -87 ; 00000328
+0000037f: push esi
+00000380: mov esi, ecx
+00000382: mov eax, [esi]
+00000384: test eax, eax
+00000386: jnz +11 ; 00000393
+00000388: call +126059 ; 0001eff8
+0000038d: mov eax, [esi]
+0000038f: test eax, eax
+00000391: jz +4 ; 00000397
+00000393: mov eax, [eax]
+00000395: jmp +2 ; 00000399
+00000397: xor eax, eax
+00000399: mov ecx, [esi+4]
+0000039c: cmp ecx, [eax+24]
+0000039f: jnz +5 ; 000003a6
+000003a1: call +126034 ; 0001eff8
+000003a6: mov eax, [esi+4]
+000003a9: add eax, 0x0c
+000003ac: pop esi
+000003ad: retn
+000003ae: cmp [esp+4], 0x00
+000003b3: push esi
+000003b4: jz +45 ; 000003e3
+000003b6: mov esi, [ecx+24]
+000003b9: lea eax, [ebp+285115140]
+000003bf: jb +4 ; 000003c5
+000003c1: mov edx, [eax]
+000003c3: jmp +2 ; 000003c7
+000003c5: mov edx, eax
+000003c7: cmp [esp+8], edx
+000003cb: jb +22 ; 000003e3
+000003cd: cmp esi, 0x10
+000003d0: jb +2 ; 000003d4
+000003d2: mov eax, [eax]
+000003d4: mov ecx, [ecx+20]
+000003d7: add ecx, eax
+000003d9: cmp ecx, [esp+8]
+000003dd: jbe +4 ; 000003e3
+000003df: mov al, 0x01
+000003e1: jmp +2 ; 000003e5
+000003e3: xor al, al
+000003e5: pop esi
+000003e6: retn 0x0004
+000003e9: mov edx, [esp+4]
+000003ed: mov eax, [edx]
+000003ef: push esi
+000003f0: mov esi, [eax+8]
+000003f3: mov [edx], esi
+000003f5: mov esi, [eax+8]
+000003f8: cmp [esi+21], 0x00
+000003fc: jnz +3 ; 00000401
+000003fe: mov [esi+4], edx
+00000401: mov esi, [edx+4]
+00000404: mov [eax+4], esi
+00000407: mov ecx, [ecx+24]
+0000040a: pop esi
+0000040b: cmp edx, [ecx+4]
+0000040e: jnz +5 ; 00000415
+00000410: mov [ecx+4], eax
+00000413: jmp +15 ; 00000424
+00000415: mov ecx, [edx+4]
+00000418: cmp edx, [ecx+8]
+0000041b: jnz +5 ; 00000422
+0000041d: mov [ecx+8], eax
+00000420: jmp +2 ; 00000424
+00000422: mov [ecx], eax
+00000424: mov [eax+8], edx
+00000427: mov [edx+4], eax
+0000042a: retn 0x0004
+0000042d: push ebp
+0000042e: mov ebp, esp
+00000430: mov eax, ecx
+00000432: mov ecx, [ebp+8]
+00000435: mov [eax], ecx
+00000437: mov ecx, [ebp+12]
+0000043a: mov [eax+4], ecx
+0000043d: mov ecx, [ebp+16]
+00000440: mov [eax+8], ecx
+00000443: mov ecx, [ebp+20]
+00000446: mov edx, [ecx]
+00000448: mov [eax+12], edx
+0000044b: mov ecx, [ecx+4]
+0000044e: mov [eax+16], ecx
+00000451: mov cl, [ebp+24]
+00000454: mov [eax+20], cl
+00000457: mov [eax+21], 0x00
+0000045b: pop ebp
+0000045c: retn 0x0014
+0000045f: mov eax, [esp+4]
+00000463: mov ecx, [esp+8]
+00000467: cmp eax, ecx
+00000469: jz +10 ; 00000475
+0000046b: mov dl, [eax]
+0000046d: push ebx
+0000046e: mov bl, [ecx]
+00000470: mov [eax], bl
+00000472: mov [ecx], dl
+00000474: pop ebx
+00000475: retn
+00000476: push ebp
+00000477: mov ebp, esp
+00000479: mov ecx, [ebp+8]
+0000047c: sub esp, 0x0c
+0000047f: test ecx, ecx
+00000481: jnbe +11 ; 0000048e
+00000483: xor ecx, ecx
+00000485: push ecx
+00000486: call +125848 ; 0001f023
+0000048b: pop ecx
+0000048c: leave
+0000048d: retn
+0000048e: or eax, 0xff
+00000491: xor edx, edx
+00000493: div ecx
+00000495: cmp eax, 0x01
+00000498: jnb -21 ; 00000485
+0000049a: and [ebp+8], 0x00
+0000049e: lea eax, [ebp+1301106696]
+000004a4: hlt
+000004a5: call +124428 ; 0001eab6
+000004aa: push 0x0044ef68
+000004af: lea eax, [ebp+1170690292]
+000004b5: hlt
+000004b6: movs es:[edi], ds:[esi]
+000004b8: add al, ch
+000004bb: leave
+000004bc: jmp +1 ; 000004bf
+000004be: add ah, cl
+000004c0: push ebp
+000004c1: mov ebp, esp
+000004c3: mov ecx, [ebp+8]
+000004c6: sub esp, 0x0c
+000004c9: test ecx, ecx
+000004cb: jnbe +14 ; 000004db
+000004cd: xor ecx, ecx
+000004cf: imul ecx, ecx, 0x18
+000004d2: push ecx
+000004d3: call +125771 ; 0001f023
+000004d8: pop ecx
+000004d9: leave
+000004da: retn
+000004db: or eax, 0xff
+000004de: xor edx, edx
+000004e0: div ecx
+000004e2: cmp eax, 0x18
+000004e5: jnb -24 ; 000004cf
+000004e7: and [ebp+8], 0x00
+000004eb: lea eax, [ebp+1301106696]
+000004f1: hlt
+000004f2: call +124351 ; 0001eab6
+000004f7: push 0x0044ef68
+000004fc: lea eax, [ebp+1170690292]
+00000502: hlt
+00000503: movs es:[edi], ds:[esi]
+00000505: add al, ch
+00000508: jl -21 ; 000004f5
+0000050a: add [eax], eax
+0000050c: int 3
+0000050d: push esi
+0000050e: push [esp+8]
+00000512: mov esi, ecx
+00000514: call +124429 ; 0001eb26
+00000519: mov [esi], 0x0043a44c
+0000051f: mov eax, esi
+00000521: pop esi
+00000522: retn 0x0004
+00000525: int 3
+00000526: push ebp
+00000527: mov ebp, esp
+00000529: sub esp, 0x000006c4
+0000052f: push ebx
+00000530: push esi
+00000531: push edi
+00000532: mov esi, 0x0043ac80
+00000537: push esi
+00000538: push [ebp+12]
+0000053b: call +124960 ; 0001ed60
+00000540: pop ecx
+00000541: pop ecx
+00000542: call [0x0043a170]
+00000548: mov edi, [ebp+8]
+0000054b: movzx eax, ax
+0000054e: mov [ebp-8], eax
+00000551: mov [ebp-1], 0x00
+00000555: test edi, edi
+00000557: jz +149 ; 000005f2
+0000055d: mov eax, [edi+16]
+00000560: sub eax, [edi+12]
+00000563: and [ebp+8], 0x00
+00000567: sar eax, 0x02
+0000056a: test eax, eax
+0000056c: jbe +108 ; 000005da
+0000056e: mov ebx, 0x0043ac44
+00000573: push [ebp+8]
+00000576: mov ecx, edi
+00000578: call +22181 ; 00005c22
+0000057d: push 0x0043ac00
+00000582: push [eax]
+00000584: call +125852 ; 0001f125
+00000589: pop ecx
+0000058a: pop ecx
+0000058b: test eax, eax
+0000058d: jnz +6 ; 00000595
+0000058f: mov [ebp-1], 0x01
+00000593: jmp +41 ; 000005be
+00000595: push [ebp+8]
+00000598: mov ecx, edi
+0000059a: call +22147 ; 00005c22
+0000059f: push ebx
+000005a0: mov [ebp-12], eax
+000005a3: call +125795 ; 0001f10b
+000005a8: push eax
+000005a9: mov eax, [ebp-12]
+000005ac: push ebx
+000005ad: push [eax]
+000005af: call +125728 ; 0001f0d4
+000005b4: add esp, 0x10
+000005b7: test eax, eax
+000005b9: jnz +3 ; 000005be
+000005bb: mov [ebp-1], al
+000005be: mov eax, [edi+16]
+000005c1: sub eax, [edi+12]
+000005c4: inc [ebp+8]
+000005c7: sar eax, 0x02
+000005ca: cmp [ebp+8], eax
+000005cd: jb -92 ; 00000573
+000005cf: cmp [ebp-1], 0x00
+000005d3: mov eax, 0x0043abf4
+000005d8: jnz +5 ; 000005df
+000005da: mov eax, 0x0043abec
+000005df: push eax
+000005e0: push 0x0043aba8
+000005e5: call +43821 ; 0000b117
+000005ea: cmp [ebp-1], 0x00
+000005ee: pop ecx
+000005ef: pop ecx
+000005f0: jnz +39 ; 00000619
+000005f2: push 0x0043ab98
+000005f7: call [0x0043a16c]
+000005fd: test eax, eax
+000005ff: jz +24 ; 00000619
+00000601: push 0x0043ab7c
+00000606: push eax
+00000607: call [0x0043a168]
+0000060d: test eax, eax
+0000060f: jz +8 ; 00000619
+00000611: call eax
+00000613: movzx eax, ax
+00000616: mov [ebp-8], eax
+00000619: push 0x02
+0000061b: xor eax, eax
+0000061d: mov [ebp-1732], eax
+00000625: pop eax
+00000626: push 0x03
+00000628: mov [ebp-1724], eax
+0000062f: pop eax
+00000630: push 0x04
+00000632: mov [ebp-1716], eax
+00000639: pop eax
+0000063a: push 0x05
+0000063c: mov [ebp-1708], eax
+00000643: pop eax
+00000644: push 0x06
+00000646: mov [ebp-1700], eax
+0000064d: pop eax
+0000064e: push 0x07
+00000650: mov [ebp-1692], eax
+00000657: pop eax
+00000658: push 0x08
+0000065a: mov [ebp-1684], eax
+00000661: pop eax
+00000662: push 0x09
+00000664: mov [ebp-1676], eax
+0000066b: pop eax
+0000066c: push 0x0a
+0000066e: mov [ebp-1668], eax
+00000675: pop eax
+00000676: push 0x0b
+00000678: mov [ebp-1660], eax
+0000067f: pop eax
+00000680: push 0x0c
+00000682: mov [ebp-1652], eax
+00000689: pop eax
+0000068a: push 0x0d
+0000068c: mov [ebp-1644], eax
+00000693: pop eax
+00000694: push 0x0e
+00000696: mov [ebp-1636], eax
+0000069d: pop eax
+0000069e: push 0x0f
+000006a0: mov [ebp-1628], eax
+000006a7: pop eax
+000006a8: push 0x10
+000006aa: mov [ebp-1620], eax
+000006b1: pop eax
+000006b2: push 0x11
+000006b4: mov [ebp-1612], eax
+000006bb: pop eax
+000006bc: push 0x12
+000006be: mov [ebp-1604], eax
+000006c5: pop eax
+000006c6: push 0x13
+000006c8: mov [ebp-1596], eax
+000006cf: pop eax
+000006d0: push 0x14
+000006d2: mov [ebp-1588], eax
+000006d9: pop eax
+000006da: mov [ebp-1728], 0x0043ab78
+000006e4: mov [ebp-1720], 0x0043ab74
+000006ee: mov [ebp-1712], 0x0043ab70
+000006f8: mov [ebp-1704], 0x0043ab6c
+00000702: mov [ebp-1696], 0x0043ab68
+0000070c: mov [ebp-1688], 0x0043ab64
+00000716: mov [ebp-1680], 0x0043ab60
+00000720: mov [ebp-1672], 0x0043ab5c
+0000072a: mov [ebp-1664], esi
+00000730: mov [ebp-1656], 0x0043ab58
+0000073a: mov [ebp-1648], 0x0043ab54
+00000744: mov [ebp-1640], 0x0043ab50
+0000074e: mov [ebp-1632], 0x0043ab4c
+00000758: mov [ebp-1624], 0x0043ab48
+00000762: mov [ebp-1616], 0x0043ab44
+0000076c: mov [ebp-1608], 0x0043ab40
+00000776: mov [ebp-1600], 0x0043ab3c
+00000780: mov [ebp-1592], 0x0043ab38
+0000078a: mov [ebp-1584], 0x0043ab34
+00000794: mov [ebp-1580], eax
+0000079b: mov [ebp-1576], 0x0043ab30
+000007a5: push 0x15
+000007a7: pop eax
+000007a8: push 0x16
+000007aa: mov [ebp-1572], eax
+000007b1: pop eax
+000007b2: push 0x17
+000007b4: mov [ebp-1564], eax
+000007bb: pop eax
+000007bc: push 0x18
+000007be: mov [ebp-1556], eax
+000007c5: pop eax
+000007c6: push 0x19
+000007c8: mov [ebp-1548], eax
+000007cf: pop eax
+000007d0: push 0x1a
+000007d2: mov [ebp-1540], eax
+000007d9: pop eax
+000007da: push 0x1b
+000007dc: mov [ebp-1532], eax
+000007e3: pop eax
+000007e4: push 0x1c
+000007e6: mov [ebp-1524], eax
+000007ed: pop eax
+000007ee: push 0x1d
+000007f0: mov [ebp-1516], eax
+000007f7: pop eax
+000007f8: push 0x1e
+000007fa: mov [ebp-1508], eax
+00000801: pop eax
+00000802: push 0x1f
+00000804: mov [ebp-1500], eax
+0000080b: pop eax
+0000080c: push 0x20
+0000080e: mov [ebp-1492], eax
+00000815: pop eax
+00000816: push 0x21
+00000818: mov [ebp-1484], eax
+0000081f: pop eax
+00000820: push 0x22
+00000822: mov [ebp-1476], eax
+00000829: pop eax
+0000082a: push 0x23
+0000082c: mov [ebp-1468], eax
+00000833: pop eax
+00000834: push 0x24
+00000836: mov [ebp-1460], eax
+0000083d: pop eax
+0000083e: push 0x25
+00000840: mov [ebp-1452], eax
+00000847: pop eax
+00000848: push 0x26
+0000084a: mov [ebp-1444], eax
+00000851: pop eax
+00000852: push 0x27
+00000854: mov [ebp-1436], eax
+0000085b: pop eax
+0000085c: push 0x29
+0000085e: mov [ebp-1428], eax
+00000865: pop eax
+00000866: push 0x2a
+00000868: mov [ebp-1420], eax
+0000086f: mov [ebp-1568], 0x0043ab2c
+00000879: mov [ebp-1560], 0x0043ab28
+00000883: mov [ebp-1552], 0x0043ab24
+0000088d: mov [ebp-1544], 0x0043ab20
+00000897: mov [ebp-1536], 0x0043ab1c
+000008a1: mov [ebp-1528], 0x0043ab18
+000008ab: mov [ebp-1520], 0x0043ab14
+000008b5: mov [ebp-1512], 0x0043ab10
+000008bf: mov [ebp-1504], 0x0043ab0c
+000008c9: mov [ebp-1496], 0x0043ab08
+000008d3: mov [ebp-1488], 0x0043ab04
+000008dd: mov [ebp-1480], 0x0043ab00
+000008e7: mov [ebp-1472], 0x0043aafc
+000008f1: mov [ebp-1464], 0x0043aaf8
+000008fb: mov [ebp-1456], 0x0043aaf4
+00000905: mov [ebp-1448], 0x0043aaf0
+0000090f: mov [ebp-1440], 0x0043aaec
+00000919: mov [ebp-1432], 0x0043aae8
+00000923: mov [ebp-1424], 0x0043aae4
+0000092d: mov [ebp-1416], 0x0043aae0
+00000937: pop eax
+00000938: push 0x2b
+0000093a: mov [ebp-1412], eax
+00000941: pop eax
+00000942: push 0x2c
+00000944: mov [ebp-1404], eax
+0000094b: pop eax
+0000094c: push 0x2d
+0000094e: mov [ebp-1396], eax
+00000955: pop eax
+00000956: push 0x2f
+00000958: mov [ebp-1388], eax
+0000095f: pop eax
+00000960: push 0x31
+00000962: mov [ebp-1380], eax
+00000969: pop eax
+0000096a: push 0x32
+0000096c: mov [ebp-1372], eax
+00000973: pop eax
+00000974: push 0x34
+00000976: mov [ebp-1364], eax
+0000097d: pop eax
+0000097e: push 0x35
+00000980: mov [ebp-1356], eax
+00000987: pop eax
+00000988: push 0x36
+0000098a: mov [ebp-1348], eax
+00000991: pop eax
+00000992: push 0x37
+00000994: mov [ebp-1340], eax
+0000099b: pop eax
+0000099c: push 0x38
+0000099e: mov [ebp-1332], eax
+000009a5: pop eax
+000009a6: push 0x39
+000009a8: mov [ebp-1324], eax
+000009af: pop eax
+000009b0: push 0x3a
+000009b2: mov [ebp-1316], eax
+000009b9: pop eax
+000009ba: push 0x3c
+000009bc: mov [ebp-1308], eax
+000009c3: pop eax
+000009c4: push 0x3d
+000009c6: mov [ebp-1300], eax
+000009cd: pop eax
+000009ce: push 0x3e
+000009d0: mov [ebp-1292], eax
+000009d7: pop eax
+000009d8: push 0x3f
+000009da: mov [ebp-1284], eax
+000009e1: pop eax
+000009e2: push 0x40
+000009e4: mov [ebp-1276], eax
+000009eb: pop eax
+000009ec: push 0x41
+000009ee: mov [ebp-1268], eax
+000009f5: pop eax
+000009f6: mov ecx, 0x0043aadc
+000009fb: push 0x43
+000009fd: mov [ebp-1260], eax
+00000a04: mov [ebp-1408], 0x0043aad8
+00000a0e: mov [ebp-1400], 0x0043aad4
+00000a18: mov [ebp-1392], 0x0043aad0
+00000a22: mov [ebp-1384], 0x0043aacc
+00000a2c: mov [ebp-1376], 0x0043aac8
+00000a36: mov [ebp-1368], 0x0043aac4
+00000a40: mov [ebp-1360], 0x0043aac0
+00000a4a: mov [ebp-1352], 0x0043aabc
+00000a54: mov [ebp-1344], 0x0043aab8
+00000a5e: mov [ebp-1336], 0x0043aab4
+00000a68: mov [ebp-1328], 0x0043aab0
+00000a72: mov [ebp-1320], 0x0043aaac
+00000a7c: mov [ebp-1312], 0x0043aaa8
+00000a86: mov [ebp-1304], 0x0043aaa4
+00000a90: mov [ebp-1296], 0x0043aaa0
+00000a9a: mov [ebp-1288], ecx
+00000aa0: mov [ebp-1280], 0x0043aa9c
+00000aaa: mov [ebp-1272], 0x0043aa98
+00000ab4: mov [ebp-1264], 0x0043aa94
+00000abe: mov [ebp-1256], 0x0043aa90
+00000ac8: pop eax
+00000ac9: mov [ebp-1252], eax
+00000ad0: push 0x44
+00000ad2: pop eax
+00000ad3: mov [ebp-1244], eax
+00000ada: push 0x46
+00000adc: pop eax
+00000add: mov [ebp-1236], eax
+00000ae4: push 0x47
+00000ae6: pop eax
+00000ae7: mov [ebp-1228], eax
+00000aee: push 0x49
+00000af0: pop eax
+00000af1: mov [ebp-1220], eax
+00000af8: push 0x4a
+00000afa: pop eax
+00000afb: mov [ebp-1212], eax
+00000b02: push 0x4b
+00000b04: pop eax
+00000b05: mov [ebp-1204], eax
+00000b0c: push 0x4e
+00000b0e: pop eax
+00000b0f: mov [ebp-1196], eax
+00000b16: push 0x4f
+00000b18: pop eax
+00000b19: mov [ebp-1188], eax
+00000b20: push 0x50
+00000b22: pop eax
+00000b23: mov [ebp-1180], eax
+00000b2a: push 0x56
+00000b2c: pop eax
+00000b2d: mov [ebp-1172], eax
+00000b34: mov eax, 0x00000401
+00000b39: mov [ebp-1164], eax
+00000b40: mov [ebp-1156], eax
+00000b48: mov eax, 0x00000403
+00000b4d: mov [ebp-1148], eax
+00000b54: mov [ebp-1140], eax
+00000b5c: mov eax, 0x00000405
+00000b61: mov [ebp-1132], eax
+00000b68: mov [ebp-1124], eax
+00000b70: mov eax, 0x00000407
+00000b75: mov [ebp-1116], eax
+00000b7c: mov [ebp-1108], eax
+00000b84: mov eax, 0x00000409
+00000b89: mov [ebp-1100], eax
+00000b90: mov [ebp-1092], eax
+00000b98: mov eax, 0x0000040b
+00000b9d: mov [ebp-1084], eax
+00000ba4: mov edi, 0x0043aa8c
+00000baa: mov esi, 0x0043aa84
+00000baf: mov [ebp-1076], eax
+00000bb6: mov [ebp-1248], 0x0043aa80
+00000bc0: mov [ebp-1240], edi
+00000bc6: mov [ebp-1232], 0x0043aa7c
+00000bd0: mov [ebp-1224], 0x0043aa78
+00000bda: mov [ebp-1216], 0x0043aa74
+00000be4: mov [ebp-1208], 0x0043aa70
+00000bee: mov [ebp-1200], 0x0043aa6c
+00000bf8: mov [ebp-1192], 0x0043aa68
+00000c02: mov [ebp-1184], 0x0043aa64
+00000c0c: mov [ebp-1176], 0x0043aa60
+00000c16: mov [ebp-1168], 0x0043aa5c
+00000c20: mov [ebp-1160], 0x0043aa54
+00000c2a: mov [ebp-1152], 0x0043aa4c
+00000c34: mov [ebp-1144], 0x0043aa44
+00000c3e: mov [ebp-1136], 0x0043aa3c
+00000c48: mov [ebp-1128], 0x0043aa34
+00000c52: mov [ebp-1120], 0x0043aa2c
+00000c5c: mov [ebp-1112], 0x0043aa24
+00000c66: mov [ebp-1104], 0x0043aa1c
+00000c70: mov [ebp-1096], 0x0043aa14
+00000c7a: mov [ebp-1088], esi
+00000c80: mov [ebp-1080], 0x0043aa0c
+00000c8a: mov [ebp-1072], 0x0043aa04
+00000c94: mov eax, 0x0000040d
+00000c99: mov [ebp-1068], eax
+00000ca0: mov [ebp-1060], eax
+00000ca8: mov eax, 0x0000040f
+00000cad: mov [ebp-1052], eax
+00000cb4: mov [ebp-1044], eax
+00000cbc: mov eax, 0x00000411
+00000cc1: mov edx, 0x00000413
+00000cc6: mov [ebp-1020], edx
+00000ccd: mov [ebp-1036], eax
+00000cd4: mov [ebp-1012], edx
+00000cdd: mov edx, 0x00000415
+00000ce2: mov [ebp-1004], edx
+00000ce9: mov [ebp-996], edx
+00000cf1: mov edx, 0x00000417
+00000cf6: mov [ebp-988], edx
+00000cfd: mov [ebp-980], edx
+00000d05: mov edx, 0x00000419
+00000d0a: mov [ebp-972], edx
+00000d11: mov [ebp-964], edx
+00000d19: mov edx, 0x0000041b
+00000d1e: mov [ebp-956], edx
+00000d25: mov [ebp-948], edx
+00000d2d: mov edx, 0x0000041d
+00000d32: mov [ebp-940], edx
+00000d39: mov [ebp-932], edx
+00000d41: mov edx, 0x0000041f
+00000d46: mov [ebp-924], edx
+00000d4d: mov [ebp-916], edx
+00000d55: mov edx, 0x00000421
+00000d5a: mov [ebp-908], edx
+00000d61: mov [ebp-900], edx
+00000d69: mov edx, 0x00000423
+00000d6e: mov [ebp-892], edx
+00000d75: mov [ebp-884], edx
+00000d7d: mov edx, 0x00000425
+00000d82: mov [ebp-876], edx
+00000d89: mov [ebp-1028], eax
+00000d91: mov [ebp-868], edx
+00000d98: mov eax, 0x0043a9fc
+00000d9d: mov edx, 0x00000427
+00000da2: mov [ebp-1064], 0x0043a9f4
+00000dac: mov [ebp-1056], 0x0043a9ec
+00000db6: mov [ebp-1048], 0x0043a9e4
+00000dc0: mov [ebp-1040], 0x0043a9dc
+00000dca: mov [ebp-1032], 0x0043a9d4
+00000dd4: mov [ebp-1024], eax
+00000dda: mov [ebp-1016], 0x0043a9cc
+00000de4: mov [ebp-1008], 0x0043a9c4
+00000dee: mov [ebp-1000], 0x0043a9bc
+00000df8: mov [ebp-992], 0x0043a9b4
+00000e02: mov [ebp-984], 0x0043a9ac
+00000e0c: mov [ebp-976], 0x0043a9a4
+00000e16: mov [ebp-968], 0x0043a99c
+00000e20: mov [ebp-960], 0x0043a994
+00000e2a: mov [ebp-952], 0x0043a98c
+00000e34: mov [ebp-944], 0x0043a984
+00000e3e: mov [ebp-936], 0x0043a97c
+00000e48: mov [ebp-928], 0x0043a974
+00000e52: mov [ebp-920], 0x0043a96c
+00000e5c: mov [ebp-912], 0x0043a964
+00000e66: mov [ebp-904], 0x0043a95c
+00000e70: mov [ebp-896], 0x0043a954
+00000e7a: mov [ebp-888], 0x0043a94c
+00000e84: mov [ebp-880], 0x0043a944
+00000e8e: mov [ebp-872], 0x0043a93c
+00000e98: mov [ebp-864], 0x0043a934
+00000ea2: mov [ebp-860], edx
+00000ea9: mov [ebp-856], 0x0043a92c
+00000eb3: add edx, 0x02
+00000eb6: mov ebx, 0x0000042d
+00000ebb: mov [ebp-820], ebx
+00000ec2: add ebx, 0x02
+00000ec5: mov [ebp-812], ebx
+00000ecc: mov [ebp-852], edx
+00000ed3: mov edx, 0x0000042a
+00000ed8: mov [ebp-844], edx
+00000edf: mov ebx, 0x00000431
+00000ee5: mov [ebp-804], ebx
+00000eec: mov [ebp-796], ebx
+00000ef4: mov ebx, 0x00000434
+00000ef9: mov [ebp-788], ebx
+00000f00: mov [ebp-780], ebx
+00000f08: mov ebx, 0x00000436
+00000f0d: mov [ebp-772], ebx
+00000f14: mov [ebp-764], ebx
+00000f1c: mov ebx, 0x00000438
+00000f21: mov [ebp-756], ebx
+00000f28: mov [ebp-748], ebx
+00000f30: mov ebx, 0x0000043a
+00000f35: mov [ebp-740], ebx
+00000f3c: add ebx, 0x02
+00000f3f: mov [ebp-720], ecx
+00000f45: mov [ebp-732], ebx
+00000f4c: mov ebx, 0x0000043d
+00000f51: lea ecx, [ebp-1920375295]
+00000f57: db 0x34
+00000f58: std
+00000f59: db 0xff
+00000f5a: inc [ecx+102]
+00000f5d: mov [ebp-708], ecx
+00000f63: lea ecx, [ebp-1920375293]
+00000f69: std
+00000f6b: db 0xff
+00000f6c: inc [ecx-119]
+00000f6f: mov ebp, 0xfffffd60
+00000f74: mov [ebp-692], ecx
+00000f7b: lea ecx, [ebp+71745286]
+00000f81: add [eax], al
+00000f83: mov [ebp-668], edi
+00000f8a: mov [ebp-724], ebx
+00000f91: add ebx, 0x07
+00000f94: mov [ebp-836], edx
+00000f9c: mov edx, 0x0000042c
+00000fa1: mov [ebp-660], edi
+00000fa8: mov edi, 0x00000449
+00000fad: mov [ebp-828], edx
+00000fb4: mov [ebp-684], ecx
+00000fbb: mov edx, 0x0043a924
+00000fc0: mov ecx, 0x0043a91c
+00000fc5: mov [ebp-652], edi
+00000fcc: mov [ebp-848], 0x0043a914
+00000fd6: mov [ebp-840], 0x0043a90c
+00000fe0: mov [ebp-832], 0x0043a904
+00000fea: mov [ebp-824], edx
+00000ff0: mov [ebp-816], 0x0043a8fc
+00000ffa: mov [ebp-808], 0x0043a8f4
+// Export handler: Raw
+// Export handler: x86-32 instructions
+// committed:FORMAT:IMAGE_SECTION[.rdata][0000000000038e00h-0000000000052200h]
+start = 0000000000038e00h
+end = 0000000000052200h
+size = 103.424 // 101 KiB
+// Export handler: Raw
+// Export handler: x86-32 instructions
+// committed:FORMAT:IMAGE_SECTION[.data][0000000000052200h-0000000000054000h]
+start = 0000000000052200h
+end = 0000000000054000h
+size = 7.680 // 7,5 KiB
+// Export handler: Raw
+// Export handler: x86-32 instructions
+// committed:FORMAT:IMAGE_SECTION[.rsrc][0000000000054000h-0000000000058e00h]
+start = 0000000000054000h
+end = 0000000000058e00h
+size = 19.968 // 19,5 KiB
+// Export handler: Raw
+// Export handler: x86-32 instructions
+// committed:FORMAT:IMAGE_SECTION[.reloc][0000000000058e00h-000000000005ca00h]
+start = 0000000000058e00h
+end = 000000000005ca00h
+size = 15.360 // 15 KiB
+// Export handler: Raw
+// Export handler: x86-32 instructions

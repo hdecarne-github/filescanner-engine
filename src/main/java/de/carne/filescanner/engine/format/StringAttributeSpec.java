@@ -21,8 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.util.FinalSupplier;
+import de.carne.filescanner.engine.util.PrettyFormat;
 import de.carne.filescanner.engine.util.StringHelper;
-import de.carne.filescanner.provider.util.PrettyFormat;
 
 /**
  * Base class for {@linkplain String} based format attribute specifications.

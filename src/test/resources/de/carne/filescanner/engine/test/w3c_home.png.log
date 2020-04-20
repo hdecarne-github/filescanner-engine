@@ -1,0 +1,36 @@
+// committed:FORMAT:PNG image data[0000000000000000h-00000000000007ech]
+[image/png]
+// Export handler: PNG image file
+// Export handler: Raw
+// committed:FORMAT:PNG file signature[0000000000000000h-0000000000000008h]
+signature = { 89h, 50h, 4eh, 47h, 0dh, 0ah, 1ah, 0ah }
+// Export handler: Raw
+// committed:FORMAT:IHDR chunk[0000000000000008h-0000000000000021h]
+Length = 13 // 13 byte
+Chunk Type = 49484452h
+Width = 72
+Height = 48
+Bit depth = 8
+Color type = 02h // RGB
+Compression method = 00h // deflate/inflate compression
+Filter method = 00h // adaptive filtering
+Interlace method = 00h // no interlace
+CRC = 3dfeabbch
+// Export handler: Raw
+// committed:FORMAT:gAMA chunk[0000000000000021h-0000000000000031h]
+Length = 4 // 4 byte
+Chunk Type = 67414d41h
+Chunk Data = { ... } // 4 byte
+CRC = 0bfc6105h
+// Export handler: Raw
+// committed:FORMAT:IDAT chunk[0000000000000031h-00000000000007e0h]
+Length = 1.955 // 1,909 KiB
+Chunk Type = 49444154h
+Chunk Data = { ... } // 1,909 KiB
+CRC = 4283ddddh
+// Export handler: Raw
+// committed:FORMAT:IEND chunk[00000000000007e0h-00000000000007ech]
+Length = 0 // 0 byte
+Chunk Type = 49454e44h
+CRC = ae426082h
+// Export handler: Raw

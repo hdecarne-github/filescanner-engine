@@ -24,7 +24,7 @@ import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpec;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 
 /**
  * Input data processor base class responsible for input data access.

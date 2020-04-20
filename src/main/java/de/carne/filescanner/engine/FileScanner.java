@@ -40,7 +40,7 @@ import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.spi.Format;
-import de.carne.filescanner.provider.util.HexFormat;
+import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.SystemProperties;
 
 /**
