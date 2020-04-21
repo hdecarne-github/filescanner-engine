@@ -129,9 +129,11 @@ public final class FormatSpecs {
 	 */
 	public static boolean matches(ByteBuffer buffer, Supplier<? extends Number> size,
 			BiPredicate<ByteBuffer, Integer> matcher) {
-		boolean match = false;
+		boolean match = true;
 
 		if (size instanceof FinalSupplier) {
+			match = false;
+
 			Number sizeValue = size.get();
 
 			if (isValidSize(sizeValue.longValue())) {

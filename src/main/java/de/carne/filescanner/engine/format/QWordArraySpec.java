@@ -54,24 +54,25 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this qword array attribute.
 	 *
-	 * @param sizeSupplier the size (in bytes) of this byte array attribute.
+	 * @param lengthSupplier the length of this qword array attribute.
 	 * @return the updated {@linkplain QWordArraySpec} instance for chaining.
 	 */
-	public QWordArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.size = sizeSupplier;
+	public QWordArraySpec length(Supplier<? extends Number> lengthSupplier) {
+		this.size = (lengthSupplier instanceof FinalSupplier ? FinalSupplier.of(lengthSupplier.get().intValue() << 3)
+				: () -> lengthSupplier.get().intValue() << 3);
 		return this;
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this qword array attribute.
 	 *
-	 * @param sizeValue the size (in bytes) of this byte array attribute.
+	 * @param lengthValue the length of this qword array attribute.
 	 * @return the updated {@linkplain QWordArraySpec} instance for chaining.
 	 */
-	public QWordArraySpec size(int sizeValue) {
-		this.size = FinalSupplier.of(sizeValue);
+	public QWordArraySpec length(int lengthValue) {
+		this.size = FinalSupplier.of(lengthValue);
 		return this;
 	}
 
@@ -82,26 +83,25 @@ public class QWordArraySpec extends AttributeSpec<long[]> {
 
 	@Override
 	public int matchSize() {
-		return FormatSpecs.matchSize(this.size) << 3;
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !isFixedSize()
-				|| ((this.size.get().intValue() << 3) <= buffer.remaining() && validateValue(decodeValue(buffer)));
+		return FormatSpecs.matches(buffer, this.size, b -> validateValue(decodeValue(b)));
 	}
 
 	@Override
 	protected long[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue() << 4, this::decodeValue);
+		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 
 	private long[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue() << 4);
+		slice.limit(this.size.get().intValue());
 
-		long[] value = new long[slice.remaining() >> 4];
+		long[] value = new long[slice.remaining() >> 3];
 		int valueIndex = 0;
 
 		while (slice.hasRemaining()) {

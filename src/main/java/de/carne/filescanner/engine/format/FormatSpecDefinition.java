@@ -1174,7 +1174,7 @@ public abstract class FormatSpecDefinition {
 	private WordArraySpec loadWordArraySpec(WordArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		WordArraySpec spec = new WordArraySpec(loadTextExpression(specCtx.textExpression()));
 
-		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		spec.length(loadNumberExpression(specCtx.numberExpression()));
 		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
 				ShortHelper::decodeUnsignedArray);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.wordArrayAttributeFormatter);
@@ -1190,7 +1190,7 @@ public abstract class FormatSpecDefinition {
 	private DWordArraySpec loadDWordArraySpec(DwordArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		DWordArraySpec spec = new DWordArraySpec(loadTextExpression(specCtx.textExpression()));
 
-		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		spec.length(loadNumberExpression(specCtx.numberExpression()));
 		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
 				IntHelper::decodeUnsignedArray);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.dwordArrayAttributeFormatter);
@@ -1206,7 +1206,7 @@ public abstract class FormatSpecDefinition {
 	private QWordArraySpec loadQWordArraySpec(QwordArrayAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
 		QWordArraySpec spec = new QWordArraySpec(loadTextExpression(specCtx.textExpression()));
 
-		spec.size(loadNumberExpression(specCtx.numberExpression()));
+		spec.length(loadNumberExpression(specCtx.numberExpression()));
 		applyValidateNumberArrayModifier(spec, specCtx.attributeValidateNumberArrayModifier(),
 				LongHelper::decodeUnsignedArray);
 		applyFormatModifier(spec, specCtx.attributeFormatModifier(), this.qwordArrayAttributeFormatter);

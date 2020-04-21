@@ -54,24 +54,25 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this word array attribute.
 	 *
-	 * @param sizeSupplier the size (in bytes) of this byte array attribute.
+	 * @param lengthSupplier the length of this word array attribute.
 	 * @return the updated {@linkplain WordArraySpec} instance for chaining.
 	 */
-	public WordArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.size = sizeSupplier;
+	public WordArraySpec length(Supplier<? extends Number> lengthSupplier) {
+		this.size = (lengthSupplier instanceof FinalSupplier ? FinalSupplier.of(lengthSupplier.get().intValue() << 1)
+				: () -> lengthSupplier.get().intValue() << 1);
 		return this;
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this word array attribute.
 	 *
-	 * @param sizeValue the size (in bytes) of this byte array attribute.
+	 * @param lengthValue the length of this word array attribute.
 	 * @return the updated {@linkplain WordArraySpec} instance for chaining.
 	 */
-	public WordArraySpec size(int sizeValue) {
-		this.size = FinalSupplier.of(sizeValue);
+	public WordArraySpec length(int lengthValue) {
+		this.size = FinalSupplier.of(lengthValue);
 		return this;
 	}
 
@@ -82,24 +83,23 @@ public class WordArraySpec extends AttributeSpec<short[]> {
 
 	@Override
 	public int matchSize() {
-		return FormatSpecs.matchSize(this.size) << 1;
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !isFixedSize()
-				|| ((this.size.get().intValue() << 1) <= buffer.remaining() && validateValue(decodeValue(buffer)));
+		return FormatSpecs.matches(buffer, this.size, b -> validateValue(decodeValue(b)));
 	}
 
 	@Override
 	protected short[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue() << 1, this::decodeValue);
+		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 
 	private short[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue() << 1);
+		slice.limit(this.size.get().intValue());
 
 		short[] value = new short[slice.remaining() >> 1];
 		int valueIndex = 0;

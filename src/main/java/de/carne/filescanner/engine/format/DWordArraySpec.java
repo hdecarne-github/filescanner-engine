@@ -54,24 +54,25 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this dword array attribute.
 	 *
-	 * @param sizeSupplier the size (in bytes) of this byte array attribute.
+	 * @param lengthSupplier the length of this dword array attribute.
 	 * @return the updated {@linkplain DWordArraySpec} instance for chaining.
 	 */
-	public DWordArraySpec size(Supplier<? extends Number> sizeSupplier) {
-		this.size = sizeSupplier;
+	public DWordArraySpec length(Supplier<? extends Number> lengthSupplier) {
+		this.size = (lengthSupplier instanceof FinalSupplier ? FinalSupplier.of(lengthSupplier.get().intValue() << 2)
+				: () -> lengthSupplier.get().intValue() << 2);
 		return this;
 	}
 
 	/**
-	 * Sets the size (in bytes) of this byte array attribute.
+	 * Sets the length of this dword array attribute.
 	 *
-	 * @param sizeValue the size (in bytes) of this byte array attribute.
+	 * @param lengthValue the length of this dword array attribute.
 	 * @return the updated {@linkplain DWordArraySpec} instance for chaining.
 	 */
-	public DWordArraySpec size(int sizeValue) {
-		this.size = FinalSupplier.of(sizeValue);
+	public DWordArraySpec length(int lengthValue) {
+		this.size = FinalSupplier.of(lengthValue);
 		return this;
 	}
 
@@ -82,24 +83,23 @@ public class DWordArraySpec extends AttributeSpec<int[]> {
 
 	@Override
 	public int matchSize() {
-		return FormatSpecs.matchSize(this.size) << 2;
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		return !isFixedSize()
-				|| ((this.size.get().intValue() << 2) <= buffer.remaining() && validateValue(decodeValue(buffer)));
+		return FormatSpecs.matches(buffer, this.size, b -> validateValue(decodeValue(b)));
 	}
 
 	@Override
 	protected int[] decodeValue(FileScannerResultInputContext context) throws IOException {
-		return context.readValue(this.size.get().intValue() << 2, this::decodeValue);
+		return context.readValue(this.size.get().intValue(), this::decodeValue);
 	}
 
 	private int[] decodeValue(ByteBuffer buffer) {
 		ByteBuffer slice = buffer.slice();
 
-		slice.limit(this.size.get().intValue() << 2);
+		slice.limit(this.size.get().intValue());
 
 		int[] value = new int[slice.remaining() >> 2];
 		int valueIndex = 0;
