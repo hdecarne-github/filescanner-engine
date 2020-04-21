@@ -49,6 +49,13 @@ public final class TestFiles {
 			"d0d8344e384f91c8deabb5dfa452d8bb9a44e66a03cd2ffd973451eec505c1cc");
 
 	/**
+	 * https://busybox.net/downloads/binaries/1.31.0-defconfig-multiarch-musl/busybox-x86_64
+	 */
+	public static final TestFile ELF_X86_64_IMAGE = new RemoteTestFile(TEST_FILE_DIR,
+			"https://busybox.net/downloads/binaries/1.31.0-defconfig-multiarch-musl/busybox-x86_64", "busybox-x86_64",
+			"51fcb60efbdf3e579550e9ab893730df56b33d0cc928a2a6467bd846cdfef7d8");
+
+	/**
 	 * https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.gif
 	 */
 	public static final TestFile GIF_IMAGE = new RemoteTestFile(TEST_FILE_DIR,
