@@ -133,6 +133,11 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testElfX86x642ImageFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.ELF_X86_64_IMAGE.getPath(), Formats.all().enabledFormats());
+	}
+
+	@Test
 	void testGifImageFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.GIF_IMAGE.getPath(), Formats.all().enabledFormats());
 	}
