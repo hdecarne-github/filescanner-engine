@@ -17,7 +17,7 @@
 lexer grammar XMLStyle;
 
 @header {
-package de.carne.filescanner.engine.transfer.textstyle;
+package de.carne.filescanner.engine.transfer.renderer.textstyle;
 }
 
 NEWLINE: '\r\n'|'\n'|'\r';

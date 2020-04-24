@@ -46,17 +46,30 @@ public final class FileScannerResults {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	public static void renderDefault(FileScannerResult result, RenderOutput out) throws IOException {
-		out.setStyle(RenderStyle.NORMAL).write("start");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.start()));
-		out.setStyle(RenderStyle.NORMAL).write("end");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.end()));
-		out.setStyle(RenderStyle.NORMAL).write("size");
-		out.setStyle(RenderStyle.OPERATOR).write(" = ");
-		out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(result.size()));
-		out.setStyle(RenderStyle.COMMENT).write(" // ")
-				.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(result.size() * 1.0));
+		if (result.type() == FileScannerResult.Type.INPUT) {
+			FileScannerInput input = result.input();
+
+			out.setStyle(RenderStyle.NORMAL).write("file");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input.name()));
+			out.setStyle(RenderStyle.NORMAL).write("size");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input.size()));
+			out.setStyle(RenderStyle.COMMENT).write(" // ")
+					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input.size() * 1.0));
+		} else {
+			out.setStyle(RenderStyle.NORMAL).write("start");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.start()));
+			out.setStyle(RenderStyle.NORMAL).write("end");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).writeln(HexFormat.formatLong(result.end()));
+			out.setStyle(RenderStyle.NORMAL).write("size");
+			out.setStyle(RenderStyle.OPERATOR).write(" = ");
+			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(result.size()));
+			out.setStyle(RenderStyle.COMMENT).write(" // ")
+					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(result.size() * 1.0));
+		}
 	}
 
 	/**

@@ -1,0 +1,2 @@
+de.carne.filescanner.engine.transfer.handler.SimpleRenderHandlerFactory
+de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandlerFactory

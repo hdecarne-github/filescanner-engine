@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.util;
+package de.carne.filescanner.engine.transfer.handler;
 
 import java.io.IOException;
 import java.io.OutputStream;

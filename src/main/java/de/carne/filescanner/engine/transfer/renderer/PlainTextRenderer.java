@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.transfer;
+package de.carne.filescanner.engine.transfer.renderer;
 
 import java.io.IOException;
 import java.io.Writer;
+
+import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.transfer.Renderer;
+import de.carne.filescanner.engine.transfer.TransferSource;
 
 /**
  * {@linkplain Renderer} implementation suitable for creating a plain {@linkplain String} representation of a scan

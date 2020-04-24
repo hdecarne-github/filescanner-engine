@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResult;
 
@@ -50,15 +52,18 @@ public final class RenderOutput implements Closeable {
 	 *
 	 * @param result the {@linkplain FileScannerResult} to render.
 	 * @param renderer the {@linkplain Renderer} to use for output generation.
+	 * @param renderHandler the {@linkplain FileScannerResultRenderHandler} to use for rendering. May {@code null} to
+	 * use the default handler.
 	 * @param offset the offset to start rendering at.
 	 * @return the number of decoded bytes.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public static long render(FileScannerResult result, Renderer renderer, long offset) throws IOException {
+	public static long render(FileScannerResult result, Renderer renderer,
+			@Nullable FileScannerResultRenderHandler renderHandler, long offset) throws IOException {
 		long decoded;
 
 		try (RenderOutput out = new RenderOutput(renderer)) {
-			decoded = result.render(out, offset);
+			decoded = result.render(out, renderHandler, offset);
 		}
 		return decoded;
 	}

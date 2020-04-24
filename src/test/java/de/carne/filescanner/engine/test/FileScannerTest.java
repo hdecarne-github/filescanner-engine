@@ -41,9 +41,9 @@ import de.carne.filescanner.engine.FileScannerStatus;
 import de.carne.filescanner.engine.Formats;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.PlainTextRenderer;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.Renderer;
+import de.carne.filescanner.engine.transfer.renderer.PlainTextRenderer;
 import de.carne.filescanner.provider.jvm.ClassFormat;
 import de.carne.filescanner.provider.zip.ZipFormat;
 import de.carne.test.api.io.TempDir;
@@ -243,7 +243,7 @@ class FileScannerTest {
 		if (!root) {
 			resultLogWriter.write("// " + result.toString() + System.lineSeparator());
 			try (Renderer renderer = new PlainTextRenderer(resultLogWriter, false)) {
-				RenderOutput.render(result, renderer, 0);
+				RenderOutput.render(result, renderer, null, 0);
 			}
 			for (FileScannerResultExportHandler exportHandler : result.exportHandlers()) {
 				resultLogWriter.write("// Export handler: " + exportHandler.name() + System.lineSeparator());

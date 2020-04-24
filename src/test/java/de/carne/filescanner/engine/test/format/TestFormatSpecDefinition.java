@@ -26,7 +26,7 @@ import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.ScanSpecConfig;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.RawTransferHandler;
+import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
 
 final class TestFormatSpecDefinition extends FormatSpecDefinition {
 

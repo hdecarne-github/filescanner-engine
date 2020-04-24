@@ -14,11 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.transfer;
+package de.carne.filescanner.engine.transfer.handler;
 
 import java.io.IOException;
 
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.util.SizeRenderer;
 
 /**

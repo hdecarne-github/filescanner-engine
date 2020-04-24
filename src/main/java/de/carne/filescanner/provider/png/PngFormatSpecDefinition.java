@@ -24,7 +24,7 @@ import de.carne.filescanner.engine.format.DWordSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.RawTransferHandler;
+import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
 import de.carne.util.Lazy;
 
 /**

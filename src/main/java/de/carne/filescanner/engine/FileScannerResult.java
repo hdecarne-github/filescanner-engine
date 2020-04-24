@@ -23,6 +23,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.TransferSource;
 
@@ -137,11 +138,14 @@ public interface FileScannerResult {
 	 * Renders this {@linkplain FileScannerResult}.
 	 *
 	 * @param out the {@linkplain RenderOutput} to render to.
+	 * @param renderHandler the {@linkplain FileScannerResultRenderHandler} to use for rendering. May {@code null} to
+	 * use the default handler.
 	 * @param offset the offset to start rendering at.
 	 * @return the number of decoded bytes.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	long render(RenderOutput out, long offset) throws IOException;
+	long render(RenderOutput out, @Nullable FileScannerResultRenderHandler renderHandler, long offset)
+			throws IOException;
 
 	/**
 	 * Gets the available {@linkplain FileScannerResultExportHandler} instances for this {@linkplain FileScannerResult}.

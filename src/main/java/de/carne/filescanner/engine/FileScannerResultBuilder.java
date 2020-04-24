@@ -39,14 +39,12 @@ import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.RawTransferHandler;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
-import de.carne.filescanner.engine.transfer.RenderStyle;
 import de.carne.filescanner.engine.transfer.TransferSource;
+import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.HexFormat;
-import de.carne.filescanner.engine.util.PrettyFormat;
-import de.carne.text.MemoryUnitFormat;
 import de.carne.util.Strings;
 
 /**
@@ -417,16 +415,17 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public long render(RenderOutput out, long offset) throws IOException {
-			out.setStyle(RenderStyle.NORMAL).write("file");
-			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).writeln(PrettyFormat.formatString(input().name()));
-			out.setStyle(RenderStyle.NORMAL).write("size");
-			out.setStyle(RenderStyle.OPERATOR).write(" = ");
-			out.setStyle(RenderStyle.VALUE).write(PrettyFormat.formatLongNumber(input().size()));
-			out.setStyle(RenderStyle.COMMENT).write(" // ")
-					.writeln(MemoryUnitFormat.getMemoryUnitInstance().format(input().size() * 1.0));
-			return size();
+		public long render(RenderOutput out, @Nullable FileScannerResultRenderHandler renderHandler, long offset)
+				throws IOException {
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, offset);
+
+			if (renderHandler != null) {
+				renderHandler.render(out, context);
+			} else {
+				FileScannerResults.renderDefault(this, out);
+				context.skip(context.remaining());
+			}
+			return context.decoded();
 		}
 
 		@Override
@@ -467,10 +466,15 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public long render(RenderOutput out, long offset) throws IOException {
+		public long render(RenderOutput out, @Nullable FileScannerResultRenderHandler renderHandler, long offset)
+				throws IOException {
 			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, offset);
 
-			this.formatSpec.render(out, context);
+			if (renderHandler != null) {
+				renderHandler.render(out, context);
+			} else {
+				this.formatSpec.render(out, context);
+			}
 			if (out.isEmpty()) {
 				FileScannerResults.renderDefault(this, out);
 			}
@@ -529,13 +533,19 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 		}
 
 		@Override
-		public long render(RenderOutput out, long offset) throws IOException {
-			FileScannerResults.renderDefault(this, out);
+		public long render(RenderOutput out, @Nullable FileScannerResultRenderHandler renderHandler, long offset)
+				throws IOException {
+			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, offset);
 
-			FileScannerResultRenderContext context = new FileScannerResultRenderContext(this, 0);
+			if (renderHandler != null) {
+				renderHandler.render(out, context);
+			} else {
+				FileScannerResults.renderDefault(this, out);
 
-			context.render(out, this.encodedInputSpec);
-			return size();
+				context.render(out, this.encodedInputSpec);
+				context.skip(context.remaining());
+			}
+			return context.decoded();
 		}
 
 		@Override

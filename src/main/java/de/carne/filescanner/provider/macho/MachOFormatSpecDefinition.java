@@ -25,10 +25,10 @@ import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.QWordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.RangeRenderHandler;
-import de.carne.filescanner.engine.transfer.RawTransferHandler;
+import de.carne.filescanner.engine.transfer.handler.McdTransferHandler;
+import de.carne.filescanner.engine.transfer.handler.RangeRenderHandler;
+import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
 import de.carne.filescanner.engine.util.IntHelper;
-import de.carne.filescanner.engine.util.McdTransferHandler;
 import de.carne.util.Lazy;
 
 /**

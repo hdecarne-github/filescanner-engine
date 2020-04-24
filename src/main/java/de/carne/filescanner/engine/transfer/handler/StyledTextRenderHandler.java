@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.transfer;
+package de.carne.filescanner.engine.transfer.handler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,10 +34,15 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.transfer.textstyle.XMLStyle;
+import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.RenderOption;
+import de.carne.filescanner.engine.transfer.RenderOutput;
+import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.filescanner.engine.transfer.TransferType;
+import de.carne.filescanner.engine.transfer.renderer.textstyle.XMLStyle;
 
 /**
- * {@linkplain FileScannerResultRenderHandler} implementation supported styled text rendering.
+ * {@linkplain FileScannerResultRenderHandler} implementation for styled text rendering.
  */
 public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 
@@ -48,8 +53,7 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 	/**
 	 * Predefined TEXT_XML renderer handler.
 	 */
-	public static final StyledTextRenderHandler XML_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_XML);
+	public static final StyledTextRenderHandler XML_RENDER_HANDLER = new StyledTextRenderHandler(TransferType.TEXT_XML);
 
 	/**
 	 * Constructs a new {@linkplain StyledTextRenderHandler} instance.

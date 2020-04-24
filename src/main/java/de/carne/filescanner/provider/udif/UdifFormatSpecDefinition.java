@@ -28,8 +28,8 @@ import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.StyledTextRenderHandler;
 import de.carne.filescanner.engine.transfer.TransferType;
+import de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandler;
 import de.carne.util.Lazy;
 
 /**

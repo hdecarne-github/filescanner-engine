@@ -25,8 +25,8 @@ import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.handler.McdTransferHandler;
 import de.carne.filescanner.engine.util.IntHelper;
-import de.carne.filescanner.engine.util.McdTransferHandler;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
 
