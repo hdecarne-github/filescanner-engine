@@ -30,6 +30,11 @@ public class StyledTextRenderHandlerFactory extends FileScannerResultRenderHandl
 
 	@Override
 	protected void addHandlers(SortedMap<HandlerId, FileScannerResultRenderHandler> handlers) {
+		addHandler(handlers, HandlerGroup.TEXT, "US-ASCII", StyledTextRenderHandler.PLAIN_ASCII_RENDER_HANDLER);
+		addHandler(handlers, HandlerGroup.TEXT, "ISO-8859-1", StyledTextRenderHandler.PLAIN_ISO8859_RENDER_HANDLER);
+		addHandler(handlers, HandlerGroup.TEXT, "UTF-8", StyledTextRenderHandler.PLAIN_UTF8_RENDER_HANDLER);
+		addHandler(handlers, HandlerGroup.TEXT, "UTF-16LE", StyledTextRenderHandler.PLAIN_UTF16LE_RENDER_HANDLER);
+		addHandler(handlers, HandlerGroup.TEXT, "UTF-16BE", StyledTextRenderHandler.PLAIN_UTF16BE_RENDER_HANDLER);
 		addHandler(handlers, HandlerGroup.TEXT, "XML", StyledTextRenderHandler.XML_RENDER_HANDLER);
 	}
 

@@ -51,6 +51,36 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 	private final Charset charset;
 
 	/**
+	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
+	 */
+	public static final StyledTextRenderHandler PLAIN_ASCII_RENDER_HANDLER = new StyledTextRenderHandler(
+			TransferType.TEXT_PLAIN, StandardCharsets.US_ASCII);
+
+	/**
+	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
+	 */
+	public static final StyledTextRenderHandler PLAIN_ISO8859_RENDER_HANDLER = new StyledTextRenderHandler(
+			TransferType.TEXT_PLAIN, StandardCharsets.ISO_8859_1);
+
+	/**
+	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
+	 */
+	public static final StyledTextRenderHandler PLAIN_UTF8_RENDER_HANDLER = new StyledTextRenderHandler(
+			TransferType.TEXT_PLAIN, StandardCharsets.UTF_8);
+
+	/**
+	 * Predefined TEXT_PLAIN/UTF-16LE renderer handler.
+	 */
+	public static final StyledTextRenderHandler PLAIN_UTF16LE_RENDER_HANDLER = new StyledTextRenderHandler(
+			TransferType.TEXT_PLAIN, StandardCharsets.UTF_16LE);
+
+	/**
+	 * Predefined TEXT_PLAIN/UTF-16BE renderer handler.
+	 */
+	public static final StyledTextRenderHandler PLAIN_UTF16BE_RENDER_HANDLER = new StyledTextRenderHandler(
+			TransferType.TEXT_PLAIN, StandardCharsets.UTF_16BE);
+
+	/**
 	 * Predefined TEXT_XML renderer handler.
 	 */
 	public static final StyledTextRenderHandler XML_RENDER_HANDLER = new StyledTextRenderHandler(TransferType.TEXT_XML);
