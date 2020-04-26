@@ -47,11 +47,16 @@ class StyledTextCharStream implements CharStream {
 	private long nextReadPosition = 0;
 	private int decodeBufferDisplacement = 0;
 	private int markIndex = -1;
+	private long decodedBytes = 0;
 
 	StyledTextCharStream(FileScannerInputRange inputRange, Charset charset) {
 		this.inputRange = inputRange;
 		this.decoder = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
+	}
+
+	public long decodedBytes() {
+		return this.decodedBytes;
 	}
 
 	@Override
@@ -178,6 +183,7 @@ class StyledTextCharStream implements CharStream {
 							feedReadBuffer();
 						}
 
+						int readBufferStart = this.readBuffer.position();
 						int capacity = this.decodeBuffer0.capacity();
 
 						if (this.decoded0 < capacity) {
@@ -207,6 +213,7 @@ class StyledTextCharStream implements CharStream {
 						} else {
 							Check.fail("Insufficent LA buffer");
 						}
+						this.decodedBytes += (this.readBuffer.position() - readBufferStart);
 					} while (feed > 0 && this.nextReadPosition >= 0);
 				} catch (IOException e) {
 					throw Exceptions.toRuntime(e);
