@@ -70,10 +70,12 @@ public abstract class FileScannerResultRenderHandlerFactory {
 
 		private final HandlerGroup group;
 		private final String name;
+		private final String displayName;
 
-		HandlerId(HandlerGroup group, String name) {
+		HandlerId(HandlerGroup group, String name, String displayName) {
 			this.group = group;
 			this.name = name;
+			this.displayName = displayName;
 		}
 
 		/**
@@ -92,6 +94,15 @@ public abstract class FileScannerResultRenderHandlerFactory {
 		 */
 		public String name() {
 			return this.name;
+		}
+
+		/**
+		 * Gets this id's display name.
+		 *
+		 * @return this id's display name.
+		 */
+		public String displayName() {
+			return this.displayName;
 		}
 
 		@Override
@@ -139,7 +150,12 @@ public abstract class FileScannerResultRenderHandlerFactory {
 
 	protected final void addHandler(SortedMap<HandlerId, FileScannerResultRenderHandler> handlers, HandlerGroup group,
 			String name, FileScannerResultRenderHandler handler) {
-		handlers.put(new HandlerId(group, name), handler);
+		addHandler(handlers, group, name, name, handler);
+	}
+
+	protected final void addHandler(SortedMap<HandlerId, FileScannerResultRenderHandler> handlers, HandlerGroup group,
+			String name, String displayName, FileScannerResultRenderHandler handler) {
+		handlers.put(new HandlerId(group, name, displayName), handler);
 	}
 
 	protected abstract void addHandlers(SortedMap<HandlerId, FileScannerResultRenderHandler> handlers);
