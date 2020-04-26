@@ -28,7 +28,6 @@ import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandler;
 import de.carne.util.Lazy;
 
@@ -39,8 +38,7 @@ final class UdifFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
 
-	private static final StyledTextRenderHandler RESOURCE_FORK_RENDERER = new StyledTextRenderHandler(
-			TransferType.TEXT_XML);
+	private static final StyledTextRenderHandler RESOURCE_FORK_RENDERER = StyledTextRenderHandler.XML_UTF8_RENDER_HANDLER;
 
 	@Override
 	protected URL getFormatSpecResource() {

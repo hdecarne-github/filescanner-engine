@@ -49,7 +49,7 @@ final class XmlFormatSpecDefinition extends FormatSpecDefinition {
 	}
 
 	public FileScannerResultRenderHandler xmlRenderer() {
-		return StyledTextRenderHandler.XML_RENDER_HANDLER;
+		return StyledTextRenderHandler.XML_UTF8_RENDER_HANDLER;
 	}
 
 	public FileScannerResultExportHandler xmlExporter() {

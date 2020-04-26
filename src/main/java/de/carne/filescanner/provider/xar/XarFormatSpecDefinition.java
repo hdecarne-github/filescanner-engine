@@ -16,17 +16,12 @@
  */
 package de.carne.filescanner.provider.xar;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Objects;
 import java.util.zip.InflaterInputStream;
 
 import de.carne.boot.logging.Log;
-import de.carne.filescanner.engine.FileScannerResult;
-import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
@@ -34,11 +29,6 @@ import de.carne.filescanner.engine.format.FormatSpecs;
 import de.carne.filescanner.engine.format.QWordSpec;
 import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.format.WordSpec;
-import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
-import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
-import de.carne.filescanner.engine.transfer.TransferType;
-import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
-import de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandler;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
@@ -49,26 +39,6 @@ import de.carne.util.Lazy;
 final class XarFormatSpecDefinition extends FormatSpecDefinition {
 
 	private static final Log LOG = new Log();
-
-	private static final StyledTextRenderHandler TOC_RENDERER = new StyledTextRenderHandler(TransferType.TEXT_XML) {
-
-		@Override
-		protected InputStream newResultStream(FileScannerResultRenderContext context) throws IOException {
-			return new InflaterInputStream(super.newResultStream(context));
-		}
-
-	};
-
-	private static final RawTransferHandler TOC_EXPORT_HANDLER = new RawTransferHandler("Table of content XML",
-			TransferType.TEXT_XML, ".xml") {
-
-		@Override
-		protected ReadableByteChannel newResultChannel(FileScannerResult result) throws IOException {
-			return Channels
-					.newChannel(new InflaterInputStream(result.input().inputStream(result.start(), result.end())));
-		}
-
-	};
 
 	@Override
 	protected URL getFormatSpecResource() {
@@ -94,14 +64,6 @@ final class XarFormatSpecDefinition extends FormatSpecDefinition {
 		int headerSizeValue = ShortHelper.toUnsignedInt(this.headerSize.get().get());
 
 		return Math.max(headerSizeValue - 28, 0);
-	}
-
-	public FileScannerResultRenderHandler tocRenderer() {
-		return TOC_RENDERER;
-	}
-
-	public FileScannerResultExportHandler tocExportHandler() {
-		return TOC_EXPORT_HANDLER;
 	}
 
 	public CompositeSpec heapSpec() {

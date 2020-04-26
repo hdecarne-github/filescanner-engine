@@ -59,8 +59,6 @@ struct "toc" {
 TOC_XML@XAR_ARCHIVE:
 	range[@TOC_LENGTH] "toc"
 }	->bigEndian()
-	->renderer(#tocRenderer)
-	->export(#tocExportHandler)
 
 XAR_ARCHIVE:
 format_spec "XAR archive" {

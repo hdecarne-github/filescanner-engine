@@ -37,7 +37,7 @@ public class StyledTextRenderHandlerFactory extends FileScannerResultRenderHandl
 				StyledTextRenderHandler.PLAIN_UTF16LE_RENDER_HANDLER);
 		addHandler(handlers, HandlerGroup.TEXT, "UTF@3", "UTF-16BE",
 				StyledTextRenderHandler.PLAIN_UTF16BE_RENDER_HANDLER);
-		addHandler(handlers, HandlerGroup.TEXT, "XML", StyledTextRenderHandler.XML_RENDER_HANDLER);
+		addHandler(handlers, HandlerGroup.TEXT, "XML", StyledTextRenderHandler.XML_UTF8_RENDER_HANDLER);
 	}
 
 }

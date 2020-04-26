@@ -16,10 +16,7 @@
  */
 package de.carne.filescanner.engine.transfer.handler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -29,15 +26,15 @@ import java.util.function.Function;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
-import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
+import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RenderOption;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.RenderStyle;
-import de.carne.filescanner.engine.transfer.TransferType;
+import de.carne.filescanner.engine.transfer.renderer.textstyle.PlainStyle;
 import de.carne.filescanner.engine.transfer.renderer.textstyle.XMLStyle;
 
 /**
@@ -45,75 +42,86 @@ import de.carne.filescanner.engine.transfer.renderer.textstyle.XMLStyle;
  */
 public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 
-	private final @Nullable Function<CharStream, Lexer> lexerFactory;
-	private final Map<Integer, RenderStyle> styleMap = new HashMap<>();
+	private static class Style {
+
+		private final Function<CharStream, Lexer> lexerFactory;
+		private final int lineBreakTokenType;
+		private final Map<Integer, RenderStyle> styleMap = new HashMap<>();
+
+		private Style(Function<CharStream, Lexer> lexerFactory, int lineBreakTokenType) {
+			this.lexerFactory = lexerFactory;
+			this.lineBreakTokenType = lineBreakTokenType;
+		}
+
+		static Style withLexer(Function<CharStream, Lexer> lexerFactory, int lineBreakType) {
+			return new Style(lexerFactory, lineBreakType);
+		}
+
+		Style withStyle(int tokenType, RenderStyle style) {
+			this.styleMap.put(tokenType, style);
+			return this;
+		}
+
+		Lexer lexer(CharStream input) {
+			return this.lexerFactory.apply(input);
+		}
+
+		boolean isLineBreakTokenType(int tokenType) {
+			return this.lineBreakTokenType == tokenType;
+		}
+
+		RenderStyle style(int tokenType) {
+			return this.styleMap.getOrDefault(tokenType, RenderStyle.NORMAL);
+		}
+
+	}
+
+	private static final Style PLAIN_STYLE = Style.withLexer(PlainStyle::new, PlainStyle.NEWLINE);
+	private static final Style XML_STYLE = Style.withLexer(XMLStyle::new, XMLStyle.NEWLINE)
+			.withStyle(XMLStyle.COMMENT, RenderStyle.COMMENT).withStyle(XMLStyle.PREAMBLE, RenderStyle.LABEL)
+			.withStyle(XMLStyle.DTD, RenderStyle.LABEL).withStyle(XMLStyle.DEFAULT, RenderStyle.VALUE);
+
+	private final Style style;
 	private final Charset charset;
 
 	/**
 	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
 	 */
-	public static final StyledTextRenderHandler PLAIN_ASCII_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_PLAIN, StandardCharsets.US_ASCII);
+	public static final StyledTextRenderHandler PLAIN_ASCII_RENDER_HANDLER = new StyledTextRenderHandler(PLAIN_STYLE,
+			StandardCharsets.US_ASCII);
 
 	/**
 	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
 	 */
-	public static final StyledTextRenderHandler PLAIN_ISO8859_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_PLAIN, StandardCharsets.ISO_8859_1);
+	public static final StyledTextRenderHandler PLAIN_ISO8859_RENDER_HANDLER = new StyledTextRenderHandler(PLAIN_STYLE,
+			StandardCharsets.ISO_8859_1);
 
 	/**
 	 * Predefined TEXT_PLAIN/UTF-8 renderer handler.
 	 */
-	public static final StyledTextRenderHandler PLAIN_UTF8_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_PLAIN, StandardCharsets.UTF_8);
+	public static final StyledTextRenderHandler PLAIN_UTF8_RENDER_HANDLER = new StyledTextRenderHandler(PLAIN_STYLE,
+			StandardCharsets.UTF_8);
 
 	/**
 	 * Predefined TEXT_PLAIN/UTF-16LE renderer handler.
 	 */
-	public static final StyledTextRenderHandler PLAIN_UTF16LE_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_PLAIN, StandardCharsets.UTF_16LE);
+	public static final StyledTextRenderHandler PLAIN_UTF16LE_RENDER_HANDLER = new StyledTextRenderHandler(PLAIN_STYLE,
+			StandardCharsets.UTF_16LE);
 
 	/**
 	 * Predefined TEXT_PLAIN/UTF-16BE renderer handler.
 	 */
-	public static final StyledTextRenderHandler PLAIN_UTF16BE_RENDER_HANDLER = new StyledTextRenderHandler(
-			TransferType.TEXT_PLAIN, StandardCharsets.UTF_16BE);
+	public static final StyledTextRenderHandler PLAIN_UTF16BE_RENDER_HANDLER = new StyledTextRenderHandler(PLAIN_STYLE,
+			StandardCharsets.UTF_16BE);
 
 	/**
-	 * Predefined TEXT_XML renderer handler.
+	 * Predefined TEXT_XML/UTF-8 renderer handler.
 	 */
-	public static final StyledTextRenderHandler XML_RENDER_HANDLER = new StyledTextRenderHandler(TransferType.TEXT_XML);
+	public static final StyledTextRenderHandler XML_UTF8_RENDER_HANDLER = new StyledTextRenderHandler(XML_STYLE,
+			StandardCharsets.UTF_8);
 
-	/**
-	 * Constructs a new {@linkplain StyledTextRenderHandler} instance.
-	 *
-	 * @param transferType the {@linkplain TransferType} used to determine the render style.
-	 */
-	public StyledTextRenderHandler(TransferType transferType) {
-		this(transferType, StandardCharsets.UTF_8);
-	}
-
-	/**
-	 * Constructs a new {@linkplain StyledTextRenderHandler} instance.
-	 *
-	 * @param transferType the {@linkplain TransferType} used to determine the render style.
-	 * @param charset the {@linkplain Charset} of the text to display.
-	 */
-	public StyledTextRenderHandler(TransferType transferType, Charset charset) {
-		switch (transferType) {
-		case TEXT_PLAIN:
-			this.lexerFactory = null;
-			break;
-		case TEXT_XML:
-			this.lexerFactory = XMLStyle::new;
-			this.styleMap.put(XMLStyle.COMMENT, RenderStyle.COMMENT);
-			this.styleMap.put(XMLStyle.PREAMBLE, RenderStyle.LABEL);
-			this.styleMap.put(XMLStyle.DTD, RenderStyle.LABEL);
-			this.styleMap.put(XMLStyle.DEFAULT, RenderStyle.VALUE);
-			break;
-		default:
-			throw new IllegalArgumentException("Unsupported transfer type: " + transferType);
-		}
+	private StyledTextRenderHandler(Style style, Charset charset) {
+		this.style = style;
 		this.charset = charset;
 	}
 
@@ -121,45 +129,28 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
 		out.enableOption(RenderOption.WRAP);
 
-		Function<CharStream, Lexer> checkedLexerFactory = this.lexerFactory;
+		StyledTextCharStream lexerInput = newLexerInput(context);
+		Lexer lexer = this.style.lexer(lexerInput);
 
-		if (checkedLexerFactory != null && out.isStyled()) {
-			FileScannerResult result = context.result();
-			CharStream lexerInput = new StyledTextCharStream(result.input().range(context.position(), result.end()),
-					this.charset);
-			Lexer lexer = checkedLexerFactory.apply(lexerInput);
+		while (!lexer._hitEOF) {
+			Token token = lexer.nextToken();
+			int tokenType = token.getType();
 
-			while (!lexer._hitEOF) {
-				Token token = lexer.nextToken();
-				int tokenType = token.getType();
-
-				if (tokenType != 1) {
-					out.setStyle(this.styleMap.getOrDefault(tokenType, RenderStyle.NORMAL));
-					out.write(token.getText());
-				} else {
-					out.writeln();
-				}
-			}
-		} else {
-			try (BufferedReader lineReader = newLineReader(context)) {
-				String line;
-
-				while ((line = lineReader.readLine()) != null) {
-					out.writeln(line);
-				}
+			if (!this.style.isLineBreakTokenType(tokenType)) {
+				out.setStyle(this.style.style(tokenType));
+				out.write(token.getText());
+			} else {
+				out.writeln();
 			}
 		}
-		// context.skip(context.remaining());
+		context.skip(lexerInput.decodedBytes());
 	}
 
-	private BufferedReader newLineReader(FileScannerResultRenderContext context) throws IOException {
-		return new BufferedReader(new InputStreamReader(newResultStream(context), this.charset));
-	}
-
-	protected InputStream newResultStream(FileScannerResultRenderContext context) throws IOException {
+	private StyledTextCharStream newLexerInput(FileScannerResultRenderContext context) throws IOException {
 		FileScannerResult result = context.result();
+		FileScannerInputRange inputRange = result.input().range(context.position(), result.end());
 
-		return result.input().inputStream(context.position(), result.end());
+		return new StyledTextCharStream(inputRange, this.charset);
 	}
 
 }
