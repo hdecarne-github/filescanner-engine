@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
 import org.eclipse.jdt.annotation.Nullable;
@@ -125,23 +124,22 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 		Function<CharStream, Lexer> checkedLexerFactory = this.lexerFactory;
 
 		if (checkedLexerFactory != null && out.isStyled()) {
-			try (InputStream resultStream = newResultStream(context)) {
-				CharStream lexerInput = CharStreams.fromStream(resultStream, this.charset);
-				Lexer lexer = checkedLexerFactory.apply(lexerInput);
+			FileScannerResult result = context.result();
+			CharStream lexerInput = new StyledTextCharStream(result.input().range(context.position(), result.end()),
+					this.charset);
+			Lexer lexer = checkedLexerFactory.apply(lexerInput);
 
-				while (!lexer._hitEOF) {
-					Token token = lexer.nextToken();
-					int tokenType = token.getType();
+			while (!lexer._hitEOF) {
+				Token token = lexer.nextToken();
+				int tokenType = token.getType();
 
-					if (tokenType != 1) {
-						out.setStyle(this.styleMap.getOrDefault(tokenType, RenderStyle.NORMAL));
-						out.write(token.getText());
-					} else {
-						out.writeln();
-					}
+				if (tokenType != 1) {
+					out.setStyle(this.styleMap.getOrDefault(tokenType, RenderStyle.NORMAL));
+					out.write(token.getText());
+				} else {
+					out.writeln();
 				}
 			}
-
 		} else {
 			try (BufferedReader lineReader = newLineReader(context)) {
 				String line;
@@ -151,7 +149,7 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 				}
 			}
 		}
-		context.skip(context.remaining());
+		// context.skip(context.remaining());
 	}
 
 	private BufferedReader newLineReader(FileScannerResultRenderContext context) throws IOException {

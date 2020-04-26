@@ -407,8 +407,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 
 	private static class InputResultBuilder extends FileScannerResultBuilder {
 
-		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange)
-				throws IOException {
+		public InputResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerInputRange inputRange) {
 			super(parent, FileScannerResult.Type.INPUT, inputRange, FinalSupplier.of(inputRange.name()));
 			bindValue(FileScannerResultContextValueSpecs.INPUT_NAME, inputRange.name());
 			bindValue(FileScannerResultContextValueSpecs.INPUT_SIZE, inputRange.size());
