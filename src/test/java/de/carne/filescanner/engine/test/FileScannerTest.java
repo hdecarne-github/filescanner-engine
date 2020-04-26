@@ -192,6 +192,11 @@ class FileScannerTest {
 	}
 
 	@Test
+	void testXmlFileFormat() throws IOException, InterruptedException {
+		runFileScanner(TestFiles.XML_FILE.getPath(), Formats.all().enabledFormats());
+	}
+
+	@Test
 	void testZipArchiveFormat() throws IOException, InterruptedException {
 		runFileScanner(TestFiles.ZIP_ARCHIVE.getPath(),
 				Formats.all().disable(ClassFormat.FORMAT_NAME).enabledFormats());

@@ -105,6 +105,13 @@ public final class TestFiles {
 			"MacPorts-2.5.4-10.14-Mojave.pkg", "93033663bd2eb9d59df87468ed6693bf641a413799088275d16b21a9d82c6d15");
 
 	/**
+	 * https://raw.githubusercontent.com/Barebit/x86reference/master/x86reference.xml
+	 */
+	public static final TestFile XML_FILE = new RemoteTestFile(TEST_FILE_DIR,
+			"https://raw.githubusercontent.com/Barebit/x86reference/master/x86reference.xml", "x86reference.xml",
+			"31e1fe66f693b3bc5ea7ef0500b78f64a41eced96bf95c0ff1905dbd475af153");
+
+	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip
 	 */
 	public static final TestFile ZIP_ARCHIVE = new RemoteTestFile(TEST_FILE_DIR,
