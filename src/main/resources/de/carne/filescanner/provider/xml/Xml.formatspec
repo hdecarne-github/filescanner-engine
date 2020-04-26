@@ -25,8 +25,8 @@
 
 XML_MAGIC:
 struct {
-	char[5] "magic"
-		->validate("<?xml")
+	char[36] "preamble"
+		->validate("<?xml version=\"1.0\" encoding=\"UTF-8\"")
 }
 
 XML_STREAM:
