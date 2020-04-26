@@ -19,6 +19,7 @@ package de.carne.filescanner.engine.transfer.handler;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
@@ -29,7 +30,6 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
-import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.nio.compression.Check;
 
 class StyledTextCharStream implements CharStream {
@@ -37,20 +37,22 @@ class StyledTextCharStream implements CharStream {
 	private static final int READ_BUFFER_SIZE = 1024;
 	private static final int DECODE_BUFFER_SIZE = 2048;
 
-	private final FileScannerInputRange inputRange;
+	private final ReadableByteChannel channel;
+	private final long channelSize;
+	private boolean channelEof = false;
 	private final CharsetDecoder decoder;
 	private final ByteBuffer readBuffer = ByteBuffer.allocate(READ_BUFFER_SIZE).position(READ_BUFFER_SIZE);
 	private CharBuffer decodeBuffer0 = CharBuffer.allocate(DECODE_BUFFER_SIZE);
 	private int decoded0 = 0;
 	private CharBuffer decodeBuffer1 = CharBuffer.allocate(DECODE_BUFFER_SIZE);
 	private int decoded1 = 0;
-	private long nextReadPosition = 0;
 	private int decodeBufferDisplacement = 0;
 	private int markIndex = -1;
 	private long decodedBytes = 0;
 
-	StyledTextCharStream(FileScannerInputRange inputRange, Charset charset) {
-		this.inputRange = inputRange;
+	StyledTextCharStream(ReadableByteChannel channel, long channelSize, Charset charset) {
+		this.channel = channel;
+		this.channelSize = channelSize;
 		this.decoder = charset.newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
@@ -129,12 +131,12 @@ class StyledTextCharStream implements CharStream {
 
 	@Override
 	public int size() {
-		return (int) Math.min(this.inputRange.size(), Integer.MAX_VALUE);
+		return (int) Math.min(this.channelSize, Integer.MAX_VALUE);
 	}
 
 	@Override
 	public String getSourceName() {
-		return this.inputRange.toString();
+		return this.channel.toString();
 	}
 
 	@Override
@@ -179,7 +181,7 @@ class StyledTextCharStream implements CharStream {
 			if (feed > 0) {
 				try {
 					do {
-						if (this.readBuffer.remaining() == 0 && this.nextReadPosition >= 0) {
+						if (this.readBuffer.remaining() == 0 && this.decodedBytes < this.channelSize) {
 							feedReadBuffer();
 						}
 
@@ -192,7 +194,7 @@ class StyledTextCharStream implements CharStream {
 
 							decodeBuffer.position(this.decoded0);
 							decodeBuffer.limit(this.decoded0 + feeds0);
-							this.decoder.decode(this.readBuffer, decodeBuffer, this.nextReadPosition < 0);
+							this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
 
 							int nextDecoded0 = decodeBuffer.position();
 
@@ -204,7 +206,7 @@ class StyledTextCharStream implements CharStream {
 
 							decodeBuffer.position(this.decoded1);
 							decodeBuffer.limit(this.decoded1 + feeds1);
-							this.decoder.decode(this.readBuffer, decodeBuffer, this.nextReadPosition < 0);
+							this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
 
 							int nextDecoded1 = decodeBuffer.position();
 
@@ -214,7 +216,7 @@ class StyledTextCharStream implements CharStream {
 							Check.fail("Insufficent LA buffer");
 						}
 						this.decodedBytes += (this.readBuffer.position() - readBufferStart);
-					} while (feed > 0 && this.nextReadPosition >= 0);
+					} while (feed > 0 && (!this.channelEof || this.readBuffer.hasRemaining()));
 				} catch (IOException e) {
 					throw Exceptions.toRuntime(e);
 				}
@@ -228,11 +230,9 @@ class StyledTextCharStream implements CharStream {
 		int read = 0;
 
 		while (read >= 0 && this.readBuffer.hasRemaining()) {
-			read = this.inputRange.read(this.readBuffer, this.nextReadPosition);
-			if (read >= 0) {
-				this.nextReadPosition += read;
-			} else {
-				this.nextReadPosition = -1;
+			read = this.channel.read(this.readBuffer);
+			if (read < 0) {
+				this.channelEof = true;
 			}
 		}
 		this.readBuffer.flip();

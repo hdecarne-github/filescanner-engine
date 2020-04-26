@@ -17,6 +17,7 @@
 package de.carne.filescanner.engine.transfer.handler;
 
 import java.io.IOException;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -29,7 +30,6 @@ import org.antlr.v4.runtime.Token;
 
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
-import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.RenderOption;
 import de.carne.filescanner.engine.transfer.RenderOutput;
@@ -148,9 +148,9 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 
 	private StyledTextCharStream newLexerInput(FileScannerResultRenderContext context) throws IOException {
 		FileScannerResult result = context.result();
-		FileScannerInputRange inputRange = result.input().range(context.position(), result.end());
+		ReadableByteChannel channel = result.input().byteChannel(context.position(), result.end());
 
-		return new StyledTextCharStream(inputRange, this.charset);
+		return new StyledTextCharStream(channel, context.remaining(), this.charset);
 	}
 
 }
