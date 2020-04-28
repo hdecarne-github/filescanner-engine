@@ -165,21 +165,24 @@ public interface FileScannerResult {
 	TransferSource export(FileScannerResultExportHandler exportHandler) throws IOException;
 
 	/**
-	 * Sets the custom data object associated with this {@linkplain FileScannerResult}.
+	 * Sets a custom data object associated with this {@linkplain FileScannerResult}.
 	 *
+	 * @param key the key to associate the data object with.
 	 * @param data the data object to set.
+	 * @see #getData(Object, Class)
 	 */
-	void setData(Object data);
+	void setData(Object key, Object data);
 
 	/**
 	 * Gets the previously set custom data object associated with this {@linkplain FileScannerResult}.
 	 *
 	 * @param <T> the actual data type.
+	 * @param key the key to get the data object for.
 	 * @param dataType the actual data type to retrieve.
 	 * @return the previously set custom data object associated with this {@linkplain FileScannerResult}.
 	 */
 	@Nullable
-	<T> T getData(Class<T> dataType);
+	<T> T getData(Object key, Class<T> dataType);
 
 	/**
 	 * Gets the unique key of this {@linkplain FileScannerResult}.

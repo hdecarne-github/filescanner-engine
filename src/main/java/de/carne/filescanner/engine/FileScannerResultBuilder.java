@@ -61,7 +61,7 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	private final Set<FileScannerResultExportHandler> exportHandlers = new HashSet<>();
 	private CommitState committedState = UNCOMMITTED;
 	private CommitState currentState;
-	private @Nullable Object data = null;
+	private Map<Object, Object> dataMap = new HashMap<>();
 
 	protected FileScannerResultBuilder(@Nullable FileScannerResultBuilder parent, FileScannerResult.Type type,
 			FileScannerInputRange inputRange, Supplier<String> name) {
@@ -154,14 +154,16 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public synchronized void setData(Object data) {
-		this.data = data;
+	public synchronized void setData(Object key, Object data) {
+		this.dataMap.put(key, data);
 	}
 
 	@Override
 	@Nullable
-	public synchronized <T> T getData(Class<T> dataType) {
-		return (this.data != null ? Check.isInstanceOf(this.data, dataType) : null);
+	public synchronized <T> T getData(Object key, Class<T> dataType) {
+		Object data = this.dataMap.get(key);
+
+		return (data != null ? Check.isInstanceOf(data, dataType) : null);
 	}
 
 	@Override
