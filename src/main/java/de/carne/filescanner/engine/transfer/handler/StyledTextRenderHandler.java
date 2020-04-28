@@ -120,6 +120,17 @@ public class StyledTextRenderHandler implements FileScannerResultRenderHandler {
 	public static final StyledTextRenderHandler XML_UTF8_RENDER_HANDLER = new StyledTextRenderHandler(XML_STYLE,
 			StandardCharsets.UTF_8);
 
+	/**
+	 * Constructs a XML style render handler for the given {@linkplain Charset}.
+	 *
+	 * @param charset the {@linkplain Charset} to use for XML decoding.
+	 * @return a XML style render handler for the given {@linkplain Charset}.
+	 */
+	public static final StyledTextRenderHandler xmlRenderHandler(Charset charset) {
+		return (StandardCharsets.UTF_8.equals(charset) ? XML_UTF8_RENDER_HANDLER
+				: new StyledTextRenderHandler(XML_STYLE, charset));
+	}
+
 	private StyledTextRenderHandler(Style style, Charset charset) {
 		this.style = style;
 		this.charset = charset;

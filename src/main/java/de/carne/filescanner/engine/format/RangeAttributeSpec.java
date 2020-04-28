@@ -35,7 +35,7 @@ import de.carne.filescanner.engine.util.SizeRenderer;
  */
 public class RangeAttributeSpec extends AttributeSpec<StreamValue> {
 
-	private Supplier<? extends Number> size = FinalSupplier.of(Integer.valueOf(0));
+	private Supplier<? extends Number> size = FinalSupplier.of(Long.valueOf(-1l));
 
 	/**
 	 * Constructs a new {@linkplain RangeAttributeSpec} instance.
@@ -85,31 +85,19 @@ public class RangeAttributeSpec extends AttributeSpec<StreamValue> {
 
 	@Override
 	public int matchSize() {
-		return (isFixedSize() ? this.size.get().intValue() : 0);
+		return FormatSpecs.matchSize(this.size);
 	}
 
 	@Override
 	public boolean matches(ByteBuffer buffer) {
-		boolean match = false;
-
-		if (isFixedSize()) {
-			int sizeValue = this.size.get().intValue();
-
-			if (sizeValue <= buffer.remaining()) {
-				buffer.position(buffer.position() + sizeValue);
-				match = true;
-			}
-		} else {
-			match = true;
-		}
-		return match;
+		return FormatSpecs.matches(buffer, this.size);
 	}
 
 	@Override
 	protected StreamValue decodeValue(FileScannerResultInputContext context) throws IOException {
 		long sizeValue = LongHelper.toUnsignedLong(this.size.get());
 
-		return context.streamValue(sizeValue);
+		return context.streamValue((sizeValue >= 0 ? sizeValue : context.remaining()), true);
 	}
 
 	private void sizeRenderer(RenderOutput out, StreamValue value) throws IOException {

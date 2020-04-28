@@ -16,7 +16,6 @@
  */
 package de.carne.filescanner.engine;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -26,16 +25,16 @@ import java.nio.ByteBuffer;
 public interface ValueStreamer {
 
 	/**
-	 * Stream value data.
+	 * Streams value data.
 	 * <p>
-	 * The submitted buffer may contain less bytes than the requested chunk size. The number of decoded bytes is derived
-	 * from the buffer's position movement.
+	 * The submitted buffer is never empty, but may contain less bytes than requested. The number of decoded bytes is
+	 * derived from the buffer's position movement.
 	 * </p>
 	 *
-	 * @param buffer the {@linkplain ByteBuffer} to decode from.
-	 * @return {@code true} if streaming should continue or {@code false} if not.
-	 * @throws IOException if a decode error occurs.
+	 * @param buffer the {@linkplain ByteBuffer} to stream from.
+	 * @return the streamer status.
+	 * @see ValueStreamerStatus
 	 */
-	boolean stream(ByteBuffer buffer) throws IOException;
+	ValueStreamerStatus stream(ByteBuffer buffer);
 
 }

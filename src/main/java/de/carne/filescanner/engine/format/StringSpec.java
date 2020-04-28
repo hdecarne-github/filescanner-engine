@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 import de.carne.filescanner.engine.FileScannerResultInputContext;
 import de.carne.filescanner.engine.StreamValueDecoder;
-import de.carne.filescanner.engine.UnexpectedDataException;
+import de.carne.filescanner.engine.ValueStreamerStatus;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.util.SystemProperties;
 
@@ -72,9 +72,8 @@ public class StringSpec extends StringAttributeSpec {
 
 	@Override
 	protected String decodeValue(FileScannerResultInputContext context) throws IOException {
-		long decodeStart = context.position();
 		CharsetDecoder decoder = charset().newDecoder().onMalformedInput(CodingErrorAction.REPLACE)
-				.onUnmappableCharacter(CodingErrorAction.REPLACE).replaceWith("?");
+				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 		int chunkSize = (int) Math.ceil(decoder.maxCharsPerByte());
 		int maxLength = MAX_LENGTH;
 
@@ -83,27 +82,31 @@ public class StringSpec extends StringAttributeSpec {
 			private final CharBuffer stringBuffer = CharBuffer.allocate(maxLength);
 
 			@Override
-			public boolean stream(ByteBuffer buffer) throws IOException {
-				if (this.stringBuffer.limit() < this.stringBuffer.capacity() || this.stringBuffer.hasRemaining()) {
+			public ValueStreamerStatus stream(ByteBuffer buffer) {
+				ValueStreamerStatus status;
+
+				if (this.stringBuffer.hasRemaining() || this.stringBuffer.limit() < this.stringBuffer.capacity()) {
 					this.stringBuffer.limit(this.stringBuffer.position() + 1);
+
+					CoderResult coderResult = decoder.decode(buffer, this.stringBuffer, false);
+
+					if (!coderResult.isError()) {
+						int lastCharPosition = this.stringBuffer.position() - 1;
+
+						if (this.stringBuffer.get(lastCharPosition) == '\0') {
+							this.stringBuffer.position(lastCharPosition);
+							this.stringBuffer.flip();
+							status = ValueStreamerStatus.COMPLETE;
+						} else {
+							status = ValueStreamerStatus.STREAMING;
+						}
+					} else {
+						status = ValueStreamerStatus.FAILED;
+					}
 				} else {
-					throw new UnexpectedDataException("Excessive string length", decodeStart);
+					status = ValueStreamerStatus.FAILED;
 				}
-
-				CoderResult coderResult = decoder.decode(buffer, this.stringBuffer, false);
-
-				if (coderResult.isError()) {
-					throw new UnexpectedDataException("String decode failure", decodeStart);
-				}
-
-				int lastCharPosition = this.stringBuffer.position() - 1;
-				boolean streamStatus = this.stringBuffer.get(lastCharPosition) != '\0';
-
-				if (!streamStatus) {
-					this.stringBuffer.position(lastCharPosition);
-					this.stringBuffer.flip();
-				}
-				return streamStatus;
+				return status;
 			}
 
 			@Override

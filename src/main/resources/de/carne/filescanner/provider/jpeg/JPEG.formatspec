@@ -152,8 +152,9 @@ struct {
 		byte "number of components"
 			->format(@PrettyFormat)
 	}	->bigEndian()
-	scan "Image data" #sosScanConfig
-		->bigEndian()
+	struct "Image data" {
+		scan[...,2] "" #sosScanner
+	}	->bigEndian()
 }	->bigEndian()
 
 JPEG_EOI_MARKER:

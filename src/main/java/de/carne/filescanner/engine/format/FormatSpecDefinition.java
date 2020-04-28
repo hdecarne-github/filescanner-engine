@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +52,11 @@ import de.carne.boot.Exceptions;
 import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.StreamValue;
+import de.carne.filescanner.engine.ValueStreamerFactory;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarBaseVisitor;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarLexer;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousArraySpecContext;
-import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousScanSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousSequenceSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousStructSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.AnonymousUnionSpecContext;
@@ -100,9 +101,8 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordA
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordFlagSymbolsContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.QwordSymbolsContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RangeAttributeSpecContext;
-import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RawSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.RegexTextContext;
-import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.ScanSpecContext;
+import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.ScanAttributeSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.ScopeIdentifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecMaxModifierContext;
@@ -111,7 +111,6 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.Sequen
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecStopAfterModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SequenceSpecStopBeforeModifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SimpleTextContext;
-import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SkipSpecContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SpecIdentifierContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.SpecReferenceContext;
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.StringAttributeCharsetModifierContext;
@@ -733,11 +732,7 @@ public abstract class FormatSpecDefinition {
 	private void loadFormatSpec(FormatSpecContext specCtx, FormatSpecsContext rootCtx) {
 		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
 		StructSpec spec = new StructSpec();
-		RawSpecContext rawCtx = specCtx.rawSpec();
 
-		if (rawCtx != null) {
-			spec.add(loadRawSpec(rawCtx, rootCtx));
-		}
 		for (StructSpecElementContext elementCtx : specCtx.structSpecElement()) {
 			spec.add(loadStructSpecElement(elementCtx, rootCtx));
 		}
@@ -749,19 +744,6 @@ public abstract class FormatSpecDefinition {
 		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
 
 		this.specs.put(specIdentifier, () -> spec);
-	}
-
-	@SuppressWarnings("null")
-	private RawSpec loadRawSpec(RawSpecContext specCtx, FormatSpecsContext rootCtx) {
-		for (SpecReferenceContext specReferenceCtx : specCtx.specReference()) {
-			resolveSpec(rootCtx, specReferenceCtx.referencedSpec().specIdentifier(), CompositeSpec.class);
-		}
-
-		RawSpec spec = new RawSpec();
-
-		LOG.debug(LOG_LOADED_SPEC, spec);
-
-		return spec;
 	}
 
 	@SuppressWarnings("null")
@@ -918,30 +900,6 @@ public abstract class FormatSpecDefinition {
 		return spec;
 	}
 
-	@SuppressWarnings("null")
-	private ScanSpec loadScanSpec(ScanSpecContext specCtx) {
-		String specIdentifier = reserveSpecIdentifier(specCtx.specIdentifier());
-		ScanSpec spec = loadAnonymousScanSpec(specCtx.anonymousScanSpec());
-
-		LOG.debug(LOG_ASSIGNED_SPEC, specIdentifier, spec);
-
-		this.specs.put(specIdentifier, () -> spec);
-		return spec;
-	}
-
-	@SuppressWarnings("null")
-	private ScanSpec loadAnonymousScanSpec(AnonymousScanSpecContext specCtx) {
-		ScanSpec spec = new ScanSpec(resolveExternalReference(specCtx.externalReference(), ScanSpecConfig.class).get());
-
-		applyResultModifier(spec, specCtx.textExpression());
-		applyByteOrderModifier(spec, specCtx.compositeSpecByteOrderModifier());
-		applyExportModifier(spec, specCtx.compositeSpecExportModifier());
-
-		LOG.debug(LOG_LOADED_SPEC, spec);
-
-		return spec;
-	}
-
 	private void applyResultModifier(CompositeSpec spec, @Nullable TextExpressionContext modiferCtx) {
 		if (modiferCtx != null) {
 			spec.result(loadTextExpression(modiferCtx));
@@ -1013,15 +971,6 @@ public abstract class FormatSpecDefinition {
 	}
 
 	@SuppressWarnings("null")
-	private SkipSpec loadSkipSpec(SkipSpecContext specCtx) {
-		SkipSpec spec = new SkipSpec().size(loadNumberExpression(specCtx.numberExpression()));
-
-		LOG.debug(LOG_LOADED_SPEC, spec);
-
-		return spec;
-	}
-
-	@SuppressWarnings("null")
 	private EncodedInputSpec loadEncodedInputSpec(EncodedInputSpecContext specCtx) {
 		EncodedInputSpec spec = new EncodedInputSpec(
 				resolveExternalReference(specCtx.externalReference(), EncodedInputSpecConfig.class).get());
@@ -1061,6 +1010,7 @@ public abstract class FormatSpecDefinition {
 		CharArrayAttributeSpecContext charArrayAttributeSpecCtx;
 		StringAttributeSpecContext stringAttributeSpecCtx;
 		RangeAttributeSpecContext rangeAttributeSpecCtx;
+		ScanAttributeSpecContext scanAttributeSpecCtx;
 
 		if ((byteAttributeSpecCtx = specCtx.byteAttributeSpec()) != null) {
 			spec = loadByteSpec(byteAttributeSpecCtx, rootCtx);
@@ -1084,6 +1034,8 @@ public abstract class FormatSpecDefinition {
 			spec = loadStringSpec(stringAttributeSpecCtx, rootCtx);
 		} else if ((rangeAttributeSpecCtx = specCtx.rangeAttributeSpec()) != null) {
 			spec = loadRangeAttributeSpec(rangeAttributeSpecCtx, rootCtx);
+		} else if ((scanAttributeSpecCtx = specCtx.scanAttributeSpec()) != null) {
+			spec = loadScanAttributeSpec(scanAttributeSpecCtx, rootCtx);
 		} else {
 			throw newLoadException(specCtx, "Unexpected attribute spec");
 		}
@@ -1251,9 +1203,36 @@ public abstract class FormatSpecDefinition {
 
 	@SuppressWarnings("null")
 	private RangeAttributeSpec loadRangeAttributeSpec(RangeAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
-		RangeAttributeSpec spec = new RangeAttributeSpec(loadTextExpression(specCtx.textExpression()))
-				.size(loadNumberExpression(specCtx.numberExpression()));
+		RangeAttributeSpec spec = new RangeAttributeSpec(loadTextExpression(specCtx.textExpression()));
+		NumberExpressionContext sizeCtx = specCtx.numberExpression();
 
+		if (sizeCtx != null) {
+			spec.size(loadNumberExpression(specCtx.numberExpression()));
+		}
+		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.streamValueAttributeRenderer);
+		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
+
+		LOG.debug(LOG_LOADED_SPEC, spec);
+
+		return spec;
+	}
+
+	@SuppressWarnings("null")
+	private ScanAttributeSpec loadScanAttributeSpec(ScanAttributeSpecContext specCtx, FormatSpecsContext rootCtx) {
+		ScanAttributeSpec spec = new ScanAttributeSpec(loadTextExpression(specCtx.textExpression()),
+				resolveExternalReference(specCtx.externalReference(), ValueStreamerFactory.class).get());
+		List<NumberExpressionContext> numberArguments = specCtx.numberExpression();
+
+		if (numberArguments != null) {
+			Iterator<NumberExpressionContext> numberArgumentsIterator = numberArguments.iterator();
+
+			if (specCtx.Ellipsis() == null) {
+				spec.limit(loadNumberExpression(numberArgumentsIterator.next()));
+			}
+			if (numberArgumentsIterator.hasNext()) {
+				spec.step(loadNumberExpression(numberArgumentsIterator.next()));
+			}
+		}
 		applyRendererModifier(spec, specCtx.attributeRendererModifier(), this.streamValueAttributeRenderer);
 		bindAttributeSpecIfNeeded(spec, specCtx.specIdentifier(), specCtx.scopeIdentifier(), rootCtx);
 
@@ -1476,9 +1455,7 @@ public abstract class FormatSpecDefinition {
 		AnonymousArraySpecContext anonymousArraySpecCtx;
 		AnonymousSequenceSpecContext anonymousSequenceSpecCtx;
 		AnonymousUnionSpecContext anonymousUnionSpecCtx;
-		AnonymousScanSpecContext anonymousScanSpecCtx;
 		ConditionalSpecContext conditionalSpecCtx;
-		SkipSpecContext skipSpecCtx;
 		EncodedInputSpecContext encodedInputSpecCtx;
 		DecodeAtSpecContext decodeAtSpecCtx;
 
@@ -1494,12 +1471,8 @@ public abstract class FormatSpecDefinition {
 			element = loadAnonymousSequenceSpec(anonymousSequenceSpecCtx, rootCtx);
 		} else if ((anonymousUnionSpecCtx = elementCtx.anonymousUnionSpec()) != null) {
 			element = loadAnonymousUnionSpec(anonymousUnionSpecCtx, rootCtx);
-		} else if ((anonymousScanSpecCtx = elementCtx.anonymousScanSpec()) != null) {
-			element = loadAnonymousScanSpec(anonymousScanSpecCtx);
 		} else if ((conditionalSpecCtx = elementCtx.conditionalSpec()) != null) {
 			element = loadConditionalSpec(conditionalSpecCtx, rootCtx);
-		} else if ((skipSpecCtx = elementCtx.skipSpec()) != null) {
-			element = loadSkipSpec(skipSpecCtx);
 		} else if ((encodedInputSpecCtx = elementCtx.encodedInputSpec()) != null) {
 			element = loadEncodedInputSpec(encodedInputSpecCtx);
 		} else if ((decodeAtSpecCtx = elementCtx.decodeAtSpec()) != null) {
@@ -1694,11 +1667,6 @@ public abstract class FormatSpecDefinition {
 			for (SequenceSpecContext sequenceSpecCtx : rootCtx.sequenceSpec()) {
 				if (specIdentifier.equals(sequenceSpecCtx.specIdentifier().getText())) {
 					resolvedSpec = loadSequenceSpec(sequenceSpecCtx, rootCtx);
-				}
-			}
-			for (ScanSpecContext scanSpecCtx : rootCtx.scanSpec()) {
-				if (specIdentifier.equals(scanSpecCtx.specIdentifier().getText())) {
-					resolvedSpec = loadScanSpec(scanSpecCtx);
 				}
 			}
 		} else {

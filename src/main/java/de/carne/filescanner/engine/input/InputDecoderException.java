@@ -26,7 +26,7 @@ class InputDecoderException extends FormatDecodeException {
 	private static final long serialVersionUID = -2391473250632750680L;
 
 	public InputDecoderException(InputDecoder inputDecoder, Throwable cause) {
-		super(MessageFormat.format("Failed to decode ''{0}'' encoded input", inputDecoder.name()), cause);
+		super(MessageFormat.format("Failed to decode input ''{0}''", inputDecoder.name()), cause);
 	}
 
 }

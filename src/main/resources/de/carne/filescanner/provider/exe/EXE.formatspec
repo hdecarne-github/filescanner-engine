@@ -178,7 +178,7 @@ struct "DOS stub image" {
 		word[2] "rlc"
 	}
 	struct ".TEXT" {
-		skip #stubTextSize
+		range[#stubTextSize] ""
 	}	->renderer(#x86b16Renderer)
 		->export(#x86b16Exporter)
 }
@@ -393,18 +393,18 @@ NT_SECTION_CHARACTERISTICS@IMAGE_NT_SECTIONS:
 
 IMAGE_NT_GENERIC_SECTION:
 struct {
-	skip @NT_SECTION_DATA_SIZE
+	range[@NT_SECTION_DATA_SIZE] ""
 }
 
 IMAGE_NT_I386_SECTION:
 struct {
-	skip @NT_SECTION_DATA_SIZE
+	range[@NT_SECTION_DATA_SIZE] ""
 }	->renderer(#x86b32Renderer)
 	->export(#x86b32Exporter)
 
 IMAGE_NT_AMD64_SECTION:
 struct {
-	skip @NT_SECTION_DATA_SIZE
+	range[@NT_SECTION_DATA_SIZE] ""
 }	->renderer(#x86b64Renderer)
 	->export(#x86b64Exporter)
 

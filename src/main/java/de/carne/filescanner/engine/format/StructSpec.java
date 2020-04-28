@@ -134,6 +134,7 @@ public class StructSpec extends CompositeSpec {
 			out.setStyle(RenderStyle.VALUE).write("{ ... }");
 
 			SizeRenderer.LONG_RENDERER.render(out, remaining);
+			out.writeln();
 		}
 		context.skip(remaining);
 	}

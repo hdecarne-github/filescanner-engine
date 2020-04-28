@@ -39,8 +39,7 @@ union {
 
 PDF_STREAM:
 format_spec "PDF file" {
-	raw {
-		@PDF_MAGIC
-	}
+	@PDF_MAGIC
+	range[...] "data"
 }	->renderer(#pdfRenderer)
 	->export(#pdfExporter)

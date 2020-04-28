@@ -87,7 +87,7 @@ XML_PLIST@UDIF_FORMAT:
 
 UDIF_FORMAT:
 format_spec "Universal Disk Image" {
-	skip #imageDataSize
+	range[#imageDataSize] ""
 	@UDIF_TRAILER
 	decode_at @XML_OFFSET @RESOURCE_FORK
 	conditional #dataForkSpec {}

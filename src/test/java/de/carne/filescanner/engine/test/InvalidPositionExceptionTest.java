@@ -35,14 +35,14 @@ class InvalidPositionExceptionTest {
 	void testExceptionMessage() throws IOException {
 		try (BufferedFileChannelInput input = FileScannerInput.open(TestFiles.ZIP_ARCHIVE.getPath())) {
 
-			Assertions.assertEquals("Invalid read position 0000000000000042h (input: '" + input + "')",
+			Assertions.assertEquals(
+					"Invalid read position while accessing input '" + input + "' position 0000000000000042h",
 					new InvalidPositionException(input, 0x42).getMessage());
 
 			FileScannerInputRange inputRange = input.range(0, 2);
 
 			Assertions.assertEquals(
-					"Invalid read position 0000000000000042h (input: '" + input
-							+ "[0000000000000000h-0000000000000002h]')",
+					"Invalid read position while accessing input '" + input + "' position 0000000000000042h",
 					new InvalidPositionException(inputRange, 0x42).getMessage());
 		}
 	}

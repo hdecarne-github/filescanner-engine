@@ -213,6 +213,17 @@ public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec
 	protected abstract @NonNull T decodeValue(FileScannerResultInputContext context) throws IOException;
 
 	/**
+	 * Re-decodes the attribute value during rendering.
+	 *
+	 * @param context the {@linkplain FileScannerResultInputContext} to decode the value from.
+	 * @return the decoded value.
+	 * @throws IOException if an I/O error occurs.
+	 */
+	protected @NonNull T redecodeValue(FileScannerResultRenderContext context) throws IOException {
+		return decodeValue(context);
+	}
+
+	/**
 	 * Validates the attribute value against any defined validator.
 	 *
 	 * @param value the attribute value to validate.
@@ -244,7 +255,7 @@ public abstract class AttributeSpec<T> extends FileScannerResultContextValueSpec
 
 	@Override
 	public void render(RenderOutput out, FileScannerResultRenderContext context) throws IOException {
-		T value = decodeValue(context);
+		T value = redecodeValue(context);
 
 		switch (this.bindMode) {
 		case NONE:

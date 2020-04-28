@@ -30,9 +30,12 @@ import org.antlr.v4.runtime.misc.Interval;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.carne.boot.Exceptions;
-import de.carne.nio.compression.Check;
+import de.carne.boot.check.Check;
+import de.carne.boot.logging.Log;
 
 class StyledTextCharStream implements CharStream {
+
+	private static final Log LOG = new Log();
 
 	private static final int READ_BUFFER_SIZE = 1024;
 	private static final int DECODE_BUFFER_SIZE = 2048;
@@ -110,15 +113,17 @@ class StyledTextCharStream implements CharStream {
 
 	@Override
 	public void seek(int index) {
-		int position0 = this.decodeBuffer0.position();
-		int position1 = this.decodeBuffer1.position();
-		int i = index - this.decodeBufferDisplacement - (position0 + position1);
+		int seekPosition = index - this.decodeBufferDisplacement;
+
+		if (seekPosition < 0) {
+			LOG.error("");
+		}
+
+		int i = this.decodeBuffer0.position() + this.decodeBuffer1.position() - seekPosition;
 
 		if (i > 0) {
 			feedDecodeBuffer(i);
 		}
-
-		int seekPosition = position0 + i;
 
 		if (seekPosition <= this.decoded0) {
 			this.decodeBuffer0.position(seekPosition);
@@ -248,8 +253,9 @@ class StyledTextCharStream implements CharStream {
 			this.decoded0 = this.decoded1;
 			this.decodeBuffer1 = nextDecodeBuffer1;
 			this.decoded1 = 0;
-			Check.assertTrue(this.markIndex < 0 || this.markIndex >= this.decodeBufferDisplacement,
-					"Insufficient mark buffer");
+			if (0 <= this.markIndex && this.markIndex < this.decodeBufferDisplacement) {
+				LOG.warning("Mark buffer exceeded: {0}", this.decodeBufferDisplacement - this.markIndex);
+			}
 		}
 	}
 

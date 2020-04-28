@@ -77,7 +77,7 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 
 	/**
 	 * Gets this context's decoded data bytes.
-	 * 
+	 *
 	 * @return this context's decoded data bytes.
 	 */
 	public long decoded() {
@@ -190,14 +190,10 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	public <T> T readValue(int chunkSize, StreamValueDecoder<T> decoder) throws IOException {
 		Check.assertTrue(chunkSize > 0);
 
-		ByteBuffer buffer = ByteBuffer.allocate(2 * chunkSize);
+		ByteBuffer buffer = ByteBuffer.allocate(Math.max(2 * chunkSize, 64)).order(this.byteOrder).limit(0);
+		ValueStreamerStatus status;
 
-		buffer.order(this.byteOrder);
-		buffer.limit(0);
-
-		boolean done = false;
-
-		while (!done) {
+		do {
 			if (buffer.remaining() < chunkSize) {
 				buffer.clear();
 				this.inputRange.read(buffer, this.position);
@@ -206,18 +202,18 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 
 			int decodeStart = buffer.position();
 
-			done = !decoder.stream(buffer);
+			status = decoder.stream(buffer);
 
 			int decodeEnd = buffer.position();
 
-			if (decodeStart < decodeEnd) {
+			if (decodeStart < decodeEnd && status != ValueStreamerStatus.FAILED) {
 				this.position += decodeEnd - decodeStart;
-			} else if (decodeStart == decodeEnd) {
-				Check.assertTrue(done);
-			} else {
-				throw Check.fail("Invalid buffer access: %x > %x", decodeStart, decodeEnd);
+			} else if (status == ValueStreamerStatus.FAILED
+					|| (status == ValueStreamerStatus.STREAMING && decodeStart == decodeEnd)
+					|| decodeStart > decodeEnd) {
+				throw new DecodeFailureException(this.inputRange, this.position + decodeStart);
 			}
-		}
+		} while (status == ValueStreamerStatus.STREAMING);
 		return decoder.decode();
 	}
 
@@ -225,11 +221,14 @@ public abstract class FileScannerResultInputContext extends FileScannerResultCon
 	 * Streams a value (represented by a byte range).
 	 *
 	 * @param size the size of the byte range representing the value.
+	 * @param skip whether to skip the given byte range prior to streaming.
 	 * @return the {@linkplain StreamValue} instance providing access to the value bytes.
 	 * @throws IOException if an I/O error occurs while accessing the value.
 	 */
-	public StreamValue streamValue(long size) throws IOException {
-		skip(size);
+	public StreamValue streamValue(long size, boolean skip) throws IOException {
+		if (skip) {
+			skip(size);
+		}
 		return new StreamValue(this.inputRange, this.position - size, this.position);
 	}
 

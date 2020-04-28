@@ -128,7 +128,8 @@ size = 449.280 // 438,75 KiB
 // Export handler: Raw
 // committed:FORMAT:IMAGE_NT_HEADERS64[0000000000000100h-0000000000000208h]
 Signature = 00004550h
-{ ... } // 260 byte// Export handler: Raw
+{ ... } // 260 byte
+// Export handler: Raw
 // committed:FORMAT:IMAGE_FILE_HEADER[0000000000000104h-0000000000000118h]
 Machine = 8664h // IMAGE_FILE_MACHINE_AMD64
 NumberOfSections = 6
@@ -1533,32 +1534,22 @@ push esp
 // Export handler: Raw
 // Export handler: x86-64 instructions
 // committed:FORMAT:IMAGE_SECTION[.rdata][0000000000045400h-0000000000063000h]
-start = 0000000000045400h
-end = 0000000000063000h
-size = 121.856 // 119 KiB
+{ ... } // 119 KiB
 // Export handler: Raw
 // Export handler: x86-64 instructions
 // committed:FORMAT:IMAGE_SECTION[.data][0000000000063000h-0000000000065600h]
-start = 0000000000063000h
-end = 0000000000065600h
-size = 9.728 // 9,5 KiB
+{ ... } // 9,5 KiB
 // Export handler: Raw
 // Export handler: x86-64 instructions
 // committed:FORMAT:IMAGE_SECTION[.pdata][0000000000065600h-0000000000068400h]
-start = 0000000000065600h
-end = 0000000000068400h
-size = 11.776 // 11,5 KiB
+{ ... } // 11,5 KiB
 // Export handler: Raw
 // Export handler: x86-64 instructions
 // committed:FORMAT:IMAGE_SECTION[.rsrc][0000000000068400h-000000000006d200h]
-start = 0000000000068400h
-end = 000000000006d200h
-size = 19.968 // 19,5 KiB
+{ ... } // 19,5 KiB
 // Export handler: Raw
 // Export handler: x86-64 instructions
 // committed:FORMAT:IMAGE_SECTION[.reloc][000000000006d200h-000000000006dc00h]
-start = 000000000006d200h
-end = 000000000006dc00h
-size = 2.560 // 2,5 KiB
+{ ... } // 2,5 KiB
 // Export handler: Raw
 // Export handler: x86-64 instructions

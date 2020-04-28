@@ -23,16 +23,15 @@
 
 // Specs
 
-XML_MAGIC:
+XML_DECL:
 struct {
-	char[36] "preamble"
-		->validate("<?xml version=\"1.0\" encoding=\"UTF-8\"")
+DECL@XML_STREAM:
+	scan[256,4] "decl" #declScanner
 }
 
 XML_STREAM:
 format_spec "XML stream" {
-	raw {
-		@XML_MAGIC
-	}
+	@XML_DECL
+	range[...] "body"
 }	->renderer(#xmlRenderer)
 	->export(#xmlExporter)

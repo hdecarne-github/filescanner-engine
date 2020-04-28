@@ -72,32 +72,20 @@ tdir_offset = 0006c7f2h
 nextdiroff = 00000000h
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c46eh-000000000006c474h]
-start = 000000000006c46eh
-end = 000000000006c474h
-size = 6 // 6 byte
+{ ... } // 6 byte
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c474h-000000000006c49fh]
-start = 000000000006c474h
-end = 000000000006c49fh
-size = 43 // 43 byte
+{ ... } // 43 byte
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c4a0h-000000000006c4f1h]
-start = 000000000006c4a0h
-end = 000000000006c4f1h
-size = 81 // 81 byte
+{ ... } // 81 byte
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c4f2h-000000000006c672h]
-start = 000000000006c4f2h
-end = 000000000006c672h
-size = 384 // 384 byte
+{ ... } // 384 byte
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c672h-000000000006c7f2h]
-start = 000000000006c672h
-end = 000000000006c7f2h
-size = 384 // 384 byte
+{ ... } // 384 byte
 // Export handler: Raw
 // committed:FORMAT:TIFFEntry[000000000006c7f2h-000000000006c80ch]
-start = 000000000006c7f2h
-end = 000000000006c80ch
-size = 26 // 26 byte
+{ ... } // 26 byte
 // Export handler: Raw

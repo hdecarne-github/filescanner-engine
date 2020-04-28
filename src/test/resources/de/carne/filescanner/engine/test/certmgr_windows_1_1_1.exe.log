@@ -122,7 +122,8 @@ size = 379.144 // 370,258 KiB
 // Export handler: Raw
 // committed:FORMAT:IMAGE_NT_HEADERS[00000000000000f8h-00000000000001f0h]
 Signature = 00004550h
-{ ... } // 244 byte// Export handler: Raw
+{ ... } // 244 byte
+// Export handler: Raw
 // committed:FORMAT:IMAGE_FILE_HEADER[00000000000000fch-0000000000000110h]
 Machine = 014ch // IMAGE_FILE_MACHINE_I386
 NumberOfSections = 5
@@ -1418,26 +1419,18 @@ Characteristics = 42000040h
 // Export handler: Raw
 // Export handler: x86-32 instructions
 // committed:FORMAT:IMAGE_SECTION[.rdata][0000000000038e00h-0000000000052200h]
-start = 0000000000038e00h
-end = 0000000000052200h
-size = 103.424 // 101 KiB
+{ ... } // 101 KiB
 // Export handler: Raw
 // Export handler: x86-32 instructions
 // committed:FORMAT:IMAGE_SECTION[.data][0000000000052200h-0000000000054000h]
-start = 0000000000052200h
-end = 0000000000054000h
-size = 7.680 // 7,5 KiB
+{ ... } // 7,5 KiB
 // Export handler: Raw
 // Export handler: x86-32 instructions
 // committed:FORMAT:IMAGE_SECTION[.rsrc][0000000000054000h-0000000000058e00h]
-start = 0000000000054000h
-end = 0000000000058e00h
-size = 19.968 // 19,5 KiB
+{ ... } // 19,5 KiB
 // Export handler: Raw
 // Export handler: x86-32 instructions
 // committed:FORMAT:IMAGE_SECTION[.reloc][0000000000058e00h-000000000005ca00h]
-start = 0000000000058e00h
-end = 000000000005ca00h
-size = 15.360 // 15 KiB
+{ ... } // 15 KiB
 // Export handler: Raw
 // Export handler: x86-32 instructions

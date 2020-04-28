@@ -19,11 +19,12 @@ package de.carne.filescanner.engine.test.format;
 import java.net.URL;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.ValueStreamerFactory;
+import de.carne.filescanner.engine.ValueStreamerStatus;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpecConfig;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
 import de.carne.filescanner.engine.format.FormatSpecs;
-import de.carne.filescanner.engine.format.ScanSpecConfig;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
@@ -47,15 +48,15 @@ final class TestFormatSpecDefinition extends FormatSpecDefinition {
 		return RawTransferHandler.APPLICATION_OCTET_STREAM_TRANSFER;
 	}
 
-	public CompositeSpec conditionalSpec() {
+	public ValueStreamerFactory customScanner() {
+		return () -> (buffer -> ValueStreamerStatus.FAILED);
+	}
+
+	public CompositeSpec customConditionalSpec() {
 		return FormatSpecs.EMPTY;
 	}
 
-	public ScanSpecConfig scanConfig() {
-		return new ScanSpecConfig(1, buffer -> false);
-	}
-
-	public EncodedInputSpecConfig encodedInputSpecConfig() {
+	public EncodedInputSpecConfig customEncodedInputSpecConfig() {
 		return new EncodedInputSpecConfig(".");
 	}
 

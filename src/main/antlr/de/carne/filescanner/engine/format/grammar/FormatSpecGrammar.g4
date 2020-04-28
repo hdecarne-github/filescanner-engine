@@ -33,7 +33,6 @@ DWordFlagSymbols: 'dword_flag_symbols';
 QWordFlagSymbols: 'qword_flag_symbols';
 
 FormatSpec: 'format_spec';
-Raw: 'raw';
 Struct: 'struct';
 Array: 'array';
 Sequence: 'sequence';
@@ -41,7 +40,6 @@ Union: 'union';
 Scan: 'scan';
 Range: 'range';
 Conditional: 'conditional';
-Skip: 'skip';
 Encoded: 'encoded';
 DecodeAt: 'decode_at';
 Validate: 'validate';
@@ -78,6 +76,7 @@ Colon: ':';
 Or: '||';
 At: '@';
 Hash: '#';
+Ellipsis: '...';
 
 Number: DecimalNumber|OctalNumber|HexaDecimalNumber;
 fragment DecimalNumber: '0'|[1-9][0-9]*;
@@ -95,7 +94,7 @@ Whitespace: [ \t\r\n]+ -> skip;
 // Rules
 
 formatSpecs
-	: (symbols|flagSymbols|formatSpec|structSpec|arraySpec|sequenceSpec|unionSpec|scanSpec)*
+	: (symbols|flagSymbols|formatSpec|structSpec|arraySpec|sequenceSpec|unionSpec)*
 	;
 
 // Symbol rules
@@ -159,11 +158,7 @@ symbol
 // Spec rules
 
 formatSpec
-	: specIdentifier Colon FormatSpec textExpression LCBracket (rawSpec|structSpecElement+) RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
-	;
-	
-rawSpec
-	: Raw LCBracket specReference* RCBracket
+	: specIdentifier Colon FormatSpec textExpression LCBracket structSpecElement+ RCBracket(Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
 mimeTypeIdentifier
@@ -179,7 +174,7 @@ anonymousStructSpec
 	;
 	
 structSpecElement
-	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalSpec|skipSpec|encodedInputSpec|decodeAtSpec)
+	: (specReference|attributeSpec|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|conditionalSpec|encodedInputSpec|decodeAtSpec)
 	;
 	
 arraySpec
@@ -226,14 +221,6 @@ anonymousUnionSpec
 	: Union textExpression? LCBracket compositeSpecExpression+ RCBracket (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
 	;
 	
-scanSpec
-	: specIdentifier Colon anonymousScanSpec
-	;
-
-anonymousScanSpec
-	: Scan textExpression? externalReference (Apply (compositeSpecByteOrderModifier|compositeSpecExportModifier|compositeSpecRendererModifier))*
-	;
-	
 compositeSpecByteOrderModifier
 	: (LittleEndian|BigEndian) LBracket RBracket
 	;
@@ -247,7 +234,7 @@ compositeSpecRendererModifier
 	;
 
 compositeSpecExpression
-	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|anonymousScanSpec|conditionalCompositeSpec)
+	: (specReference|anonymousStructSpec|anonymousArraySpec|anonymousSequenceSpec|anonymousUnionSpec|conditionalCompositeSpec)
 	;
 	
 conditionalSpec
@@ -256,10 +243,6 @@ conditionalSpec
 	
 conditionalCompositeSpec
 	: Conditional externalReference LCBracket specReference* RCBracket
-	;
-
-skipSpec
-	: Skip numberExpression
 	;
 	
 encodedInputSpec
@@ -271,7 +254,7 @@ decodeAtSpec
 	;
 	
 attributeSpec
-	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|stringAttributeSpec|rangeAttributeSpec)
+	: (byteAttributeSpec|wordAttributeSpec|dwordAttributeSpec|qwordAttributeSpec|byteArrayAttributeSpec|wordArrayAttributeSpec|dwordArrayAttributeSpec|qwordArrayAttributeSpec|charArrayAttributeSpec|stringAttributeSpec|rangeAttributeSpec|scanAttributeSpec)
 	;
 
 byteAttributeSpec
@@ -315,7 +298,11 @@ stringAttributeSpec
 	;
 
 rangeAttributeSpec
-	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket numberExpression RSBracket textExpression(Apply (attributeRendererModifier))*
+	: (specIdentifier (At scopeIdentifier)? Colon)? Range LSBracket (numberExpression|Ellipsis) RSBracket textExpression (Apply (attributeRendererModifier))*
+	;
+	
+scanAttributeSpec
+	: (specIdentifier (At scopeIdentifier)? Colon)? Scan LSBracket (numberExpression|Ellipsis)? (Comma numberExpression)?  RSBracket textExpression externalReference (Apply (attributeRendererModifier))*
 	;
 	
 attributeValidateNumberModifier

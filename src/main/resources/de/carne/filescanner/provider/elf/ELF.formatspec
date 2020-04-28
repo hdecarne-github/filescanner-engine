@@ -251,7 +251,7 @@ SHEADER_SIZE_64@ELF_FORMAT:
 		->format(@PrettyFormat)
 		->renderer(@SizeRenderer)
 	decode_at #section64Offset:2 struct "Section" {
-		skip #section64Size
+		range[#section64Size] ""
 	}	->renderer(#section64Renderer)
 		->export(#section64Exporter)
 }

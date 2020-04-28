@@ -16,20 +16,19 @@
  */
 package de.carne.filescanner.provider.jpeg;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
+import de.carne.filescanner.engine.ValueStreamerFactory;
+import de.carne.filescanner.engine.ValueStreamerStatus;
 import de.carne.filescanner.engine.format.ByteSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
-import de.carne.filescanner.engine.format.ScanSpecConfig;
 import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
-import de.carne.nio.compression.InsufficientDataException;
 import de.carne.util.Lazy;
 
 /**
@@ -74,22 +73,27 @@ final class JpegFormatSpecDefinition extends FormatSpecDefinition {
 		return Short.toUnsignedInt(this.genericLength.get().get().shortValue()) - 2;
 	}
 
-	public ScanSpecConfig sosScanConfig() {
-		return new ScanSpecConfig(2, this::matchMarker);
+	public ValueStreamerFactory sosScanner() {
+		return () -> this::streamSos;
 	}
 
-	private boolean matchMarker(ByteBuffer buffer) throws IOException {
-		if (buffer.remaining() < Short.BYTES) {
-			throw new InsufficientDataException(Short.BYTES, buffer.remaining());
+	private ValueStreamerStatus streamSos(ByteBuffer buffer) {
+		ValueStreamerStatus status = ValueStreamerStatus.FAILED;
+
+		while (buffer.remaining() >= Short.BYTES && status != ValueStreamerStatus.COMPLETE) {
+			int bufferPosition = buffer.position();
+			int markerValue = Short.toUnsignedInt(buffer.getShort());
+
+			if ((markerValue & 0xff00) == 0xff00 && markerValue != 0xff00 && markerValue != 0xffff
+					&& (markerValue < 0xffd0 || 0xffd7 < markerValue)) {
+				buffer.position(bufferPosition);
+				status = ValueStreamerStatus.COMPLETE;
+			} else {
+				buffer.position(bufferPosition + 1);
+				status = ValueStreamerStatus.STREAMING;
+			}
 		}
-
-		int bufferPosition = buffer.position();
-		int markerValue = (buffer.getShort() & 0xffff);
-		boolean matchStatus = ((markerValue & 0xff00) == 0xff00 && markerValue != 0xff00 && markerValue != 0xffff
-				&& (markerValue < 0xffd0 || 0xffd7 < markerValue));
-
-		buffer.position(matchStatus ? bufferPosition : bufferPosition + 1);
-		return matchStatus;
+		return status;
 	}
 
 }

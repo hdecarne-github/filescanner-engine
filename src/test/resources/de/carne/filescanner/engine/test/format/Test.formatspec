@@ -75,12 +75,6 @@ qword_flag_symbols {
 
 // Specs
 
-TEST_RAW:
-format_spec "raw" {
-	raw {
-	}
-}
-
 TEST_FORMAT:
 format_spec text("%s", #specialText) {
 	struct "inline struct" {
@@ -119,10 +113,13 @@ format_spec text("%s", #specialText) {
 			byte "byte attribute"
 		}
 	}
-	@TEST_SCAN
-	scan "inline scan" #scanConfig
+SCAN_DEFAULT:
+	scan[...] "default-step unlimited scan" #customScanner
+	scan[...,2] "2-step unlimited scan" #customScanner
+	scan[42] "default-step limited scan" #customScanner
+	scan[42,2] "2-step limited scan" #customScanner
 	range[42] "data"
-	skip 42
+	range[...] "undefined"
 }
 
 TEST_HEADER:
@@ -199,10 +196,10 @@ LOCAL_BIND:
 	byte "local bind"
 SCOPED_BIND@TEST_FORMAT:
 	byte "scoped bind"
-	conditional #conditionalSpec {
+	conditional #customConditionalSpec {
 		@TEST_UNION
 	}
-	encoded #encodedInputSpecConfig
+	encoded #customEncodedInputSpecConfig
 	decode_at @POSITION:1 @TEST_HEADER
 }	->bigEndian()
 	->renderer(#customRenderer)
@@ -237,6 +234,3 @@ union {
 }	->bigEndian()
 	->renderer(#customRenderer)
 	->export(#customExport)
-
-TEST_SCAN:
-scan "scan" #scanConfig

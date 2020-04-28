@@ -37,8 +37,8 @@ public class InvalidPositionException extends FormatDecodeException {
 	 * @param position the read position.
 	 */
 	public InvalidPositionException(FileScannerInput input, long position) {
-		super(MessageFormat.format("Invalid read position {0} (input: ''{1}'')", HexFormat.formatLong(position),
-				input));
+		super(MessageFormat.format("Invalid read position while accessing input ''{0}'' position {1}", input.name(),
+				HexFormat.formatLong(position)));
 	}
 
 }

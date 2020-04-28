@@ -31,8 +31,7 @@ struct {
 
 CLASS_FILE:
 format_spec "Java class file" {
-	raw {
-		@CLASS_MAGIC
-	}
+	@CLASS_MAGIC
+	range[...] "data"
 }	->renderer(#classRenderer)
 	->export(#classExporter)

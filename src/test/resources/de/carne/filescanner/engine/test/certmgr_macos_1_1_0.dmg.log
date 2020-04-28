@@ -1,7 +1,6 @@
 // committed:FORMAT:Universal Disk Image[0000000000000000h-000000000070c087h]
-start = 0000000000000000h
-end = 000000000070c087h
-size = 7.389.319 // 7,047 MiB
+{ ... } // 7,047 MiB
+{ ... } // 512 byte
 // Export handler: Raw
 // committed:FORMAT:Data fork[0000000000000000h-000000000070b000h]
 start = 0000000000000000h
@@ -24,9 +23,7 @@ end = 000000000070b000h
 size = 7.385.088 // 7,043 MiB
 // Export handler: Raw
 // committed:FORMAT:Reserved (Boot Blocks)[0000000000000000h-0000000000000400h]
-start = 0000000000000000h
-end = 0000000000000400h
-size = 1.024 // 1 KiB
+{ ... } // 1 KiB
 // Export handler: Raw
 // committed:FORMAT:Volume Header[0000000000000400h-0000000000000600h]
 signature = 482bh // HFS Plus volume
@@ -646,58 +643,72 @@ flags = 00000000h
 // committed:FORMAT:load_command[0000000000000968h-00000000000009b8h]
 cmd = 0000000dh // LC_ID_DYLIB
 cmdsize = 00000050h // 80 byte
+{ ... } // 72 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[00000000000009b8h-00000000000009e8h]
 cmd = 80000022h // LC_DYLD_INFO_ONLY
 cmdsize = 00000030h // 48 byte
+{ ... } // 40 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[00000000000009e8h-0000000000000a00h]
 cmd = 00000002h // LC_SYMTAB
 cmdsize = 00000018h // 24 byte
+{ ... } // 16 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000a00h-0000000000000a50h]
 cmd = 0000000bh // LC_DYSYMTAB
 cmdsize = 00000050h // 80 byte
+{ ... } // 72 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000a50h-0000000000000a68h]
 cmd = 0000001bh // LC_UUID
 cmdsize = 00000018h // 24 byte
+{ ... } // 16 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000a68h-0000000000000a78h]
 cmd = 00000024h // LC_VERSION_MIN_MACOSX
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000a78h-0000000000000ad0h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000058h // 88 byte
+{ ... } // 80 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000ad0h-0000000000000b30h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000060h // 96 byte
+{ ... } // 88 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000b30h-0000000000000b68h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000038h // 56 byte
+{ ... } // 48 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000b68h-0000000000000ba0h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000038h // 56 byte
+{ ... } // 48 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000ba0h-0000000000000bf8h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000058h // 88 byte
+{ ... } // 80 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000bf8h-0000000000000c60h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000068h // 104 byte
+{ ... } // 96 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000c60h-0000000000000c70h]
 cmd = 00000026h // LC_FUNCTION_STARTS
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000c70h-0000000000000c80h]
 cmd = 00000029h // LC_DATA_IN_CODE
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:segment_64 [__TEXT][0000000000000c80h-000000000000d000h]
 0000000000000000: add [eax], al
@@ -6761,66 +6772,82 @@ flags = 00000000h
 // committed:FORMAT:load_command[0000000000000af0h-0000000000000b20h]
 cmd = 80000022h // LC_DYLD_INFO_ONLY
 cmdsize = 00000030h // 48 byte
+{ ... } // 40 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000b20h-0000000000000b38h]
 cmd = 00000002h // LC_SYMTAB
 cmdsize = 00000018h // 24 byte
+{ ... } // 16 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000b38h-0000000000000b88h]
 cmd = 0000000bh // LC_DYSYMTAB
 cmdsize = 00000050h // 80 byte
+{ ... } // 72 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000b88h-0000000000000ba8h]
 cmd = 0000000eh // LC_LOAD_DYLINKER
 cmdsize = 00000020h // 32 byte
+{ ... } // 24 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000ba8h-0000000000000bc0h]
 cmd = 0000001bh // LC_UUID
 cmdsize = 00000018h // 24 byte
+{ ... } // 16 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000bc0h-0000000000000bd0h]
 cmd = 00000024h // LC_VERSION_MIN_MACOSX
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000bd0h-0000000000000c88h]
 cmd = 00000005h // LC_UNIXTHREAD
 cmdsize = 000000b8h // 184 byte
+{ ... } // 176 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000c88h-0000000000000cb8h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000030h // 48 byte
+{ ... } // 40 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000cb8h-0000000000000d10h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000058h // 88 byte
+{ ... } // 80 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000d10h-0000000000000d70h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000060h // 96 byte
+{ ... } // 88 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000d70h-0000000000000da8h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000038h // 56 byte
+{ ... } // 48 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000da8h-0000000000000de0h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000038h // 56 byte
+{ ... } // 48 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000de0h-0000000000000e38h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000058h // 88 byte
+{ ... } // 80 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000e38h-0000000000000ea0h]
 cmd = 0000000ch // LC_LOAD_DYLIB
 cmdsize = 00000068h // 104 byte
+{ ... } // 96 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000ea0h-0000000000000eb0h]
 cmd = 00000026h // LC_FUNCTION_STARTS
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:load_command[0000000000000eb0h-0000000000000ec0h]
 cmd = 00000029h // LC_DATA_IN_CODE
 cmdsize = 00000010h // 16 byte
+{ ... } // 8 byte
 // Export handler: Raw
 // committed:FORMAT:segment_64 [__TEXT][0000000000000ec0h-0000000000012000h]
 0000000000000000: add [eax], al
@@ -9004,9 +9031,7 @@ startupFile:totalBlocks = 0
 startupFile:extents = { 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h, 00000000h }
 // Export handler: Raw
 // committed:FORMAT:Reserved (Manufacturing Block)[000000000070ae00h-000000000070b000h]
-start = 000000000070ae00h
-end = 000000000070b000h
-size = 512 // 512 byte
+{ ... } // 512 byte
 // Export handler: Raw
 // committed:FORMAT:Resource fork[000000000070b000h-000000000070be87h]
 <?xml version="1.0" encoding="UTF-8"?>
