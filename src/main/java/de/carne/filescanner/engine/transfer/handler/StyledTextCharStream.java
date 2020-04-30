@@ -22,6 +22,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 import java.util.Objects;
 
@@ -185,8 +186,11 @@ class StyledTextCharStream implements CharStream {
 
 			if (feed > 0) {
 				try {
+					CoderResult decodeResult = (this.readBuffer.hasRemaining() ? CoderResult.OVERFLOW
+							: CoderResult.UNDERFLOW);
+
 					do {
-						if (this.readBuffer.remaining() == 0 && this.decodedBytes < this.channelSize) {
+						if (decodeResult.isUnderflow() && this.decodedBytes < this.channelSize) {
 							feedReadBuffer();
 						}
 
@@ -199,7 +203,7 @@ class StyledTextCharStream implements CharStream {
 
 							decodeBuffer.position(this.decoded0);
 							decodeBuffer.limit(this.decoded0 + feeds0);
-							this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
+							decodeResult = this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
 
 							int nextDecoded0 = decodeBuffer.position();
 
@@ -211,7 +215,7 @@ class StyledTextCharStream implements CharStream {
 
 							decodeBuffer.position(this.decoded1);
 							decodeBuffer.limit(this.decoded1 + feeds1);
-							this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
+							decodeResult = this.decoder.decode(this.readBuffer, decodeBuffer, this.channelEof);
 
 							int nextDecoded1 = decodeBuffer.position();
 
@@ -230,7 +234,14 @@ class StyledTextCharStream implements CharStream {
 	}
 
 	private void feedReadBuffer() throws IOException {
-		this.readBuffer.clear();
+		if (this.readBuffer.hasRemaining()) {
+			ByteBuffer remainingBuffer = this.readBuffer.duplicate();
+
+			this.readBuffer.clear();
+			this.readBuffer.put(remainingBuffer);
+		} else {
+			this.readBuffer.clear();
+		}
 
 		int read = 0;
 
