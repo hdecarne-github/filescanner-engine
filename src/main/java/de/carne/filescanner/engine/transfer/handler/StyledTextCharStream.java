@@ -30,9 +30,9 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.misc.Interval;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.Exceptions;
-import de.carne.boot.check.Check;
-import de.carne.boot.logging.Log;
+import de.carne.util.Check;
+import de.carne.util.Exceptions;
+import de.carne.util.logging.Log;
 
 class StyledTextCharStream implements CharStream {
 

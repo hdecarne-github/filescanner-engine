@@ -31,9 +31,6 @@ import java.util.function.Supplier;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.Exceptions;
-import de.carne.boot.check.Check;
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.input.FileScannerInput;
@@ -45,7 +42,10 @@ import de.carne.filescanner.engine.transfer.TransferSource;
 import de.carne.filescanner.engine.transfer.handler.RawTransferHandler;
 import de.carne.filescanner.engine.util.FinalSupplier;
 import de.carne.filescanner.engine.util.HexFormat;
+import de.carne.util.Check;
+import de.carne.util.Exceptions;
 import de.carne.util.Strings;
+import de.carne.util.logging.Log;
 
 /**
  * {@linkplain FileScannerResultBuilder} implementation with commit and render support.

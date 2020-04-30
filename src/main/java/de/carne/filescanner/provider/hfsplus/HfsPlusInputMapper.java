@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.input.DecodedInputMapper;
 import de.carne.filescanner.engine.input.FileScannerInput;
+import de.carne.util.logging.Log;
 
 class HfsPlusInputMapper extends DecodedInputMapper {
 

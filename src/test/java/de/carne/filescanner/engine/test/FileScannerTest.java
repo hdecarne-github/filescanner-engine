@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScanner;
 import de.carne.filescanner.engine.FileScannerProgress;
 import de.carne.filescanner.engine.FileScannerResult;
@@ -51,6 +50,7 @@ import de.carne.test.diff.Diff;
 import de.carne.test.diff.DiffResult;
 import de.carne.test.extension.TempPathExtension;
 import de.carne.text.MemoryUnitFormat;
+import de.carne.util.logging.Log;
 
 /**
  * Test {@linkplain FileScanner} class.

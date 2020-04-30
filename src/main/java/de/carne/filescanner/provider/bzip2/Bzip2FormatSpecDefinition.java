@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.format.ByteSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
@@ -32,6 +31,7 @@ import de.carne.filescanner.engine.util.Bzip2InputDecoder;
 import de.carne.nio.compression.bzip2.Bzip2BlockSize;
 import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
 import de.carne.nio.file.FileUtil;
+import de.carne.util.Check;
 import de.carne.util.Lazy;
 
 /**

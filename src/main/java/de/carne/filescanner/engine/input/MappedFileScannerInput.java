@@ -24,7 +24,7 @@ import java.util.TreeMap;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.check.Check;
+import de.carne.util.Check;
 
 /**
  * {@linkplain FileScannerInput} implementation that provides a combined and mapped view to other input's data.

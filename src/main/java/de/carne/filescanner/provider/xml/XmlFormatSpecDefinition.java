@@ -31,7 +31,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.ValueStreamer;
 import de.carne.filescanner.engine.ValueStreamerFactory;
 import de.carne.filescanner.engine.ValueStreamerStatus;
@@ -45,6 +44,7 @@ import de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandler;
 import de.carne.io.IOUtil;
 import de.carne.util.Late;
 import de.carne.util.Lazy;
+import de.carne.util.logging.Log;
 
 /**
  * See Xml.formatspec

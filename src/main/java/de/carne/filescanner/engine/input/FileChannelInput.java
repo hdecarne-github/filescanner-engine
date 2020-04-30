@@ -23,7 +23,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-import de.carne.boot.logging.Log;
+import de.carne.util.logging.Log;
 
 /**
  * {@linkplain FileChannel} based {@linkplain FileScannerInput}.

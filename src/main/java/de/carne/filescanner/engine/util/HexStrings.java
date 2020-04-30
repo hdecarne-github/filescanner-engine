@@ -19,10 +19,10 @@ package de.carne.filescanner.engine.util;
 import java.io.IOException;
 import java.util.function.IntConsumer;
 
-import de.carne.boot.Exceptions;
 import de.carne.filescanner.engine.format.AttributeFormatter;
 import de.carne.filescanner.engine.format.AttributeRenderer;
 import de.carne.filescanner.engine.transfer.RenderStyle;
+import de.carne.util.Exceptions;
 import de.carne.util.Strings;
 import de.carne.util.function.FunctionException;
 

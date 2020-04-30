@@ -23,7 +23,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.function.Supplier;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResult;
 import de.carne.filescanner.engine.FileScannerResultRenderContext;
 import de.carne.filescanner.engine.FileScannerResults;
@@ -40,6 +39,7 @@ import de.carne.mcd.jvm.ClassFileDecoder;
 import de.carne.mcd.x86.X86b16Decoder;
 import de.carne.mcd.x86.X86b32Decoder;
 import de.carne.mcd.x86.X86b64Decoder;
+import de.carne.util.logging.Log;
 
 /**
  * {@linkplain FileScannerResultExportHandler} and {@linkplain FileScannerResultRenderHandler} implementation for

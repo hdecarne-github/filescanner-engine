@@ -23,8 +23,6 @@ import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import de.carne.boot.check.Check;
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
@@ -32,6 +30,8 @@ import de.carne.filescanner.engine.format.EncodedInputSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.RenderOutput;
 import de.carne.filescanner.engine.transfer.TransferSource;
+import de.carne.util.Check;
+import de.carne.util.logging.Log;
 
 /**
  * Input data processor class used during result rendering and exporting.

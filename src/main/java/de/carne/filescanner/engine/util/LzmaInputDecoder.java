@@ -18,13 +18,13 @@ package de.carne.filescanner.engine.util;
 
 import java.io.IOException;
 
-import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.nio.compression.CompressionInfos;
 import de.carne.nio.compression.lzma.LzmaDecoder;
 import de.carne.nio.compression.lzma.LzmaDecoderProperties;
 import de.carne.nio.compression.lzma.LzmaFactory;
 import de.carne.nio.compression.spi.Decoder;
+import de.carne.util.Check;
 
 /**
  * {@linkplain LzmaDecoder} based {@linkplain InputDecoder}.

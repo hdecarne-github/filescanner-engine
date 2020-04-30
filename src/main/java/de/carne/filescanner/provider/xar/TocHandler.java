@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.DecodeAtSpec;
 import de.carne.filescanner.engine.format.EncodedInputSpec;
@@ -55,6 +54,7 @@ import de.carne.nio.compression.deflate.DeflateFormat;
 import de.carne.nio.compression.lzma.LzmaDecoderProperties;
 import de.carne.nio.compression.lzma.LzmaFormat;
 import de.carne.util.Strings;
+import de.carne.util.logging.Log;
 
 class TocHandler extends DefaultHandler {
 

@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.zip.InflaterInputStream;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.CompositeSpec;
 import de.carne.filescanner.engine.format.FormatSpecDefinition;
@@ -32,6 +31,7 @@ import de.carne.filescanner.engine.format.WordSpec;
 import de.carne.filescanner.engine.util.LongHelper;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.util.Lazy;
+import de.carne.util.logging.Log;
 
 /**
  * See Xar.formatspec

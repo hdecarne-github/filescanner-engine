@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.Exceptions;
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FormatMatcherBuilder.Matcher;
 import de.carne.filescanner.engine.input.BufferedFileChannelInput;
 import de.carne.filescanner.engine.input.DecodedInputMapper;
@@ -41,7 +39,9 @@ import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.filescanner.engine.input.InputDecoderTable;
 import de.carne.filescanner.engine.spi.Format;
 import de.carne.filescanner.engine.util.HexFormat;
+import de.carne.util.Exceptions;
 import de.carne.util.SystemProperties;
+import de.carne.util.logging.Log;
 
 /**
  * FileScanner engine.

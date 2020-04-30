@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.check.Check;
+import de.carne.util.Check;
 
 class FileScannerInputByteChannel implements SeekableByteChannel {
 

@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.FileScannerResult;
+import de.carne.util.Check;
 
 /**
  * Class used to output file scanner results in a generic manner to different kind of outputs.

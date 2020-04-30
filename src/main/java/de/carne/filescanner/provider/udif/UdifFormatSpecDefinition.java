@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.format.CompositeSpec;
@@ -30,6 +29,7 @@ import de.carne.filescanner.engine.format.RangeAttributeSpec;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
 import de.carne.filescanner.engine.transfer.handler.StyledTextRenderHandler;
 import de.carne.util.Lazy;
+import de.carne.util.logging.Log;
 
 /**
  * See UDIF.formatspec

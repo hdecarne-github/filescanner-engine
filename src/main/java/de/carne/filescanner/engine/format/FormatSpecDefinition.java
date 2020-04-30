@@ -48,8 +48,6 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.Exceptions;
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.FileScannerResultContextValueSpecs;
 import de.carne.filescanner.engine.StreamValue;
 import de.carne.filescanner.engine.ValueStreamerFactory;
@@ -142,8 +140,10 @@ import de.carne.filescanner.engine.util.PrettyFormat;
 import de.carne.filescanner.engine.util.ShortHelper;
 import de.carne.filescanner.engine.util.SizeRenderer;
 import de.carne.filescanner.engine.util.StringHelper;
+import de.carne.util.Exceptions;
 import de.carne.util.Lazy;
 import de.carne.util.Strings;
+import de.carne.util.logging.Log;
 
 /**
  * Base class for all kinds {@linkplain FormatSpec} based format definitions.
@@ -274,7 +274,7 @@ public abstract class FormatSpecDefinition {
 
 	/**
 	 * Gets the {@linkplain SimpleRenderHandler} render handler.
-	 * 
+	 *
 	 * @return the {@linkplain SimpleRenderHandler} render handler.
 	 */
 	public FileScannerResultRenderHandler simpleRenderer() {

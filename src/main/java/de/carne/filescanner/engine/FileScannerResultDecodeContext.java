@@ -25,8 +25,6 @@ import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import de.carne.boot.check.Check;
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.format.AttributeBindMode;
 import de.carne.filescanner.engine.format.AttributeSpec;
 import de.carne.filescanner.engine.format.CompositeSpec;
@@ -35,7 +33,9 @@ import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.filescanner.engine.input.FileScannerInputRange;
 import de.carne.filescanner.engine.input.InputDecodeCache;
 import de.carne.filescanner.engine.util.HexFormat;
+import de.carne.util.Check;
 import de.carne.util.Strings;
+import de.carne.util.logging.Log;
 
 /**
  * Input data processor class used during result decoding.

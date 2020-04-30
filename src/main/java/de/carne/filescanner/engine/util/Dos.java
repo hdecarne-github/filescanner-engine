@@ -20,7 +20,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import de.carne.boot.Exceptions;
+import de.carne.util.Exceptions;
 
 /**
  * Utility class providing DOS related functions.

@@ -14,29 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.carne.filescanner.engine.test.spi;
+package de.carne.filescanner.engine.transfer.handler;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-import de.carne.filescanner.engine.spi.Format;
-import de.carne.util.logging.Log;
+import java.io.IOException;
+import java.nio.channels.ReadableByteChannel;
 
 /**
- * Test {@linkplain Format} class.
+ *
  */
-class FormatTest {
+public abstract class RenderHandlerSource {
 
-	private static final Log LOG = new Log();
-
-	@Test
-	void testLoadFormats() {
-		Iterable<Format> formats = Format.providers();
-
-		for (Format format : formats) {
-			LOG.notice("Format: '{0}'", format.name());
-		}
-		Assertions.assertTrue(true);
+	/**
+	 *
+	 */
+	private RenderHandlerSource() {
+		// TODO Auto-generated constructor stub
 	}
+
+	public abstract ReadableByteChannel newChannel() throws IOException;
 
 }

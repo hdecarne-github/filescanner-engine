@@ -25,9 +25,9 @@ import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.util.HexFormat;
 import de.carne.util.SystemProperties;
+import de.carne.util.logging.Log;
 
 /**
  * {@linkplain FileScannerInput} class that implements a per thread cache strategy to speed up access to an underlying

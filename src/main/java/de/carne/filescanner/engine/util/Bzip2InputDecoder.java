@@ -18,13 +18,13 @@ package de.carne.filescanner.engine.util;
 
 import java.io.IOException;
 
-import de.carne.boot.check.Check;
 import de.carne.filescanner.engine.input.InputDecoder;
 import de.carne.nio.compression.CompressionInfos;
 import de.carne.nio.compression.bzip2.Bzip2Decoder;
 import de.carne.nio.compression.bzip2.Bzip2DecoderProperties;
 import de.carne.nio.compression.bzip2.Bzip2Factory;
 import de.carne.nio.compression.spi.Decoder;
+import de.carne.util.Check;
 
 /**
  * {@linkplain Bzip2Decoder} based {@linkplain InputDecoder}.

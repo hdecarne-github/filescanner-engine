@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.InsufficientDataException;
 import de.carne.filescanner.engine.InvalidPositionException;
 import de.carne.filescanner.engine.util.HexFormat;
@@ -37,6 +36,7 @@ import de.carne.nio.compression.spi.Decoder;
 import de.carne.nio.file.FileUtil;
 import de.carne.nio.file.attribute.FileAttributes;
 import de.carne.util.SystemProperties;
+import de.carne.util.logging.Log;
 
 /**
  * This class implements a the necessary access strategies for the various types of decoded input.

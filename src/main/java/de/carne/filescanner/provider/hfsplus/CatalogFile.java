@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import de.carne.boot.logging.Log;
 import de.carne.filescanner.engine.input.FileScannerInput;
 import de.carne.util.Strings;
 import de.carne.util.SystemProperties;
+import de.carne.util.logging.Log;
 
 class CatalogFile extends BTreeFile<CatalogFileKey> {
 
