@@ -92,3 +92,4 @@ format_spec "Universal Disk Image" {
 	decode_at @XML_OFFSET @RESOURCE_FORK
 	conditional #dataForkSpec {}
 }	->bigEndian()
+	->renderer(#simpleRenderer)

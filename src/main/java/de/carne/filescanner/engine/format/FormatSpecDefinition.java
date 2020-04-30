@@ -129,6 +129,7 @@ import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.WordFl
 import de.carne.filescanner.engine.format.grammar.FormatSpecGrammarParser.WordSymbolsContext;
 import de.carne.filescanner.engine.transfer.FileScannerResultExportHandler;
 import de.carne.filescanner.engine.transfer.FileScannerResultRenderHandler;
+import de.carne.filescanner.engine.transfer.handler.SimpleRenderHandler;
 import de.carne.filescanner.engine.util.AppleDateRenderer;
 import de.carne.filescanner.engine.util.ByteHelper;
 import de.carne.filescanner.engine.util.DosDateRenderer;
@@ -269,6 +270,15 @@ public abstract class FormatSpecDefinition {
 	 */
 	public final Integer sequenceElementIndex() {
 		return FileScannerResultContextValueSpecs.SEQUENCE_ELEMENT_INDEX.get();
+	}
+
+	/**
+	 * Gets the {@linkplain SimpleRenderHandler} render handler.
+	 * 
+	 * @return the {@linkplain SimpleRenderHandler} render handler.
+	 */
+	public FileScannerResultRenderHandler simpleRenderer() {
+		return SimpleRenderHandler.RENDER_HANDLER;
 	}
 
 	/**

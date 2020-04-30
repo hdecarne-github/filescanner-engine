@@ -1,6 +1,7 @@
 // committed:FORMAT:Universal Disk Image[0000000000000000h-000000000070c087h]
-{ ... } // 7,047 MiB
-{ ... } // 512 byte
+start = 0000000000000000h
+end = 000000000070c087h
+size = 7.389.319 // 7,047 MiB
 // Export handler: Raw
 // committed:FORMAT:Data fork[0000000000000000h-000000000070b000h]
 start = 0000000000000000h
