@@ -46,9 +46,9 @@ import de.carne.filescanner.engine.transfer.renderer.PlainTextRenderer;
 import de.carne.filescanner.provider.jvm.ClassFormat;
 import de.carne.filescanner.provider.zip.ZipFormat;
 import de.carne.test.api.io.TempDir;
-import de.carne.test.diff.Diff;
-import de.carne.test.diff.DiffResult;
-import de.carne.test.extension.TempPathExtension;
+import de.carne.test.extension.io.TempPathExtension;
+import de.carne.test.helper.diff.Diff;
+import de.carne.test.helper.diff.DiffResult;
 import de.carne.text.MemoryUnitFormat;
 import de.carne.util.logging.Log;
 
