@@ -35,10 +35,10 @@ import de.carne.filescanner.engine.transfer.TransferType;
 import de.carne.mcd.MCDOutput;
 import de.carne.mcd.MachineCodeDecoder;
 import de.carne.mcd.PlainMCDOutput;
-import de.carne.mcd.jvm.ClassFileDecoder;
-import de.carne.mcd.x86.X86b16Decoder;
-import de.carne.mcd.x86.X86b32Decoder;
-import de.carne.mcd.x86.X86b64Decoder;
+import de.carne.mcd.jvmdecoder.ClassFileDecoder;
+import de.carne.mcd.x86decoder.X86b16Decoder;
+import de.carne.mcd.x86decoder.X86b32Decoder;
+import de.carne.mcd.x86decoder.X86b64Decoder;
 import de.carne.util.logging.Log;
 
 /**

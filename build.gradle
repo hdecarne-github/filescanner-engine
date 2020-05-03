@@ -18,6 +18,8 @@ def resolveProperty(propertyName, envName, defValue = "<undefined>") {
 }
 
 // Project
+defaultTasks "classes", "testClasses"
+
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
@@ -41,8 +43,8 @@ dependencies {
 	api(group: "org.eclipse.jdt", name: "org.eclipse.jdt.annotation", version: project.annotationVersion)
 	implementation(group: "de.carne.common", name: "java-default", version: project.javaDefaultVersion)
 	implementation(group: "de.carne.common", name: "java-compression", version: project.javaCompressionVersion)
-	implementation(group: "de.carne.common", name: "java-mcd-jvm", version: project.javaMcdVersion)
-	implementation(group: "de.carne.common", name: "java-mcd-x86", version: project.javaMcdVersion)
+	implementation(group: "de.carne.common", name: "java-mcd-jvmdecoder", version: project.javaMcdVersion)
+	implementation(group: "de.carne.common", name: "java-mcd-x86decoder", version: project.javaMcdVersion)
 	implementation(group: "org.antlr", name: "antlr4-runtime", version: project.antlrVersion)
 	antlr(group: "org.antlr", name: "antlr4", version: project.antlrVersion)
 	testImplementation(group: "de.carne.common", name: "java-test", version: project.javaTestVersion)
