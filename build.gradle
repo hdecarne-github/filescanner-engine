@@ -78,6 +78,9 @@ test {
 		events "started", "failed", "passed", "skipped"
 		exceptionFormat "full"
 	}
+	// use a well-defined locale to have deterministic output
+	systemProperty "user.language", "de"
+	systemProperty "user.country", "DE"
 }
 
 jacoco {
