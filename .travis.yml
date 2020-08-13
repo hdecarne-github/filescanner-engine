@@ -14,7 +14,7 @@ env:
   BUILD_JDK="adopt@1.11.0-7"
   DEPLOY_OS_NAME="linux"
   GRADLE_INSTALL_CMDLINE="-s --no-daemon --refresh-dependencies clean classes testClasses"
-  GRADLE_FAST_CMDLINE="-s --no-daemon clean build"
+  GRADLE_FAST_CMDLINE="-s --no-daemon clean assemble"
   GRADLE_FULL_CMDLINE="-s --no-daemon clean build artifactoryPublish sonarqube checkDependencyVersions"
 
 git:
