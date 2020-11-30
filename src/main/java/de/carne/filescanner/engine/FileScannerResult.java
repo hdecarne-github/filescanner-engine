@@ -171,7 +171,7 @@ public interface FileScannerResult {
 	 * @param data the data object to set.
 	 * @see #getData(Object, Class)
 	 */
-	void setData(Object key, Object data);
+	void setData(Object key, @Nullable Object data);
 
 	/**
 	 * Gets the previously set custom data object associated with this {@linkplain FileScannerResult}.

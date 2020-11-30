@@ -154,8 +154,12 @@ abstract class FileScannerResultBuilder implements FileScannerResult {
 	}
 
 	@Override
-	public synchronized void setData(Object key, Object data) {
-		this.dataMap.put(key, data);
+	public synchronized void setData(Object key, @Nullable Object data) {
+		if (data != null) {
+			this.dataMap.put(key, data);
+		} else {
+			this.dataMap.remove(key);
+		}
 	}
 
 	@Override
