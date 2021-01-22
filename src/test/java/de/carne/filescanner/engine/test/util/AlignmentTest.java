@@ -27,8 +27,7 @@ import de.carne.filescanner.engine.util.Alignment;
 class AlignmentTest {
 
 	@Test
-	void testAlignInt() {
-		// word
+	void testAlignIntWord() {
 		Assertions.assertEquals(0, Alignment.word(0));
 		Assertions.assertEquals(2, Alignment.word(1));
 		Assertions.assertEquals(2, Alignment.word(2));
@@ -37,7 +36,10 @@ class AlignmentTest {
 		Assertions.assertEquals(3, Alignment.word(1, 2));
 		Assertions.assertEquals(3, Alignment.word(1, 3));
 		Assertions.assertEquals(0xffffffff, Alignment.word(1, 0xfffffffe));
-		// dword
+	}
+
+	@Test
+	void testAlignIntDWord() {
 		Assertions.assertEquals(0, Alignment.dword(0));
 		Assertions.assertEquals(4, Alignment.dword(1));
 		Assertions.assertEquals(4, Alignment.dword(2));
@@ -50,7 +52,10 @@ class AlignmentTest {
 		Assertions.assertEquals(5, Alignment.dword(1, 4));
 		Assertions.assertEquals(5, Alignment.dword(1, 5));
 		Assertions.assertEquals(0xfffffffd, Alignment.dword(1, 0xfffffffc));
-		// qword
+	}
+
+	@Test
+	void testAlignIntQWord() {
 		Assertions.assertEquals(0, Alignment.qword(0));
 		Assertions.assertEquals(8, Alignment.qword(1));
 		Assertions.assertEquals(8, Alignment.qword(2));
@@ -74,8 +79,7 @@ class AlignmentTest {
 	}
 
 	@Test
-	void testAlignLong() {
-		// word
+	void testAlignLongWord() {
 		Assertions.assertEquals(0, Alignment.word(0));
 		Assertions.assertEquals(2, Alignment.word(1));
 		Assertions.assertEquals(2, Alignment.word(2));
@@ -84,7 +88,10 @@ class AlignmentTest {
 		Assertions.assertEquals(3, Alignment.word(1, 2));
 		Assertions.assertEquals(3, Alignment.word(1, 3));
 		Assertions.assertEquals(0xffffffffffffffffl, Alignment.word(1, 0xfffffffffffffffel));
-		// dword
+	}
+
+	@Test
+	void testAlignLongDWord() {
 		Assertions.assertEquals(0, Alignment.dword(0));
 		Assertions.assertEquals(4, Alignment.dword(1));
 		Assertions.assertEquals(4, Alignment.dword(2));
@@ -97,7 +104,10 @@ class AlignmentTest {
 		Assertions.assertEquals(5, Alignment.dword(1, 4));
 		Assertions.assertEquals(5, Alignment.dword(1, 5));
 		Assertions.assertEquals(0xfffffffffffffffdl, Alignment.dword(1, 0xfffffffffffffffcl));
-		// qword
+	}
+
+	@Test
+	void testAlignLongQWord() {
 		Assertions.assertEquals(0, Alignment.qword(0));
 		Assertions.assertEquals(8, Alignment.qword(1));
 		Assertions.assertEquals(8, Alignment.qword(2));

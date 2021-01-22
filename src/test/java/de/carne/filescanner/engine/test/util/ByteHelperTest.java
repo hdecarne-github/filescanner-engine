@@ -52,14 +52,23 @@ class ByteHelperTest {
 		Assertions.assertEquals(0xff, ByteHelper.toUnsignedInt(Short.valueOf((short) 0xff)));
 		Assertions.assertEquals(0xff, ByteHelper.toUnsignedInt(Integer.valueOf(0xff)));
 		Assertions.assertEquals(0xff, ByteHelper.toUnsignedInt(Long.valueOf(0xffl)));
+
+		Short shortValue = Short.valueOf((short) 0x100);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ByteHelper.toUnsignedInt(Short.valueOf((short) 0x100));
+			ByteHelper.toUnsignedInt(shortValue);
 		});
+
+		Integer intValue = Integer.valueOf(0x100);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ByteHelper.toUnsignedInt(Integer.valueOf(0x100));
+			ByteHelper.toUnsignedInt(intValue);
 		});
+
+		Long longValue = Long.valueOf(0x100l);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ByteHelper.toUnsignedInt(Long.valueOf(0x100l));
+			ByteHelper.toUnsignedInt(longValue);
 		});
 	}
 

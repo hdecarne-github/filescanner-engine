@@ -31,7 +31,7 @@ public abstract class FormatDecodeException extends IOException {
 	 *
 	 * @param message the exception message to use.
 	 */
-	public FormatDecodeException(String message) {
+	protected FormatDecodeException(String message) {
 		super(message);
 	}
 
@@ -41,7 +41,7 @@ public abstract class FormatDecodeException extends IOException {
 	 * @param message the exception message to use.
 	 * @param cause the causing exception.
 	 */
-	public FormatDecodeException(String message, Throwable cause) {
+	protected FormatDecodeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

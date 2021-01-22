@@ -37,7 +37,7 @@ abstract class BTreeFile<K extends Comparable<K>> {
 	private int rootNode = 0;
 	private int firstLeafNode = 0;
 
-	public BTreeFile(ForkData forkData) {
+	protected BTreeFile(ForkData forkData) {
 		this.forkData = forkData;
 	}
 

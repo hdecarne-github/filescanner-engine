@@ -194,7 +194,7 @@ final class XmlFormatSpecDefinition extends FormatSpecDefinition {
 		}
 
 		private ValueStreamerStatus streamDecl(ByteBuffer buffer) {
-			ValueStreamerStatus status = ValueStreamerStatus.FAILED;
+			ValueStreamerStatus status;
 			int decodeStart = buffer.position();
 			CoderResult coderResult = this.decoderHolder.get().decode(buffer, this.decodeBuffer, false);
 			String decoded = this.decodeBuffer.duplicate().flip().toString();
@@ -208,7 +208,7 @@ final class XmlFormatSpecDefinition extends FormatSpecDefinition {
 				}
 				buffer.position(decodeStart + (matcher.end() - 1) * this.bytesPerChar);
 				status = ValueStreamerStatus.COMPLETE;
-			} else if (coderResult.isOverflow()) {
+			} else {
 				status = ValueStreamerStatus.FAILED;
 			}
 			this.decodeBufferUnderflow = coderResult.isUnderflow();

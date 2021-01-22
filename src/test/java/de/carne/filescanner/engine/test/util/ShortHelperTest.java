@@ -52,11 +52,17 @@ class ShortHelperTest {
 		Assertions.assertEquals(0xffff, ShortHelper.toUnsignedInt(Short.valueOf((short) 0xffff)));
 		Assertions.assertEquals(0xffff, ShortHelper.toUnsignedInt(Integer.valueOf(0xffff)));
 		Assertions.assertEquals(0xffff, ShortHelper.toUnsignedInt(Long.valueOf(0xffffl)));
+
+		Integer intValue = Integer.valueOf(0x10000);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ShortHelper.toUnsignedInt(Integer.valueOf(0x10000));
+			ShortHelper.toUnsignedInt(intValue);
 		});
+
+		Long longValue = Long.valueOf(0x10000l);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			ShortHelper.toUnsignedInt(Long.valueOf(0x10000l));
+			ShortHelper.toUnsignedInt(longValue);
 		});
 	}
 

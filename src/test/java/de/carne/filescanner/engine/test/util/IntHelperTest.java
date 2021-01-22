@@ -52,8 +52,11 @@ class IntHelperTest {
 		Assertions.assertEquals(0xffffl, IntHelper.toUnsignedLong(Short.valueOf((short) 0xffff)));
 		Assertions.assertEquals(0xffffffffl, IntHelper.toUnsignedLong(Integer.valueOf(0xffffffff)));
 		Assertions.assertEquals(0xffffffffl, IntHelper.toUnsignedLong(Long.valueOf(0xffffffffl)));
+
+		Long longValue = Long.valueOf(0x100000000l);
+
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			IntHelper.toUnsignedLong(Long.valueOf(0x100000000l));
+			IntHelper.toUnsignedLong(longValue);
 		});
 	}
 
