@@ -1,6 +1,6 @@
 autoEnabled=true
 eclipse.preferences.version=1
 idePrefixKey=
-projectKey=de.carne.common\:filescanner-engine
+projectKey=de.carne\:filescanner-engine
 serverId=SonarCloud/hdecarne-github
 sqPrefixKey=
