@@ -35,7 +35,7 @@ import de.carne.text.MemoryUnitFormat;
 public final class FileScannerResults {
 
 	private FileScannerResults() {
-		// prevent instantiation
+		// Prevent instantiation
 	}
 
 	/**

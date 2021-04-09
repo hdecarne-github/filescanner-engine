@@ -35,7 +35,7 @@ public class RangeRenderHandler implements FileScannerResultRenderHandler {
 	public static final RangeRenderHandler RENDER_HANDLER = new RangeRenderHandler();
 
 	private RangeRenderHandler() {
-		// prevent instantiation
+		// Prevent instantiation
 	}
 
 	@Override

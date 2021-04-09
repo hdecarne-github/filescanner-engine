@@ -24,7 +24,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class FileNames {
 
 	private FileNames() {
-		// prevent instantiation
+		// Prevent instantiation
 	}
 
 	private static final String REMOVE_FILE_NAME_CHARS = "^\\\\|^/|<|>|\\||:|\\\"|\\?|\\*";

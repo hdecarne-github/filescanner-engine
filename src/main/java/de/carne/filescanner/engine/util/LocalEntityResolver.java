@@ -46,7 +46,7 @@ public class LocalEntityResolver implements EntityResolver {
 	private static final LocalEntityResolver INSTANCE = new LocalEntityResolver();
 
 	private LocalEntityResolver() {
-		// prevent instantiation
+		// Prevent instantiation
 	}
 
 	/**
