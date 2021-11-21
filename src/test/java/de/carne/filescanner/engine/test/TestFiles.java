@@ -109,7 +109,7 @@ public final class TestFiles {
 	 */
 	public static final TestFile XML_FILE = new RemoteTestFile(TEST_FILE_DIR,
 			"https://raw.githubusercontent.com/Barebit/x86reference/master/x86reference.xml", "x86reference.xml",
-			"31e1fe66f693b3bc5ea7ef0500b78f64a41eced96bf95c0ff1905dbd475af153");
+			"b1840652f82097d8c49dd77e13af0e4dbc64d19167793356e947098624d97166");
 
 	/**
 	 * https://github.com/hdecarne/certmgr/releases/download/v1.1.1/certmgr-1.1.1.zip
